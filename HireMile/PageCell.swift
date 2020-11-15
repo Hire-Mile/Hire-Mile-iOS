@@ -1,18 +1,14 @@
 //
-//  ViewController.swift
+//  PageCell.swift
 //  autolayout_lbta
 //
-//  Created by Brian Voong on 9/25/17.
+//  Created by Brian Voong on 10/12/17.
 //  Copyright © 2017 Lets Build That App. All rights reserved.
 //
 
 import UIKit
 
-extension UIColor {
-    static var mainBlue = UIColor(red: 120/255, green: 196/255, blue: 248/255, alpha: 1)
-}
-
-class Onboarding: UIViewController {
+class PageCell: UICollectionViewCell {
     
     let largeImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "hello"))
@@ -70,75 +66,42 @@ class Onboarding: UIViewController {
         return pc
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        self.view.backgroundColor = UIColor.white
-        
-        view.addSubview(backdrop)
-        backdrop.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
-        backdrop.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        backdrop.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-        backdrop.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        view.addSubview(descriptionTextView)
-        setupBottomControls()
+        addSubview(backdrop)
+        backdrop.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        backdrop.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        backdrop.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+        backdrop.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
         setupLayout()
     }
-    
-    fileprivate func setupBottomControls() {
-        let bottomControlsStackView = UIStackView(arrangedSubviews: [previousButton, pageControl, nextButton])
-        bottomControlsStackView.translatesAutoresizingMaskIntoConstraints = false
-        bottomControlsStackView.distribution = .fillEqually
-        
-        view.addSubview(bottomControlsStackView)
-        
-        NSLayoutConstraint.activate([
-            bottomControlsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            bottomControlsStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            bottomControlsStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            bottomControlsStackView.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
+
     private func setupLayout() {
         let topImageContainerView = UIView()
-        
-        view.addSubview(topImageContainerView)
-        
+        addSubview(topImageContainerView)
         topImageContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        topImageContainerView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        
-        topImageContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        topImageContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
+
+        topImageContainerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+
+        topImageContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        topImageContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+
         topImageContainerView.addSubview(largeImageView)
         largeImageView.centerXAnchor.constraint(equalTo: topImageContainerView.centerXAnchor).isActive = true
         largeImageView.centerYAnchor.constraint(equalTo: topImageContainerView.centerYAnchor).isActive = true
         largeImageView.heightAnchor.constraint(equalTo: topImageContainerView.heightAnchor, multiplier: 0.5).isActive = true
-        
-        topImageContainerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
-        
+
+        topImageContainerView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5).isActive = true
+
+        addSubview(descriptionTextView)
         descriptionTextView.topAnchor.constraint(equalTo: topImageContainerView.bottomAnchor).isActive = true
-        descriptionTextView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        descriptionTextView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        descriptionTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        descriptionTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: 24).isActive = true
+        descriptionTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: -24).isActive = true
+        descriptionTextView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
     }
-
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
