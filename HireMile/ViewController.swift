@@ -8,10 +8,14 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SignIn: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Functions to throw
+        self.view.backgroundColor = UIColor.green
+        
         // Do any additional setup after loading the view.
     }
 
