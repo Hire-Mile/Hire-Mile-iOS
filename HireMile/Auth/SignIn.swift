@@ -161,6 +161,9 @@ class SignIn: UIViewController {
     
     @objc func loginPressed() {
         print("login pressed")
+        let controller = TabBarController()
+        controller.modalPresentationStyle = .fullScreen
+        self.present(controller, animated: true, completion: nil)
     }
     
     @objc func applePressed() {
