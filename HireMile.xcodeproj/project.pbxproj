@@ -15,10 +15,11 @@
 		784646DD2561C5A7000C5F26 /* SwipingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646DC2561C5A7000C5F26 /* SwipingController.swift */; };
 		784646DF2561C854000C5F26 /* PageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646DE2561C854000C5F26 /* PageCell.swift */; };
 		784646E225626F79000C5F26 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E125626F79000C5F26 /* Helpers.swift */; };
+		784646E625629A97000C5F26 /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E525629A97000C5F26 /* SignUp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		784646C32561B841000C5F26 /* HireMile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HireMile.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		784646C32561B841000C5F26 /* Hiremile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hiremile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		784646C62561B841000C5F26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		784646C82561B841000C5F26 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		784646CA2561B841000C5F26 /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
@@ -28,6 +29,8 @@
 		784646DC2561C5A7000C5F26 /* SwipingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipingController.swift; sourceTree = "<group>"; };
 		784646DE2561C854000C5F26 /* PageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageCell.swift; sourceTree = "<group>"; };
 		784646E125626F79000C5F26 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		784646E325629499000C5F26 /* Hiremile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hiremile.entitlements; sourceTree = "<group>"; };
+		784646E525629A97000C5F26 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +55,7 @@
 		784646C42561B841000C5F26 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				784646C32561B841000C5F26 /* HireMile.app */,
+				784646C32561B841000C5F26 /* Hiremile.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -60,11 +63,12 @@
 		784646C52561B841000C5F26 /* HireMile */ = {
 			isa = PBXGroup;
 			children = (
+				784646E325629499000C5F26 /* Hiremile.entitlements */,
 				784646C62561B841000C5F26 /* AppDelegate.swift */,
 				784646C82561B841000C5F26 /* SceneDelegate.swift */,
 				784646E125626F79000C5F26 /* Helpers.swift */,
 				784646E025626EEB000C5F26 /* Onboarding */,
-				784646CA2561B841000C5F26 /* SignIn.swift */,
+				784646E425629A84000C5F26 /* Auth */,
 				784646CF2561B842000C5F26 /* Assets.xcassets */,
 				784646D12561B843000C5F26 /* LaunchScreen.storyboard */,
 				784646D42561B843000C5F26 /* Info.plist */,
@@ -79,6 +83,15 @@
 				784646DE2561C854000C5F26 /* PageCell.swift */,
 			);
 			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		784646E425629A84000C5F26 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				784646CA2561B841000C5F26 /* SignIn.swift */,
+				784646E525629A97000C5F26 /* SignUp.swift */,
+			);
+			path = Auth;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -98,7 +111,7 @@
 			);
 			name = HireMile;
 			productName = HireMile;
-			productReference = 784646C32561B841000C5F26 /* HireMile.app */;
+			productReference = 784646C32561B841000C5F26 /* Hiremile.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -151,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
@@ -292,6 +306,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
@@ -300,7 +315,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -310,6 +325,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
@@ -318,7 +334,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

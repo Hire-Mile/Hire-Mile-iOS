@@ -125,6 +125,7 @@ class SwipingController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     @objc private func getStarted() {
+        UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
         let controller = UINavigationController(rootViewController: SignIn())
         controller.modalPresentationStyle = .fullScreen
         self.present(controller, animated: true, completion: nil)
