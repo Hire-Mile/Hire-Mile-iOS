@@ -95,11 +95,17 @@ class SignIn: UIViewController {
         super.viewDidLoad()
         
         // Functions to throw
-        self.basicSetup()
         self.addSubviews()
         self.addConstraints()
         
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // Functions to throw
+        self.basicSetup()
     }
     
     func addSubviews() {
@@ -150,7 +156,7 @@ class SignIn: UIViewController {
     }
     
     @objc func forgotPasswordPressed() {
-        print("forgot password pressed")
+        navigationController?.pushViewController(ForgotPassword(), animated: true)
     }
     
     @objc func loginPressed() {
