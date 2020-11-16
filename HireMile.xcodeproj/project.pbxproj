@@ -17,6 +17,10 @@
 		784646E225626F79000C5F26 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E125626F79000C5F26 /* Helpers.swift */; };
 		784646E625629A97000C5F26 /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E525629A97000C5F26 /* SignUp.swift */; };
 		784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E725629F94000C5F26 /* ForgotPassword.swift */; };
+		784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E92562ADB9000C5F26 /* TabBarController.swift */; };
+		784646EC2562ADF7000C5F26 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646EB2562ADF7000C5F26 /* Home.swift */; };
+		784646EE2562ADFC000C5F26 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646ED2562ADFC000C5F26 /* Chat.swift */; };
+		784646F02562CAEA000C5F26 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646EF2562CAEA000C5F26 /* Post.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +37,10 @@
 		784646E325629499000C5F26 /* Hiremile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hiremile.entitlements; sourceTree = "<group>"; };
 		784646E525629A97000C5F26 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
 		784646E725629F94000C5F26 /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
+		784646E92562ADB9000C5F26 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		784646EB2562ADF7000C5F26 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		784646ED2562ADFC000C5F26 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		784646EF2562CAEA000C5F26 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +82,10 @@
 				784646CF2561B842000C5F26 /* Assets.xcassets */,
 				784646D12561B843000C5F26 /* LaunchScreen.storyboard */,
 				784646D42561B843000C5F26 /* Info.plist */,
+				784646E92562ADB9000C5F26 /* TabBarController.swift */,
+				784646EB2562ADF7000C5F26 /* Home.swift */,
+				784646ED2562ADFC000C5F26 /* Chat.swift */,
+				784646EF2562CAEA000C5F26 /* Post.swift */,
 			);
 			path = HireMile;
 			sourceTree = "<group>";
@@ -169,9 +181,13 @@
 			files = (
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
+				784646EC2562ADF7000C5F26 /* Home.swift in Sources */,
+				784646F02562CAEA000C5F26 /* Post.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
+				784646EE2562ADFC000C5F26 /* Chat.swift in Sources */,
+				784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */,
 				784646DF2561C854000C5F26 /* PageCell.swift in Sources */,
 				784646DD2561C5A7000C5F26 /* SwipingController.swift in Sources */,
 				784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */,
