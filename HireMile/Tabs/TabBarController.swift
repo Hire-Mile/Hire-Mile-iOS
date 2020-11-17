@@ -30,8 +30,6 @@ class TabBarController: UITabBarController {
         homeController.tabBarItem.selectedImage = UIImage(systemName: "house.fill")
         
         let addController = UINavigationController(rootViewController: Chat())
-//        addController.tabBarItem.image = UIImage(named: "postButton")
-//        addController.tabBarItem.selectedImage = UIImage(named: "postButton")
         
         let chatController = UINavigationController(rootViewController: Chat())
         chatController.tabBarItem.image = UIImage(systemName: "text.bubble")

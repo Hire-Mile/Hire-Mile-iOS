@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		780A7F622562D565009BD93A /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780A7F612562D565009BD93A /* Home.swift */; };
 		784646C72561B841000C5F26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646C62561B841000C5F26 /* AppDelegate.swift */; };
 		784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646C82561B841000C5F26 /* SceneDelegate.swift */; };
 		784646CB2561B841000C5F26 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646CA2561B841000C5F26 /* SignIn.swift */; };
@@ -18,12 +19,12 @@
 		784646E625629A97000C5F26 /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E525629A97000C5F26 /* SignUp.swift */; };
 		784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E725629F94000C5F26 /* ForgotPassword.swift */; };
 		784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E92562ADB9000C5F26 /* TabBarController.swift */; };
-		784646EC2562ADF7000C5F26 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646EB2562ADF7000C5F26 /* Home.swift */; };
 		784646EE2562ADFC000C5F26 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646ED2562ADFC000C5F26 /* Chat.swift */; };
 		784646F02562CAEA000C5F26 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646EF2562CAEA000C5F26 /* Post.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		780A7F612562D565009BD93A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		784646C32561B841000C5F26 /* Hiremile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hiremile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		784646C62561B841000C5F26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		784646C82561B841000C5F26 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -38,7 +39,6 @@
 		784646E525629A97000C5F26 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
 		784646E725629F94000C5F26 /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		784646E92562ADB9000C5F26 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		784646EB2562ADF7000C5F26 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		784646ED2562ADFC000C5F26 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		784646EF2562CAEA000C5F26 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,13 +79,10 @@
 				784646E125626F79000C5F26 /* Helpers.swift */,
 				784646E025626EEB000C5F26 /* Onboarding */,
 				784646E425629A84000C5F26 /* Auth */,
+				784646F12562D436000C5F26 /* Tabs */,
 				784646CF2561B842000C5F26 /* Assets.xcassets */,
 				784646D12561B843000C5F26 /* LaunchScreen.storyboard */,
 				784646D42561B843000C5F26 /* Info.plist */,
-				784646E92562ADB9000C5F26 /* TabBarController.swift */,
-				784646EB2562ADF7000C5F26 /* Home.swift */,
-				784646ED2562ADFC000C5F26 /* Chat.swift */,
-				784646EF2562CAEA000C5F26 /* Post.swift */,
 			);
 			path = HireMile;
 			sourceTree = "<group>";
@@ -107,6 +104,25 @@
 				784646E725629F94000C5F26 /* ForgotPassword.swift */,
 			);
 			path = Auth;
+			sourceTree = "<group>";
+		};
+		784646F12562D436000C5F26 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				784646E92562ADB9000C5F26 /* TabBarController.swift */,
+				784646F22562D45D000C5F26 /* Home */,
+				784646ED2562ADFC000C5F26 /* Chat.swift */,
+				784646EF2562CAEA000C5F26 /* Post.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
+		784646F22562D45D000C5F26 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				780A7F612562D565009BD93A /* Home.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -181,10 +197,10 @@
 			files = (
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
-				784646EC2562ADF7000C5F26 /* Home.swift in Sources */,
 				784646F02562CAEA000C5F26 /* Post.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
+				780A7F622562D565009BD93A /* Home.swift in Sources */,
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
 				784646EE2562ADFC000C5F26 /* Chat.swift in Sources */,
 				784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */,
