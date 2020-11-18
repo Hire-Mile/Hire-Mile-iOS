@@ -1,0 +1,20 @@
+PODS:
+  - SideMenu (6.5.0)
+  - ZKCarousel (1.1.0)
+
+DEPENDENCIES:
+  - SideMenu
+  - ZKCarousel
+
+SPEC REPOS:
+  trunk:
+    - SideMenu
+    - ZKCarousel
+
+SPEC CHECKSUMS:
+  SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
+  ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
+
+PODFILE CHECKSUM: 9469fffeac0d685a3f503ccf8a44dbd862a4b260
+
+COCOAPODS: 1.9.3
