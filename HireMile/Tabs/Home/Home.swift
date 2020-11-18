@@ -134,6 +134,11 @@ class HomeCell: UITableViewCell {
     
     let seeAllButton : UIButton = {
         let button = UIButton()
+        button.backgroundColor = UIColor(red: 242/255, green: 235/255, blue: 235/255, alpha: 1)
+        button.setTitleColor(UIColor(red: 131/255, green: 131/255, blue: 131/255, alpha: 1), for: .normal)
+        button.setTitle("SEE ALL", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -145,6 +150,11 @@ class HomeCell: UITableViewCell {
     func setup() {
         addSubview(titleLabel)
         titleLabel.anchor(top: topAnchor, paddingTop: 0, bottom: bottomAnchor, paddingBottom: -140, left: leftAnchor, paddingLeft: 0, right: rightAnchor, paddingRight: 0, width: 0, height: 0)
+        
+        addSubview(seeAllButton)
+        seeAllButton.anchor(top: topAnchor, paddingTop: 5, bottom: bottomAnchor, paddingBottom: -140, left: leftAnchor, paddingLeft: frame.width / 1.2, right: rightAnchor, paddingRight: 0, width: 0, height: 0)
+        seeAllButton.layer.cornerRadius = 15
+        seeAllButton.clipsToBounds = true
     }
     
     required init?(coder: NSCoder) {
