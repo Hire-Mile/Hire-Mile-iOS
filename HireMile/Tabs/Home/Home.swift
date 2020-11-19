@@ -11,6 +11,13 @@ import SideMenu
 
 class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    private let refrshControl : UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = UIColor.black
+        refreshControl.addTarget(self, action: #selector(refreshAction), for: .valueChanged)
+        return refreshControl
+    }()
+    
     let searchButton : UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
@@ -95,6 +102,7 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.refreshControl = refrshControl
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -151,6 +159,14 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @objc func seeAllPressed() {
         print("touched see all!")
         navigationController?.pushViewController(CategoryPostController(), animated: true)
+    }
+    
+    @objc func refreshAction() {
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(hideRefrsh), userInfo: nil, repeats: false)
+    }
+    
+    @objc func hideRefrsh() {
+        self.refrshControl.endRefreshing()
     }
 
 }
