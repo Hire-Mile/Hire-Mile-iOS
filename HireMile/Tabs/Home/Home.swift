@@ -383,6 +383,9 @@ class MenuListController: UITableViewController {
         
         self.navigationController?.isNavigationBarHidden = true
         tableView.separatorColor = UIColor.clear
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.allowsSelection = true
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "sideMenuCellNormal")
         tableView.register(SideMenuCell.self, forCellReuseIdentifier: "sideMenuCellProfile")
         
@@ -414,8 +417,38 @@ class MenuListController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
-        print("hello")
+        if indexPath.section == 0 {
+            print("profile")
+        } else {
+            switch indexPath.row {
+            case 0:
+                print("0")
+            case 1:
+                print("1")
+            case 2:
+                print("2")
+            case 3:
+                print("3")
+            case 4:
+                print("4")
+            case 5:
+                print("5")
+            case 6:
+                print("6")
+                self.navigationController?.pushViewController(Settings(), animated: true)
+            case 7:
+                let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+                    let controller = SignIn()
+                    controller.modalPresentationStyle = .fullScreen
+                    self.present(controller, animated: true, completion: nil)
+                }))
+                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            default:
+                print("other")
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
