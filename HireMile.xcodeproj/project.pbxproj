@@ -24,7 +24,6 @@
 		784646F02562CAEA000C5F26 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646EF2562CAEA000C5F26 /* Post.swift */; };
 		786A33212565931300B58265 /* CategoryPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A33202565931300B58265 /* CategoryPostController.swift */; };
 		786A3323256596E700B58265 /* FilterLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A3322256596E700B58265 /* FilterLauncher.swift */; };
-		786A332525659BAC00B58265 /* WorkProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A332425659BAC00B58265 /* WorkProgress.swift */; };
 		78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5CA352565515E00BF59AB /* ViewPostController.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,7 +47,6 @@
 		784646EF2562CAEA000C5F26 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		786A33202565931300B58265 /* CategoryPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPostController.swift; sourceTree = "<group>"; };
 		786A3322256596E700B58265 /* FilterLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLauncher.swift; sourceTree = "<group>"; };
-		786A332425659BAC00B58265 /* WorkProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkProgress.swift; sourceTree = "<group>"; };
 		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
 		7CD4FFC8B2591F2481B92C9B /* Pods_HireMile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HireMile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A91A1DE31160FFE2BA389866 /* Pods-HireMile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.debug.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.debug.xcconfig"; sourceTree = "<group>"; };
@@ -101,7 +99,6 @@
 				784646C62561B841000C5F26 /* AppDelegate.swift */,
 				784646C82561B841000C5F26 /* SceneDelegate.swift */,
 				784646E125626F79000C5F26 /* Helpers.swift */,
-				786A332425659BAC00B58265 /* WorkProgress.swift */,
 				784646E025626EEB000C5F26 /* Onboarding */,
 				784646E425629A84000C5F26 /* Auth */,
 				784646F12562D436000C5F26 /* Tabs */,
@@ -280,7 +277,6 @@
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
 				786A3323256596E700B58265 /* FilterLauncher.swift in Sources */,
 				784646F02562CAEA000C5F26 /* Post.swift in Sources */,
-				786A332525659BAC00B58265 /* WorkProgress.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
