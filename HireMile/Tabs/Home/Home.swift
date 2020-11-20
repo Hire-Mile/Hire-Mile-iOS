@@ -388,7 +388,6 @@ class MenuListController: UITableViewController {
         tableView.allowsSelection = true
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "sideMenuCellNormal")
         tableView.register(SideMenuCell.self, forCellReuseIdentifier: "sideMenuCellProfile")
-        
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

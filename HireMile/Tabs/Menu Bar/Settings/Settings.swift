@@ -11,6 +11,8 @@ import UIKit
 class Settings: UITableViewController {
     
     private let titles = ["Edit Profile", "Password", "youremail@gmail.com"]
+    private let images = ["person.crop.circle", "lock", "envelope"]
+    private let pages = [EditProfile(), Password(), Email()]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,23 +58,44 @@ class Settings: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCellID", for: indexPath) as! SettingsCell
         cell.textLabel?.text = titles[indexPath.row]
+        cell.profileImageView.image = UIImage(systemName: images[indexPath.row])
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("selected")
+        self.navigationController?.pushViewController(pages[indexPath.row], animated: true)
     }
 
 }
 
 class SettingsCell: UITableViewCell {
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    let profileImageView : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.tintColor = UIColor.black
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        textLabel?.frame = CGRect(x: 55, y: textLabel!.frame.origin.y + 2, width: textLabel!.frame.width, height: textLabel!.frame.height)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        // init
+        
+        addSubview(profileImageView)
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 25).isActive = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
