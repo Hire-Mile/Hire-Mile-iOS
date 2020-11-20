@@ -6,8 +6,6 @@
 //  Copyright © 2020 Jorge Zapata. All rights reserved.
 //
 
-//Category Filter
-//Category Filter Search
 //Category Page
 //Category Page Tap Result
 //Search on Home Page
