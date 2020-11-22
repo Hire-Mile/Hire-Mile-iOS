@@ -79,6 +79,7 @@ class ChangePassword: UIViewController, UITextFieldDelegate {
         self.view.addSubview(currentPassword)
         self.view.addSubview(newPassword)
         self.view.addSubview(confirmNewPassword)
+        self.view.addSubview(updatePasswordButton)
     }
 
     func addConstraints() {
@@ -106,9 +107,10 @@ class ChangePassword: UIViewController, UITextFieldDelegate {
     func basicSetup() {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.navigationBar.topItem?.title = "Change Password"
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        title = "Change Password"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        
 
         self.currentPassword.delegate = self
         self.newPassword.delegate = self
@@ -116,11 +118,17 @@ class ChangePassword: UIViewController, UITextFieldDelegate {
     }
 
     @objc func updatePressed() {
-        let alert = UIAlertController(title: "Success!", message: "Your password has been changed", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
-            self.navigationController?.popViewController(animated: true)
-        }))
-        self.present(alert, animated: true, completion: nil)
+        if self.newPassword.text == "" || self.currentPassword.text == "" || self.confirmNewPassword.text == "" {
+            let alert = UIAlertController(title: "Error", message: "Please input in all textfields", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Success!", message: "Your password has been changed", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

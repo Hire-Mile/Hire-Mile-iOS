@@ -10,8 +10,7 @@ import UIKit
 
 class Password: UITableViewController {
 
-    private let titles = ["Change Password", "Reset Password"]
-    private let pages = [ChangePassword(), Password()]
+    let titles = ["Change Password", "Reset Password"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +18,7 @@ class Password: UITableViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.allowsSelection = true
-        tableView.register(SettingsCell.self, forCellReuseIdentifier: "passwordPageCellID")
+        tableView.register(PasswordCell.self, forCellReuseIdentifier: "passwordPageCellID")
 
         // Do any additional setup after loading the view.
     }
@@ -56,13 +55,33 @@ class Password: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "passwordPageCellID", for: indexPath) as! SettingsCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "passwordPageCellID", for: indexPath) as! PasswordCell
         cell.textLabel?.text = titles[indexPath.row]
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.navigationController?.pushViewController(pages[indexPath.row], animated: true)
+        switch indexPath.row {
+        case 0:
+            self.navigationController?.pushViewController(ChangePassword(), animated: true)
+        default:
+            self.navigationController?.pushViewController(ResetPassword(), animated: true)
+        }
     }
 
+}
+
+class PasswordCell: UITableViewCell {
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

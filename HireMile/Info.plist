@@ -56,5 +56,9 @@
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Please allow the camera for taking photos!</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Please allow the photo library to upload photos from your camera roll!</string>
 </dict>
 </plist>
