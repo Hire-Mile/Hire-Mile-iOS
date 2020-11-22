@@ -435,6 +435,7 @@ class MenuListController: UITableViewController {
             case 6:
                 print("6")
                 self.navigationController?.pushViewController(Settings(), animated: true)
+//                self.navigationController?.pushViewController(Settings(), animated: true)
             case 7:
                 let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
