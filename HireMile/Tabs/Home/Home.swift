@@ -432,6 +432,7 @@ class MenuListController: UITableViewController {
                 print("4")
             case 5:
                 print("5")
+                self.navigationController?.pushViewController(Favorites(), animated: true)
             case 6:
                 print("6")
                 self.navigationController?.pushViewController(Settings(), animated: true)

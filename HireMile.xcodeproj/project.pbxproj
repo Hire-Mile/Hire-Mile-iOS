@@ -31,6 +31,7 @@
 		787B018425685BD600BBC392 /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018325685BD600BBC392 /* EditProfile.swift */; };
 		787B018825685BE600BBC392 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018725685BE600BBC392 /* Email.swift */; };
 		78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5CA352565515E00BF59AB /* ViewPostController.swift */; };
+		78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A06256B99EC00DFABEB /* Favorites.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		787B018325685BD600BBC392 /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
 		787B018725685BE600BBC392 /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
 		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
+		78DA5A06256B99EC00DFABEB /* Favorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
 		7CD4FFC8B2591F2481B92C9B /* Pods_HireMile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HireMile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A91A1DE31160FFE2BA389866 /* Pods-HireMile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.debug.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.debug.xcconfig"; sourceTree = "<group>"; };
 		F33EA7BD8215DF8F8A43B9DB /* Pods-HireMile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.release.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.release.xcconfig"; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				787B018925685C0100BBC392 /* Settings */,
+				78DA5A06256B99EC00DFABEB /* Favorites.swift */,
 			);
 			path = "Menu Bar";
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
 				78008CD72569B8E4005E4A15 /* Password.swift in Sources */,
 				787B018425685BD600BBC392 /* EditProfile.swift in Sources */,
+				78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */,
 				786A3323256596E700B58265 /* FilterLauncher.swift in Sources */,
 				787B018825685BE600BBC392 /* Email.swift in Sources */,
 				784646F02562CAEA000C5F26 /* Post.swift in Sources */,
