@@ -240,7 +240,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     @objc func sendPressed() {
         if self.textField.text != " " && self.textField.text != "  " && self.textField.text != "   " && self.textField.text != nil && self.textField.text != "  Say Something..." {
-            let alert = UIAlertController(title: "Message Sent", message: "Your messsage to Albert was successful!", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Message Sent", message: "Your messsage to Albert was successful", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         } else {

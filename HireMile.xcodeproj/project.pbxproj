@@ -32,6 +32,7 @@
 		787B018825685BE600BBC392 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018725685BE600BBC392 /* Email.swift */; };
 		78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5CA352565515E00BF59AB /* ViewPostController.swift */; };
 		78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A06256B99EC00DFABEB /* Favorites.swift */; };
+		78DA5A09256C1CE000DFABEB /* OtherProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A08256C1CE000DFABEB /* OtherProfile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		787B018725685BE600BBC392 /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
 		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
 		78DA5A06256B99EC00DFABEB /* Favorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
+		78DA5A08256C1CE000DFABEB /* OtherProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfile.swift; sourceTree = "<group>"; };
 		7CD4FFC8B2591F2481B92C9B /* Pods_HireMile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HireMile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A91A1DE31160FFE2BA389866 /* Pods-HireMile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.debug.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.debug.xcconfig"; sourceTree = "<group>"; };
 		F33EA7BD8215DF8F8A43B9DB /* Pods-HireMile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.release.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.release.xcconfig"; sourceTree = "<group>"; };
@@ -86,6 +88,15 @@
 				F33EA7BD8215DF8F8A43B9DB /* Pods-HireMile.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		7826697D256C3BC500D63FB1 /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				78DA5A06256B99EC00DFABEB /* Favorites.swift */,
+				78DA5A08256C1CE000DFABEB /* OtherProfile.swift */,
+			);
+			path = Favorites;
 			sourceTree = "<group>";
 		};
 		784646BA2561B841000C5F26 = {
@@ -169,7 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				787B018925685C0100BBC392 /* Settings */,
-				78DA5A06256B99EC00DFABEB /* Favorites.swift */,
+				7826697D256C3BC500D63FB1 /* Favorites */,
 			);
 			path = "Menu Bar";
 			sourceTree = "<group>";
@@ -309,6 +320,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78DA5A09256C1CE000DFABEB /* OtherProfile.swift in Sources */,
 				78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
