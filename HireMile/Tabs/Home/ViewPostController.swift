@@ -120,6 +120,10 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         // Functions to throw
         self.basicSetup()
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        profileImage.isUserInteractionEnabled = true
+        profileImage.addGestureRecognizer(tapGestureRecognizer)
     }
     
     func addSubviews() {
@@ -212,6 +216,12 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             self.view.frame.origin.y = 0
         }
+    }
+
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
+        let tappedImage = tapGestureRecognizer.view as! UIImageView
+        // action here
+        self.navigationController?.pushViewController(OtherProfile(), animated: true)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
