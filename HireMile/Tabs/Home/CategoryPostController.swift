@@ -85,6 +85,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("hello")
+        self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -154,7 +155,7 @@ class CategoryCell: UITableViewCell {
 
     let titleLabel : UILabel = {
         let label = UILabel()
-        label.text = "Henry paid Steve"
+        label.text = "Mens Haircut"
         label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textColor = UIColor.black
         label.numberOfLines = 1
