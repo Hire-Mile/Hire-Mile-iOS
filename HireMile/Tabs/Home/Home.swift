@@ -53,7 +53,7 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var menu : SideMenuNavigationController?
     
-    let titles = ["Nearby Services", "Popular Services", "Web Design & Dev", "Auto Repair"]
+    let titles = ["Nearby Services", "Newest Posts", "Web Design & Dev", "Auto Repair"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -428,15 +428,16 @@ class MenuListController: UITableViewController {
                 print("2")
             case 3:
                 print("3")
+                self.navigationController?.pushViewController(Payment(), animated: true)
             case 4:
                 print("4")
+                self.navigationController?.pushViewController(MyReviews(), animated: true)
             case 5:
                 print("5")
                 self.navigationController?.pushViewController(Favorites(), animated: true)
             case 6:
                 print("6")
                 self.navigationController?.pushViewController(Settings(), animated: true)
-//                self.navigationController?.pushViewController(Settings(), animated: true)
             case 7:
                 let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
