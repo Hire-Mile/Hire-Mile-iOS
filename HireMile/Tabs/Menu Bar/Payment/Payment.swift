@@ -82,6 +82,13 @@ class Payment: UIViewController {
         return button
     }()
     
+    let everythingButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(addButtonPressed), for: .touchUpInside)
+        return button
+    }()
+    
  
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,11 +158,21 @@ class Payment: UIViewController {
         self.addLabel.rightAnchor.constraint(equalTo: self.addButton.leftAnchor, constant: -10).isActive = true
         self.addLabel.bottomAnchor.constraint(equalTo: self.addCardView.bottomAnchor, constant: -10).isActive = true
         self.addLabel.leftAnchor.constraint(equalTo: self.cardImage.rightAnchor, constant: 10).isActive = true
+        
+        self.addCardView.addSubview(everythingButton)
+        self.everythingButton.topAnchor.constraint(equalTo: self.addCardView.topAnchor).isActive = true
+        self.everythingButton.rightAnchor.constraint(equalTo: self.addCardView.rightAnchor).isActive = true
+        self.everythingButton.leftAnchor.constraint(equalTo: self.addCardView.leftAnchor).isActive = true
+        self.everythingButton.bottomAnchor.constraint(equalTo: self.addCardView.bottomAnchor).isActive = true
  
 //        self.tableView.delegate = self
 //        self.tableView.dataSource = self
 //        self.tableView.allowsSelection = true
  
+    }
+    
+    @objc func addButtonPressed() {
+        self.navigationController?.present(AddCard(), animated: true, completion: nil)
     }
 
 }
