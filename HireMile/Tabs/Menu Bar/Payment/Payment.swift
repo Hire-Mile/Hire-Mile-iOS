@@ -8,7 +8,24 @@
 
 import UIKit
 
-class Payment: UIViewController {
+class Payment: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    let cashOutLauncher = CashOutLauncher()
+    var timer : Timer?
+        
+    private let refrshControl : UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.tintColor = UIColor.black
+        refreshControl.addTarget(self, action: #selector(refreshAction), for: .valueChanged)
+        return refreshControl
+    }()
+    
+    let tableView : UITableView = {
+        let tableview = UITableView()
+        tableview.translatesAutoresizingMaskIntoConstraints = false
+        tableview.backgroundColor = UIColor.white
+        return tableview
+    }()
     
     let cash : UILabel = {
         let label = UILabel()
@@ -23,8 +40,8 @@ class Payment: UIViewController {
     
     let cashNumber : UILabel = {
         let label = UILabel()
-        label.text = "$500.00"
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.text = "$500"
+        label.font = UIFont.boldSystemFont(ofSize: 19)
         label.textAlignment = NSTextAlignment.right
         label.numberOfLines = 1
         label.textColor = UIColor.black
@@ -89,14 +106,39 @@ class Payment: UIViewController {
         return button
     }()
     
+    let bottomView2 : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 236/255, green: 237/255, blue: 238/255, alpha: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let loginButton : UIButton = {
+        let button = UIButton()
+        button.setTitle("Cash Out", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor.mainBlue
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.layer.cornerRadius = 22.5
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(cashOut), for: .touchUpInside)
+        return button
+    }()
+    
+    let bottomView3 : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 236/255, green: 237/255, blue: 238/255, alpha: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
  
     override func viewDidLoad() {
         super.viewDidLoad()
  
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.allowsSelection = true
-//        tableView.register(MyReviewsCell.self, forCellReuseIdentifier: "reviewsCellID")
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.allowsSelection = false
+        tableView.register(PaymentCell.self, forCellReuseIdentifier: "paymentCellID")
  
         // Do any additional setup after loading the view.
     }
@@ -106,6 +148,9 @@ class Payment: UIViewController {
  
         // Functions to throw
         self.basicSetup()
+        
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
+        
     }
  
     func basicSetup() {
@@ -164,15 +209,134 @@ class Payment: UIViewController {
         self.everythingButton.rightAnchor.constraint(equalTo: self.addCardView.rightAnchor).isActive = true
         self.everythingButton.leftAnchor.constraint(equalTo: self.addCardView.leftAnchor).isActive = true
         self.everythingButton.bottomAnchor.constraint(equalTo: self.addCardView.bottomAnchor).isActive = true
+        
+        self.view.addSubview(bottomView2)
+        self.bottomView2.topAnchor.constraint(equalTo: self.addCardView.bottomAnchor, constant: 25).isActive = true
+        self.bottomView2.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
+        self.bottomView2.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
+        self.bottomView2.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        self.view.addSubview(loginButton)
+        self.loginButton.topAnchor.constraint(equalTo: self.bottomView2.bottomAnchor, constant: 20).isActive = true
+        self.loginButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 16).isActive = true
+        self.loginButton.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -16).isActive = true
+        self.loginButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+        self.view.addSubview(bottomView3)
+        self.bottomView3.topAnchor.constraint(equalTo: self.loginButton.bottomAnchor, constant: 20).isActive = true
+        self.bottomView3.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
+        self.bottomView3.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -15).isActive = true
+        self.bottomView3.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        self.view.addSubview(tableView)
+        self.tableView.topAnchor.constraint(equalTo: self.bottomView3.bottomAnchor, constant: 0).isActive = true
+        self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
+        self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
+        self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
  
-//        self.tableView.delegate = self
-//        self.tableView.dataSource = self
-//        self.tableView.allowsSelection = true
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.allowsSelection = true
+        self.tableView.refreshControl = refrshControl
  
+    }
+       
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "paymentCellID", for: indexPath) as! PaymentCell
+        cell.textLabel?.text = "Mary Jane"
+        cell.detailTextLabel?.text = "Paid you for a haircut"
+        cell.detailTextLabel?.textColor = UIColor.lightGray
+        cell.selectionStyle = .none
+        cell.profileImageView.image = UIImage(named: "woman-profile")
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
     }
     
     @objc func addButtonPressed() {
         self.navigationController?.present(AddCard(), animated: true, completion: nil)
     }
+    
+    @objc func cashOut() {
+        cashOutLauncher.showAlert()
+    }
+    
+    @objc func timerFunction() {
+        if GlobalVariables.isCheckedOut == true {
+            let alert = UIAlertController(title: "Success", message: "You have successfully cashed out", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+                self.timer?.invalidate()
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
+    @objc func refreshAction() {
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(hideRefrsh), userInfo: nil, repeats: false)
+    }
+    
+    @objc func hideRefrsh() {
+        self.refrshControl.endRefreshing()
+    }
 
+}
+
+class PaymentCell: UITableViewCell {
+        
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
+        detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y + 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
+    }
+    
+    let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 24
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    let amountSpentOrEarned : UILabel = {
+        let label = UILabel()
+        label.text = "+ $45"
+        label.textAlignment = NSTextAlignment.right
+        label.textColor = UIColor.darkGray
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        
+        addSubview(profileImageView)
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        addSubview(amountSpentOrEarned)
+        amountSpentOrEarned.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
+        amountSpentOrEarned.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        amountSpentOrEarned.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        amountSpentOrEarned.heightAnchor.constraint(equalToConstant: 48).isActive = true
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
