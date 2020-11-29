@@ -34,6 +34,7 @@
 		78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FA25723E4D004A1487 /* AddCard.swift */; };
 		78AD20FD25724B0B004A1487 /* CashOutLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FC25724B0B004A1487 /* CashOutLauncher.swift */; };
 		78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FE25724C17004A1487 /* GlobalVariables.swift */; };
+		78AD2101257290B1004A1487 /* MyJobs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD2100257290B1004A1487 /* MyJobs.swift */; };
 		78B793C425703FBF00EFA7D1 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B793C325703FBF00EFA7D1 /* Payment.swift */; };
 		78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5CA352565515E00BF59AB /* ViewPostController.swift */; };
 		78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A06256B99EC00DFABEB /* Favorites.swift */; };
@@ -70,6 +71,7 @@
 		78AD20FA25723E4D004A1487 /* AddCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCard.swift; sourceTree = "<group>"; };
 		78AD20FC25724B0B004A1487 /* CashOutLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashOutLauncher.swift; sourceTree = "<group>"; };
 		78AD20FE25724C17004A1487 /* GlobalVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
+		78AD2100257290B1004A1487 /* MyJobs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJobs.swift; sourceTree = "<group>"; };
 		78B793C325703FBF00EFA7D1 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
 		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
 		78DA5A06256B99EC00DFABEB /* Favorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
@@ -98,6 +100,14 @@
 				F33EA7BD8215DF8F8A43B9DB /* Pods-HireMile.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		7823F7862573A184001EE37D /* My Jobs */ = {
+			isa = PBXGroup;
+			children = (
+				78AD2100257290B1004A1487 /* MyJobs.swift */,
+			);
+			path = "My Jobs";
 			sourceTree = "<group>";
 		};
 		7826697D256C3BC500D63FB1 /* Favorites */ = {
@@ -194,6 +204,7 @@
 				7826697D256C3BC500D63FB1 /* Favorites */,
 				78B793C225703FAB00EFA7D1 /* My Reviews */,
 				78B793C525703FC400EFA7D1 /* Payment */,
+				7823F7862573A184001EE37D /* My Jobs */,
 			);
 			path = "Menu Bar";
 			sourceTree = "<group>";
@@ -373,6 +384,7 @@
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
 				78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */,
 				787B0181256838E400BBC392 /* Settings.swift in Sources */,
+				78AD2101257290B1004A1487 /* MyJobs.swift in Sources */,
 				78B793C425703FBF00EFA7D1 /* Payment.swift in Sources */,
 				784646EE2562ADFC000C5F26 /* Chat.swift in Sources */,
 				784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */,
@@ -517,12 +529,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.02;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
@@ -537,12 +551,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.02;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
