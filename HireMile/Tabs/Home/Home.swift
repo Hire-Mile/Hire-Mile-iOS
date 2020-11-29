@@ -376,7 +376,7 @@ class HomeCell: UITableViewCell {
 
 class MenuListController: UITableViewController {
     
-    let items = ["Popular", "My Jobs", "Notifications", "Payment", "My Reviews", "Favorites", "Settings", "Sign Out"]
+    let items = ["Popular", "My Jobs", "Payment", "My Reviews", "Favorites", "Settings", "Sign Out"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -422,23 +422,23 @@ class MenuListController: UITableViewController {
             switch indexPath.row {
             case 0:
                 print("0")
+                self.navigationController?.pushViewController(CategoryPostController(), animated: true)
             case 1:
                 print("1")
+                self.navigationController?.pushViewController(MyJobs(), animated: true)
             case 2:
-                print("2")
-            case 3:
                 print("3")
                 self.navigationController?.pushViewController(Payment(), animated: true)
-            case 4:
+            case 3:
                 print("4")
                 self.navigationController?.pushViewController(MyReviews(), animated: true)
-            case 5:
+            case 4:
                 print("5")
                 self.navigationController?.pushViewController(Favorites(), animated: true)
-            case 6:
+            case 5:
                 print("6")
                 self.navigationController?.pushViewController(Settings(), animated: true)
-            case 7:
+            case 6:
                 let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
                     let controller = SignIn()
