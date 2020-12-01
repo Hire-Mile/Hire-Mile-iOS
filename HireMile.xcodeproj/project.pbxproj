@@ -12,6 +12,7 @@
 		78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD12569B7DA005E4A15 /* ChangePassword.swift */; };
 		78008CD72569B8E4005E4A15 /* Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD62569B8E4005E4A15 /* Password.swift */; };
 		780A7F622562D565009BD93A /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780A7F612562D565009BD93A /* Home.swift */; };
+		78277F7F2576C06500B8C7BD /* MyProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78277F7E2576C06500B8C7BD /* MyProfile.swift */; };
 		784646C72561B841000C5F26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646C62561B841000C5F26 /* AppDelegate.swift */; };
 		784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646C82561B841000C5F26 /* SceneDelegate.swift */; };
 		784646CB2561B841000C5F26 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646CA2561B841000C5F26 /* SignIn.swift */; };
@@ -46,6 +47,7 @@
 		78008CD12569B7DA005E4A15 /* ChangePassword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		78008CD62569B8E4005E4A15 /* Password.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Password.swift; sourceTree = "<group>"; };
 		780A7F612562D565009BD93A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		78277F7E2576C06500B8C7BD /* MyProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfile.swift; sourceTree = "<group>"; };
 		784646C32561B841000C5F26 /* Hiremile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hiremile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		784646C62561B841000C5F26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		784646C82561B841000C5F26 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +119,14 @@
 				78DA5A08256C1CE000DFABEB /* OtherProfile.swift */,
 			);
 			path = Favorites;
+			sourceTree = "<group>";
+		};
+		78277F802576C06A00B8C7BD /* My Profile */ = {
+			isa = PBXGroup;
+			children = (
+				78277F7E2576C06500B8C7BD /* MyProfile.swift */,
+			);
+			path = "My Profile";
 			sourceTree = "<group>";
 		};
 		784646BA2561B841000C5F26 = {
@@ -205,6 +215,7 @@
 				78B793C225703FAB00EFA7D1 /* My Reviews */,
 				78B793C525703FC400EFA7D1 /* Payment */,
 				7823F7862573A184001EE37D /* My Jobs */,
+				78277F802576C06A00B8C7BD /* My Profile */,
 			);
 			path = "Menu Bar";
 			sourceTree = "<group>";
@@ -363,6 +374,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78DA5A09256C1CE000DFABEB /* OtherProfile.swift in Sources */,
+				78277F7F2576C06500B8C7BD /* MyProfile.swift in Sources */,
 				78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
