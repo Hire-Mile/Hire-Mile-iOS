@@ -11,5 +11,6 @@ import UIKit
 class GlobalVariables: NSObject {
     
     static var isCheckedOut = false
+    static var presentToCat = false
 
 }

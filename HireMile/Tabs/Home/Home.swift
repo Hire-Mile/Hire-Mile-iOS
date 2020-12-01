@@ -11,6 +11,8 @@ import SideMenu
 
 class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var timer : Timer?
+    
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.tintColor = UIColor.black
@@ -22,6 +24,7 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let button = UIButton()
         button.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
         button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         button.layer.cornerRadius = 20
         button.tintColor = UIColor(red: 112/255, green: 112/255, blue: 112/255, alpha: 1)
@@ -63,7 +66,15 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.addConstraints()
         self.menuSetup()
         
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
+        
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        print("je;;;pt")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -167,6 +178,21 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @objc func hideRefrsh() {
         self.refrshControl.endRefreshing()
+    }
+    
+    @objc func searchButtonPressed() {
+        let controller = SearchController()
+        controller.modalPresentationStyle = .overFullScreen
+        self.present(controller, animated: true, completion: nil)
+    }
+    
+    @objc func timerFunction() {
+        print("hello")
+        if GlobalVariables.presentToCat == true {
+            self.navigationController?.pushViewController(CategoryPostController(), animated: true)
+            GlobalVariables.presentToCat = false
+        }
+        
     }
 
 }
