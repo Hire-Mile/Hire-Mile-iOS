@@ -126,7 +126,7 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
-        title = "Change Email"
+        title = "Edit Profile"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         
 

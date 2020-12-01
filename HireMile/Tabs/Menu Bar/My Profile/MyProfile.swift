@@ -1,14 +1,14 @@
 //
-//  OtherProfile.swift
+//  MyProfile.swift
 //  HireMile
 //
-//  Created by JJ Zapata on 11/23/20.
+//  Created by JJ Zapata on 12/1/20.
 //  Copyright © 2020 Jorge Zapata. All rights reserved.
 //
 
 import UIKit
 
-class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -94,17 +94,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         tableView.backgroundColor = UIColor.white
         return tableView
     }()
-    
-    let statusButton : UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.mainBlue
-        button.setTitle("Following", for: .normal)
-        button.layer.cornerRadius = 15
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        return button
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -169,12 +158,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 10).isActive = true
         
-        view.addSubview(statusButton)
-        statusButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
-        statusButton.bottomAnchor.constraint(equalTo: self.seperaterView.bottomAnchor, constant: -20).isActive = true
-        statusButton.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
-        statusButton.leftAnchor.constraint(equalTo: self.star5.rightAnchor, constant: 30).isActive = true
-        
         view.backgroundColor = UIColor.white
         
         tableView.delegate = self
@@ -187,9 +170,15 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.barTintColor = .white
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .bottom, barMetrics: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
+        let upload = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(uploadPressed))
+        let edit = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPressed))
+        
+        self.view.backgroundColor = UIColor.white
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.isNavigationBarHidden = false
+        self.navigationController?.navigationBar.topItem?.title = " "
+        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationItem.rightBarButtonItems = [upload, edit]
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -201,7 +190,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! MyProfileCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
         return cell
     }
     
@@ -212,10 +201,32 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            print("delete")
+        }
+        return [deleteAction]
+    }
+    
+    @objc func uploadPressed() {
+        let text = "Hire or get work on the fastest and easiest platform"
+        let url : NSURL = NSURL(string: "https://www.google.com")!
+        let vc = UIActivityViewController(activityItems: [text, url], applicationActivities: [])
+        if let popoverController = vc.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = self.view.bounds
+        }
+        self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func editPressed() {
+        self.navigationController?.pushViewController(EditProfile(), animated: true)
+    }
 
 }
 
-class MyProfileCell: UITableViewCell {
+class ProfileCell: UITableViewCell {
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
