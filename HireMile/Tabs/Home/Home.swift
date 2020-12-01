@@ -376,8 +376,8 @@ class HomeCell: UITableViewCell {
 
 class MenuListController: UITableViewController {
     
-    let items = ["Popular", "My Jobs", "Payment", "My Reviews", "Favorites", "Settings", "Sign Out"]
-    
+    let items = ["Recent", "My Jobs", "Payment", "My Reviews", "Favorites", "Settings", "Sign Out"]
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
