@@ -23,6 +23,7 @@ class TabBarController: UITabBarController {
         middleButton.layer.cornerRadius = 35
         middleButton.layer.masksToBounds = true
         middleButton.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - 65)
+        middleButton.addTarget(self, action: #selector(openPost), for: .touchUpInside)
         view.addSubview(middleButton)
         
         let homeController = UINavigationController(rootViewController: Home())
@@ -38,6 +39,12 @@ class TabBarController: UITabBarController {
         viewControllers = [homeController, addController, chatController]
 
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func openPost() {
+        let controller = Post()
+        controller.modalPresentationStyle = .overFullScreen
+        self.present(controller, animated: true, completion: nil)
     }
 
 }
