@@ -70,3 +70,55 @@ extension UITextField {
         self.inputAccessoryView = toolBar
     }
 }
+
+extension UIButton {
+    func setAtributedTextWithImagePrefix(image: UIImage, text: String, for state: UIControl.State) {
+        let fullString = NSMutableAttributedString()
+        let imageString = getImageAttributedString(image: image)
+        fullString.append(imageString)
+        fullString.append(NSAttributedString(string: "  " + text))
+        self.attributedTitle(for: state)
+    }
+    func getImageAttributedString(image: UIImage) -> NSAttributedString {
+        let buttonHeight = self.frame.height
+        let resizedImage = image.getResizedWithAspect(maxHeight: buttonHeight - 10)
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.bounds = CGRect(x: 0, y: ((self.titleLabel?.font.capHeight)! - resizedImage!.size.height).rounded() / 2, width: resizedImage!.size.width, height: resizedImage!.size.height)
+        imageAttachment.image = resizedImage
+        let image1String = NSAttributedString(attachment: imageAttachment)
+        return image1String
+        
+    }
+}
+
+extension UIImage {
+    func getResized(size: CGSize) -> UIImage? {
+        if UIScreen.main.responds(to: #selector(NSDecimalNumberBehaviors.scale)) {
+            UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+        } else {
+            UIGraphicsBeginImageContext(size)
+        }
+        self.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    func getResizedWithAspect(scaleToMaxWidth width: CGFloat? = nil, maxHeight height: CGFloat? = nil) -> UIImage? {
+        let oldWidth = self.size.width
+        let oldHeight = self.size.height
+        var scaleToWidth = oldWidth
+        if let width = width {
+            scaleToWidth = width
+        }
+        var scaleToHeight = oldHeight
+        if let height = height {
+            scaleToHeight = height
+        }
+        let scaleFactor = (oldWidth > oldHeight) ? scaleToWidth / oldWidth : scaleToHeight / oldHeight
+        let newHeight = oldHeight * scaleFactor
+        let newWidth = oldWidth * scaleFactor
+        let newSize = CGSize(width: newWidth, height: newHeight)
+        return getResized(size: newSize)
+    }
+        
+}
