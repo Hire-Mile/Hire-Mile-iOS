@@ -30,6 +30,7 @@
 		784B6023256ED04C0024F4C8 /* MyReviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B6022256ED04C0024F4C8 /* MyReviews.swift */; };
 		786A33212565931300B58265 /* CategoryPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A33202565931300B58265 /* CategoryPostController.swift */; };
 		786A3323256596E700B58265 /* FilterLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A3322256596E700B58265 /* FilterLauncher.swift */; };
+		787013402579721A0019C24A /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7870133F2579721A0019C24A /* Camera.swift */; };
 		787B0181256838E400BBC392 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B0180256838E400BBC392 /* Settings.swift */; };
 		787B018425685BD600BBC392 /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018325685BD600BBC392 /* EditProfile.swift */; };
 		787B018825685BE600BBC392 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018725685BE600BBC392 /* Email.swift */; };
@@ -69,6 +70,7 @@
 		784B6022256ED04C0024F4C8 /* MyReviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviews.swift; sourceTree = "<group>"; };
 		786A33202565931300B58265 /* CategoryPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPostController.swift; sourceTree = "<group>"; };
 		786A3322256596E700B58265 /* FilterLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLauncher.swift; sourceTree = "<group>"; };
+		7870133F2579721A0019C24A /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		787B0180256838E400BBC392 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		787B018325685BD600BBC392 /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
 		787B018725685BE600BBC392 /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				784646F22562D45D000C5F26 /* Home */,
 				784646ED2562ADFC000C5F26 /* Chat.swift */,
 				784646EF2562CAEA000C5F26 /* Post.swift */,
+				7870133F2579721A0019C24A /* Camera.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
 				78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */,
 				784B6023256ED04C0024F4C8 /* MyReviews.swift in Sources */,
+				787013402579721A0019C24A /* Camera.swift in Sources */,
 				78AD20FD25724B0B004A1487 /* CashOutLauncher.swift in Sources */,
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
 				78277F822576C78C00B8C7BD /* SearchController.swift in Sources */,
@@ -545,14 +549,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.02;
+				MARKETING_VERSION = 1.03;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
@@ -567,14 +571,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.02;
+				MARKETING_VERSION = 1.03;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;

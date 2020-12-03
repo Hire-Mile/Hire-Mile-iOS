@@ -42,7 +42,7 @@ class TabBarController: UITabBarController {
     }
     
     @objc func openPost() {
-        let controller = Post()
+        let controller = Camera()
         controller.modalPresentationStyle = .overFullScreen
         self.present(controller, animated: true, completion: nil)
     }
