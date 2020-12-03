@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import Photos
+import AVFoundation
 
 class Camera: UIViewController {
+    
+    var timer : Timer?
+    
+    var imageArray = [UIImage]()
 
     let cameraButtonView : UIView = {
         let view = UIView()
@@ -56,21 +62,26 @@ class Camera: UIViewController {
         return button
     }()
 
-//    let xButton : UIButton = {
-//        let button = UIButton()
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setImage(UIImage(named: "xmark"), for: .normal)
-//        button.tintColor = UIColor.white
-//        button.addTarget(self, action: #selector(xmarktouched), for: .touchUpInside)
-//        return button
-//    }()
+    let cameraRollButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor.white
+        button.layer.cornerRadius = 21
+        button.clipsToBounds = true
+        button.backgroundColor = UIColor.blue
+        button.addTarget(self, action: #selector(xmarktouched), for: .touchUpInside)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
+        
         self.view.backgroundColor = UIColor.black
 
-        setupUI()
+        self.setupUI()
+        self.grabPhotos()
 //        setupCaptureSession()
 //        setupDevice()
 //        setupInputOutput()
@@ -112,7 +123,19 @@ class Camera: UIViewController {
         self.buttonShutterButton.rightAnchor.constraint(equalTo: self.cameraButtonView.rightAnchor).isActive = true
         self.buttonShutterButton.bottomAnchor.constraint(equalTo: self.cameraButtonView.bottomAnchor).isActive = true
         
+        self.view.addSubview(cameraRollButton)
+        cameraRollButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
+        cameraRollButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
+        cameraRollButton.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        cameraRollButton.heightAnchor.constraint(equalToConstant: 42).isActive = true
         // button set image, last from camera roll
+        // button action tapped
+    }
+    
+    @objc func timerFunction() {
+        print("cam roll checking")
+        self.cameraRollButton.setImage(imageArray.first!, for: .normal)
+        print(imageArray.count)
     }
 
 //    func setupCaptureSession() {
@@ -153,6 +176,26 @@ class Camera: UIViewController {
 //    func startRunningCaptureSession() {
 //        captureSession.startRunning()
 //    }
+    
+    func grabPhotos() {
+        let imgManager = PHImageManager.default()
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        requestOptions.deliveryMode = .highQualityFormat
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        if let fetchResult : PHFetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions) {
+            if fetchResult.count > 0 {
+                for _ in 0..<fetchResult.count {
+                    imgManager.requestImage(for: fetchResult.object(at: 1), targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: requestOptions) { (image, error) in
+                        self.imageArray.append(image!)
+                    }
+                }
+            } else {
+                print("no photos")
+            }
+        }
+    }
 
     @objc func buttonShutterButtonPressed() {
         print("hi")
