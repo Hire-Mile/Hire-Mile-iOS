@@ -8,10 +8,18 @@
 
 import UIKit
 
-class TabBarController: UITabBarController {
+class TabBarController: UITabBarController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    let imagePicker = UIImagePickerController()
+    
+    var passingImage : UIImage?
+    
+    var timer : Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
         
         tabBar.tintColor = UIColor.mainBlue
         
@@ -42,9 +50,45 @@ class TabBarController: UITabBarController {
     }
     
     @objc func openPost() {
-        let controller = Camera()
-        controller.modalPresentationStyle = .overFullScreen
-        self.present(controller, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Choose Your Source", message: "Where should you get your cover photo from?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
+            self.imagePicker.sourceType = .photoLibrary
+            self.imagePicker.allowsEditing = true
+            self.imagePicker.delegate = self
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = .camera
+            imagePicker.allowsEditing = true
+            self.present(imagePicker, animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.imagePicker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let editedImage = info[.editedImage] as? UIImage {
+            self.passingImage = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            self.passingImage = originalImage
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func timerFunction() {
+        if self.passingImage != nil {
+            GlobalVariables.postImage = passingImage!
+            let controller = Post()
+            controller.modalPresentationStyle = .fullScreen
+            timer?.invalidate()
+            self.present(controller, animated: true, completion: nil)
+        }
     }
 
 }

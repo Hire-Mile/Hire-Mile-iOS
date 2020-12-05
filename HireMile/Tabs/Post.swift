@@ -194,6 +194,8 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         self.applyButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         // func here
+        
+        self.backgroundImage.image = GlobalVariables.postImage
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

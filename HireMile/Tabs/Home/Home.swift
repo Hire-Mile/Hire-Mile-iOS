@@ -187,7 +187,6 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func timerFunction() {
-        print("hello")
         if GlobalVariables.presentToCat == true {
             self.navigationController?.pushViewController(CategoryPostController(), animated: true)
             GlobalVariables.presentToCat = false

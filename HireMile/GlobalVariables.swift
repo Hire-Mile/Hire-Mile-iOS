@@ -12,5 +12,6 @@ class GlobalVariables: NSObject {
     
     static var isCheckedOut = false
     static var presentToCat = false
+    static var postImage = UIImage()
 
 }
