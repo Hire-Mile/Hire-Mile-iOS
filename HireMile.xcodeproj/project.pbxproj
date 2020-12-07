@@ -194,9 +194,8 @@
 				784646E92562ADB9000C5F26 /* TabBarController.swift */,
 				787B0182256838E800BBC392 /* Menu Bar */,
 				784646F22562D45D000C5F26 /* Home */,
+				78FE863D257D603D00E5D758 /* Post */,
 				784646ED2562ADFC000C5F26 /* Chat.swift */,
-				784646EF2562CAEA000C5F26 /* Post.swift */,
-				7870133F2579721A0019C24A /* Camera.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -255,6 +254,15 @@
 				78AD20FC25724B0B004A1487 /* CashOutLauncher.swift */,
 			);
 			path = Payment;
+			sourceTree = "<group>";
+		};
+		78FE863D257D603D00E5D758 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				784646EF2562CAEA000C5F26 /* Post.swift */,
+				7870133F2579721A0019C24A /* Camera.swift */,
+			);
+			path = Post;
 			sourceTree = "<group>";
 		};
 		D33A66BA080644870A7C7518 /* Frameworks */ = {
