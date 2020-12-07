@@ -12,6 +12,10 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let titles = ["Cash Out", "Cash In"]
     let descriptions = ["You have cashed out $253 to your wallet from HireMile", "You have cashed in $500 to your HireMile wallet"]
+    
+    let messageTitles = ["Mary Smith", "John Doe"]
+    let messageDescriptions = ["Amazing, you did a great job", "I have finished!"]
+    let hasSeen = [true, false]
         
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -99,6 +103,18 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if segmentedControl.selectedSegmentIndex == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myMessagesCellID", for: indexPath) as! MessagesCellCell
+            cell.profileImageView.image = UIImage(named: "profilepic")
+            cell.textLabel?.text = messageTitles[indexPath.row]
+            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+            cell.detailTextLabel?.isHidden = false
+            if self.hasSeen[indexPath.row] == false {
+                print("hello")
+            } else {
+                cell.hasSeenView.removeFromSuperview()
+                cell.timeStamp.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
+            }
+            cell.detailTextLabel?.textColor = UIColor.darkGray
+            cell.detailTextLabel?.text = messageDescriptions[indexPath.row]
             return cell
         } else if segmentedControl.selectedSegmentIndex == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myNotificationsCellID", for: indexPath) as! NotificationCell
@@ -117,7 +133,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if segmentedControl.selectedSegmentIndex == 0 {
-            return 110
+            return 80
         } else if segmentedControl.selectedSegmentIndex == 1 {
             return 90
         } else {
@@ -172,9 +188,6 @@ class NotificationCell: UITableViewCell {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         addSubview(profileImageView)
-        
-        //ios 9 constraint anchors
-        //need x,y,width,height anchors
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
@@ -188,9 +201,64 @@ class NotificationCell: UITableViewCell {
 
 class MessagesCellCell: UITableViewCell {
     
+    let profileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 24
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    let timeStamp : UILabel = {
+        let label = UILabel()
+        label.text = "10 mins"
+        label.textAlignment = NSTextAlignment.right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 10)
+        label.textColor = UIColor.darkGray
+        return label
+    }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
+        detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y + 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
+    }
+    
+    let hasSeenView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.mainBlue
+        view.layer.cornerRadius = 12.5
+        view.clipsToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .orange
+        
+        addSubview(profileImageView)
+        
+        //ios 9 constraint anchors
+        //need x,y,width,height anchors
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        addSubview(hasSeenView)
+        hasSeenView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
+        hasSeenView.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 10).isActive = true
+        hasSeenView.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        hasSeenView.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        addSubview(timeStamp)
+        timeStamp.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
+        timeStamp.bottomAnchor.constraint(equalTo: self.hasSeenView.topAnchor, constant: -5).isActive = true
+        timeStamp.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        timeStamp.heightAnchor.constraint(equalToConstant: 15).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
