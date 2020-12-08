@@ -7,9 +7,18 @@
 //
 
 import UIKit
+import Firebase
+import Foundation
+import FirebaseAuth
 import AuthenticationServices
+import FirebaseDatabase
+import MBProgressHUD
+import CryptoKit
 
-class SignUp: UIViewController {
+class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate, UITextFieldDelegate {
+    
+    var currentNonce: String?
+    var largeName = ""
     
     let welcomeLabel : UILabel = {
         let label = UILabel()
@@ -164,11 +173,15 @@ class SignUp: UIViewController {
     }
     
     @objc func applePressed() {
-        print("apple pressed")
+        signUpWithApple()
     }
     
     @objc func signUpPressed() {
-        print("sign up")
+        if self.nameTextField.text! == "" && self.emailTextField.text! == "" && self.passwordTextField.text! == "" {
+            print("cannot go ")
+        } else {
+            self.signUpWith(name: self.nameTextField.text!, email: self.emailTextField.text!, password: self.passwordTextField.text!)
+        }
     }
     
     func basicSetup() {
@@ -183,6 +196,143 @@ class SignUp: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    func signUpWith(name: String?, email: String?, password: String?) {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        Auth.auth().createUser(withEmail: email!, password: password!) { result, error in
+            if error == nil {
+                let infoToAdd : Dictionary<String, Any> = [
+                                                            "name" : "\(name!)",
+                                                            "email" : "\(email!)",
+                                                            "password" : "\(password!)",
+                                                            "profile-image" : "not-yet-selected"
+                                                        ]
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
+                MBProgressHUD.hide(for: self.view, animated: true)
+                let controller = TabBarController()
+                controller.modalPresentationStyle = .fullScreen
+                self.present(controller, animated: true, completion: nil)
+            } else {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                let alert = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    @objc func signUpWithApple() {
+        let alertController = UIAlertController(title: "We need your name!", message: "How should we refer to you?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let ok = UIAlertAction(title: "Next", style: .default) { (action: UIAlertAction) -> Void in
+            let usersName = alertController.textFields![0].text!
+            self.largeName = usersName
+            self.dismiss(animated: true, completion: nil)
+            let nonce = self.randomNonceString()
+            self.currentNonce = nonce
+            let appleIDProvider = ASAuthorizationAppleIDProvider()
+            let request = appleIDProvider.createRequest()
+            request.requestedScopes = [.fullName, .email]
+            request.nonce = self.sha256(nonce)
+            let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+            authorizationController.delegate = self
+            authorizationController.presentationContextProvider = self
+            authorizationController.performRequests()
+        }
+        alertController.addTextField { (textField : UITextField) in
+            textField.placeholder = "Name"
+            textField.delegate = self
+        }
+        alertController.addAction(cancel)
+        alertController.addAction(ok)
+        self.present(alertController, animated: true, completion: nil)
+    }
+
+    func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            return String(format: "%02x", $0)
+        }.joined()
+        return hashString
+    }
+
+    func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        let charset: Array<Character> =
+            Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        var result = ""
+        var remainingLength = length
+        while remainingLength > 0 {
+            let randoms: [UInt8] = (0 ..< 16).map { _ in
+                var random: UInt8 = 0
+                let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+                if errorCode != errSecSuccess {
+                    fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+                }
+                return random
+            }
+            randoms.forEach { random in
+                if remainingLength == 0 {
+                    return
+                }
+                if random < charset.count {
+                    result.append(charset[Int(random)])
+                    remainingLength -= 1
+                }
+            }
+        }
+        return result
+    }
+
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
+
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard let nonce = currentNonce else {
+                fatalError("Invalid state: A login callback was received, but no login request was sent.")
+            }
+            guard let appleIDToken = appleIDCredential.identityToken else {
+                print("Unable to fetch identity token")
+                return
+            }
+            guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                return
+            }
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
+            print("Up To Firebase Now")
+            Auth.auth().signIn(with: credential) { (authResult, error) in
+                if error != nil {
+                    print(error!.localizedDescription)
+                    return
+                }
+                MBProgressHUD.showAdded(to: self.view, animated: true)
+                print("Fine")
+                let infoToAdd : Dictionary<String, Any> = [
+                                                            "name" : "\(self.largeName)",
+                                                            "email" : "\(Auth.auth().currentUser!.email)",
+                                                            "profile-image" : "not-yet-selected"
+                                                        ]
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
+                MBProgressHUD.hide(for: self.view, animated: true)
+                let controller = TabBarController()
+                controller.modalPresentationStyle = .fullScreen
+                self.present(controller, animated: true, completion: nil)
+            }
+        }
+    }
+
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("Sign in with Apple errored: \(error)")
+        let errror = error.localizedDescription
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        print("Sign in with Apple errored: \(errror)")
     }
 
 }
