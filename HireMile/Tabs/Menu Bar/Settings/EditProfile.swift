@@ -14,7 +14,8 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "onboarding3")
+//        imageView.image = UIImage(named: "onboarding3")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 50

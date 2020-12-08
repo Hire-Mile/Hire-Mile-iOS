@@ -13,7 +13,8 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "profilepic")
+//        imageView.image = UIImage(named: "profilepic")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.layer.cornerRadius = 37.5
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill

@@ -251,11 +251,11 @@ class Payment: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "paymentCellID", for: indexPath) as! PaymentCell
-        cell.textLabel?.text = "Mary Jane"
-        cell.detailTextLabel?.text = "Paid you for a haircut"
+        cell.textLabel?.text = "Name"
+        cell.detailTextLabel?.text = "Description"
         cell.detailTextLabel?.textColor = UIColor.lightGray
         cell.selectionStyle = .none
-        cell.profileImageView.image = UIImage(named: "woman-profile")
+        cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return cell
     }
     
@@ -306,13 +306,14 @@ class PaymentCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 24
         imageView.layer.masksToBounds = true
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
     let amountSpentOrEarned : UILabel = {
         let label = UILabel()
-        label.text = "+ $45"
+        label.text = "+ $$"
         label.textAlignment = NSTextAlignment.right
         label.textColor = UIColor.darkGray
         label.font = UIFont.boldSystemFont(ofSize: 16)

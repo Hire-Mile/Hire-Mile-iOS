@@ -13,10 +13,10 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let carousel : ZKCarousel = {
         let carousel = ZKCarousel()
-        let firstSlide = ZKCarouselSlide(image: UIImage(named: "working"), title: "", description: "")
-        let secondSlide = ZKCarouselSlide(image: UIImage(named: "working"), title: "", description: "")
-        let thirdSlide = ZKCarouselSlide(image: UIImage(named: "working"), title: "", description: "")
-        let fourthSlide = ZKCarouselSlide(image: UIImage(named: "working"), title: "", description: "")
+        let firstSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
+        let secondSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
+        let thirdSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
+        let fourthSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
         carousel.slides = [firstSlide, secondSlide, thirdSlide, fourthSlide]
         carousel.translatesAutoresizingMaskIntoConstraints = false
         return carousel
@@ -35,7 +35,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let titleLabel : UILabel = {
         let label = UILabel()
-        label.text = "Car Repair"
+        label.text = "Job Title"
         label.font = UIFont.boldSystemFont(ofSize: 23)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -46,7 +46,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let descriptionLabel : UILabel = {
         let label = UILabel()
-        label.text = "Expert at changing tires"
+        label.text = "Job Description"
         label.font = UIFont.systemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -57,7 +57,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let priceLabel : UILabel = {
         let label = UILabel()
-        label.text = "$30"
+        label.text = "Price"
         label.font = UIFont.systemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -68,7 +68,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let profileImage : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "woman-profile")
+//        imageView.image = UIImage(named: "woman-profile")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 25
@@ -94,8 +95,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let seeAllButton : UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(red: 242/255, green: 235/255, blue: 235/255, alpha: 1)
-        button.setTitleColor(UIColor(red: 131/255, green: 131/255, blue: 131/255, alpha: 1), for: .normal)
+        button.backgroundColor = .mainBlue
+        button.setTitleColor(.white, for: .normal)
         button.setTitle("SEND", for: .normal)
         button.addTarget(self, action: #selector(sendPressed), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)

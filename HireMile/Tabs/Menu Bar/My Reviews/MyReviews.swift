@@ -61,8 +61,6 @@ class MyReviews: UITableViewController {
  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reviewsCellID", for: indexPath) as! MyReviewsCell
-        cell.profileImageView.backgroundColor = .green
-        cell.profileImageView.image = UIImage(named: "profilepic")
         cell.selectionStyle = .none
         return cell
     }
@@ -92,6 +90,7 @@ class MyReviewsCell: UITableViewCell {
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 30
         imageView.layer.masksToBounds = true
@@ -101,7 +100,7 @@ class MyReviewsCell: UITableViewCell {
     
     let userNameLabel : UILabel = {
         let label = UILabel()
-        label.text = "John Doe"
+        label.text = "Name"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -151,7 +150,7 @@ class MyReviewsCell: UITableViewCell {
     
     let reviewLabel : UILabel = {
         let label = UILabel()
-        label.text = "He's a laborius worker, finished everytime, and recommend him to all"
+        label.text = "Description"
         label.numberOfLines = 3
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.left
@@ -162,7 +161,8 @@ class MyReviewsCell: UITableViewCell {
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "working")
+//        imageView.image = UIImage(named: "working")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 15
@@ -172,7 +172,7 @@ class MyReviewsCell: UITableViewCell {
     
     let priceDateLabel : UILabel = {
         let label = UILabel()
-        label.text = "$30, 24 Feb. 2018"
+        label.text = "Price, Info"
         label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
