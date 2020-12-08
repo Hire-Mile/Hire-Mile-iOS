@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>830456861739-ck7auf95qp1ho36i56cvfclgbfsi0506.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.830456861739-ck7auf95qp1ho36i56cvfclgbfsi0506</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA_4CZ9HTc_7JBCZB1r4MPJsWpQX4_2dUc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>830456861739</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>Jorge-Zapata.HireMile</string>
+	<key>PROJECT_ID</key>
+	<string>hiremile-aaacc</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hiremile-aaacc.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:830456861739:ios:2df9c79c30b5e96593866e</string>
+	<key>DATABASE_URL</key>
+	<string>https://hiremile-aaacc.firebaseio.com</string>
+</dict>
+</plist>

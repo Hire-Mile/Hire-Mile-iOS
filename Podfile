@@ -8,5 +8,15 @@ target 'HireMile' do
   # Pods for HireMile
   pod 'SideMenu'
   pod 'ZKCarousel'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
+  pod 'SVProgressHUD'
+  pod 'MBProgressHUD'
+  pod 'NVActivityIndicatorView'
+  pod 'GoogleSignIn'
+  pod 'BulletinBoard'
+  pod 'STPopup'
 
 end
