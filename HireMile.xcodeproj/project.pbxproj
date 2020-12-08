@@ -34,6 +34,7 @@
 		787B0181256838E400BBC392 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B0180256838E400BBC392 /* Settings.swift */; };
 		787B018425685BD600BBC392 /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018325685BD600BBC392 /* EditProfile.swift */; };
 		787B018825685BE600BBC392 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018725685BE600BBC392 /* Email.swift */; };
+		7886ED38258018A400260D2F /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7886ED37258018A400260D2F /* Firebase.swift */; };
 		788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B1257E9C1F002AF9CB /* CashInAlert.swift */; };
 		788D44B5257EA25D002AF9CB /* FavoriteRemoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */; };
 		788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */; };
@@ -78,6 +79,7 @@
 		787B0180256838E400BBC392 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		787B018325685BD600BBC392 /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
 		787B018725685BE600BBC392 /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
+		7886ED37258018A400260D2F /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		788D44B1257E9C1F002AF9CB /* CashInAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashInAlert.swift; sourceTree = "<group>"; };
 		788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRemoveView.swift; sourceTree = "<group>"; };
 		788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSuccess.swift; sourceTree = "<group>"; };
@@ -166,8 +168,7 @@
 				784646E325629499000C5F26 /* Hiremile.entitlements */,
 				784646C62561B841000C5F26 /* AppDelegate.swift */,
 				784646C82561B841000C5F26 /* SceneDelegate.swift */,
-				784646E125626F79000C5F26 /* Helpers.swift */,
-				78AD20FE25724C17004A1487 /* GlobalVariables.swift */,
+				7886ED352580189700260D2F /* Reference */,
 				784646E025626EEB000C5F26 /* Onboarding */,
 				784646E425629A84000C5F26 /* Auth */,
 				784646F12562D436000C5F26 /* Tabs */,
@@ -256,6 +257,16 @@
 				788D44B1257E9C1F002AF9CB /* CashInAlert.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		7886ED352580189700260D2F /* Reference */ = {
+			isa = PBXGroup;
+			children = (
+				784646E125626F79000C5F26 /* Helpers.swift */,
+				78AD20FE25724C17004A1487 /* GlobalVariables.swift */,
+				7886ED37258018A400260D2F /* Firebase.swift */,
+			);
+			path = Reference;
 			sourceTree = "<group>";
 		};
 		78B793C225703FAB00EFA7D1 /* My Reviews */ = {
@@ -432,6 +443,7 @@
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
 				78008CD72569B8E4005E4A15 /* Password.swift in Sources */,
+				7886ED38258018A400260D2F /* Firebase.swift in Sources */,
 				787B018425685BD600BBC392 /* EditProfile.swift in Sources */,
 				78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */,
 				786A3323256596E700B58265 /* FilterLauncher.swift in Sources */,
