@@ -156,7 +156,8 @@ class SignIn: UIViewController {
     }
     
     @objc func forgotPasswordPressed() {
-        navigationController?.pushViewController(ForgotPassword(), animated: true)
+        let controller = ForgotPassword()
+        self.present(controller, animated: true, completion: nil)
     }
     
     @objc func loginPressed() {
