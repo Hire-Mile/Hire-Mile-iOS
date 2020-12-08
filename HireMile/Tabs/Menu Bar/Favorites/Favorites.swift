@@ -10,6 +10,8 @@ import UIKit
 
 class Favorites: UITableViewController {
     
+    let removeView = FavoriteRemoveView()
+    
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.tintColor = UIColor.black
@@ -69,25 +71,15 @@ class Favorites: UITableViewController {
         cell.detailTextLabel?.textColor = UIColor.darkGray
         cell.detailTextLabel?.text = "iOS Developer"
         cell.favoriteButton.imageView?.contentMode = .scaleAspectFill
-        cell.favoriteButton.addTarget(self, action: #selector(unheartTapped), for: .touchUpInside)
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.navigationController?.pushViewController(OtherProfile(), animated: true)
+        removeView.showFilter()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
-    }
-    
-    @objc func unheartTapped() {
-        let alert = UIAlertController(title: "Remove from favorites?", message: "Are you want to remove Jorge Zapata?", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
-            print("deleted")
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
     }
     
     @objc func refreshAction() {

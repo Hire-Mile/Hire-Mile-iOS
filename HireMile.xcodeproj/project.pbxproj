@@ -34,6 +34,9 @@
 		787B0181256838E400BBC392 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B0180256838E400BBC392 /* Settings.swift */; };
 		787B018425685BD600BBC392 /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018325685BD600BBC392 /* EditProfile.swift */; };
 		787B018825685BE600BBC392 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018725685BE600BBC392 /* Email.swift */; };
+		788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B1257E9C1F002AF9CB /* CashInAlert.swift */; };
+		788D44B5257EA25D002AF9CB /* FavoriteRemoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */; };
+		788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */; };
 		78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FA25723E4D004A1487 /* AddCard.swift */; };
 		78AD20FD25724B0B004A1487 /* CashOutLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FC25724B0B004A1487 /* CashOutLauncher.swift */; };
 		78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FE25724C17004A1487 /* GlobalVariables.swift */; };
@@ -74,6 +77,9 @@
 		787B0180256838E400BBC392 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		787B018325685BD600BBC392 /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
 		787B018725685BE600BBC392 /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
+		788D44B1257E9C1F002AF9CB /* CashInAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashInAlert.swift; sourceTree = "<group>"; };
+		788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRemoveView.swift; sourceTree = "<group>"; };
+		788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSuccess.swift; sourceTree = "<group>"; };
 		78AD20FA25723E4D004A1487 /* AddCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCard.swift; sourceTree = "<group>"; };
 		78AD20FC25724B0B004A1487 /* CashOutLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashOutLauncher.swift; sourceTree = "<group>"; };
 		78AD20FE25724C17004A1487 /* GlobalVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
@@ -121,6 +127,7 @@
 			children = (
 				78DA5A06256B99EC00DFABEB /* Favorites.swift */,
 				78DA5A08256C1CE000DFABEB /* OtherProfile.swift */,
+				788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */,
 			);
 			path = Favorites;
 			sourceTree = "<group>";
@@ -196,6 +203,7 @@
 				784646F22562D45D000C5F26 /* Home */,
 				78FE863D257D603D00E5D758 /* Post */,
 				784646ED2562ADFC000C5F26 /* Chat.swift */,
+				788D44B1257E9C1F002AF9CB /* CashInAlert.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -233,6 +241,7 @@
 				78008CD62569B8E4005E4A15 /* Password.swift */,
 				787B018725685BE600BBC392 /* Email.swift */,
 				78008CD12569B7DA005E4A15 /* ChangePassword.swift */,
+				788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */,
 				78008CD02569B7DA005E4A15 /* ResetPassword.swift */,
 			);
 			path = Settings;
@@ -401,10 +410,12 @@
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				78008CD22569B7DA005E4A15 /* ResetPassword.swift in Sources */,
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
+				788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */,
 				78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */,
 				784B6023256ED04C0024F4C8 /* MyReviews.swift in Sources */,
 				787013402579721A0019C24A /* Camera.swift in Sources */,
 				78AD20FD25724B0B004A1487 /* CashOutLauncher.swift in Sources */,
+				788D44B5257EA25D002AF9CB /* FavoriteRemoveView.swift in Sources */,
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
 				78277F822576C78C00B8C7BD /* SearchController.swift in Sources */,
 				780A7F622562D565009BD93A /* Home.swift in Sources */,
@@ -413,6 +424,7 @@
 				78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */,
 				787B0181256838E400BBC392 /* Settings.swift in Sources */,
 				78AD2101257290B1004A1487 /* MyJobs.swift in Sources */,
+				788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */,
 				78B793C425703FBF00EFA7D1 /* Payment.swift in Sources */,
 				784646EE2562ADFC000C5F26 /* Chat.swift in Sources */,
 				784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */,
@@ -564,7 +576,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.03;
+				MARKETING_VERSION = 1.04;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
@@ -586,7 +598,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.03;
+				MARKETING_VERSION = 1.04;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;

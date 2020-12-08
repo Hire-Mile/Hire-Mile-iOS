@@ -10,6 +10,8 @@ import UIKit
 
 class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    let cashInAlert = CashInAlert()
+    
     let titles = ["Cash Out", "Cash In"]
     let descriptions = ["You have cashed out $253 to your wallet from HireMile", "You have cashed in $500 to your HireMile wallet"]
     
@@ -145,10 +147,8 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if segmentedControl.selectedSegmentIndex == 0 {
             print("open conversaton")
         } else if segmentedControl.selectedSegmentIndex == 1 {
-            let alert = UIAlertController(title: titles[indexPath.row], message: descriptions[indexPath.row], preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
         } else {
+            //
         }
     }
     

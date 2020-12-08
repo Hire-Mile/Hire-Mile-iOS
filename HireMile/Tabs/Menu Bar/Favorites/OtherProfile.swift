@@ -201,7 +201,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! MyProfileCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
         return cell
     }
     
