@@ -144,7 +144,7 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Hello, this needs to be complete :) ")
+        seeAllPressedRow()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -169,6 +169,11 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @objc func seeAllPressed() {
         print("touched see all!")
+        navigationController?.pushViewController(CategoryPostController(), animated: true)
+    }
+    
+    func seeAllPressedRow() {
+        print("touched see all row!")
         navigationController?.pushViewController(CategoryPostController(), animated: true)
     }
     
