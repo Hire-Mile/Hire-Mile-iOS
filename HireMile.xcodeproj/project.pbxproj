@@ -205,8 +205,7 @@
 				787B0182256838E800BBC392 /* Menu Bar */,
 				784646F22562D45D000C5F26 /* Home */,
 				78FE863D257D603D00E5D758 /* Post */,
-				784646ED2562ADFC000C5F26 /* Chat.swift */,
-				788D44B1257E9C1F002AF9CB /* CashInAlert.swift */,
+				7886ED3125800A0600260D2F /* Chat */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -248,6 +247,15 @@
 				78008CD02569B7DA005E4A15 /* ResetPassword.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		7886ED3125800A0600260D2F /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				784646ED2562ADFC000C5F26 /* Chat.swift */,
+				788D44B1257E9C1F002AF9CB /* CashInAlert.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		78B793C225703FAB00EFA7D1 /* My Reviews */ = {

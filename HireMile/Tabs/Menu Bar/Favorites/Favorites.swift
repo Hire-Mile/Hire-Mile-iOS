@@ -63,13 +63,12 @@ class Favorites: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoritesCellID", for: indexPath) as! FavoritesCell
-        cell.profileImageView.backgroundColor = .green
-        cell.profileImageView.image = UIImage(named: "profilepic")
-        cell.textLabel?.text = "Jorge Zapata"
+        cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        cell.textLabel?.text = "Name"
         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         cell.detailTextLabel?.isHidden = false
         cell.detailTextLabel?.textColor = UIColor.darkGray
-        cell.detailTextLabel?.text = "iOS Developer"
+        cell.detailTextLabel?.text = "Position"
         cell.favoriteButton.imageView?.contentMode = .scaleAspectFill
         return cell
     }

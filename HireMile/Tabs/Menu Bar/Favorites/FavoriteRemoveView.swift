@@ -60,7 +60,7 @@ class FavoriteRemoveView: NSObject {
     let nameTitle : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Mary Jane"
+        label.text = "Name"
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 32)
@@ -71,7 +71,8 @@ class FavoriteRemoveView: NSObject {
     let profileImage : UIImageView = {
         let iv = UIImageView()
         iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.image = UIImage(named: "profilepic")
+//        iv.image = UIImage(named: "profilepic")
+        iv.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = 37.5
         iv.clipsToBounds = true

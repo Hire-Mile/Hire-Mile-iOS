@@ -12,11 +12,11 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let cashInAlert = CashInAlert()
     
-    let titles = ["Cash Out", "Cash In"]
-    let descriptions = ["You have cashed out $253 to your wallet from HireMile", "You have cashed in $500 to your HireMile wallet"]
+    let titles = ["Style", "Style"]
+    let descriptions = ["Message", "Message"]
     
-    let messageTitles = ["Mary Smith", "John Doe"]
-    let messageDescriptions = ["Amazing, you did a great job", "I have finished!"]
+    let messageTitles = ["Name", "Name"]
+    let messageDescriptions = ["Message", "Message"]
     let hasSeen = [true, false]
         
     private let refrshControl : UIRefreshControl = {
@@ -105,7 +105,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if segmentedControl.selectedSegmentIndex == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myMessagesCellID", for: indexPath) as! MessagesCellCell
-            cell.profileImageView.image = UIImage(named: "profilepic")
+            cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
             cell.textLabel?.text = messageTitles[indexPath.row]
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
             cell.detailTextLabel?.isHidden = false
@@ -172,7 +172,7 @@ class NotificationCell: UITableViewCell {
         super.layoutSubviews()
         
         textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
-        detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y - 2, width: detailTextLabel!.frame.width - 30, height: detailTextLabel!.frame.height)
+        detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y - 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
     }
     
     let profileImageView: UIImageView = {

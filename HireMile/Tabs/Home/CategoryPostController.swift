@@ -61,7 +61,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
-        self.navigationController?.navigationBar.topItem?.title = "Popular"
+        self.navigationController?.navigationBar.topItem?.title = "Title"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(filterPressed))
 
         self.tableView.delegate = self
@@ -110,7 +110,8 @@ class CategoryCell: UITableViewCell {
 
     let titleImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "haircut")
+//        imageView.image = UIImage(named: "haircut")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 20
@@ -143,7 +144,7 @@ class CategoryCell: UITableViewCell {
 
     let priceTag : UILabel = {
         let label = UILabel()
-        label.text = "$30"
+        label.text = "Price"
         label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         label.textColor = UIColor.mainBlue
         label.numberOfLines = 1
@@ -155,7 +156,7 @@ class CategoryCell: UITableViewCell {
 
     let titleLabel : UILabel = {
         let label = UILabel()
-        label.text = "Mens Haircut"
+        label.text = "Title"
         label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         label.textColor = UIColor.black
         label.numberOfLines = 1
@@ -166,7 +167,8 @@ class CategoryCell: UITableViewCell {
 
     let locationAndTime : UILabel = {
         let label = UILabel()
-        label.text = "3.5mi away  -  10 min ago"
+//        label.text = "3.5mi away  -  10 min ago"
+        label.text = "Info"
         label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = UIColor.white
         label.numberOfLines = 1

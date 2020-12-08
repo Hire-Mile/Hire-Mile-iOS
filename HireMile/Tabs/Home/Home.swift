@@ -56,7 +56,7 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var menu : SideMenuNavigationController?
     
-    let titles = ["Nearby Services", "Newest Posts", "Web Design & Dev", "Auto Repair"]
+    let titles = ["Cat. Name", "Cat. Name", "Cat. Name", "Cat. Name"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,12 +69,6 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
         
         // Do any additional setup after loading the view.
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        print("je;;;pt")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -163,17 +157,14 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func servicePressed() {
-        print("touched service!")
         navigationController?.pushViewController(ViewPostController(), animated: true)
     }
     
     @objc func seeAllPressed() {
-        print("touched see all!")
         navigationController?.pushViewController(CategoryPostController(), animated: true)
     }
     
     func seeAllPressedRow() {
-        print("touched see all row!")
         navigationController?.pushViewController(CategoryPostController(), animated: true)
     }
     
@@ -250,7 +241,8 @@ class HomeCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "working")
+//        imageView.image = UIImage(named: "working")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return imageView
     }()
     
@@ -258,7 +250,8 @@ class HomeCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "designing")
+//        imageView.image = UIImage(named: "designing")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return imageView
     }()
     
@@ -269,7 +262,7 @@ class HomeCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "1 Mile Away"
+//        label.text = "1 Mile Away"
         return label
     }()
     
@@ -280,7 +273,7 @@ class HomeCell: UITableViewCell {
         label.textAlignment = NSTextAlignment.left
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "1 Mile Away"
+//        label.text = "1 Mile Away"
         return label
     }()
     
@@ -288,7 +281,7 @@ class HomeCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor(red: 87/255, green: 87/255, blue: 87/255, alpha: 1)
         label.font = UIFont.boldSystemFont(ofSize: 13)
-        label.text = "Car Repair"
+        label.text = "Title"
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = NSTextAlignment.left
@@ -299,7 +292,7 @@ class HomeCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor(red: 87/255, green: 87/255, blue: 87/255, alpha: 1)
         label.font = UIFont.boldSystemFont(ofSize: 13)
-        label.text = "Car Repair"
+        label.text = "Title"
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = NSTextAlignment.left
@@ -310,7 +303,7 @@ class HomeCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
-        label.text = "$850"
+        label.text = "Price"
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = NSTextAlignment.left
@@ -321,7 +314,7 @@ class HomeCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
-        label.text = "$850"
+        label.text = "Price"
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = NSTextAlignment.left
@@ -498,17 +491,16 @@ class SideMenuCell : UITableViewCell {
     
     let profileImage : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.crop.circle.fill")
         imageView.tintColor = UIColor.lightGray
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
     }()
     
     let nameLabel : UILabel = {
         let label = UILabel()
-        label.text = "Henry Correa"
+        label.text = "Name"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.heavy)
         label.textColor = UIColor.black
@@ -555,9 +547,11 @@ class SideMenuCell : UITableViewCell {
         
         addSubview(profileImage)
         profileImage.anchor(top: topAnchor, paddingTop: 20, bottom: bottomAnchor, paddingBottom: -60, left: leftAnchor, paddingLeft: 57, right: rightAnchor, paddingRight: -57, width: 0, height: 0)
+        self.profileImage.layer.cornerRadius = 60
+        self.profileImage.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         
         addSubview(nameLabel)
-        nameLabel.anchor(top: profileImage.bottomAnchor, paddingTop: -30, bottom: bottomAnchor, paddingBottom: -10, left: leftAnchor, paddingLeft: 10, right: rightAnchor, paddingRight: -10, width: 0, height: 0)
+        nameLabel.anchor(top: profileImage.bottomAnchor, paddingTop: -10, bottom: bottomAnchor, paddingBottom: -10, left: leftAnchor, paddingLeft: 10, right: rightAnchor, paddingRight: -10, width: 0, height: 0)
         
         addSubview(ratingView)
         ratingView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: -24).isActive = true

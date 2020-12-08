@@ -128,17 +128,17 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if segmentedControl.selectedSegmentIndex == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCellID", for: indexPath) as! MyJobsRunningCell
-            cell.profileImageView.image = UIImage(named: "profilepic")
+//            cell.profileImageView.image = UIImage(named: "profilepic")
             return cell
         } else if segmentedControl.selectedSegmentIndex == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCompletedCellID", for: indexPath) as! MyJobsCompletedgCell
-            cell.profileImageView.backgroundColor = .green
-            cell.profileImageView.image = UIImage(named: "profilepic")
+//            cell.profileImageView.backgroundColor = .green
+//            cell.profileImageView.image = UIImage(named: "profilepic")
             cell.selectionStyle = .none
             return cell
         } else if segmentedControl.selectedSegmentIndex == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCabcekkedCellID", for: indexPath) as! MyJobsCanceledCell
-            cell.profileImageView.image = UIImage(named: "profilepic")
+//            cell.profileImageView.image = UIImage(named: "profilepic")
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCellID", for: indexPath) as! MyJobsRunningCell
@@ -174,6 +174,7 @@ class MyJobsRunningCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 30
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -181,7 +182,7 @@ class MyJobsRunningCell: UITableViewCell {
     
     let userNameLabel : UILabel = {
         let label = UILabel()
-        label.text = "John Doe"
+        label.text = "Name"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -191,7 +192,7 @@ class MyJobsRunningCell: UITableViewCell {
     
     let reviewLabel : UILabel = {
         let label = UILabel()
-        label.text = "Web Designer\n $360"
+        label.text = "Job Title\n Price"
         label.numberOfLines = 3
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.left
@@ -202,7 +203,8 @@ class MyJobsRunningCell: UITableViewCell {
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "working")
+//        imageView.image = UIImage(named: "working")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 15
@@ -212,7 +214,8 @@ class MyJobsRunningCell: UITableViewCell {
     
     let priceDateLabel : UILabel = {
         let label = UILabel()
-        label.text = "24 Feb. 2018"
+//        label.text = "24 Feb. 2018"
+        label.text = "Date"
         label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
@@ -304,13 +307,14 @@ class MyJobsCompletedgCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 30
         imageView.layer.masksToBounds = true
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
     let userNameLabel : UILabel = {
         let label = UILabel()
-        label.text = "John Doe"
+        label.text = "Name"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -360,7 +364,8 @@ class MyJobsCompletedgCell: UITableViewCell {
     
     let reviewLabel : UILabel = {
         let label = UILabel()
-        label.text = "He's a laborius worker, finished everytime, and recommend him to all"
+//        label.text = "He's a laborius worker, finished everytime, and recommend him to all"
+        label.text = "Description"
         label.numberOfLines = 3
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.left
@@ -371,7 +376,8 @@ class MyJobsCompletedgCell: UITableViewCell {
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "working")
+//        imageView.image = UIImage(named: "working")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 15
@@ -381,7 +387,8 @@ class MyJobsCompletedgCell: UITableViewCell {
     
     let priceDateLabel : UILabel = {
         let label = UILabel()
-        label.text = "$30, 24 Feb. 2018"
+//        label.text = "$30, 24 Feb. 2018"
+        label.text = "Date"
         label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
@@ -473,6 +480,7 @@ class MyJobsCanceledCell: UITableViewCell {
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.layer.cornerRadius = 30
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -481,7 +489,7 @@ class MyJobsCanceledCell: UITableViewCell {
     
     let userNameLabel : UILabel = {
         let label = UILabel()
-        label.text = "John Doe"
+        label.text = "Name"
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -491,7 +499,7 @@ class MyJobsCanceledCell: UITableViewCell {
     
     let reviewLabel : UILabel = {
         let label = UILabel()
-        label.text = "Web Designer\nBecause I'm busy now"
+        label.text = "Job Title\nReasoning"
         label.numberOfLines = 3
         label.textColor = UIColor.black
         label.textAlignment = NSTextAlignment.left
@@ -502,7 +510,7 @@ class MyJobsCanceledCell: UITableViewCell {
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "working")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 15
@@ -512,7 +520,7 @@ class MyJobsCanceledCell: UITableViewCell {
     
     let priceDateLabel : UILabel = {
         let label = UILabel()
-        label.text = "24 Feb. 2018"
+        label.text = "Date"
         label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray

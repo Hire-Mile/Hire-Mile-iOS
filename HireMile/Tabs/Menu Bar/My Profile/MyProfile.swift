@@ -13,7 +13,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "profilepic")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.layer.cornerRadius = 37.5
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -22,7 +22,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let profileName : UILabel = {
         let label = UILabel()
-        label.text = "Jorge Zapata"
+        label.text = "Name"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 20)
@@ -230,7 +230,7 @@ class ProfileCell: UITableViewCell {
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "working")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 15
@@ -251,7 +251,7 @@ class ProfileCell: UITableViewCell {
     
     let titleJob : UILabel = {
         let label = UILabel()
-        label.text = "Car Rental"
+        label.text = "Name"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -261,7 +261,7 @@ class ProfileCell: UITableViewCell {
     
     let saleNumber : UILabel = {
         let label = UILabel()
-        label.text = "10 sales"
+        label.text = "Sales"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
         label.font = UIFont.systemFont(ofSize: 15)
@@ -271,7 +271,7 @@ class ProfileCell: UITableViewCell {
     
     let priceNumber : UILabel = {
         let label = UILabel()
-        label.text = "$30"
+        label.text = "Cost"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
         label.font = UIFont.systemFont(ofSize: 15)
