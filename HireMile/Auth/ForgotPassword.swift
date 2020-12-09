@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
 
 class ForgotPassword: UIViewController {
     
@@ -62,12 +64,20 @@ class ForgotPassword: UIViewController {
     
     @objc func linkSendPressed() {
         if self.emailTextField.text != "" {
-            let alert = UIAlertController(title: "Success!", message: "A password reset link has been set to your email. Please check now!", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Back to Login", style: .default, handler: { (action) in
-                self.dismiss(animated: true, completion: nil)
-                self.navigationController?.popViewController(animated: true)
-            }))
-            self.present(alert, animated: true, completion: nil)
+            Auth.auth().sendPasswordReset(withEmail: self.emailTextField.text!) { (error) in
+                if error == nil {
+                    let alert = UIAlertController(title: "Success!", message: "A password reset link has been set to your email. Please check now!", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Back to Login", style: .default, handler: { (action) in
+                        self.dismiss(animated: true, completion: nil)
+                        self.navigationController?.popViewController(animated: true)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    let alert = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
         } else {
             let alert = UIAlertController(title: "Error", message: "Please enter valid email", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
