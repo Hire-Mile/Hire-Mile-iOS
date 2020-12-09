@@ -330,6 +330,11 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
                             let postFeed = ["\(key!)" : infoToAdd]
                             Database.database().reference().child("Jobs").updateChildValues(postFeed) { (addInfoError, result) in
                                 if addInfoError == nil {
+                                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("services").observeSingleEvent(of: .value) { (ratingNum) in
+                                        let value = ratingNum.value as? NSNumber
+                                        let newNumber = Int(value!)
+                                        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("services").setValue(newNumber + 1)
+                                    }
                                     // success alert
                                     MBProgressHUD.hide(for: self.view, animated: true)
                                     let alert = UIAlertController(title: "Posted", message: "You post has been posted! Use your profile to see your job listings.", preferredStyle: .alert)

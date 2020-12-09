@@ -7,17 +7,18 @@
 //
 
 import UIKit
+import Firebase
 import ZKCarousel
+import FirebaseAuth
+import FirebaseDatabase
 
 class ViewPostController: UIViewController, UITextFieldDelegate {
     
-    let carousel : ZKCarousel = {
-        let carousel = ZKCarousel()
-        let firstSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
-        let secondSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
-        let thirdSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
-        let fourthSlide = ZKCarouselSlide(image: UIImage(named: "grayBack"), title: "", description: "")
-        carousel.slides = [firstSlide, secondSlide, thirdSlide, fourthSlide]
+    var postId = ""
+    
+    let carousel : UIImageView = {
+        let carousel = UIImageView()
+        carousel.contentMode = .scaleAspectFill
         carousel.translatesAutoresizingMaskIntoConstraints = false
         return carousel
     }()
@@ -113,6 +114,31 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.addSubviews()
         self.addConstraints()
         
+        self.carousel.image = GlobalVariables.postImage2.image
+        self.titleLabel.text = GlobalVariables.postTitle
+        self.descriptionLabel.text = GlobalVariables.postDescription
+        self.priceLabel.text = "$\(GlobalVariables.postPrice)"
+        self.postId = GlobalVariables.postId
+        
+        // use author to get profile image
+        Database.database().reference().child("Users").child(GlobalVariables.authorId).child("profile-image").observe(.value) { (snapshot) in
+            let profileImageUrl : String = (snapshot.value as? String)!
+            if GlobalVariables.authorImageView == "not-yet-selected" {
+                self.profileImage.image = UIImage(systemName: "person.circle.fill")
+                self.profileImage.tintColor = UIColor.lightGray
+                self.profileImage.contentMode = .scaleAspectFill
+            } else {
+                self.profileImage.loadImageUsingCacheWithUrlString(profileImageUrl)
+            }
+            GlobalVariables.postTitle = ""
+            GlobalVariables.postDescription = ""
+            GlobalVariables.postPrice = 0
+            GlobalVariables.authorId = ""
+            GlobalVariables.authorImageView = ""
+            GlobalVariables.postId = ""
+            GlobalVariables.userUID = ""
+        }
+        
         // Do any additional setup after loading the view.
     }
     
@@ -152,12 +178,12 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         self.titleLabel.topAnchor.constraint(equalTo: self.informationView.topAnchor, constant: 15).isActive = true
         self.titleLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 15).isActive = true
-        self.titleLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -15).isActive = true
+        self.titleLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -20).isActive = true
         self.titleLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: -5).isActive = true
         self.descriptionLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 15).isActive = true
-        self.descriptionLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -15).isActive = true
+        self.descriptionLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -75).isActive = true
         self.descriptionLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         self.priceLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: -15).isActive = true
@@ -193,7 +219,6 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
-        self.navigationController?.navigationBar.topItem?.title = "Albert Smith"
     }
     
     func changeButtonStatus() {
@@ -220,9 +245,13 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     }
 
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        let tappedImage = tapGestureRecognizer.view as! UIImageView
-        // action here
-        self.navigationController?.pushViewController(OtherProfile(), animated: true)
+        // send uid
+        Database.database().reference().child("Jobs").child(postId).child("author").observe(.value) { (snapshot) in
+            let profileUID : String = (snapshot.value as? String)!
+            GlobalVariables.userUID = profileUID
+            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+        }
+        // following
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {

@@ -7,10 +7,17 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
+import MBProgressHUD
 
 class EditProfile: UIViewController, UITextFieldDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     let imagePicker = UIImagePickerController()
+    
+    var imageHasBeenChanged = false
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -86,6 +93,37 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
 
         // Functions to throw
         self.basicSetup()
+        
+        // image
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in
+            let profileImageString : String = (snapshot.value as? String)!
+            if profileImageString == "not-yet-selected" {
+                self.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.contentMode = .scaleAspectFill
+            } else {
+                self.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.contentMode = .scaleAspectFill
+            }
+        }
+        
+        // name
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+            let userName : String = (snapshot.value as? String)!
+            self.currentPassword.text = userName
+        }
+        
+        // zip code
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("zipcode").observe(.value) { (snapshot) in
+            let zipcode = snapshot.value as? NSNumber
+            let zipcodeInt = Int(zipcode!)
+            if zipcodeInt == 0 {
+                self.zipCode.text = ""
+            } else {
+                self.zipCode.text = String(zipcodeInt)
+            }
+        }
     }
 
     func addSubviews() {
@@ -135,12 +173,66 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
     }
 
     @objc func updatePressed() {
-        // check for changes
-        let alert = UIAlertController(title: "Success!", message: "Your information has been updated.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
-            self.navigationController?.popViewController(animated: true)
-        }))
-        self.present(alert, animated: true, completion: nil)
+        if self.imageHasBeenChanged == true {
+            MBProgressHUD.showAdded(to: self.view, animated: true)
+            guard let imageData = profileImageView.image?.jpegData(compressionQuality: 0.75) else { return }
+            let storageRef = Storage.storage().reference()
+            let storageProfileRef = storageRef.child("Profile").child("\(Auth.auth().currentUser!.uid)").child("ProfileImage")
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpg"
+            storageProfileRef.putData(imageData, metadata: metadata) { (storageMetadata, putDataError) in
+                if putDataError == nil && storageMetadata != nil {
+                    storageProfileRef.downloadURL { (url, downloadUrlError) in
+                        if let metalImageUrl = url?.absoluteString {
+                            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").setValue(metalImageUrl, withCompletionBlock: { (addInfoError, result) in
+                                if addInfoError == nil {
+                                    if self.currentPassword.text != "" {
+                                        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").setValue(self.currentPassword.text)
+                                    }
+                                    if self.zipCode.text != "" {
+                                        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("zipcode").setValue(Int(self.zipCode.text!))
+                                    }
+                                    MBProgressHUD.hide(for: self.view, animated: true)
+                                    let alert = UIAlertController(title: "Success!", message: "Your information has been updated.", preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+                                        self.navigationController?.popViewController(animated: true)
+                                    }))
+                                    self.present(alert, animated: true, completion: nil)
+                                } else {
+                                    MBProgressHUD.hide(for: self.view, animated: true)
+                                    let alert = UIAlertController(title: "Error", message: addInfoError!.localizedDescription, preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                            })
+                        } else {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            let alert = UIAlertController(title: "Error", message: downloadUrlError!.localizedDescription, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                } else {
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    let alert = UIAlertController(title: "Error", message: putDataError!.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        } else {
+            if self.currentPassword.text != "" {
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").setValue(self.currentPassword.text)
+            }
+            if self.zipCode.text != "" {
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("zipcode").setValue(Int(self.zipCode.text!))
+            }
+            MBProgressHUD.hide(for: self.view, animated: true)
+            let alert = UIAlertController(title: "Success!", message: "Your information has been updated.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+                self.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @objc func openImgePicker() {
@@ -169,6 +261,7 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         } else if let originalImage = info[.originalImage] as? UIImage{
             self.profileImageView.image = originalImage
         }
+        self.imageHasBeenChanged = true
         dismiss(animated: true, completion: nil)
     }
 }
