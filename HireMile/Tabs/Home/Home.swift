@@ -8,6 +8,9 @@
 
 import UIKit
 import SideMenu
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -413,6 +416,12 @@ class MenuListController: UITableViewController {
         tableView.register(SideMenuCell.self, forCellReuseIdentifier: "sideMenuCellProfile")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tableView.reloadData()
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -428,6 +437,39 @@ class MenuListController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "sideMenuCellProfile", for: indexPath) as! SideMenuCell
+            
+            // find image
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in
+                let profileImageString : String = (snapshot.value as? String)!
+                if profileImageString == "not-yet-selected" {
+                    cell.profileImage.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImage.tintColor = UIColor.lightGray
+                    cell.profileImage.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImage.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.profileImage.tintColor = UIColor.lightGray
+                    cell.profileImage.contentMode = .scaleAspectFill
+                }
+            }
+            
+            // find name
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+                let userName : String = (snapshot.value as? String)!
+                cell.nameLabel.text = userName
+            }
+            
+            // find rating
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
+                let value = ratingNum.value as? NSNumber
+                let newNumber = Float(value!)
+                if newNumber == 100 {
+                    cell.ratingView.alpha = 0
+                } else {
+                    cell.ratingView.alpha = 1
+                    cell.ratingLabel.text = String(newNumber)
+                }
+            }
+            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "sideMenuCellNormal", for: indexPath)
@@ -548,7 +590,6 @@ class SideMenuCell : UITableViewCell {
         addSubview(profileImage)
         profileImage.anchor(top: topAnchor, paddingTop: 20, bottom: bottomAnchor, paddingBottom: -60, left: leftAnchor, paddingLeft: 57, right: rightAnchor, paddingRight: -57, width: 0, height: 0)
         self.profileImage.layer.cornerRadius = 60
-        self.profileImage.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         
         addSubview(nameLabel)
         nameLabel.anchor(top: profileImage.bottomAnchor, paddingTop: -10, bottom: bottomAnchor, paddingBottom: -10, left: leftAnchor, paddingLeft: 10, right: rightAnchor, paddingRight: -10, width: 0, height: 0)

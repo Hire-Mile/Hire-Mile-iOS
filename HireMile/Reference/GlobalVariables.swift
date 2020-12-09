@@ -13,5 +13,15 @@ class GlobalVariables: NSObject {
     static var isCheckedOut = false
     static var presentToCat = false
     static var postImage = UIImage()
-
+    
+    
+    static var postImage2 = UIImageView()
+    static var postTitle = ""
+    static var postDescription = ""
+    static var postPrice = 0
+    static var authorId = ""
+    static var authorImageView = ""
+    static var postId = ""
+    
+    static var userUID = ""
 }

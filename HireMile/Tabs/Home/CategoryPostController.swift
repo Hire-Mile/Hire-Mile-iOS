@@ -149,7 +149,6 @@ class CategoryCell: UITableViewCell {
         label.textColor = UIColor.mainBlue
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
-//        label.backgroundColor = .mainBlue
         label.textAlignment = .right
         return label
     }()

@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    var allJobs = [JobStructure]()
+    var myJobs = [JobStructure]()
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -79,7 +85,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let myServices : UILabel = {
         let label = UILabel()
-        label.text = "My Services (3)"
+        label.text = "My Services ()"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -179,6 +185,102 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.navigationBar.topItem?.title = " "
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
         self.navigationItem.rightBarButtonItems = [upload, edit]
+        
+        // profile image view
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in
+            let profileImageString : String = (snapshot.value as? String)!
+            if profileImageString == "not-yet-selected" {
+                self.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.contentMode = .scaleAspectFill
+            } else {
+                self.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.contentMode = .scaleAspectFill
+            }
+        }
+        
+        // name
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+            let userName : String = (snapshot.value as? String)!
+            self.profileName.text = userName
+        }
+        
+        // stars
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
+            let value = ratingNum.value as? NSNumber
+            let newNumber = Int(value!)
+            if newNumber == 100 {
+                self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+            } else {
+                switch newNumber {
+                case 0:
+                    self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 1:
+                    self.star1.tintColor = UIColor.mainBlue
+                    self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 2:
+                    self.star1.tintColor = UIColor.mainBlue
+                    self.star2.tintColor = UIColor.mainBlue
+                    self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 3:
+                    self.star1.tintColor = UIColor.mainBlue
+                    self.star2.tintColor = UIColor.mainBlue
+                    self.star3.tintColor = UIColor.mainBlue
+                    self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 4:
+                    self.star1.tintColor = UIColor.mainBlue
+                    self.star2.tintColor = UIColor.mainBlue
+                    self.star3.tintColor = UIColor.mainBlue
+                    self.star4.tintColor = UIColor.mainBlue
+                    self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 5:
+                    self.star1.tintColor = UIColor.mainBlue
+                    self.star2.tintColor = UIColor.mainBlue
+                    self.star3.tintColor = UIColor.mainBlue
+                    self.star4.tintColor = UIColor.mainBlue
+                    self.star5.tintColor = UIColor.mainBlue
+                default:
+                    print("hello")
+                }
+            }
+        }
+        
+        self.allJobs.removeAll()
+        self.myJobs.removeAll()
+        Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = JobStructure()
+                job.authorName = value["author"] as? String ?? "Error"
+                job.titleOfPost = value["title"] as? String ?? "Error"
+                job.descriptionOfPost = value["description"] as? String ?? "Error"
+                job.price = value["price"] as? Int ?? 0
+                job.category = value["category"] as? String ?? "Error"
+                job.imagePost = value["image"] as? String ?? "Error"
+                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                job.postId = value["postId"] as? String ?? "Error"
+                
+                if job.authorName ==  Auth.auth().currentUser!.uid {
+                    print("my name")
+                    self.myJobs.append(job)
+                }
+            }
+            self.tableView.reloadData()
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -186,15 +288,28 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        self.myServices.text = "My Services (\(myJobs.count))"
+        return myJobs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
+        cell.postImageView.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+        cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
+        cell.postId = self.myJobs[indexPath.row].postId!
+        cell.saleNumber.text = self.myJobs[indexPath.row].descriptionOfPost!
+        cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+        GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
+        GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
+        GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
+        GlobalVariables.authorId = self.myJobs[indexPath.row].authorName!
+        GlobalVariables.postId = self.myJobs[indexPath.row].postId!
+        
         self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
     
@@ -227,6 +342,8 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
 }
 
 class ProfileCell: UITableViewCell {
+    
+    var postId = ""
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
@@ -272,10 +389,11 @@ class ProfileCell: UITableViewCell {
     let priceNumber : UILabel = {
         let label = UILabel()
         label.text = "Cost"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
+        label.textColor = UIColor.mainBlue
         label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         return label
     }()
     
@@ -298,7 +416,7 @@ class ProfileCell: UITableViewCell {
         priceNumber.topAnchor.constraint(equalTo: informationView.topAnchor, constant: 10).isActive = true
         priceNumber.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -10).isActive = true
         priceNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        priceNumber.widthAnchor.constraint(equalToConstant: 38).isActive = true
+        priceNumber.widthAnchor.constraint(equalToConstant: 80).isActive = true
         
         informationView.addSubview(titleJob)
         titleJob.topAnchor.constraint(equalTo: self.topAnchor, constant: 40).isActive = true

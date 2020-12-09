@@ -216,7 +216,10 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                                                             "name" : "\(name!)",
                                                             "email" : "\(email!)",
                                                             "password" : "\(password!)",
-                                                            "profile-image" : "not-yet-selected"
+                                                            "profile-image" : "not-yet-selected",
+                                                            "rating" : 100,
+                                                            "zipcode" : 0,
+                                                            "services" : 0
                                                         ]
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -329,7 +332,10 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                 let infoToAdd : Dictionary<String, Any> = [
                                                             "name" : "\(self.largeName)",
                                                             "email" : "\(Auth.auth().currentUser!.email!)",
-                                                            "profile-image" : "not-yet-selected"
+                                                            "profile-image" : "not-yet-selected",
+                                                            "rating" : 100,
+                                                            "zipcode" : 0,
+                                                            "services" : 0
                                                           ]
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
                 MBProgressHUD.hide(for: self.view, animated: true)
