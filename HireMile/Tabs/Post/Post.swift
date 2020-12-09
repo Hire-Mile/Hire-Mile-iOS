@@ -7,6 +7,12 @@
 //
 
 import UIKit
+import Firebase
+import Foundation
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
+import MBProgressHUD
 
 class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -284,10 +290,75 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     }
     
     @objc func handlePost() {
-        self.dismiss(animated: true) {
-            let alert = UIAlertController(title: "Posted", message: "You post has been posted! Use your profile to see your job listings.", preferredStyle: .alert)
+        if self.titleYourListing.text! == "" || self.describeYourListing.text! == "" || self.priceYourListing.text! == "" || self.pickCategory.text! == "" {
+            let alert = UIAlertController(title: "Error", message: "Please make sure that all fields are filled in", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+        } else {
+            // show loader
+            MBProgressHUD.showAdded(to: self.view, animated: true)
+            
+            // image upload
+            guard let imageData = backgroundImage.image?.jpegData(compressionQuality: 0.75) else { return }
+            let storageRef = Storage.storage().reference()
+            let storageProfileRef = storageRef.child("Jobs").child("\(Auth.auth().currentUser!.uid)").child("PostImage")
+            let key = Database.database().reference().child("Jobs").childByAutoId().key
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpg"
+            storageProfileRef.putData(imageData, metadata: metadata) { (storageMetadata, putDataError) in
+                if putDataError == nil && storageMetadata != nil {
+                    storageProfileRef.downloadURL { (url, downloadUrlError) in
+                        if let metalImageUrl = url?.absoluteString {
+                            print(metalImageUrl)
+                            // info upload
+                            var typeOfPrice = ""
+                            if self.segmentedControl.selectedSegmentIndex == 0 {
+                                typeOfPrice = "Total"
+                            } else {
+                                typeOfPrice = "Hourly"
+                            }
+                            let infoToAdd : Dictionary<String, Any> = [
+                                "category" : "\(self.pickCategory.text!)",
+                                "description" : "\(self.describeYourListing.text!)",
+                                "title" : "\(self.titleYourListing.text!)",
+                                "postId" : "\(key!)",
+                                "price" : "\(self.priceYourListing.text!)",
+                                "type-of-price" : "\(typeOfPrice)",
+                                "author" : "\(Auth.auth().currentUser!.uid)",
+                                "image" : "\(metalImageUrl)"
+                            ]
+                            let postFeed = ["\(key!)" : infoToAdd]
+                            Database.database().reference().child("Jobs").updateChildValues(postFeed) { (addInfoError, result) in
+                                if addInfoError == nil {
+                                    // success alert
+                                    MBProgressHUD.hide(for: self.view, animated: true)
+                                    let alert = UIAlertController(title: "Posted", message: "You post has been posted! Use your profile to see your job listings.", preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+                                        self.dismiss(animated: true, completion: nil)
+                                    }))
+                                    self.present(alert, animated: true, completion: nil)
+                                } else {
+                                    MBProgressHUD.hide(for: self.view, animated: true)
+                                    let alert = UIAlertController(title: "Error", message: addInfoError!.localizedDescription, preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                            }
+                        } else {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            let alert = UIAlertController(title: "Error", message: downloadUrlError!.localizedDescription, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }
+                } else {
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    let alert = UIAlertController(title: "Error", message: putDataError!.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+            
         }
     }
     
