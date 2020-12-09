@@ -228,7 +228,7 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         let ok = UIAlertAction(title: "Next", style: .default) { (action: UIAlertAction) -> Void in
             let usersName = alertController.textFields![0].text!
             self.largeName = usersName
-            self.dismiss(animated: true, completion: nil)
+            alertController.dismiss(animated: true, completion: nil)
             let nonce = self.randomNonceString()
             self.currentNonce = nonce
             let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -291,16 +291,20 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let nonce = currentNonce else {
+                MBProgressHUD.hide(for: self.view, animated: true)
                 fatalError("Invalid state: A login callback was received, but no login request was sent.")
             }
             guard let appleIDToken = appleIDCredential.identityToken else {
                 print("Unable to fetch identity token")
+                MBProgressHUD.hide(for: self.view, animated: true)
                 return
             }
             guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
                 print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                MBProgressHUD.hide(for: self.view, animated: true)
                 return
             }
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
@@ -308,15 +312,15 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
             Auth.auth().signIn(with: credential) { (authResult, error) in
                 if error != nil {
                     print(error!.localizedDescription)
+                    MBProgressHUD.hide(for: self.view, animated: true)
                     return
                 }
-                MBProgressHUD.showAdded(to: self.view, animated: true)
                 print("Fine")
                 let infoToAdd : Dictionary<String, Any> = [
                                                             "name" : "\(self.largeName)",
-                                                            "email" : "\(Auth.auth().currentUser!.email)",
+                                                            "email" : "\(Auth.auth().currentUser!.email!)",
                                                             "profile-image" : "not-yet-selected"
-                                                        ]
+                                                          ]
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
                 MBProgressHUD.hide(for: self.view, animated: true)
                 let controller = TabBarController()
