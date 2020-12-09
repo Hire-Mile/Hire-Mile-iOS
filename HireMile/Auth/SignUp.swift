@@ -187,7 +187,7 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
     
     @objc func signUpPressed() {
-        if self.nameTextField.text! == "" && self.emailTextField.text! == "" && self.passwordTextField.text! == "" {
+        if self.nameTextField.text! == "" || self.emailTextField.text! == "" || self.passwordTextField.text! == "" {
             print("cannot go ")
         } else {
             self.signUpWith(name: self.nameTextField.text!, email: self.emailTextField.text!, password: self.passwordTextField.text!)

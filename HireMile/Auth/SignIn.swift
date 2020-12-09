@@ -179,7 +179,7 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
     
     @objc func loginPressed() {
-        if self.emailTextField.text! == "" && self.passwordTextField.text! == "" {
+        if self.emailTextField.text! == "" || self.passwordTextField.text! == "" {
             print("cannot go ")
         } else {
             self.signInWith(email: self.emailTextField.text!, password: self.passwordTextField.text!)
