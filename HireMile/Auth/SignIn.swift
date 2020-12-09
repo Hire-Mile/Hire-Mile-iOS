@@ -114,6 +114,16 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         
         // Functions to throw
         self.basicSetup()
+        self.autoSignIn()
+    }
+    
+    func autoSignIn() {
+        if Auth.auth().currentUser != nil {
+            print(Auth.auth().currentUser!.uid)
+            let controller = TabBarController()
+            controller.modalPresentationStyle = .fullScreen
+            self.present(controller, animated: false, completion: nil)
+        }
     }
     
     func addSubviews() {
