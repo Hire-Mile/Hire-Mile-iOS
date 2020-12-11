@@ -7,10 +7,16 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseAnalytics
 
 class CategoryPostController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     let filterLauncher = FilterLauncher()
+    
+    var category = ""
+    var allJobs = [JobStructure]()
 
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -43,6 +49,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
         // Functions to throw
         self.basicSetup()
+        self.pullData()
     }
 
     func addSubviews() {
@@ -61,12 +68,13 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
-        self.navigationController?.navigationBar.topItem?.title = "Title"
+        self.navigationController?.navigationBar.topItem?.title = GlobalVariables.categoryName
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(filterPressed))
-
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.refreshControl = refrshControl
+        
+        self.category = GlobalVariables.categoryName
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -74,17 +82,30 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return self.allJobs.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath) as! CategoryCell
-        // #add target to heart tapped
+        cell.titleImageView.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+        cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
+        cell.postId = self.allJobs[indexPath.row].postId!
+        if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
+            cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
+        } else {
+            cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!)"
+        }
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("hello")
+        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+        GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
+        GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
+        GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
+        GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
+        GlobalVariables.postId = self.allJobs[indexPath.row].postId!
+        GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
         self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
 
@@ -95,9 +116,30 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
     @objc func filterPressed() {
         filterLauncher.showFilter()
     }
+    
+    func pullData() {
+        self.allJobs.removeAll()
+        Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = JobStructure()
+                job.authorName = value["author"] as? String ?? "Error"
+                job.titleOfPost = value["title"] as? String ?? "Error"
+                job.descriptionOfPost = value["description"] as? String ?? "Error"
+                job.price = value["price"] as? Int ?? 0
+                job.category = value["category"] as? String ?? "Error"
+                job.imagePost = value["image"] as? String ?? "Error"
+                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                job.postId = value["postId"] as? String ?? "Error"
+                self.allJobs.append(job)
+            }
+            self.allJobs.reverse()
+            self.tableView.reloadData()
+            Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.hideRefrsh), userInfo: nil, repeats: false)
+        }
+    }
 
     @objc func refreshAction() {
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(hideRefrsh), userInfo: nil, repeats: false)
+        self.pullData()
     }
 
     @objc func hideRefrsh() {
@@ -107,6 +149,8 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 }
 
 class CategoryCell: UITableViewCell {
+    
+    var postId = ""
 
     let titleImageView : UIImageView = {
         let imageView = UIImageView()
@@ -130,18 +174,7 @@ class CategoryCell: UITableViewCell {
         view.layer.cornerRadius = 15
         return view
     }()
-
-    let heartButton : UIButton = {
-         let button = UIButton()
-         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-         button.imageView?.tintColor = UIColor.red
-         button.tintColor = UIColor.red
-         button.layer.cornerRadius = 20
-         button.translatesAutoresizingMaskIntoConstraints = false
-         button.backgroundColor = UIColor.white
-         return button
-    }()
-
+    
     let priceTag : UILabel = {
         let label = UILabel()
         label.text = "Price"
@@ -166,8 +199,6 @@ class CategoryCell: UITableViewCell {
 
     let locationAndTime : UILabel = {
         let label = UILabel()
-//        label.text = "3.5mi away  -  10 min ago"
-        label.text = "Info"
         label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = UIColor.white
         label.numberOfLines = 1
@@ -195,12 +226,6 @@ class CategoryCell: UITableViewCell {
         infoView.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
         infoView.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
         infoView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
-
-        addSubview(heartButton)
-        heartButton.topAnchor.constraint(equalTo: titleImageView.topAnchor, constant: 10).isActive = true
-        heartButton.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
-        heartButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        heartButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
 
         infoView.addSubview(titleLabel)
         titleLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 10).isActive = true

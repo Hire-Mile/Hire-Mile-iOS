@@ -22,6 +22,9 @@ class GlobalVariables: NSObject {
     static var authorId = ""
     static var authorImageView = ""
     static var postId = ""
+    static var type = ""
     
     static var userUID = ""
+    
+    static var categoryName = ""
 }
