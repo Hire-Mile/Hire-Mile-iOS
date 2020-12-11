@@ -121,6 +121,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.postId = GlobalVariables.postId
         
         // use author to get profile image
+        print("Helo")
+        print("Helo")
+        print(GlobalVariables.authorId)
         Database.database().reference().child("Users").child(GlobalVariables.authorId).child("profile-image").observe(.value) { (snapshot) in
             let profileImageUrl : String = (snapshot.value as? String)!
             if GlobalVariables.authorImageView == "not-yet-selected" {

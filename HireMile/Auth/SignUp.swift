@@ -222,6 +222,12 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                                                             "services" : 0
                                                         ]
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
+                let userInformation : Dictionary<String, Any> = [
+                    "uid" : "\(Auth.auth().currentUser!.uid)"
+                ]
+                let postFeed = ["\(Auth.auth().currentUser!.uid)" : userInformation]
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+                
                 MBProgressHUD.hide(for: self.view, animated: true)
                 let controller = TabBarController()
                 controller.modalPresentationStyle = .fullScreen
@@ -338,6 +344,12 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                                                             "services" : 0
                                                           ]
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
+                let userInformation : Dictionary<String, Any> = [
+                    "uid" : "\(Auth.auth().currentUser!.uid)"
+                ]
+                let postFeed = ["\(Auth.auth().currentUser!.uid)" : userInformation]
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+                
                 MBProgressHUD.hide(for: self.view, animated: true)
                 let controller = TabBarController()
                 controller.modalPresentationStyle = .fullScreen
