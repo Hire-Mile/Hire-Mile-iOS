@@ -298,7 +298,11 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
         cell.postId = self.myJobs[indexPath.row].postId!
         cell.saleNumber.text = self.myJobs[indexPath.row].descriptionOfPost!
-        cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
+        if self.myJobs[indexPath.row].typeOfPrice == "Hourly" {
+            cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
+        } else {
+            cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
+        }
         return cell
     }
     
@@ -309,6 +313,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
         GlobalVariables.authorId = self.myJobs[indexPath.row].authorName!
         GlobalVariables.postId = self.myJobs[indexPath.row].postId!
+        GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
         
         self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }

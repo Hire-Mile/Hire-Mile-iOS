@@ -117,7 +117,11 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.carousel.image = GlobalVariables.postImage2.image
         self.titleLabel.text = GlobalVariables.postTitle
         self.descriptionLabel.text = GlobalVariables.postDescription
-        self.priceLabel.text = "$\(GlobalVariables.postPrice)"
+        if GlobalVariables.type == "Hourly" {
+            self.priceLabel.text = "$\(GlobalVariables.postPrice) / Hour"
+        } else {
+            self.priceLabel.text = "$\(GlobalVariables.postPrice)"
+        }
         self.postId = GlobalVariables.postId
         
         // use author to get profile image
@@ -126,7 +130,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         print(GlobalVariables.authorId)
         Database.database().reference().child("Users").child(GlobalVariables.authorId).child("profile-image").observe(.value) { (snapshot) in
             let profileImageUrl : String = (snapshot.value as? String)!
-            if GlobalVariables.authorImageView == "not-yet-selected" {
+            if profileImageUrl == "not-yet-selected" {
                 self.profileImage.image = UIImage(systemName: "person.circle.fill")
                 self.profileImage.tintColor = UIColor.lightGray
                 self.profileImage.contentMode = .scaleAspectFill

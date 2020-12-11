@@ -488,6 +488,7 @@ class MenuListController: UITableViewController {
             switch indexPath.row {
             case 0:
                 print("0")
+                GlobalVariables.categoryName = "Recent"
                 self.navigationController?.pushViewController(CategoryPostController(), animated: true)
             case 1:
                 print("1")

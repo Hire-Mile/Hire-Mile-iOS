@@ -322,7 +322,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
                                 "description" : "\(self.describeYourListing.text!)",
                                 "title" : "\(self.titleYourListing.text!)",
                                 "postId" : "\(key!)",
-                                "price" : "\(self.priceYourListing.text!)",
+                                "price" : Int(self.priceYourListing.text!),
                                 "type-of-price" : "\(typeOfPrice)",
                                 "author" : "\(Auth.auth().currentUser!.uid)",
                                 "image" : "\(metalImageUrl)"
