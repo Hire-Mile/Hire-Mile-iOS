@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ResetPassword: UIViewController {
     
@@ -123,6 +124,23 @@ class ResetPassword: UIViewController {
     }
     
     @objc func sendResendLink() {
+        Auth.auth().sendPasswordReset(withEmail: Auth.auth().currentUser!.email!) { (error) in
+            if error == nil {
+                let alert = UIAlertController(title: "Success!", message: "Password reset link has been sent to your registered email ", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+                    self.navigationController?.popViewController(animated: true)
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(title: "Success!", message: error!.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+                    self.navigationController?.popViewController(animated: true)
+                    self.navigationController?.popViewController(animated: true)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
         let alert = UIAlertController(title: "Success!", message: "Password reset link has been sent to your registered email ", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
             self.navigationController?.popViewController(animated: true)

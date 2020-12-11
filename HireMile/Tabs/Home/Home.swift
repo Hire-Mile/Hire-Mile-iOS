@@ -508,6 +508,15 @@ class MenuListController: UITableViewController {
             case 6:
                 let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+                    let firebaseAuth = Auth.auth()
+                    do {
+                        try firebaseAuth.signOut()
+                    } catch let signOutError as NSError {
+                        print("Error signing out: \(signOutError)")
+                        let errorAlert = UIAlertController(title: "Error", message: signOutError.localizedDescription, preferredStyle: .alert)
+                        errorAlert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                        self.present(errorAlert, animated: true, completion: nil)
+                    }
                     let controller = SignIn()
                     controller.modalPresentationStyle = .fullScreen
                     self.present(controller, animated: true, completion: nil)

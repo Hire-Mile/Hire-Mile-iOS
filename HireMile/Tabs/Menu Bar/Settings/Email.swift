@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
+import MBProgressHUD
 
 class Email: UIViewController, UITextFieldDelegate {
 
@@ -85,11 +88,20 @@ class Email: UIViewController, UITextFieldDelegate {
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         } else {
-            let alert = UIAlertController(title: "Success!", message: "Your email has been changed", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
-                self.navigationController?.popViewController(animated: true)
-            }))
-            self.present(alert, animated: true, completion: nil)
+            Auth.auth().currentUser!.updateEmail(to: self.currentPassword.text!) { (error) in
+                if error != nil {
+                    let errorAlert = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
+                    errorAlert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                    self.present(errorAlert, animated: true, completion: nil)
+                } else {
+                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("email").setValue(self.currentPassword.text!)
+                    let alert = UIAlertController(title: "Success!", message: "Your email has been changed", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+                        self.navigationController?.popViewController(animated: true)
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
         }
     }
 
