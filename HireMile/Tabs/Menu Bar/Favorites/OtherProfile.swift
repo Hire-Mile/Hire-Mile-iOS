@@ -15,7 +15,9 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     var allJobs = [JobStructure]()
     var myJobs = [JobStructure]()
+    var favorites = [UserStructure]()
     var userUid = GlobalVariables.userUID
+    var isFollowing : Bool?
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -108,6 +110,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         button.backgroundColor = UIColor.mainBlue
         button.setTitle("Following", for: .normal)
         button.layer.cornerRadius = 15
+        button.addTarget(self, action: #selector(followingPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
@@ -276,17 +279,9 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                         }
                     }
                     self.tableView.reloadData()
-                    
                 }
             }
-            GlobalVariables.userUID = ""
         }
-        
-        // following or not
-        
-        // services
-        
-        // services count
 
         // Do any additional setup after loading the view.
     }
@@ -297,6 +292,47 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.navigationController?.navigationBar.barTintColor = .white
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .bottom, barMetrics: .default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
+        
+        // get array
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
+            if let value = listOfuserFavorite.value as? [String : Any] {
+                let user = UserStructure()
+                user.uid = value["uid"] as? String ?? "Error"
+                print("USERUID")
+                print(user.uid!)
+                print("USERUID")
+                if user.uid! == GlobalVariables.userUID {
+                    self.updateFollowingButton(isFollowing: true)
+                } else {
+                    self.updateFollowingButton(isFollowing: false)
+                }
+            }
+        }
+    }
+    
+    func updateFollowingButton(isFollowing: Bool) {
+        switch isFollowing {
+        case true:
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+                self.statusButton.backgroundColor = UIColor.mainBlue
+                self.statusButton.setTitle("Following", for: .normal)
+                self.statusButton.setTitleColor(UIColor.white, for: .normal)
+                self.isFollowing = true
+            } completion: { (completion) in
+                print("updated button")
+            }
+        case false:
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+                self.statusButton.backgroundColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 0.35)
+                self.statusButton.setTitle("Follow", for: .normal)
+                self.statusButton.setTitleColor(UIColor.mainBlue, for: .normal)
+                self.isFollowing = false
+            } completion: { (completion) in
+                print("updated button")
+            }
+        default:
+            print("following user error")
+        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -319,11 +355,31 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+        GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
+        GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
+        GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
+        GlobalVariables.authorId = self.myJobs[indexPath.row].authorName!
+        GlobalVariables.postId = self.myJobs[indexPath.row].postId!
+        self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+    
+    @objc func followingPressed() {
+        if self.isFollowing == true {
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(GlobalVariables.userUID).removeValue()
+            self.updateFollowingButton(isFollowing: false)
+        } else {
+            self.updateFollowingButton(isFollowing: true)
+            let userInformation : Dictionary<String, Any> = [
+                "uid" : "\(GlobalVariables.userUID)"
+            ]
+            let postFeed = ["\(GlobalVariables.userUID)" : userInformation]
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+        }
     }
 
 }
