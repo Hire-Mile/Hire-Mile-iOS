@@ -7,8 +7,13 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class FavoriteRemoveView: NSObject {
+    
+    var uid = ""
     
     let height : CGFloat = 400
     
@@ -95,7 +100,8 @@ class FavoriteRemoveView: NSObject {
     }
     
     func doStuff() {
-        self.applyButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+        
+        self.applyButton.addTarget(self, action: #selector(handleDelete), for: .touchUpInside)
         self.discardButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
         self.exitButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
         
@@ -122,6 +128,8 @@ class FavoriteRemoveView: NSObject {
         self.profileImage.widthAnchor.constraint(equalToConstant: 75).isActive = true
         self.profileImage.topAnchor.constraint(equalTo: self.filterTitle.bottomAnchor, constant: 45  ).isActive = true
         self.profileImage.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        self.profileImage.tintColor = UIColor.lightGray
+        self.profileImage.contentMode = .scaleAspectFill
         
         filterView.addSubview(nameTitle)
         self.nameTitle.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 40).isActive = true
@@ -136,7 +144,7 @@ class FavoriteRemoveView: NSObject {
         self.exitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
     
-    func showFilter() {
+    func showFilter(withName name: String, withImage image: String, withUid uid: String, isImageNil imageBool: Bool) {
         if let window = UIApplication.shared.keyWindow {
             blackView.frame = window.frame
             blackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismiss)))
@@ -144,6 +152,16 @@ class FavoriteRemoveView: NSObject {
             blackView.alpha = 0
             window.addSubview(blackView)
             window.addSubview(filterView)
+            
+            self.nameTitle.text! = name
+            
+            if imageBool == true {
+                self.profileImage.image = UIImage(systemName: "person.circle.fill")
+            } else {
+                self.profileImage.loadImageUsingCacheWithUrlString(image)
+            }
+            
+            self.uid = "\(uid)"
             
             let y = window.frame.height - height
             filterView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 400)
@@ -153,6 +171,25 @@ class FavoriteRemoveView: NSObject {
             }) { (completion) in
                 print("showing view")
                 self.doStuff()
+            }
+        }
+    }
+    
+    @objc func handleDelete() {
+        if uid == Auth.auth().currentUser!.uid {
+            UIView.animate(withDuration: 0.5) {
+                self.blackView.alpha = 0
+                if let window = UIApplication.shared.keyWindow {
+                    self.filterView.frame = CGRect(x: 0, y: window.frame.height, width: self.filterView.frame.width, height: self.filterView.frame.height)
+                }
+            }
+        } else {
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(uid).removeValue()
+            UIView.animate(withDuration: 0.5) {
+                self.blackView.alpha = 0
+                if let window = UIApplication.shared.keyWindow {
+                    self.filterView.frame = CGRect(x: 0, y: window.frame.height, width: self.filterView.frame.width, height: self.filterView.frame.height)
+                }
             }
         }
     }

@@ -402,7 +402,7 @@ class HomeCell: UITableViewCell {
 
 class MenuListController: UITableViewController {
     
-    let items = ["Recent", "My Jobs", "Payment", "My Reviews", "Favorites", "Settings", "Sign Out"]
+    let items = ["Recent", "My Jobs", "My Reviews", "Favorites", "Settings", "Sign Out"]
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -491,21 +491,18 @@ class MenuListController: UITableViewController {
                 GlobalVariables.categoryName = "Recent"
                 self.navigationController?.pushViewController(CategoryPostController(), animated: true)
             case 1:
-                print("1")
+                print("my jobs")
                 self.navigationController?.pushViewController(MyJobs(), animated: true)
             case 2:
-                print("3")
-                self.navigationController?.pushViewController(Payment(), animated: true)
-            case 3:
                 print("4")
                 self.navigationController?.pushViewController(MyReviews(), animated: true)
-            case 4:
+            case 3:
                 print("5")
                 self.navigationController?.pushViewController(Favorites(), animated: true)
-            case 5:
+            case 4:
                 print("6")
                 self.navigationController?.pushViewController(Settings(), animated: true)
-            case 6:
+            case 5:
                 let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
                     let firebaseAuth = Auth.auth()

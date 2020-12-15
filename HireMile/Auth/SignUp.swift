@@ -219,7 +219,8 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                                                             "profile-image" : "not-yet-selected",
                                                             "rating" : 100,
                                                             "zipcode" : 0,
-                                                            "services" : 0
+                                                            "services" : 0,
+                                                            "number-of-ratings" : 0
                                                         ]
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
                 let userInformation : Dictionary<String, Any> = [
@@ -341,7 +342,8 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                                                             "profile-image" : "not-yet-selected",
                                                             "rating" : 100,
                                                             "zipcode" : 0,
-                                                            "services" : 0
+                                                            "services" : 0,
+                                                            "number-of-ratings" : 0
                                                           ]
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
                 let userInformation : Dictionary<String, Any> = [

@@ -96,7 +96,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if segmentedControl.selectedSegmentIndex == 0 {
             return 2
         } else if segmentedControl.selectedSegmentIndex == 1 {
-            return 2
+            return 0
         } else {
             return 0
         }

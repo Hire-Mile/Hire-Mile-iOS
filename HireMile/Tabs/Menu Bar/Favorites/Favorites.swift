@@ -7,15 +7,20 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class Favorites: UITableViewController {
+    
+    var favorites = [UserStructure]()
     
     let removeView = FavoriteRemoveView()
     
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.tintColor = UIColor.black
-        refreshControl.addTarget(self, action: #selector(refreshAction), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refrshThing), for: .valueChanged)
         return refreshControl
     }()
 
@@ -51,6 +56,24 @@ class Favorites: UITableViewController {
         self.tableView.allowsSelection = true
         self.tableView.refreshControl = refrshControl
         
+        self.pullData()
+    }
+    
+    @objc func refrshThing() {
+        self.pullData()
+        self.refreshControl?.endRefreshing()
+    }
+    
+    func pullData() {
+        self.favorites.removeAll()
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
+            if let value = listOfuserFavorite.value as? [String : Any] {
+                let user = UserStructure()
+                user.uid = value["uid"] as? String ?? "Error"
+                self.favorites.append(user)
+            }
+            self.tableView.reloadData()
+        }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -58,13 +81,34 @@ class Favorites: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.favorites.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoritesCellID", for: indexPath) as! FavoritesCell
         cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        cell.textLabel?.text = "Name"
+        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("name").observe(.value) { (snapshot) in
+            let snapshot : String = (snapshot.value as? String)!
+            cell.textLabel?.text = snapshot
+        }
+        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("email").observe(.value) { (snapshot) in
+            let snapshot : String = (snapshot.value as? String)!
+            if snapshot.contains("@") || snapshot.contains(".") {
+                cell.detailTextLabel?.text = snapshot
+            } else {
+                cell.detailTextLabel?.text = "Hiremile Contributer"
+            }
+        }
+        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("profile-image").observe(.value) { (snapshot) in
+            let snapshot : String = (snapshot.value as? String)!
+            if snapshot == "not-yet-selected" {
+                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                cell.profileImageView.tintColor = UIColor.lightGray
+                cell.profileImageView.contentMode = .scaleAspectFill
+            } else {
+                cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+            }
+        }
         cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         cell.detailTextLabel?.isHidden = false
         cell.detailTextLabel?.textColor = UIColor.darkGray
@@ -74,19 +118,21 @@ class Favorites: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        removeView.showFilter()
+        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("name").observe(.value) { (name) in
+            let name : String = (name.value as? String)!
+            Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("profile-image").observe(.value) { (snapshot) in
+                let snapshot : String = (snapshot.value as? String)!
+                if snapshot == "not-yet-selected" {
+                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[indexPath.row].uid!, isImageNil: true)
+                } else {
+                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[indexPath.row].uid!, isImageNil: false)
+                }
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
-    }
-    
-    @objc func refreshAction() {
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(hideRefrsh), userInfo: nil, repeats: false)
-    }
-    
-    @objc func hideRefrsh() {
-        self.refrshControl.endRefreshing()
     }
 
 }
