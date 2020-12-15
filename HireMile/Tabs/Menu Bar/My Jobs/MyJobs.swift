@@ -7,8 +7,17 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    var running = [MyJobStructure]()
+    var completed = [MyJobStructure]()
+    var canceled = [MyJobStructure]()
+    
+    var allJobs = [MyJobStructure]()
     
     let segmentedControl : UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
@@ -60,6 +69,51 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
         // Functions to throw
         self.basicSetup()
+        
+        // there should be a child reference in profile which has a collection of jobs. each job should have the following:
+        // - uid of workers
+        //     - name
+        //     - profile image
+        // - some sort of text (descruption, reason of cancel)
+        // - job key
+        //     - job cover image
+        // - bool to see if rating is nil (if it is not nil, fetch the number)
+        // - rating, if bool is false
+        
+        // add jobs to job collection
+        // if job type == completed, if job type == running, if job type == canceled, add to certain array
+        // tableview should return numberofrowsinsection per collection array
+        
+        self.allJobs.removeAll()
+        self.running.removeAll()
+        self.completed.removeAll()
+        self.canceled.removeAll()
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String: Any] {
+                let job = MyJobStructure()
+                job.authorUid = value["author-uid"] as? String ?? "Error"
+                job.reasonOrDescripiotn = value["reason-or-description"] as? String ?? "Error"
+                job.jobKey = value["job-key"] as? String ?? "Error"
+                job.rating = value["rating"] as? Int ?? 0
+                job.ratingIsNil = value["is-rating-nil"] as? Bool ?? true
+                job.type = value["job-status"] as? String ?? "Error"
+                job.idThingy = value["job-id-for-me"] as? String ?? "Error"
+                switch job.type! {
+                case "running":
+                    self.running.append(job)
+                    print(job)
+                case "completed":
+                    self.completed.append(job)
+                    print(job)
+                case "canceled":
+                    self.canceled.append(job)
+                    print(job)
+                default:
+                    print("error")
+                }
+            }
+            self.tableView.reloadData()
+        }
     }
     
     func basicSetup() {
@@ -90,8 +144,6 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @objc func segmentedControlValueChanged(_ semder: UISegmentedControl) {
         UIView.animate(withDuration: 0.3) {
-            print(self.segmentedControl.numberOfSegments)
-            print(self.segmentedControl.selectedSegmentIndex)
             self.buttonBar.frame.origin.x = (self.segmentedControl.frame.width / CGFloat(self.segmentedControl.numberOfSegments)) * CGFloat(self.segmentedControl.selectedSegmentIndex)
             self.tableView.reloadData()
         }
@@ -102,12 +154,13 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(allJobs.count)
         if segmentedControl.selectedSegmentIndex == 0 {
-            return 3
+            return self.running.count
         } else if segmentedControl.selectedSegmentIndex == 1 {
-            return 1
+            return self.completed.count
         } else if segmentedControl.selectedSegmentIndex == 2 {
-            return 2
+            return self.canceled.count
         } else {
             return 0
         }
@@ -115,7 +168,22 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if segmentedControl.selectedSegmentIndex == 0 {
-            print("end job prompt")
+            let alert = UIAlertController(title: "Ending Job?", message: "How are you going to end this job?", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Cancel Job", style: .default, handler: { (action) in
+                // alert other user that job has been cancelled
+                // change the dict to cancelled, so it shows up in the cancelled the project.
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").child(self.running[indexPath.row].idThingy!).child("job-status").setValue("canceled")
+                // reload stuff
+                self.viewWillAppear(true)
+            }))
+            alert.addAction(UIAlertAction(title: "Complete Job", style: .default, handler: { (action) in
+                // change the dict to completed
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").child(self.running[indexPath.row].idThingy!).child("job-status").setValue("completed")
+                // reload stuff
+                self.viewWillAppear(true)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         } else if segmentedControl.selectedSegmentIndex == 1 {
             print("nothing")
         } else if segmentedControl.selectedSegmentIndex == 2 {
@@ -128,20 +196,175 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if segmentedControl.selectedSegmentIndex == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCellID", for: indexPath) as! MyJobsRunningCell
-//            cell.profileImageView.image = UIImage(named: "profilepic")
+            // get author name and get author profile image from type authorId in MyJobStructure from database. Then update cell.
+            
+            Database.database().reference().child("Users").child(self.running[indexPath.row].authorUid!).child("name").observe(.value) { (snapshot) in
+                let nameString : String = (snapshot.value as? String)!
+                cell.userNameLabel.text! = nameString
+            }
+
+            Database.database().reference().child("Users").child(self.running[indexPath.row].authorUid!).child("profile-image").observe(.value) { (snapshot) in
+                let profileImageString : String = (snapshot.value as? String)!
+                if profileImageString == "not-yet-selected" {
+                    cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                }
+            }
+            
+            Database.database().reference().child("Jobs").child(self.running[indexPath.row].jobKey!).child("image").observe(.value) { (snapshot) in
+                let pictureString : String = (snapshot.value as? String)!
+                cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+            }
+            
+            Database.database().reference().child("Jobs").child(self.running[indexPath.row].jobKey!).child("title").observe(.value) { (snapshot) in
+                let pictureString : String = (snapshot.value as? String)!
+                cell.reviewLabel.text = "\(pictureString)"
+            }
+            
             return cell
         } else if segmentedControl.selectedSegmentIndex == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCompletedCellID", for: indexPath) as! MyJobsCompletedgCell
-//            cell.profileImageView.backgroundColor = .green
-//            cell.profileImageView.image = UIImage(named: "profilepic")
+            
+            Database.database().reference().child("Users").child(self.completed[indexPath.row].authorUid!).child("name").observe(.value) { (snapshot) in
+                let nameString : String = (snapshot.value as? String)!
+                cell.userNameLabel.text! = nameString
+            }
+            
+            Database.database().reference().child("Users").child(self.completed[indexPath.row].authorUid!).child("profile-image").observe(.value) { (snapshot) in
+                let profileImageString : String = (snapshot.value as? String)!
+                if profileImageString == "not-yet-selected" {
+                    cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                }
+            }
+            
+            if self.completed[indexPath.row].ratingIsNil! == false {
+                if self.completed[indexPath.row].rating! == 100 {
+                    cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                } else {
+                    switch self.completed[indexPath.row].rating! {
+                    case 0:
+                        cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    case 1:
+                        cell.star1.tintColor = UIColor.mainBlue
+                        cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    case 2:
+                        cell.star1.tintColor = UIColor.mainBlue
+                        cell.star2.tintColor = UIColor.mainBlue
+                        cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    case 3:
+                        cell.star1.tintColor = UIColor.mainBlue
+                        cell.star2.tintColor = UIColor.mainBlue
+                        cell.star3.tintColor = UIColor.mainBlue
+                        cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    case 4:
+                        cell.star1.tintColor = UIColor.mainBlue
+                        cell.star2.tintColor = UIColor.mainBlue
+                        cell.star3.tintColor = UIColor.mainBlue
+                        cell.star4.tintColor = UIColor.mainBlue
+                        cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    case 5:
+                        cell.star1.tintColor = UIColor.mainBlue
+                        cell.star2.tintColor = UIColor.mainBlue
+                        cell.star3.tintColor = UIColor.mainBlue
+                        cell.star4.tintColor = UIColor.mainBlue
+                        cell.star5.tintColor = UIColor.mainBlue
+                    default:
+                        print("hello")
+                    }
+                }
+            } else {
+                print("Error")
+            }
+            
+            Database.database().reference().child("Jobs").child(self.completed[indexPath.row].jobKey!).child("image").observe(.value) { (snapshot) in
+                let pictureString : String = (snapshot.value as? String)!
+                cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+            }
+            
+            // get review notes
+            
+            cell.reviewLabel.text! = self.completed[indexPath.row].reasonOrDescripiotn!
+            
             cell.selectionStyle = .none
             return cell
         } else if segmentedControl.selectedSegmentIndex == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCabcekkedCellID", for: indexPath) as! MyJobsCanceledCell
-//            cell.profileImageView.image = UIImage(named: "profilepic")
+            // get author name and get author profile image from type authorId in MyJobStructure from database. Then update cell.
+            
+            Database.database().reference().child("Users").child(self.canceled[indexPath.row].authorUid!).child("name").observe(.value) { (snapshot) in
+                let nameString : String = (snapshot.value as? String)!
+                cell.userNameLabel.text! = nameString
+            }
+
+            Database.database().reference().child("Users").child(self.canceled[indexPath.row].authorUid!).child("profile-image").observe(.value) { (snapshot) in
+                let profileImageString : String = (snapshot.value as? String)!
+                if profileImageString == "not-yet-selected" {
+                    cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                }
+            }
+            
+            Database.database().reference().child("Jobs").child(self.canceled[indexPath.row].jobKey!).child("image").observe(.value) { (snapshot) in
+                let pictureString : String = (snapshot.value as? String)!
+                cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+            }
+            
+            Database.database().reference().child("Jobs").child(self.canceled[indexPath.row].jobKey!).child("title").observe(.value) { (snapshot) in
+                let pictureString : String = (snapshot.value as? String)!
+                cell.reviewLabel.text = "\(pictureString)\n\(self.canceled[indexPath.row].reasonOrDescripiotn!)"
+            }
+            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCellID", for: indexPath) as! MyJobsRunningCell
+            
+            Database.database().reference().child("Users").child(self.canceled[indexPath.row].authorUid!).child("name").observe(.value) { (snapshot) in
+                let nameString : String = (snapshot.value as? String)!
+                cell.userNameLabel.text! = nameString
+            }
+            
+            Database.database().reference().child("Users").child(self.canceled[indexPath.row].authorUid!).child("profile-image").observe(.value) { (snapshot) in
+                let profileImageString : String = (snapshot.value as? String)!
+                if profileImageString == "not-yet-selected" {
+                    cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                }
+            }
             cell.textLabel?.text = "Cell Running"
             return cell
         }
@@ -215,7 +438,7 @@ class MyJobsRunningCell: UITableViewCell {
     let priceDateLabel : UILabel = {
         let label = UILabel()
 //        label.text = "24 Feb. 2018"
-        label.text = "Date"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
@@ -388,7 +611,7 @@ class MyJobsCompletedgCell: UITableViewCell {
     let priceDateLabel : UILabel = {
         let label = UILabel()
 //        label.text = "$30, 24 Feb. 2018"
-        label.text = "Date"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
@@ -520,7 +743,7 @@ class MyJobsCanceledCell: UITableViewCell {
     
     let priceDateLabel : UILabel = {
         let label = UILabel()
-        label.text = "Date"
+        label.text = ""
         label.font = UIFont.systemFont(ofSize: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray

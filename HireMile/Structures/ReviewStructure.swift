@@ -1,0 +1,18 @@
+//
+//  ReviewStructure.swift
+//  HireMile
+//
+//  Created by JJ Zapata on 12/11/20.
+//  Copyright © 2020 Jorge Zapata. All rights reserved.
+//
+
+import UIKit
+
+class ReviewStructure: NSObject {
+    
+    var userUid : String?
+    var ratingNumber : Int?
+    var postId : String?
+    var descriptionOfRating : String?
+
+}

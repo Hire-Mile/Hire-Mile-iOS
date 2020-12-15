@@ -36,6 +36,7 @@
 		787B018825685BE600BBC392 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018725685BE600BBC392 /* Email.swift */; };
 		7886ED92258127DD00260D2F /* PostStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7886ED91258127DD00260D2F /* PostStructure.swift */; };
 		7886ED9A25836BE300260D2F /* UserStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7886ED9925836BE300260D2F /* UserStructure.swift */; };
+		788A028E2583A19800C77434 /* ReviewStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788A028D2583A19800C77434 /* ReviewStructure.swift */; };
 		788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B1257E9C1F002AF9CB /* CashInAlert.swift */; };
 		788D44B5257EA25D002AF9CB /* FavoriteRemoveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */; };
 		788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */; };
@@ -45,6 +46,7 @@
 		78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FE25724C17004A1487 /* GlobalVariables.swift */; };
 		78AD2101257290B1004A1487 /* MyJobs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD2100257290B1004A1487 /* MyJobs.swift */; };
 		78B793C425703FBF00EFA7D1 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B793C325703FBF00EFA7D1 /* Payment.swift */; };
+		78C0B8BB25878C45002866A9 /* JobStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C0B8BA25878C45002866A9 /* JobStructure.swift */; };
 		78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5CA352565515E00BF59AB /* ViewPostController.swift */; };
 		78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A06256B99EC00DFABEB /* Favorites.swift */; };
 		78DA5A09256C1CE000DFABEB /* OtherProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A08256C1CE000DFABEB /* OtherProfile.swift */; };
@@ -82,6 +84,7 @@
 		787B018725685BE600BBC392 /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
 		7886ED91258127DD00260D2F /* PostStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostStructure.swift; sourceTree = "<group>"; };
 		7886ED9925836BE300260D2F /* UserStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserStructure.swift; path = "HireMile/Tabs/Menu Bar/Favorites/UserStructure.swift"; sourceTree = SOURCE_ROOT; };
+		788A028D2583A19800C77434 /* ReviewStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStructure.swift; sourceTree = "<group>"; };
 		788D44B1257E9C1F002AF9CB /* CashInAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashInAlert.swift; sourceTree = "<group>"; };
 		788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRemoveView.swift; sourceTree = "<group>"; };
 		788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSuccess.swift; sourceTree = "<group>"; };
@@ -91,6 +94,7 @@
 		78AD20FE25724C17004A1487 /* GlobalVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
 		78AD2100257290B1004A1487 /* MyJobs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJobs.swift; sourceTree = "<group>"; };
 		78B793C325703FBF00EFA7D1 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		78C0B8BA25878C45002866A9 /* JobStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobStructure.swift; sourceTree = "<group>"; };
 		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
 		78DA5A06256B99EC00DFABEB /* Favorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
 		78DA5A08256C1CE000DFABEB /* OtherProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfile.swift; sourceTree = "<group>"; };
@@ -276,6 +280,8 @@
 			children = (
 				7886ED9925836BE300260D2F /* UserStructure.swift */,
 				7886ED91258127DD00260D2F /* PostStructure.swift */,
+				788A028D2583A19800C77434 /* ReviewStructure.swift */,
+				78C0B8BA25878C45002866A9 /* JobStructure.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -449,6 +455,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78DA5A09256C1CE000DFABEB /* OtherProfile.swift in Sources */,
+				78C0B8BB25878C45002866A9 /* JobStructure.swift in Sources */,
 				78277F7F2576C06500B8C7BD /* MyProfile.swift in Sources */,
 				78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
@@ -471,6 +478,7 @@
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
 				78277F822576C78C00B8C7BD /* SearchController.swift in Sources */,
 				780A7F622562D565009BD93A /* Home.swift in Sources */,
+				788A028E2583A19800C77434 /* ReviewStructure.swift in Sources */,
 				7886ED9A25836BE300260D2F /* UserStructure.swift in Sources */,
 				78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */,
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
