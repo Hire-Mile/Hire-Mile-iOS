@@ -35,7 +35,8 @@ class Password: UITableViewController {
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.prefersLargeTitles = false    
         self.navigationController?.navigationBar.topItem?.title = "Password"
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
 
         self.tableView.delegate = self
         self.tableView.dataSource = self

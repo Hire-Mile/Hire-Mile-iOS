@@ -118,7 +118,8 @@ class ResetPassword: UIViewController {
     func basicSetup() {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         title = "Reset Password"
         self.navigationController?.navigationBar.prefersLargeTitles = true
     }

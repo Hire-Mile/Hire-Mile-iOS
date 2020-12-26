@@ -123,9 +123,12 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
     func autoSignIn() {
         if Auth.auth().currentUser != nil {
             print(Auth.auth().currentUser!.uid)
-            let controller = TabBarController()
-            controller.modalPresentationStyle = .fullScreen
-            self.present(controller, animated: false, completion: nil)
+//            let controller = TabBarController()
+//            controller.modalPresentationStyle = .fullScreen
+//            self.present(controller, animated: false, completion: nil)
+            let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+            let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+            UIApplication.shared.keyWindow?.rootViewController = vc
         }
     }
     
@@ -230,9 +233,12 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
                 
                 MBProgressHUD.hide(for: self.view, animated: true)
-                let controller = TabBarController()
-                controller.modalPresentationStyle = .fullScreen
-                self.present(controller, animated: true, completion: nil)
+//                let controller = TabBarController()
+//                controller.modalPresentationStyle = .fullScreen
+//                self.present(controller, animated: true, completion: nil)
+                let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                UIApplication.shared.keyWindow?.rootViewController = vc
             } else {
                 MBProgressHUD.hide(for: self.view, animated: true)
                 let alert = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
@@ -353,9 +359,12 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                 Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
                 
                 MBProgressHUD.hide(for: self.view, animated: true)
-                let controller = TabBarController()
-                controller.modalPresentationStyle = .fullScreen
-                self.present(controller, animated: true, completion: nil)
+//                let controller = TabBarController()
+//                controller.modalPresentationStyle = .fullScreen
+//                self.present(controller, animated: true, completion: nil)
+                let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                UIApplication.shared.keyWindow?.rootViewController = vc
             }
         }
     }

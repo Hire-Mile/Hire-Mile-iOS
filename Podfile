@@ -19,5 +19,6 @@ target 'HireMile' do
   pod 'GoogleSignIn'
   pod 'BulletinBoard'
   pod 'STPopup'
+  pod 'Kingfisher'
 
 end

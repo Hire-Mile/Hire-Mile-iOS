@@ -67,9 +67,12 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
         self.view.backgroundColor = UIColor.white
 
         self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.topItem?.title = GlobalVariables.categoryName
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(filterPressed))
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.refreshControl = refrshControl

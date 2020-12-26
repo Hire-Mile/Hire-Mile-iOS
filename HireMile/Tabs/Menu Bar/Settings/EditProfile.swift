@@ -164,7 +164,8 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
     func basicSetup() {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         title = "Edit Profile"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         

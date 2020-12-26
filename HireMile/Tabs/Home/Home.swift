@@ -9,12 +9,20 @@
 import UIKit
 import SideMenu
 import Firebase
+import Kingfisher
 import FirebaseAuth
 import FirebaseDatabase
+import MBProgressHUD
 
-class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    
+    let imagePicker = UIImagePickerController()
     
     var timer : Timer?
+    var estimateWidth = 160.0
+    var cellMarginSize = 16.0
+    var allJobs = [JobStructure]()
+    var passingImage : UIImage?
     
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -43,23 +51,15 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return button
     }()
     
-    
-    let tableView : UITableView = {
-        let tableview = UITableView()
-        tableview.translatesAutoresizingMaskIntoConstraints = false
-        tableview.separatorStyle = .none
-        tableview.register(HomeCell.self, forCellReuseIdentifier: "homeTableViewId")
-        tableview.backgroundColor = UIColor.white
-        return tableview
-    }()
-    
     lazy var slideInMenu : CGFloat = self.view.frame.width  * 0.30
     
     var isSlideInMenuPresented = false
     
     var menu : SideMenuNavigationController?
     
-    let titles = ["Cat. Name", "Cat. Name", "Cat. Name", "Cat. Name"]
+    var myCollectionView : UICollectionView?
+    
+    var titles = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,12 +79,36 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // Functions to throw
         self.basicSetup()
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: 60, height: 60)
+        
+        myCollectionView = UICollectionView(frame: CGRect(x: 6, y: 100, width: self.view.frame.width - 12, height: self.view.frame.height - 100), collectionViewLayout: layout)
+        myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
+        myCollectionView?.backgroundColor = UIColor.white
+        myCollectionView?.dataSource = self
+        myCollectionView?.delegate = self
+        view.addSubview(myCollectionView ?? UICollectionView())
+        myCollectionView?.refreshControl = refrshControl
+        
+        self.setupCategory()
+        
+        self.view = view
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.setupGrid()
+        DispatchQueue.main.async {
+            self.myCollectionView?.reloadData()
+        }
     }
     
     func addSubviews() {
         self.view.addSubview(searchButton)
         self.view.addSubview(menuButton)
-        self.view.addSubview(tableView)
     }
     
     func addConstraints() {
@@ -97,20 +121,36 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.menuButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.menuButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         self.menuButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        self.tableView.topAnchor.constraint(equalTo: self.menuButton.bottomAnchor, constant: 10).isActive = true
-        self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
-        self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
-        self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
     }
     
     func basicSetup() {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = true
-        
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.refreshControl = refrshControl
+        navigationItem.backButtonTitle = " "
+    }
+    
+    @objc func setupCategory() {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        self.allJobs.removeAll()
+        Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = JobStructure()
+                job.authorName = value["author"] as? String ?? "Error"
+                job.titleOfPost = value["title"] as? String ?? "Error"
+                job.descriptionOfPost = value["description"] as? String ?? "Error"
+                job.price = value["price"] as? Int ?? 0
+                job.category = value["category"] as? String ?? "Error"
+                job.imagePost = value["image"] as? String ?? "Error"
+                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                job.postId = value["postId"] as? String ?? "Error"
+                self.allJobs.append(job)
+            }
+            self.allJobs.reverse()
+            self.myCollectionView?.reloadData()
+            MBProgressHUD.hide(for: self.view, animated: true)
+            self.refrshControl.endRefreshing()
+        }
+
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -122,30 +162,61 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.view.endEditing(true)
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return titles.count
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.allJobs.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "homeTableViewId", for: indexPath) as! HomeCell
-        cell.titleLabel.text = titles[indexPath.row]
-        cell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
-        cell.secondServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
-        cell.seeAllButton.addTarget(self, action: #selector(seeAllPressed), for: .touchUpInside)
-        cell.backgroundColor = UIColor.white
-        return cell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
+        myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
+        
+        let url = URL(string: self.allJobs[indexPath.row].imagePost!)
+        myCell.firstServiceImage.kf.setImage(with: url)
+        
+        myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
+        if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
+            myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
+        } else {
+            myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!)"
+        }
+        myCell.backgroundColor = UIColor.white
+        return myCell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        seeAllPressedRow()
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+        let url = URL(string: self.allJobs[indexPath.row].imagePost!)
+        GlobalVariables.imagePost.kf.setImage(with: url)
+        GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
+        GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
+        GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
+        GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
+        GlobalVariables.postId = self.allJobs[indexPath.row].postId!
+        GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+        self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = self.calculateWidth()
+        return CGSize(width: width, height: width)
+    }
+    
+    func calculateWidth() -> CGFloat {
+        let estimatedWidth = CGFloat(estimateWidth)
+        let cellCount = floor(CGFloat(self.view.frame.size.width / estimatedWidth))
+        let margin = CGFloat(cellMarginSize * 2)
+        let width = (self.view.frame.size.width - CGFloat(cellMarginSize) * (cellCount - 1) - margin) / cellCount
+        return width
+    }
+    
+    func setupGrid() {
+        let flow = myCollectionView?.collectionViewLayout as! UICollectionViewFlowLayout
+        flow.minimumInteritemSpacing = CGFloat(self.cellMarginSize)
+        flow.minimumLineSpacing = CGFloat(self.cellMarginSize)
     }
     
     func menuSetup() {
@@ -172,11 +243,7 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func refreshAction() {
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(hideRefrsh), userInfo: nil, repeats: false)
-    }
-    
-    @objc func hideRefrsh() {
-        self.refrshControl.endRefreshing()
+        self.setupCategory()
     }
     
     @objc func searchButtonPressed() {
@@ -187,36 +254,72 @@ class Home: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @objc func timerFunction() {
         if GlobalVariables.presentToCat == true {
-            self.navigationController?.pushViewController(CategoryPostController(), animated: true)
+            
+            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
+            let url = URL(string: GlobalVariables.catId.imagePost!)
+            GlobalVariables.imagePost.kf.setImage(with: url)
+            GlobalVariables.postTitle = GlobalVariables.catId.titleOfPost!
+            GlobalVariables.postDescription = GlobalVariables.catId.descriptionOfPost!
+            GlobalVariables.postPrice = GlobalVariables.catId.price!
+            GlobalVariables.authorId = GlobalVariables.catId.authorName!
+            GlobalVariables.postId = GlobalVariables.catId.postId!
+            GlobalVariables.type = GlobalVariables.catId.typeOfPrice!
+            self.navigationController?.pushViewController(ViewPostController(), animated: true)
             GlobalVariables.presentToCat = false
+            GlobalVariables.catId = JobStructure()
         }
         
+        if GlobalVariables.isGoingToPost == true {
+            let alert = UIAlertController(title: "Choose Your Source", message: "Where should you get your cover photo from?", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
+                self.imagePicker.sourceType = .photoLibrary
+                self.imagePicker.allowsEditing = true
+                self.imagePicker.delegate = self
+                self.present(self.imagePicker, animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
+                let imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                imagePicker.sourceType = .camera
+                imagePicker.allowsEditing = true
+                self.present(imagePicker, animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            GlobalVariables.isGoingToPost = false
+        }
+        
+        if self.passingImage != nil {
+            GlobalVariables.postImage = passingImage!
+            let controller = Post()
+            controller.modalPresentationStyle = .fullScreen
+            timer?.invalidate()
+            self.present(controller, animated: true, completion: nil)
+        }
+        
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.imagePicker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let editedImage = info[.editedImage] as? UIImage {
+            self.passingImage = editedImage
+        } else if let originalImage = info[.originalImage] as? UIImage {
+            self.passingImage = originalImage
+        }
+        dismiss(animated: true, completion: nil)
     }
 
 }
 
-class HomeCell: UITableViewCell {
+class HomeCell: UICollectionViewCell {
     
-    let titleLabel : UILabel = {
-        let label = UILabel()
-        label.text = "Nearby Services"
-        label.textColor = UIColor.black
-        label.textAlignment = .left
-        label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let seeAllButton : UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor(red: 242/255, green: 235/255, blue: 235/255, alpha: 1)
-        button.setTitleColor(UIColor(red: 131/255, green: 131/255, blue: 131/255, alpha: 1), for: .normal)
-        button.setTitle("SEE ALL", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.heavy)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
     
     let firstServiceView : UIView = {
         let view = UIView()
@@ -225,17 +328,6 @@ class HomeCell: UITableViewCell {
         view.layer.shadowColor = UIColor.black.cgColor
         view.layer.shadowRadius = 30
         view.layer.shadowOpacity = 0.09
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let secondServiceView : UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.white
-        view.layer.cornerRadius = 15
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 20
-        view.layer.shadowOpacity = 0.1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -249,27 +341,7 @@ class HomeCell: UITableViewCell {
         return imageView
     }()
     
-    let secondServiceImage : UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "designing")
-        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        return imageView
-    }()
-    
     let firstLocationLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 11, weight: .heavy)
-        label.textColor = UIColor.white
-        label.textAlignment = NSTextAlignment.left
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.text = "1 Mile Away"
-        return label
-    }()
-    
-    let secondLocationLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 11, weight: .heavy)
         label.textColor = UIColor.white
@@ -291,29 +363,7 @@ class HomeCell: UITableViewCell {
         return label
     }()
     
-    let secondTitle : UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 87/255, green: 87/255, blue: 87/255, alpha: 1)
-        label.font = UIFont.boldSystemFont(ofSize: 13)
-        label.text = "Title"
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = NSTextAlignment.left
-        return label
-    }()
-    
     let firstPrice : UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
-        label.text = "Price"
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = NSTextAlignment.left
-        return label
-    }()
-    
-    let secondPrice : UILabel = {
         let label = UILabel()
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
@@ -330,29 +380,16 @@ class HomeCell: UITableViewCell {
         return button
     }()
     
-    let secondServiceButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
         setup()
     }
     
     func setup() {
-        addSubview(titleLabel)
-        titleLabel.anchor(top: topAnchor, paddingTop: 0, bottom: bottomAnchor, paddingBottom: -165, left: leftAnchor, paddingLeft: 20, right: rightAnchor, paddingRight: -20, width: 0, height: 0)
-        
-        addSubview(seeAllButton)
-        seeAllButton.anchor(top: topAnchor, paddingTop: 5, bottom: bottomAnchor, paddingBottom: -165, left: leftAnchor, paddingLeft: frame.width / 1.2, right: rightAnchor, paddingRight: -20, width: 0, height: 0)
-        seeAllButton.layer.cornerRadius = 15
-        seeAllButton.clipsToBounds = true
         
         addSubview(firstServiceView)
-        firstServiceView.anchor(top: titleLabel.bottomAnchor, paddingTop: 10, bottom: bottomAnchor, paddingBottom: -10, left: leftAnchor, paddingLeft: 20, right: rightAnchor, paddingRight: -(self.frame.width / 1.6), width: 0, height: 0)
+        firstServiceView.anchor(top: topAnchor, paddingTop: 10, bottom: bottomAnchor, paddingBottom: -10, left: leftAnchor, paddingLeft: 10, right: rightAnchor, paddingRight: -10, width: 0, height: 0)
         
         firstServiceView.addSubview(firstServiceImage)
         firstServiceImage.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
@@ -368,30 +405,6 @@ class HomeCell: UITableViewCell {
         
         firstServiceView.addSubview(firstPrice)
         firstPrice.anchor(top: firstTitle.bottomAnchor, paddingTop: 0, bottom: firstServiceView.bottomAnchor, paddingBottom: -7, left: firstServiceView.leftAnchor, paddingLeft: 6, right: firstServiceView.rightAnchor, paddingRight: 6, width: 0, height: 0)
-        
-        addSubview(secondServiceView)
-        secondServiceView.anchor(top: titleLabel.bottomAnchor, paddingTop: 10, bottom: bottomAnchor, paddingBottom: -10, left: firstServiceView.rightAnchor, paddingLeft: 20, right: rightAnchor, paddingRight: -20, width: 0, height: 0)
-        
-        secondServiceView.addSubview(secondServiceImage)
-        secondServiceImage.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-        secondServiceImage.layer.cornerRadius = 15
-        secondServiceImage.clipsToBounds = true
-        secondServiceImage.anchor(top: secondServiceView.topAnchor, paddingTop: 0, bottom: secondServiceView.bottomAnchor, paddingBottom: -50, left: secondServiceView.leftAnchor, paddingLeft: 0, right: secondServiceView.rightAnchor, paddingRight: 0, width: 0, height: 0)
-        
-        secondServiceView.addSubview(secondLocationLabel)
-        secondLocationLabel.anchor(top: secondServiceView.topAnchor, paddingTop: 5, bottom: secondServiceView.bottomAnchor, paddingBottom: -125, left: secondServiceView.leftAnchor, paddingLeft: 6, right: secondServiceView.rightAnchor, paddingRight: 0, width: 0, height: 0)
-        
-        secondServiceView.addSubview(secondTitle)
-        secondTitle.anchor(top: secondServiceImage.bottomAnchor, paddingTop: 5, bottom: secondServiceView.bottomAnchor, paddingBottom: -25, left: secondServiceView.leftAnchor, paddingLeft: 6, right: secondServiceView.rightAnchor, paddingRight: 6, width: 0, height: 0)
-        
-        secondServiceView.addSubview(secondPrice)
-        secondPrice.anchor(top: secondTitle.bottomAnchor, paddingTop: 0, bottom: secondServiceView.bottomAnchor, paddingBottom: -7, left: secondServiceView.leftAnchor, paddingLeft: 6, right: secondServiceView.rightAnchor, paddingRight: 6, width: 0, height: 0)
-        
-        firstServiceView.addSubview(firstServiceButton)
-        firstServiceButton.anchor(top: firstServiceView.topAnchor, paddingTop: 0, bottom: firstServiceView.bottomAnchor, paddingBottom: 0, left: firstServiceView.leftAnchor, paddingLeft: 0, right: firstServiceView.rightAnchor, paddingRight: 0, width: 0, height: 0)
-        
-        secondServiceView.addSubview(secondServiceButton)
-        secondServiceButton.anchor(top: secondServiceView.topAnchor, paddingTop: 0, bottom: secondServiceView.bottomAnchor, paddingBottom: 0, left: secondServiceView.leftAnchor, paddingLeft: 0, right: secondServiceView.rightAnchor, paddingRight: 0, width: 0, height: 0)
     }
     
     required init?(coder: NSCoder) {
@@ -418,6 +431,8 @@ class MenuListController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.tabBarController?.tabBar.isHidden = false
         
         self.tableView.reloadData()
     }
@@ -488,7 +503,7 @@ class MenuListController: UITableViewController {
             switch indexPath.row {
             case 0:
                 print("0")
-                GlobalVariables.categoryName = "Recent"
+                GlobalVariables.categoryName = "Trending"
                 self.navigationController?.pushViewController(CategoryPostController(), animated: true)
             case 1:
                 print("my jobs")

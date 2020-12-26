@@ -7,10 +7,17 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
     let results = ["Web Design", "Car Rental", "App Design", "IT"   ]
+    var users = [UserStructure]()
+    var allJobs = [JobStructure]()
+    var justRes = [JobStructure]()
+    var isSearching = false
     
     let xButton : UIButton = {
         let button = UIButton()
@@ -57,12 +64,14 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.searchTextField.addTarget(self, action: #selector(textFieldChange), for: .editingChanged)
+        
         self.view.backgroundColor = UIColor.white
         
         self.searchTextField.delegate = self
         self.searchTextField.becomeFirstResponder()
         
-        self.tableView.register(SearchCell.self, forCellReuseIdentifier: "mySearchCell")
+        self.tableView.register(CategoryCell.self, forCellReuseIdentifier: "mySearchCell")
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
@@ -89,23 +98,62 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 0).isActive = true
         self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 0).isActive = true
         self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        
+        self.pullData()
 
         // Do any additional setup after loading the view.
     }
     
+    func pullData() {
+        self.allJobs.removeAll()
+        Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = JobStructure()
+                job.authorName = value["author"] as? String ?? "Error"
+                job.titleOfPost = value["title"] as? String ?? "Error"
+                job.descriptionOfPost = value["description"] as? String ?? "Error"
+                job.price = value["price"] as? Int ?? 0
+                job.category = value["category"] as? String ?? "Error"
+                job.imagePost = value["image"] as? String ?? "Error"
+                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                job.postId = value["postId"] as? String ?? "Error"
+                self.allJobs.append(job)
+            }
+            self.allJobs.reverse()
+            self.tableView.reloadData()
+        }
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.isSearching = false
+        self.tableView.reloadData()
         textField.resignFirstResponder()
         self.view.frame.origin.y = 0
         return (true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.isSearching = false
+        self.tableView.reloadData()
         self.view.frame.origin.y = 0
         self.view.endEditing(true)
     }
     
     @objc func xmarktouched () {
+        self.isSearching = false
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func textFieldChange() {
+        
+        self.justRes = self.allJobs.filter({$0.titleOfPost!.prefix(self.searchTextField.text!.count) == self.searchTextField.text!})
+        
+        self.isSearching = true
+        self.tableView.reloadData()
+        
+        // implment search function for sorting here
+        
+        print("info")
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -113,24 +161,54 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.results.count
+        if self.isSearching {
+            return self.justRes.count
+        } else {
+            return self.allJobs.count
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return 200
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "mySearchCell", for: indexPath) as! SearchCell
-        cell.textLabel?.text = results[indexPath.row]
-        cell.selectionStyle = .default
-        cell.textLabel?.textColor = UIColor.darkGray
-        return cell
+        if self.isSearching {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "mySearchCell", for: indexPath) as! CategoryCell
+            cell.titleImageView.loadImageUsingCacheWithUrlString(self.justRes[indexPath.row].imagePost!)
+            cell.titleLabel.text = self.justRes[indexPath.row].titleOfPost!
+            cell.postId = self.justRes[indexPath.row].postId!
+            if self.justRes[indexPath.row].typeOfPrice == "Hourly" {
+                cell.priceTag.text = "$\(self.justRes[indexPath.row].price!) / Hour"
+            } else {
+                cell.priceTag.text = "$\(self.justRes[indexPath.row].price!)"
+            }
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "mySearchCell", for: indexPath) as! CategoryCell
+            cell.titleImageView.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+            cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
+            cell.postId = self.allJobs[indexPath.row].postId!
+            if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
+                cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
+            } else {
+                cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!)"
+            }
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.dismiss(animated: true) {
-            GlobalVariables.presentToCat = true
+        if self.isSearching {
+            self.dismiss(animated: true) {
+                GlobalVariables.catId = self.justRes[indexPath.row]
+                GlobalVariables.presentToCat = true
+            }
+        } else {
+            self.dismiss(animated: true) {
+                GlobalVariables.catId = self.allJobs[indexPath.row]
+                GlobalVariables.presentToCat = true
+            }
         }
     }
 

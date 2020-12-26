@@ -19,19 +19,14 @@ class TabBarController: UITabBarController, UINavigationControllerDelegate, UIIm
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
+        self.hidesBottomBarWhenPushed = true
+        
+//        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
         
         tabBar.tintColor = UIColor.mainBlue
         
         let middleButton = UIButton()
-        middleButton.frame.size = CGSize(width: 70, height: 70)
-        middleButton.backgroundColor = UIColor.mainBlue
-        middleButton.setTitleColor(UIColor.white, for: .normal)
-        middleButton.setImage(UIImage(named: "postButton"), for: .normal)
-        middleButton.layer.cornerRadius = 35
-        middleButton.layer.masksToBounds = true
-        middleButton.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - 65)
-        middleButton.addTarget(self, action: #selector(openPost), for: .touchUpInside)
+        
         view.addSubview(middleButton)
         
         let homeController = UINavigationController(rootViewController: Home())
@@ -50,45 +45,52 @@ class TabBarController: UITabBarController, UINavigationControllerDelegate, UIIm
     }
     
     @objc func openPost() {
-        let alert = UIAlertController(title: "Choose Your Source", message: "Where should you get your cover photo from?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
-            self.imagePicker.sourceType = .photoLibrary
-            self.imagePicker.allowsEditing = true
-            self.imagePicker.delegate = self
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
-            let imagePicker = UIImagePickerController()
-            imagePicker.delegate = self
-            imagePicker.sourceType = .camera
-            imagePicker.allowsEditing = true
-            self.present(imagePicker, animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.imagePicker.dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let editedImage = info[.editedImage] as? UIImage {
-            self.passingImage = editedImage
-        } else if let originalImage = info[.originalImage] as? UIImage {
-            self.passingImage = originalImage
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func timerFunction() {
-        if self.passingImage != nil {
-            GlobalVariables.postImage = passingImage!
-            let controller = Post()
-            controller.modalPresentationStyle = .fullScreen
-            timer?.invalidate()
-            self.present(controller, animated: true, completion: nil)
-        }
+        
     }
 
 }
+
+
+class TabBarController2: UITabBar {
+
+    private var middleButton = UIButton()
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setupMiddleButton()
+    }
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if self.isHidden {
+            return super.hitTest(point, with: event)
+        }
+        
+        let from = point
+        let to = middleButton.center
+
+        return sqrt((from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y)) <= 39 ? middleButton : super.hitTest(point, with: event)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        middleButton.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: 0)
+    }
+
+    func setupMiddleButton() {
+        middleButton.frame.size = CGSize(width: 70, height: 70)
+        middleButton.backgroundColor = UIColor.mainBlue
+        middleButton.setTitleColor(UIColor.white, for: .normal)
+        middleButton.setImage(UIImage(named: "postButton"), for: .normal)
+        middleButton.layer.cornerRadius = 35
+        middleButton.layer.masksToBounds = true
+        middleButton.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - 65)
+        middleButton.addTarget(self, action: #selector(test), for: .touchUpInside)
+        addSubview(middleButton)
+    }
+
+    @objc func test() {
+        print("my name is jeff")
+        GlobalVariables.isGoingToPost = true
+    }
+}
+

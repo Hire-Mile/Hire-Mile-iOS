@@ -94,6 +94,9 @@ PODS:
   - GTMSessionFetcher/Core (1.4.0)
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
+  - Kingfisher (5.15.8):
+    - Kingfisher/Core (= 5.15.8)
+  - Kingfisher/Core (5.15.8)
   - leveldb-library (1.22)
   - MBProgressHUD (1.2.0)
   - nanopb (1.30905.0):
@@ -118,6 +121,7 @@ DEPENDENCIES:
   - Firebase/Database
   - Firebase/Storage
   - GoogleSignIn
+  - Kingfisher
   - MBProgressHUD
   - NVActivityIndicatorView
   - SideMenu
@@ -143,6 +147,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
+    - Kingfisher
     - leveldb-library
     - MBProgressHUD
     - nanopb
@@ -170,6 +175,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  Kingfisher: a3c03d702433fa6cfedabb2bddbe076fb8f2e902
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
@@ -180,6 +186,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: a4d2d4643f0fea5db0ff533c7bedb24385e22252
+PODFILE CHECKSUM: ff53de2d09856179ce5826039c7c3d3c8c2fb0c6
 
 COCOAPODS: 1.10.0
