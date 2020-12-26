@@ -115,6 +115,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.addConstraints()
         
         self.carousel.image = GlobalVariables.postImage2.image
+//        self.carousel.image! = GlobalVariables.imagePost.image!
         self.titleLabel.text = GlobalVariables.postTitle
         self.descriptionLabel.text = GlobalVariables.postDescription
         if GlobalVariables.type == "Hourly" {
@@ -225,7 +226,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
     }
     
     func changeButtonStatus() {

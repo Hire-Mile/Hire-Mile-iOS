@@ -35,7 +35,8 @@ class Settings: UITableViewController {  // change to tableview tonoller
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.topItem?.title = "Settings"
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
 
         self.tableView.delegate = self
         self.tableView.dataSource = self

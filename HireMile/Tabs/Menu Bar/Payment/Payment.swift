@@ -161,6 +161,8 @@ class Payment: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 247/255, green: 248/255, blue: 248/255, alpha: 1)
         self.navigationController?.navigationBar.setBackgroundImage(nil, for: .bottom, barMetrics: .default)
         self.navigationController?.navigationBar.shadowImage = nil
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         
         self.view.addSubview(cash)
         self.cash.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 25).isActive = true

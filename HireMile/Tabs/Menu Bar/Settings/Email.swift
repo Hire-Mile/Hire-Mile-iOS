@@ -74,7 +74,8 @@ class Email: UIViewController, UITextFieldDelegate {
     func basicSetup() {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         title = "Change Email"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         

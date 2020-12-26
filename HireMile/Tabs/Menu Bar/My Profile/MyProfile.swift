@@ -185,6 +185,8 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.navigationBar.topItem?.title = " "
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
         self.navigationItem.rightBarButtonItems = [upload, edit]
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         
         // profile image view
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in

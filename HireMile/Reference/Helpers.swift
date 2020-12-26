@@ -11,6 +11,15 @@ import UIKit
 
 extension UIColor {
     static var mainBlue = UIColor(red: 120/255, green: 196/255, blue: 248/255, alpha: 1)
+    func as1ptImage() -> UIImage {
+        UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
+        let ctx = UIGraphicsGetCurrentContext()
+        self.setFill()
+        ctx!.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
 }
 
 extension UIView {
@@ -145,4 +154,41 @@ extension UIImageView {
             })
         }).resume()
     }
+}
+
+enum VerticalLocation: String {
+    case bottom
+    case top
+}
+
+extension UIView {
+    func addShadow(location: VerticalLocation, color: UIColor = .black, opacity: Float = 0.5, radius: CGFloat = 5.0) {
+        switch location {
+        case .bottom:
+             addShadow(offset: CGSize(width: 0, height: 10), color: color, opacity: opacity, radius: radius)
+        case .top:
+            addShadow(offset: CGSize(width: 0, height: -10), color: color, opacity: opacity, radius: radius)
+        }
+    }
+    func addShadow(offset: CGSize, color: UIColor = .black, opacity: Float = 0.5, radius: CGFloat = 5.0) {
+        self.layer.masksToBounds = false
+        self.layer.shadowColor = color.cgColor
+        self.layer.shadowOffset = offset
+        self.layer.shadowOpacity = opacity
+        self.layer.shadowRadius = radius
+    }
+}
+
+extension UIView {
+func addBottomShadow() {
+    layer.masksToBounds = false
+    layer.shadowRadius = 120
+    layer.shadowOpacity = 0.5
+    layer.shadowColor = UIColor.black.cgColor
+    layer.shadowOffset = CGSize(width: 0 , height: 0)
+//    layer.shadowPath = UIBezierPath(rect: CGRect(x: 0,
+//                                                 y: bounds.maxY - layer.shadowRadius,
+//                                                 width: bounds.width,
+//                                                 height: layer.shadowRadius)).cgPath
+}
 }

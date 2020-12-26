@@ -46,8 +46,8 @@ class Favorites: UITableViewController {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.topItem?.title = "Favorites"
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
-        self.navigationController?.navigationBar.barTintColor = UIColor(red: 247/255, green: 248/255, blue: 248/255, alpha: 1)
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.setBackgroundImage(nil, for: .bottom, barMetrics: .default)
         self.navigationController?.navigationBar.shadowImage = nil
 

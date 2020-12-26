@@ -20,7 +20,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     
     let imagePicker = UIImagePickerController()
     let pickeringView = UIPickerView()
-    let pickerData = ["Design / Development", "Car / Auto", "Cleaning", "Beauty & Salon", "Repair", "Other"]
+    let pickerData = ["Development / Design", "Repairs / Cleaning", "Teaching / Tutoring", "Writing", "Sales & Marketing", "SEO", "Public Relations", "Translation", "Other"]
 
     let backButton : UIButton = {
         let button = UIButton()
@@ -302,8 +302,8 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
             guard let imageData = backgroundImage.image?.jpegData(compressionQuality: 0.75) else { return }
             let storageRef = Storage.storage().reference()
             let storageProfileRef = storageRef.child("Jobs").child("\(Auth.auth().currentUser!.uid)").child("PostImage")
-            let key = Database.database().reference().child("Jobs").childByAutoId().key
             let metadata = StorageMetadata()
+            let key = Database.database().reference().child("Jobs").childByAutoId().key
             metadata.contentType = "image/jpg"
             storageProfileRef.putData(imageData, metadata: metadata) { (storageMetadata, putDataError) in
                 if putDataError == nil && storageMetadata != nil {
@@ -335,6 +335,26 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
                                         let newNumber = Int(value!)
                                         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("services").setValue(newNumber + 1)
                                     }
+                                    switch self.pickCategory.text! {
+                                    case "Development / Design":
+                                        self.upload(childRef: "developmentdesign")
+                                    case "Repairs / Cleaning":
+                                        self.upload(childRef: "repairscleaning")
+                                    case "Teaching / Tutoring":
+                                        self.upload(childRef: "teachingtutoring")
+                                    case "Writing":
+                                        self.upload(childRef: "writing")
+                                    case "SEO":
+                                        self.upload(childRef: "seo")
+                                    case "Public Relations":
+                                        self.upload(childRef: "publicrelations")
+                                    case "Translation":
+                                        self.upload(childRef: "translation")
+                                    case "Other":
+                                        self.upload(childRef: "other")
+                                    default:
+                                        self.upload(childRef: "other")
+                                    }
                                     // success alert
                                     MBProgressHUD.hide(for: self.view, animated: true)
                                     let alert = UIAlertController(title: "Posted", message: "You post has been posted! Use your profile to see your job listings.", preferredStyle: .alert)
@@ -365,6 +385,10 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
             }
             
         }
+    }
+    
+    func upload(childRef: String) {
+        Database.database().reference().child("Information").child("home").child(childRef).child("trueOrFalse").setValue("true")
     }
     
 }

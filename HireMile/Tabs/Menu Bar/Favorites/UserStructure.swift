@@ -11,5 +11,7 @@ import UIKit
 class UserStructure: NSObject {
     
     var uid : String?
+    var profileImageView : String?
+    var username : String?
 
 }
