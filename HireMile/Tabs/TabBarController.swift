@@ -43,10 +43,6 @@ class TabBarController: UITabBarController, UINavigationControllerDelegate, UIIm
 
         // Do any additional setup after loading the view.
     }
-    
-    @objc func openPost() {
-        
-    }
 
 }
 

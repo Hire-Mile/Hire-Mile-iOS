@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -15,9 +18,8 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let titles = ["Style", "Style"]
     let descriptions = ["Message", "Message"]
     
-    let messageTitles = ["Name", "Name"]
-    let messageDescriptions = ["Message", "Message"]
-    let hasSeen = [true, false]
+//    let messageTitles = ["Name", "Name"]
+//    let messageDescriptions = ["Message", "Message"]
         
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -75,6 +77,8 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.refreshControl = refrshControl
         tableView.register(NotificationCell.self, forCellReuseIdentifier: "myNotificationsCellID")
         tableView.register(MessagesCellCell.self, forCellReuseIdentifier: "myMessagesCellID")
+        
+        observeMessages()
 
         // Do any additional setup after loading the view.
     }
@@ -89,11 +93,60 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.navigationBar.topItem?.title = "Chat"
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
-        self.navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(playButtonPressed))
     }
     
-    @objc func playButtonPressed() {
-        print("hello")
+    var messages = [Message]()
+    var messagesDictionary = [String : Message]()
+    
+    func observeMessages() {
+        self.messages.removeAll()
+        self.messagesDictionary.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference().child("User-Messages").child(uid)
+        ref.observe(.childAdded, with: { (snapshot) in
+            let userId = snapshot.key
+            Database.database().reference().child("User-Messages").child(uid).child(userId).observe(.childAdded) { (snapshot) in
+                let messageId = snapshot.key
+                self.fetchMessageWithMessageId(messageId: messageId)
+            }
+        }, withCancel: nil)
+    }
+    
+    private func fetchMessageWithMessageId(messageId: String) {
+        let messagesReference = Database.database().reference().child("Messages").child(messageId)
+        messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message(dictionary: dictionary)
+                if let chatPartnerId = message.chatPartnerId() {
+                    self.messagesDictionary[chatPartnerId] = message
+                }
+                self.attemptReloadData()
+            }
+        }, withCancel: nil)
+    }
+    
+    var timer : Timer?
+    
+    func attemptReloadData() {
+        self.timer?.invalidate()
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+    }
+    
+    @objc func handleReload() {
+        self.messages = Array(self.messagesDictionary.values)
+        self.messages.sort(by: { (message1, message2) -> Bool in
+            if let timestamp1 = message1.timestamp, let timestamp2 = message2.timestamp {
+                return timestamp1.intValue > timestamp2.intValue
+            }
+            return false
+        })
+        //this will crash because of background thread, so lets call this on dispatch_async main thread
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -102,7 +155,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if segmentedControl.selectedSegmentIndex == 0 {
-            return 2
+            return self.messages.count
         } else if segmentedControl.selectedSegmentIndex == 1 {
             return 0
         } else {
@@ -113,18 +166,10 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if segmentedControl.selectedSegmentIndex == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myMessagesCellID", for: indexPath) as! MessagesCellCell
-            cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-            cell.textLabel?.text = messageTitles[indexPath.row]
-            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-            cell.detailTextLabel?.isHidden = false
-            if self.hasSeen[indexPath.row] == false {
-                print("hello")
-            } else {
-                cell.hasSeenView.removeFromSuperview()
-                cell.timeStamp.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
-            }
-            cell.detailTextLabel?.textColor = UIColor.darkGray
-            cell.detailTextLabel?.text = messageDescriptions[indexPath.row]
+            
+            let message = messages[indexPath.row]
+            cell.message = message
+            
             return cell
         } else if segmentedControl.selectedSegmentIndex == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myNotificationsCellID", for: indexPath) as! NotificationCell
@@ -153,11 +198,32 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if segmentedControl.selectedSegmentIndex == 0 {
-            self.navigationController?.pushViewController(ChatLogController(collectionViewLayout: UICollectionViewFlowLayout()), animated: true)
+            
+            let message = messages[indexPath.row]
+            guard let chatPartnerId = message.chatPartnerId() else {
+                return
+            }
+            
+            let ref = Database.database().reference().child("Users").child(chatPartnerId)
+            ref.observe(.value) { (snapshot) in
+                guard let dictionary = snapshot.value as? [String : AnyObject] else {
+                    return
+                }
+                let user = UserChat(dictionary: dictionary)
+                user.id = chatPartnerId
+                self.showChatControllerForUser(user)
+            }
+            
         } else if segmentedControl.selectedSegmentIndex == 1 {
         } else {
             //
         }
+    }
+    
+    func showChatControllerForUser(_ user: UserChat) {
+        let chatLogController = ChatLogController2(collectionViewLayout: UICollectionViewFlowLayout())
+        chatLogController.user = user
+        navigationController?.pushViewController(chatLogController, animated: true)
     }
     
     @objc func refreshAction() {
@@ -208,6 +274,53 @@ class NotificationCell: UITableViewCell {
 }
 
 class MessagesCellCell: UITableViewCell {
+    
+    var message : Message? {
+        didSet {
+            self.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+            
+            self.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+            self.detailTextLabel?.isHidden = false
+            self.detailTextLabel?.textColor = UIColor.darkGray
+            
+            // remove unread circle
+            self.hasSeenView.removeFromSuperview()
+            self.timeStamp.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            
+            self.detailTextLabel?.text = message?.text
+            
+            if let seconds = message?.timestamp?.doubleValue {
+                let timeStampDate = Date(timeIntervalSince1970: seconds)
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "hh:mm a"
+                timeStamp.text = dateFormatter.string(from: timeStampDate)
+            }
+            
+            setupNameAndAvatoar()
+        }
+    }
+    
+    private func setupNameAndAvatoar() {
+        if let id = message?.chatPartnerId() {
+            let ref = Database.database().reference().child("Users").child(id)
+            ref.observeSingleEvent(of: .value) { (snapshot) in
+                if let dictionary = snapshot.value as? [String : Any] {
+                    self.textLabel?.text = dictionary["name"] as? String
+                    if dictionary["profile-image"] as? String == "not-yet-selected" {
+                        self.profileImageView.backgroundColor = UIColor.clear
+                        self.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                        self.profileImageView.tintColor = UIColor.lightGray
+                        self.profileImageView.contentMode = .scaleAspectFill
+                    } else {
+                        if let photoString = dictionary["profile-image"] as? String {
+                            self.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+                            self.profileImageView.loadImageUsingCacheWithUrlString(photoString)
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
