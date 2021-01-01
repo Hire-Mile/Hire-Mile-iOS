@@ -15,6 +15,7 @@ import FirebaseDatabase
 class ViewPostController: UIViewController, UITextFieldDelegate {
     
     var postId = ""
+    var authorId = ""
     
     let carousel : UIImageView = {
         let carousel = UIImageView()
@@ -129,6 +130,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         print("Helo")
         print("Helo")
         print(GlobalVariables.authorId)
+        self.authorId = GlobalVariables.authorId
         Database.database().reference().child("Users").child(GlobalVariables.authorId).child("profile-image").observe(.value) { (snapshot) in
             let profileImageUrl : String = (snapshot.value as? String)!
             if profileImageUrl == "not-yet-selected" {
@@ -289,9 +291,34 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     @objc func sendPressed() {
         if self.textField.text != " " && self.textField.text != "  " && self.textField.text != "   " && self.textField.text != nil && self.textField.text != "  Say Something..." {
-            let alert = UIAlertController(title: "Message Sent", message: "Your messsage to Albert was successful", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            let ref = Database.database().reference().child("Messages")
+            let childRef = ref.childByAutoId()
+            let toId = authorId
+            let fromId = Auth.auth().currentUser!.uid
+            let timestamp = Int(Date().timeIntervalSince1970)
+            let values = ["text": textField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+            childRef.updateChildValues(values) { (error, ref) in
+                if error != nil {
+                    print(error ?? "")
+                    return
+                }
+                
+                guard let messageId = childRef.key else { return }
+                
+    //            let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(messageId)
+                let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(toId).child(messageId)
+                userMessagesRef.setValue(1)
+                
+    //            let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId!).child(messageId)
+                let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId).child(fromId).child(messageId)
+                recipientUserMessagesRef.setValue(1)
+                
+                self.textField.text = nil
+                
+                let alert = UIAlertController(title: "Message Sent", message: "Your messsage was sent successfully", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
         } else {
             let alert = UIAlertController(title: "Error", message: "Please enter valid text", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
