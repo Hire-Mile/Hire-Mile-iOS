@@ -64,6 +64,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let pushManager = PushNotificationManager(userID: Auth.auth().currentUser!.uid)
+        pushManager.registerForPushNotifications()
+        
         // Functions to throw
         self.addSubviews()
         self.addConstraints()

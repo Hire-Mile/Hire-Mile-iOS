@@ -26,6 +26,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     var messages = [Message]()
     var startingFrame : CGRect?
     var blackBackground : UIView?
+    var messageType = ""
+    var theMessage = ""
     
     let cellId = "myCellId"
     
@@ -294,7 +296,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     @objc func didSelectImage() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
-        imagePickerController.mediaTypes = [kUTTypeImage as String, kUTTypeVideo as String, kUTTypeMovie as String]
+        imagePickerController.mediaTypes = [kUTTypeImage as String]
         imagePickerController.allowsEditing = true
         self.present(imagePickerController, animated: true, completion: nil)
     }
@@ -403,8 +405,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
     }
     
-    private func sendImageWithImageUrl(imageUrl: String, image: UIImage  ) {
-        
+    private func sendImageWithImageUrl(imageUrl: String, image: UIImage) {
         let properties = ["imageUrl": imageUrl, "imageWidth" : image.size.width, "imageHeight" : image.size.height] as [String : Any]
         sendMessageWithProperties(properties)
     }
@@ -433,6 +434,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             
             let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId!).child(fromId).child(messageId)
             recipientUserMessagesRef.setValue(1)
+            
+            
+            Database.database().reference().child("Users").child(toId!).child("fcmToken").observe(.value) { (snapshot) in
+                let token : String = (snapshot.value as? String)!
+                let sender = PushNotificationSender()
+                sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(fromId)")
+            }
             
             self.inputTextField.text = nil
         }

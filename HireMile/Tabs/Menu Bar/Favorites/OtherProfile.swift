@@ -320,6 +320,14 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.statusButton.setTitle("Following", for: .normal)
                 self.statusButton.setTitleColor(UIColor.white, for: .normal)
                 self.isFollowing = true
+                Database.database().reference().child("Users").child(self.userUid).child("fcmToken").observe(.value) { (snapshot) in
+                    let token : String = (snapshot.value as? String)!
+                    let sender = PushNotificationSender()
+                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+                        let userName : String = (snapshot.value as? String)!
+                        sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!")
+                    }
+                }
             } completion: { (completion) in
                 print("updated button")
             }

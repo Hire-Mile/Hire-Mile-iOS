@@ -18,6 +18,9 @@ PODS:
   - Firebase/Database (6.30.0):
     - Firebase/CoreOnly
     - FirebaseDatabase (~> 6.5.0)
+  - Firebase/Messaging (6.30.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 4.6.1)
   - Firebase/Storage (6.30.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 3.9.0)
@@ -52,6 +55,19 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/UserDefaults (~> 6.7)
     - PromisesObjC (~> 1.2)
+  - FirebaseInstanceID (4.8.0):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstallations (~> 1.6)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+  - FirebaseMessaging (4.6.2):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstanceID (~> 4.6)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/Reachability (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+    - Protobuf (>= 3.9.2, ~> 3.9)
   - FirebaseStorage (3.9.0):
     - FirebaseCore (~> 6.10)
     - GTMSessionFetcher/Core (~> 1.1)
@@ -108,6 +124,7 @@ PODS:
     - NVActivityIndicatorView/Base (= 5.0.1)
   - NVActivityIndicatorView/Base (5.0.1)
   - PromisesObjC (1.2.10)
+  - Protobuf (3.14.0)
   - SideMenu (6.5.0)
   - STPopup (1.8.7)
   - SVProgressHUD (2.2.5)
@@ -119,6 +136,7 @@ DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
+  - Firebase/Messaging
   - Firebase/Storage
   - GoogleSignIn
   - Kingfisher
@@ -140,6 +158,8 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseDatabase
     - FirebaseInstallations
+    - FirebaseInstanceID
+    - FirebaseMessaging
     - FirebaseStorage
     - GoogleAppMeasurement
     - GoogleDataTransport
@@ -153,6 +173,7 @@ SPEC REPOS:
     - nanopb
     - NVActivityIndicatorView
     - PromisesObjC
+    - Protobuf
     - SideMenu
     - STPopup
     - SVProgressHUD
@@ -168,6 +189,8 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 7535fe695737f8c5b350584292a70b7f8ff0357b
   FirebaseDatabase: d85b47213273708e48c972012b39105f76229588
   FirebaseInstallations: 45f9d44d3a8d6f780fa337ee8987dad87210fcbc
+  FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
+  FirebaseMessaging: 82d75b3770a78bbce470769a6980429608b4c407
   FirebaseStorage: 33b92875a9b556824886cc7a65120c7d2cb3a8d8
   GoogleAppMeasurement: 3def7652b1f5b5a576178dc332e2a36a260fbef6
   GoogleDataTransport: 672fb0ce96fe7f7f31d43672fca62ad2c9c86f7b
@@ -181,11 +204,12 @@ SPEC CHECKSUMS:
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   NVActivityIndicatorView: 738e843cb8924e9e4fc3e559d0728031624bf860
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
+  Protobuf: 0cde852566359049847168e51bd1c690e0f70056
   SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
   STPopup: a9045557bc48a0df51fbb7bf0544447c5fe84d34
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: ff53de2d09856179ce5826039c7c3d3c8c2fb0c6
+PODFILE CHECKSUM: 1cab672c2cc84bb18744d4ade82f1aa09be0d05c
 
 COCOAPODS: 1.10.0
