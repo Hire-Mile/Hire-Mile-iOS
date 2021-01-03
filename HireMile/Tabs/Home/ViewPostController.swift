@@ -313,6 +313,13 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
                 let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId).child(fromId).child(messageId)
                 recipientUserMessagesRef.setValue(1)
                 
+                
+                Database.database().reference().child("Users").child(toId).child("fcmToken").observe(.value) { (snapshot) in
+                    let token : String = (snapshot.value as? String)!
+                    let sender = PushNotificationSender()
+                    sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(fromId)")
+                }
+                
                 self.textField.text = nil
                 
                 let alert = UIAlertController(title: "Message Sent", message: "Your messsage was sent successfully", preferredStyle: .alert)
