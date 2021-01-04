@@ -11,6 +11,7 @@ import Firebase
 import Kingfisher
 import FirebaseAuth
 import AVFoundation
+import MBProgressHUD
 import FirebaseStorage
 import FirebaseDatabase
 import MobileCoreServices
@@ -280,10 +281,22 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                         self.theMessage = message.text!
                         self.firstTimeFunction()
                     }
+                    GlobalVariables.chatPartnerId = message.chatPartnerId()!
+                    GlobalVariables.jobId = message.postId!
                     // setup for owners
                 } else {
                     print("i am not the owner")
+                    if message.firstTime == false {
+                        let stopJob = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(self.stopJobButton))
+                        stopJob.tintColor = UIColor.red
+                        let completeJob = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .done, target: self, action: #selector(self.completeJobButton))
+                        completeJob.tintColor = UIColor(red: 111/255, green: 210/255, blue: 89/255, alpha: 1)
+                        self.navigationItem.rightBarButtonItems = [stopJob, completeJob]
+                    }
                 }
+                
+                GlobalVariables.postIdFeedback = self.jobId
+                
                 self.messages.append(message)
                 DispatchQueue.main.async(execute: {
                     self.collectionView.reloadData()
@@ -838,6 +851,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             }
             let message = self.messages[0]
             if let chatPartnerId = message.chatPartnerId() {
+                GlobalVariables.chatPartnerId = chatPartnerId
                 Database.database().reference().child("User-Messages").child(uid).child(chatPartnerId).removeValue { (error, ref) in
                     if error != nil {
                         print("error deleting message: \(error!.localizedDescription)")
@@ -864,6 +878,31 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    @objc func completeJobButton() {
+        let alert = UIAlertController(title: "Mark as complete?", message: "Are you sure you want to mark this job as 'completed'? This conversation will then be removed.", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes, Complete", style: .default, handler: { (action) in
+            print("complete")
+            // show loader for 1 second
+            MBProgressHUD.showAdded(to: self.view, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                let feedbackController = FeedbackController()
+                self.navigationController?.pushViewController(feedbackController, animated: true)
+            }
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func stopJobButton() {
+        let alert = UIAlertController(title: "Are you sure you want to cancel this job?", message: "Your conversation and proposal will be removed", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes, Cancel Job", style: .default, handler: { (action) in
+            print("cancel job")
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
 
 }
