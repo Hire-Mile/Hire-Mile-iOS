@@ -21,6 +21,10 @@ class Message: NSObject {
     var imageWidth: NSNumber?
     var imageHeight: NSNumber?
     
+    var firstTime: Bool?
+    var serviceProvider : String?
+    var postId : String?
+    
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String
         self.text = dictionary["text"] as? String
@@ -30,6 +34,10 @@ class Message: NSObject {
         
         self.imageWidth = dictionary["imageWidth"] as? NSNumber
         self.imageHeight = dictionary["imageHeight"] as? NSNumber
+        
+        self.firstTime = dictionary["first-time"] as? Bool ?? false
+        self.serviceProvider = dictionary["service-provider"] as? String
+        self.postId = dictionary["job-id"] as? String
     }
     
     func chatPartnerId() -> String? {

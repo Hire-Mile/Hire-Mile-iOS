@@ -17,6 +17,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let titles = ["Style", "Style"]
     let descriptions = ["Message", "Message"]
+    var tTimer : Timer?
     
 //    let messageTitles = ["Name", "Name"]
 //    let messageDescriptions = ["Message", "Message"]
@@ -75,6 +76,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.refreshControl = refrshControl
+        tableView.allowsMultipleSelectionDuringEditing = true
         tableView.register(NotificationCell.self, forCellReuseIdentifier: "myNotificationsCellID")
         tableView.register(MessagesCellCell.self, forCellReuseIdentifier: "myMessagesCellID")
         
@@ -93,6 +95,8 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.navigationBar.topItem?.title = "Chat"
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
+        
+        tTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(supposedToDelete), userInfo: nil, repeats: true)
     }
     
     var messages = [Message]()
@@ -204,6 +208,8 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 return
             }
             
+            GlobalVariables.indexToDelete = indexPath.row
+            
             let ref = Database.database().reference().child("Users").child(chatPartnerId)
             ref.observe(.value) { (snapshot) in
                 guard let dictionary = snapshot.value as? [String : AnyObject] else {
@@ -217,6 +223,52 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else if segmentedControl.selectedSegmentIndex == 1 {
         } else {
             //
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let message = self.messages[indexPath.row]
+        if let chatPartnerId = message.chatPartnerId() {
+            Database.database().reference().child("User-Messages").child(uid).child(chatPartnerId).removeValue { (error, ref) in
+                if error != nil {
+                    print("error deleting message: \(error!.localizedDescription)")
+                } else {
+                    print("success")
+                }
+                self.messages.remove(at: indexPath.row)
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+        }
+    }
+    
+    @objc func supposedToDelete() {
+        if GlobalVariables.isDeleting == true {
+            let indexToDelete = GlobalVariables.indexToDelete
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            let message = self.messages[indexToDelete]
+            if let chatPartnerId = message.chatPartnerId() {
+                Database.database().reference().child("User-Messages").child(uid).child(chatPartnerId).removeValue { (error, ref) in
+                    if error != nil {
+                        print("error deleting message: \(error!.localizedDescription)")
+                    } else {
+                        print("success")
+                    }
+//                    self.messages.remove(at: indexToDelete)
+                    GlobalVariables.isDeleting = false
+                    self.messages.removeAll()
+                    self.tableView.reloadData()
+                    self.viewWillAppear(true)
+                }
+            }
         }
     }
     

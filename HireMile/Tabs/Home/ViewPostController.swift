@@ -296,7 +296,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
             let toId = authorId
             let fromId = Auth.auth().currentUser!.uid
             let timestamp = Int(Date().timeIntervalSince1970)
-            let values = ["text": textField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+            let values = ["text": textField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : true, "service-provider" : toId, "job-id" : self.postId] as [String : Any]
             childRef.updateChildValues(values) { (error, ref) in
                 if error != nil {
                     print(error ?? "")
@@ -305,11 +305,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
                 
                 guard let messageId = childRef.key else { return }
                 
-    //            let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(messageId)
                 let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(toId).child(messageId)
                 userMessagesRef.setValue(1)
                 
-    //            let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId!).child(messageId)
                 let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId).child(fromId).child(messageId)
                 recipientUserMessagesRef.setValue(1)
                 
@@ -317,7 +315,10 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
                 Database.database().reference().child("Users").child(toId).child("fcmToken").observe(.value) { (snapshot) in
                     let token : String = (snapshot.value as? String)!
                     let sender = PushNotificationSender()
-                    sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(fromId)")
+                    Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
+                        let name : String = (snapshot.value as? String)!
+                        sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)")
+                    }
                 }
                 
                 self.textField.text = nil
