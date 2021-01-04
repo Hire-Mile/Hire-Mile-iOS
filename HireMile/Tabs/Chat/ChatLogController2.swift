@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import Kingfisher
 import FirebaseAuth
 import AVFoundation
 import FirebaseStorage
@@ -28,6 +29,9 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     var blackBackground : UIView?
     var messageType = ""
     var theMessage = ""
+    var jobId = ""
+    var chatId = ""
+    var isShowing = false
     
     let cellId = "myCellId"
     
@@ -244,7 +248,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
         
         let width = UIScreen.main.bounds.width
-        return CGSize(width: width, height: height)
+        return CGSize(width: width, height: height + 5)
     }
     
     private func estimateFrameForText(text: String) -> CGRect {
@@ -266,6 +270,20 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                     return
                 }
                 let message = Message(dictionary: dictionary)
+                
+                if message.serviceProvider == Auth.auth().currentUser!.uid {
+                    print("i own the project")
+                    if message.firstTime == true {
+                        print("first time")
+                        self.chatId = messageId
+                        self.jobId = message.postId!
+                        self.theMessage = message.text!
+                        self.firstTimeFunction()
+                    }
+                    // setup for owners
+                } else {
+                    print("i am not the owner")
+                }
                 self.messages.append(message)
                 DispatchQueue.main.async(execute: {
                     self.collectionView.reloadData()
@@ -416,7 +434,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let toId = user?.id
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
-        var values : [String : Any] = ["toId": toId, "fromId": fromId, "timestamp": timestamp] as [String : Any]
+        var values : [String : Any] = ["toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : false, "service-provider" : "??"] as [String : Any]
         
         // append properties
         properties.forEach({values[$0] = $1})
@@ -439,7 +457,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             Database.database().reference().child("Users").child(toId!).child("fcmToken").observe(.value) { (snapshot) in
                 let token : String = (snapshot.value as? String)!
                 let sender = PushNotificationSender()
-                sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(fromId)")
+                Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
+                    let name : String = (snapshot.value as? String)!
+                    sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)")
+                }
             }
             
             self.inputTextField.text = nil
@@ -477,6 +498,371 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             } completion: { (completed) in
                 zoomOutImageView.removeFromSuperview()
             }
+        }
+    }
+    
+    let myView : UIView = {
+        let myView = UIView()
+        myView.translatesAutoresizingMaskIntoConstraints = false
+        myView.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        return myView
+    }()
+    
+    let jobTitle : UILabel = {
+        let jobTitle = UILabel()
+        jobTitle.text = "Job Title"
+        jobTitle.textColor = UIColor.black
+        jobTitle.font = UIFont.boldSystemFont(ofSize: 24)
+        jobTitle.translatesAutoresizingMaskIntoConstraints = false
+        jobTitle.textAlignment = NSTextAlignment.center
+        return jobTitle
+    }()
+    
+    func firstTimeFunction() {
+        print("first time")
+        
+        self.view.addSubview(myView)
+        myView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        myView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        myView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        myView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        let infoView = UIView()
+        infoView.backgroundColor = UIColor.white
+        infoView.layer.cornerRadius = 20
+        infoView.translatesAutoresizingMaskIntoConstraints = false
+        myView.addSubview(infoView)
+        infoView.leftAnchor.constraint(equalTo: myView.leftAnchor, constant: 30).isActive = true
+        infoView.rightAnchor.constraint(equalTo: myView.rightAnchor, constant: -30).isActive = true
+        infoView.topAnchor.constraint(equalTo: myView.topAnchor, constant: 150).isActive = true
+        infoView.bottomAnchor.constraint(equalTo: myView.bottomAnchor, constant: -100).isActive = true
+        
+        let postImageView = UIImageView()
+        postImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        postImageView.layer.cornerRadius = 30
+        postImageView.layer.masksToBounds = true
+        postImageView.translatesAutoresizingMaskIntoConstraints = false
+        myView.addSubview(postImageView)
+        postImageView.heightAnchor.constraint(equalToConstant: 125).isActive = true
+        postImageView.widthAnchor.constraint(equalToConstant: 125).isActive = true
+        postImageView.centerYAnchor.constraint(equalTo: infoView.topAnchor).isActive = true
+        postImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        
+        infoView.addSubview(jobTitle)
+        jobTitle.topAnchor.constraint(equalTo: postImageView.bottomAnchor).isActive = true
+        jobTitle.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 0).isActive = true
+        jobTitle.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: 0).isActive = true
+        jobTitle.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+        let priceTitle = UILabel()
+        priceTitle.text = "Price"
+        priceTitle.textColor = UIColor.black
+        priceTitle.font = UIFont.boldSystemFont(ofSize: 18)
+        priceTitle.translatesAutoresizingMaskIntoConstraints = false
+        priceTitle.textAlignment = NSTextAlignment.center
+        infoView.addSubview(priceTitle)
+        priceTitle.topAnchor.constraint(equalTo: jobTitle.bottomAnchor, constant: -5).isActive = true
+        priceTitle.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 0).isActive = true
+        priceTitle.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: 0).isActive = true
+        priceTitle.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+        let messageDescription = UILabel()
+        messageDescription.translatesAutoresizingMaskIntoConstraints = false
+        messageDescription.text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+        messageDescription.numberOfLines = 6
+        messageDescription.textColor = UIColor.darkGray
+        messageDescription.textAlignment = NSTextAlignment.center
+        infoView.addSubview(messageDescription)
+        messageDescription.topAnchor.constraint(equalTo: priceTitle.bottomAnchor, constant: 15).isActive = true
+        messageDescription.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: -15).isActive = true
+        messageDescription.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 15).isActive = true
+        messageDescription.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -120).isActive = true
+
+        let buttonView = UIView()
+        buttonView.translatesAutoresizingMaskIntoConstraints = false
+        infoView.addSubview(buttonView)
+        buttonView.topAnchor.constraint(equalTo: messageDescription.bottomAnchor).isActive = true
+        buttonView.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 15).isActive = true
+        buttonView.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: -15).isActive = true
+        buttonView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -15).isActive = true
+
+        let declineButton = UIButton(type: .system)
+        declineButton.setTitle("DECLINE", for: .normal)
+        declineButton.setTitleColor(UIColor.darkGray, for: .normal)
+        declineButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        declineButton.addTarget(self, action: #selector(decline), for: .touchUpInside)
+        declineButton.layer.cornerRadius = 25
+        declineButton.layer.borderWidth = 2
+        declineButton.layer.borderColor = UIColor.darkGray.cgColor
+        declineButton.translatesAutoresizingMaskIntoConstraints = false
+        infoView.addSubview(declineButton)
+        declineButton.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 10).isActive = true
+        declineButton.leftAnchor.constraint(equalTo: buttonView.leftAnchor, constant: 10).isActive = true
+        declineButton.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3).isActive = true
+        declineButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+
+        let acceptButton = UIButton(type: .system)
+        acceptButton.setTitle("ACCEPT", for: .normal)
+        acceptButton.setTitleColor(UIColor.white, for: .normal)
+        acceptButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        acceptButton.backgroundColor = UIColor.mainBlue
+        acceptButton.addTarget(self, action: #selector(accept), for: .touchUpInside)
+        acceptButton.layer.cornerRadius = 25
+        acceptButton.translatesAutoresizingMaskIntoConstraints = false
+        infoView.addSubview(acceptButton)
+        acceptButton.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 10).isActive = true
+        acceptButton.rightAnchor.constraint(equalTo: buttonView.rightAnchor, constant: -10).isActive = true
+        acceptButton.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3).isActive = true
+        acceptButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        // add other objects to view
+        print("jobid: \(jobId)")
+        Database.database().reference().child("Jobs").child(jobId).observe(.value) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = JobStructure()
+                job.authorName = value["author"] as? String ?? "Error"
+                job.titleOfPost = value["title"] as? String ?? "Error"
+                job.descriptionOfPost = value["description"] as? String ?? "Error"
+                job.price = value["price"] as? Int ?? 0
+                job.category = value["category"] as? String ?? "Error"
+                job.imagePost = value["image"] as? String ?? "Error"
+                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                job.postId = value["postId"] as? String ?? "Error"
+
+                postImageView.loadImageUsingCacheWithUrlString(job.imagePost!)
+                self.jobTitle.text = "\(job.titleOfPost!)"
+                if job.typeOfPrice == "Hourly" {
+                    priceTitle.text! = "$\(job.price!) / Hour"
+                } else {
+                    priceTitle.text! = "$\(job.price!)"
+                }
+                messageDescription.text! = self.theMessage
+            }
+        }
+    }
+    
+    @objc func decline() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        
+        self.view.addSubview(darkView)
+        self.darkView.alpha = 0
+        self.darkView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        self.darkView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        self.darkView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        self.darkView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        
+        self.view.addSubview(mainView)
+        self.mainView.alpha = 0
+        self.mainView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        self.mainView.layer.cornerRadius = 25
+        self.mainView.heightAnchor.constraint(equalToConstant: 280).isActive = true
+        self.mainView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        self.mainView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        
+        self.mainView.addSubview(filterTitle)
+        self.filterTitle.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 30).isActive = true
+        self.filterTitle.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -30).isActive = true
+        self.filterTitle.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: 45).isActive = true
+        self.filterTitle.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.mainView.addSubview(exitButton)
+        self.exitButton.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -30).isActive = true
+        self.exitButton.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: 30).isActive = true
+        self.exitButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        self.exitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.mainView.addSubview(tf)
+        self.tf.topAnchor.constraint(equalTo: self.filterTitle.bottomAnchor, constant: 25).isActive = true
+        self.tf.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 40).isActive = true
+        self.tf.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -40).isActive = true
+        self.tf.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.tf.becomeFirstResponder()
+        self.tf.delegate = self
+        
+        self.mainView.addSubview(bottomBar)
+        self.bottomBar.topAnchor.constraint(equalTo: self.tf.bottomAnchor).isActive = true
+        self.bottomBar.leftAnchor.constraint(equalTo: self.tf.leftAnchor).isActive = true
+        self.bottomBar.rightAnchor.constraint(equalTo: self.tf.rightAnchor).isActive = true
+        self.bottomBar.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        let declineButton = UIButton(type: .system)
+        declineButton.setTitle("I'm busy", for: .normal)
+        declineButton.setTitleColor(UIColor.darkGray, for: .normal)
+        declineButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        declineButton.addTarget(self, action: #selector(imbusy), for: .touchUpInside)
+        declineButton.layer.cornerRadius = 25
+        declineButton.layer.borderWidth = 2
+        declineButton.layer.borderColor = UIColor.darkGray.cgColor
+        declineButton.translatesAutoresizingMaskIntoConstraints = false
+        mainView.addSubview(declineButton)
+        declineButton.topAnchor.constraint(equalTo: bottomBar.bottomAnchor, constant: 30).isActive = true
+        declineButton.leftAnchor.constraint(equalTo: bottomBar.leftAnchor).isActive = true
+        declineButton.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3).isActive = true
+        declineButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        let acceptButton = UIButton(type: .system)
+        acceptButton.setTitle("Not interested", for: .normal)
+        acceptButton.setTitleColor(UIColor.darkGray, for: .normal)
+        acceptButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        acceptButton.layer.cornerRadius = 25
+        acceptButton.layer.borderWidth = 2
+        acceptButton.layer.borderColor = UIColor.darkGray.cgColor
+        acceptButton.addTarget(self, action: #selector(notInterested), for: .touchUpInside)
+        acceptButton.translatesAutoresizingMaskIntoConstraints = false
+        mainView.addSubview(acceptButton)
+        acceptButton.topAnchor.constraint(equalTo: bottomBar.bottomAnchor, constant: 30).isActive = true
+        acceptButton.rightAnchor.constraint(equalTo: bottomBar.rightAnchor).isActive = true
+        acceptButton.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3).isActive = true
+        acceptButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        let doneButton = UIButton(type: .system)
+        doneButton.setTitle("OK", for: .normal)
+        doneButton.setTitleColor(UIColor.mainBlue, for: .normal)
+//        doneButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.black)
+        doneButton.addTarget(self, action: #selector(doneButtonPressed), for: .touchUpInside)
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        mainView.addSubview(doneButton)
+        doneButton.topAnchor.constraint(equalTo: acceptButton.bottomAnchor).isActive = true
+        doneButton.bottomAnchor.constraint(equalTo: mainView.bottomAnchor).isActive = true
+        doneButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        doneButton.rightAnchor.constraint(equalTo: acceptButton.rightAnchor).isActive = true
+        
+        handlePopInPopOut()
+    }
+    
+    var bottomConstraint : NSLayoutConstraint?
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let keyboardHeight = keyboardSize.height
+            self.mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -keyboardHeight).isActive = true
+        }
+    }
+    
+    let darkView : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor.black
+        button.addTarget(self, action: #selector(handlePopInPopOut), for: .touchUpInside)
+        return button
+    }()
+    
+    let tf : UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "Write here"
+        tf.tintColor = UIColor.mainBlue
+        tf.textColor = UIColor.black
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let filterTitle : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Why are you declining?"
+        label.textAlignment = .center
+        label.textColor = UIColor.black
+        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.numberOfLines = 1
+        return label
+    }()
+    
+    let exitButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.addTarget(self, action: #selector(handlePopInPopOut), for: .touchUpInside)
+        button.imageView?.tintColor = UIColor.black
+        button.tintColor = UIColor.black
+        return button
+    }()
+    
+    let bottomBar : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.darkGray
+        return view
+    }()
+    
+    @objc func handlePopInPopOut() {
+        if self.isShowing {
+            UIView.animate(withDuration: 0.5) {
+                self.darkView.alpha = 0.0
+                self.mainView.alpha = 0.0
+                self.tf.resignFirstResponder()
+            } completion: { (completed) in
+                if completed {
+                    // completion
+                    self.isShowing = false
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.5) {
+                self.darkView.alpha = 0.5
+                self.mainView.alpha = 1.0
+            } completion: { (completed) in
+                if completed {
+                    // completion
+                    self.isShowing = true
+                }
+            }
+        }
+    }
+    
+    @objc func imbusy() {
+        self.tf.text = "I'm busy"
+    }
+    
+    @objc func notInterested() {
+        self.tf.text = "Not interested"
+    }
+    
+    let mainView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    @objc func accept() {
+        self.myView.removeFromSuperview()
+        // if user accepts or declines, mark the first message as first time false
+        Database.database().reference().child("Messages").child(chatId).child("first-time").setValue(false)
+    }
+    
+    @objc func doneButtonPressed() {
+        if self.tf.text != "" {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            let message = self.messages[0]
+            if let chatPartnerId = message.chatPartnerId() {
+                Database.database().reference().child("User-Messages").child(uid).child(chatPartnerId).removeValue { (error, ref) in
+                    if error != nil {
+                        print("error deleting message: \(error!.localizedDescription)")
+                    } else {
+                        // send notification to user
+                        Database.database().reference().child("Users").child(chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
+                            if let token : String = (snapshot.value as? String) {
+                                let sender = PushNotificationSender()
+                                sender.sendPushNotification(to: token, title: "Job Declined", body: "\(self.jobTitle.text!) was declined: \(self.tf.text!)")
+                                GlobalVariables.isDeleting = true
+                                GlobalVariables.indexToDelete = GlobalVariables.indexToDelete
+                                self.navigationController?.popViewController(animated: true)
+                            } else {
+                                GlobalVariables.isDeleting = true
+                                GlobalVariables.indexToDelete = GlobalVariables.indexToDelete
+                                self.navigationController?.popViewController(animated: true)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            let alert = UIAlertController(title: "Error", message: "Please give some sort of reasoning", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 

@@ -31,4 +31,8 @@ class GlobalVariables: NSObject {
     
     static var isGoingToPost = false
     
+    static var indexToDelete = 0
+    
+    static var isDeleting = false
+    
 }
