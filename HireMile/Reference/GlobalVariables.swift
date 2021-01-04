@@ -35,4 +35,10 @@ class GlobalVariables: NSObject {
     
     static var isDeleting = false
     
+    static var chatPartnerId = ""
+    
+    static var postIdFeedback = ""
+    
+    static var jobId = ""
+    
 }

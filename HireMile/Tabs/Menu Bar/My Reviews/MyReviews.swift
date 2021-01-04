@@ -105,11 +105,15 @@ class MyReviews: UITableViewController {
     }
  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        self.ratings.reverse()
         let cell = tableView.dequeueReusableCell(withIdentifier: "reviewsCellID", for: indexPath) as! MyReviewsCell
-        Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("image").observe(.value) { (snapshot) in
-            let imageUrl : String = (snapshot.value as? String)!
-            cell.postImageView.loadImageUsingCacheWithUrlString(imageUrl)
-        }
+        Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("image").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let imageUrl : String = (snapshot.value as? String) {
+                cell.postImageView.loadImageUsingCacheWithUrlString(imageUrl)
+            } else {
+                print("not able to find")
+            }
+        })
         Database.database().reference().child("Users").child(self.ratings[indexPath.row].userUid!).child("name").observe(.value) { (snapshot) in
             let name : String = (snapshot.value as? String)!
             cell.userNameLabel.text = name
