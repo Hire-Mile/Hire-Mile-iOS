@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import MBProgressHUD
 import FirebaseDatabase
 
 class FeedbackController: UIViewController, UITextFieldDelegate {
@@ -109,6 +110,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
     }()
     
     var rating = 0
+    var numberToUpload = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,7 +118,18 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = UIColor.white
         
         self.view.addSubview(profileImageView)
-//        self.profileImageView.loadImageUsingCacheWithUrlString(<#T##urlString: String##String#>)
+        Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("profile-image").observe(.value) { (snapshot) in
+            let profileImageString : String = (snapshot.value as? String)!
+            if profileImageString == "not-yet-selected" {
+                self.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.contentMode = .scaleAspectFill
+            } else {
+                self.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.contentMode = .scaleAspectFill
+            }
+        }
         self.profileImageView.layer.cornerRadius = 55
         self.profileImageView.layer.masksToBounds = true
         self.profileImageView.widthAnchor.constraint(equalToConstant: 110).isActive = true
@@ -125,7 +138,10 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         self.profileImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
         self.view.addSubview(titleLabel)
-        self.titleLabel.text = "Name"
+        Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("name").observe(.value) { (snapshot) in
+            let name : String = (snapshot.value as? String)!
+            self.titleLabel.text = name
+        }
         self.titleLabel.textAlignment = .center
         self.titleLabel.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: 0).isActive = true
         self.titleLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
@@ -264,6 +280,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         } else {
+            MBProgressHUD.showAdded(to: self.view, animated: true)
             Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
                 let name : String = (snapshot.value as? String)!
                 print("GLOBAL")
@@ -271,34 +288,44 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
                 print("GLOBAL")
                 Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
                     if let token : String = (snapshot.value as? String) {
+                        print("token")
+                        print(token)
+                        print("token")
                         let sender = PushNotificationSender()
                         sender.sendPushNotification(to: token, title: "\(name) gave you feedback!", body: "Open 'My Reviews' on the menu bar to see")
-                        GlobalVariables.isDeleting = true
-                        GlobalVariables.indexToDelete = GlobalVariables.indexToDelete
-                        self.nextAction()
+                        
+                        print("done 2")
+                        
+                        self.addAnotherReview()
                     } else {
-                        GlobalVariables.isDeleting = true
-                        GlobalVariables.indexToDelete = GlobalVariables.indexToDelete
-                        self.nextAction()
+                        
+                        print("done 1")
+                        
+                        self.addAnotherReview()
                     }
                 }
             }
         }
     }
     
-    func nextAction() {
-        self.addAnotherReview()
-    }
-    
     func addAnotherReview() {
         Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("number-of-ratings").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as? NSNumber
-            let newNumber = Float(value!)
-            let numberToUpload = newNumber + 1
-            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("number-of-ratings").setValue(numberToUpload)
             
-            self.addReview()
+            if let value = snapshot.value as? NSNumber {
+                
+                
+                let newNumber = Float(value)
+                self.numberToUpload = Int(newNumber) + 1
+                self.nextAction()
+                print("ALLES GOTTTTT")
+            }
         })
+    }
+    
+    func nextAction() {
+        print("hey")
+        Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("number-of-ratings").setValue(numberToUpload)
+        self.addReview()
     }
     
     func addReview() {
@@ -312,27 +339,17 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         let postFeed = ["\(key!)" : values]
         Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("ratings").updateChildValues(postFeed) { (uploadError, ref) in
             print("finished adding review")
-            self.removeConversation()
+            GlobalVariables.isDeleting = false
+            GlobalVariables.indexToDelete = 0
+            let alert = UIAlertController(title: "Success", message: "Thanks for your feedback!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+            }))
+            GlobalVariables.finishedFeedback = true
+            MBProgressHUD.hide(for: self.view, animated: true)
+            let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+            let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+            UIApplication.shared.keyWindow?.rootViewController = vc
         }
-    }
-    
-    func removeConversation() {
-        GlobalVariables.isDeleting = true
-        GlobalVariables.indexToDelete = GlobalVariables.indexToDelete
-        self.resetGlobalVariables()
-    }
-    
-    func resetGlobalVariables() {
-        GlobalVariables.chatPartnerId = ""
-        GlobalVariables.postIdFeedback = ""
-        self.successAlert()
-    }
-    
-    func successAlert() {
-        let alert = UIAlertController(title: "Success", message: "Thanks for your feedback!", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
-            print("completed")
-        }))
     }
 
 }
