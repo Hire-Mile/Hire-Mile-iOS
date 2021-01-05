@@ -296,7 +296,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
             let toId = authorId
             let fromId = Auth.auth().currentUser!.uid
             let timestamp = Int(Date().timeIntervalSince1970)
-            let values = ["text": textField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : true, "service-provider" : toId, "job-id" : self.postId] as [String : Any]
+            let key = Database.database().reference().child("Users").child(toId).child("My_Jobs").childByAutoId().key
+            let values = ["text": textField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : true, "service-provider" : toId, "job-id" : self.postId, "job-ref-id" : key] as [String : Any]
             childRef.updateChildValues(values) { (error, ref) in
                 if error != nil {
                     print(error ?? "")
