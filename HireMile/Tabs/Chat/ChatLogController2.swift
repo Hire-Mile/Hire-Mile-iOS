@@ -281,8 +281,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                         self.theMessage = message.text!
                         self.firstTimeFunction()
                     }
-                    GlobalVariables.chatPartnerId = message.chatPartnerId()!
                     GlobalVariables.jobId = message.postId!
+                    GlobalVariables.chatPartnerId = message.chatPartnerId()!
                     // setup for owners
                 } else {
                     print("i am not the owner")
@@ -291,12 +291,15 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                         stopJob.tintColor = UIColor.red
                         let completeJob = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .done, target: self, action: #selector(self.completeJobButton))
                         completeJob.tintColor = UIColor(red: 111/255, green: 210/255, blue: 89/255, alpha: 1)
+                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
                         self.navigationItem.rightBarButtonItems = [stopJob, completeJob]
+                        if let messagePostId = message.postId {
+                            GlobalVariables.jobId = messagePostId
+                        }
                     }
                 }
-                
                 GlobalVariables.postIdFeedback = self.jobId
-                
+                GlobalVariables.chatPartnerId = message.chatPartnerId()!
                 self.messages.append(message)
                 DispatchQueue.main.async(execute: {
                     self.collectionView.reloadData()

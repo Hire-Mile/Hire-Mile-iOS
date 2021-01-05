@@ -262,7 +262,6 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     } else {
                         print("success")
                     }
-//                    self.messages.remove(at: indexToDelete)
                     GlobalVariables.isDeleting = false
                     self.messages.removeAll()
                     self.tableView.reloadData()

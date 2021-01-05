@@ -80,6 +80,18 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if GlobalVariables.finishedFeedback == true {
+            let alert = UIAlertController(title: "Success", message: "Thanks for your feedback!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+                GlobalVariables.isDeleting = true
+                print(GlobalVariables.indexToDelete)
+                print("GlobalVariables.indexToDelete")
+                print("hi")
+                GlobalVariables.finishedFeedback = false
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
         // Functions to throw
         self.basicSetup()
         
