@@ -18,6 +18,9 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     var favorites = [UserStructure]()
     var userUid = GlobalVariables.userUID
     var isFollowing : Bool?
+    var finalRating = 0
+    var ratingNumber = 0
+    var findingRating = true
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -208,55 +211,20 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let name : String = (snapshot.value as? String)!
                 self.profileName.text = "\(name)"
                 // stars
-                Database.database().reference().child("Users").child(uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
-                    let value = ratingNum.value as? NSNumber
-                    let newNumber = Int(value!)
-                    if newNumber == 100 {
-                        self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    } else {
-                        switch newNumber {
-                        case 0:
+                if self.findingRating == true {
+                    // find rating
+                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
+                        let value = ratingNum.value as? NSNumber
+                        let newNumber = Float(value!)
+                        if newNumber == 100 {
                             self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                             self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                             self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                             self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                             self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        case 1:
-                            self.star1.tintColor = UIColor.mainBlue
-                            self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        case 2:
-                            self.star1.tintColor = UIColor.mainBlue
-                            self.star2.tintColor = UIColor.mainBlue
-                            self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        case 3:
-                            self.star1.tintColor = UIColor.mainBlue
-                            self.star2.tintColor = UIColor.mainBlue
-                            self.star3.tintColor = UIColor.mainBlue
-                            self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        case 4:
-                            self.star1.tintColor = UIColor.mainBlue
-                            self.star2.tintColor = UIColor.mainBlue
-                            self.star3.tintColor = UIColor.mainBlue
-                            self.star4.tintColor = UIColor.mainBlue
-                            self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        case 5:
-                            self.star1.tintColor = UIColor.mainBlue
-                            self.star2.tintColor = UIColor.mainBlue
-                            self.star3.tintColor = UIColor.mainBlue
-                            self.star4.tintColor = UIColor.mainBlue
-                            self.star5.tintColor = UIColor.mainBlue
-                        default:
-                            print("hello")
+                        } else {
+                            // get all ratings
+                            self.getAllRatings()
                         }
                     }
                 }
@@ -308,6 +276,60 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 } else {
                     self.updateFollowingButton(isFollowing: false)
                 }
+            }
+        }
+    }
+    
+    func getAllRatings() {
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = ReviewStructure()
+                job.ratingNumber = value["rating-number"] as? Int ?? 0
+                self.ratingNumber += 1
+                self.finalRating += job.ratingNumber!
+            }
+            self.finalRating = self.finalRating / self.ratingNumber
+            self.findingRating = false
+            
+            switch self.finalRating {
+            case 0:
+                self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+            case 1:
+                self.star1.tintColor = UIColor.mainBlue
+                self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+            case 2:
+                self.star1.tintColor = UIColor.mainBlue
+                self.star2.tintColor = UIColor.mainBlue
+                self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+            case 3:
+                self.star1.tintColor = UIColor.mainBlue
+                self.star2.tintColor = UIColor.mainBlue
+                self.star3.tintColor = UIColor.mainBlue
+                self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+            case 4:
+                self.star1.tintColor = UIColor.mainBlue
+                self.star2.tintColor = UIColor.mainBlue
+                self.star3.tintColor = UIColor.mainBlue
+                self.star4.tintColor = UIColor.mainBlue
+                self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+            case 5:
+                self.star1.tintColor = UIColor.mainBlue
+                self.star2.tintColor = UIColor.mainBlue
+                self.star3.tintColor = UIColor.mainBlue
+                self.star4.tintColor = UIColor.mainBlue
+                self.star5.tintColor = UIColor.mainBlue
+            default:
+                print("hello")
             }
         }
     }

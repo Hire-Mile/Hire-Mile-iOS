@@ -58,9 +58,10 @@ class MyReviews: UITableViewController {
                 rating.ratingNumber = value["rating-number"] as? Int ?? 0
                 rating.postId = value["post-id"] as? String ?? "Error"
                 rating.descriptionOfRating = value["description"] as? String ?? "Error"
+                self.isRatingsNil = false
                 self.ratings.append(rating)
             }
-            self.isRatingsNil = false
+            self.ratings.reverse()
             self.tableView.reloadData()
         }
     }
@@ -99,13 +100,12 @@ class MyReviews: UITableViewController {
             print("none")
             return 0
         } else {
-            print("hello")
+            print("here are ratings.count: \(self.ratings.count)")
             return self.ratings.count
         }
     }
  
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        self.ratings.reverse()
         let cell = tableView.dequeueReusableCell(withIdentifier: "reviewsCellID", for: indexPath) as! MyReviewsCell
         Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("image").observeSingleEvent(of: .value, with: { (snapshot) in
             if let imageUrl : String = (snapshot.value as? String) {
@@ -130,8 +130,11 @@ class MyReviews: UITableViewController {
                 cell.profileImageView.contentMode = .scaleAspectFill
             }
         }
+        print("review")
+        print(self.ratings[indexPath.row].ratingNumber!)
+        print("review")
         cell.reviewLabel.text = self.ratings[indexPath.row].descriptionOfRating!
-        switch self.ratings[indexPath.row].ratingNumber {
+        switch Int(self.ratings[indexPath.row].ratingNumber!) {
             case 0:
                 cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                 cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
@@ -169,7 +172,7 @@ class MyReviews: UITableViewController {
                 cell.star4.tintColor = UIColor.mainBlue
                 cell.star5.tintColor = UIColor.mainBlue
             default:
-                print("hello")
+                print("different review value, star cannot be formed: \(Int(self.ratings[indexPath.row].ratingNumber!))")
         }
         cell.selectionStyle = .none
         return cell
@@ -223,7 +226,6 @@ class MyReviewsCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = UIColor.mainBlue
         return imageView
     }()
     
@@ -231,7 +233,6 @@ class MyReviewsCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = UIColor.mainBlue
         return imageView
     }()
     
@@ -239,7 +240,6 @@ class MyReviewsCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = UIColor.mainBlue
         return imageView
     }()
     
@@ -247,7 +247,6 @@ class MyReviewsCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = UIColor.mainBlue
         return imageView
     }()
     
@@ -255,7 +254,6 @@ class MyReviewsCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
         return imageView
     }()
     

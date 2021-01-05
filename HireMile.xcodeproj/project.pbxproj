@@ -63,6 +63,7 @@
 		78E02C3D25A1C01F00337370 /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */; };
 		78E02C4025A1C4BA00337370 /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02C3F25A1C4BA00337370 /* PushNotificationSender.swift */; };
 		78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8F85425A33BE80021FD60 /* FeedbackController.swift */; };
+		78F8F85A25A482F30021FD60 /* ReviewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8F85925A482F30021FD60 /* ReviewObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +125,7 @@
 		78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
 		78E02C3F25A1C4BA00337370 /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
 		78F8F85425A33BE80021FD60 /* FeedbackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackController.swift; sourceTree = "<group>"; };
+		78F8F85925A482F30021FD60 /* ReviewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewObject.swift; sourceTree = "<group>"; };
 		A17E2DBFD7B47B668A9B7953 /* Pods_HireMile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HireMile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9B2D249F428626F2B6339E7 /* Pods-HireMile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.debug.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.debug.xcconfig"; sourceTree = "<group>"; };
 		F3765C6420C496AAA66CBF98 /* Pods-HireMile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.release.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.release.xcconfig"; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				78AD20FE25724C17004A1487 /* GlobalVariables.swift */,
 				78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */,
 				78E02C3F25A1C4BA00337370 /* PushNotificationSender.swift */,
+				78F8F85925A482F30021FD60 /* ReviewObject.swift */,
 			);
 			path = Reference;
 			sourceTree = "<group>";
@@ -540,6 +543,7 @@
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
 				7886ED92258127DD00260D2F /* PostStructure.swift in Sources */,
 				78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */,
+				78F8F85A25A482F30021FD60 /* ReviewObject.swift in Sources */,
 				787B0181256838E400BBC392 /* Settings.swift in Sources */,
 				78AD2101257290B1004A1487 /* MyJobs.swift in Sources */,
 				788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */,
