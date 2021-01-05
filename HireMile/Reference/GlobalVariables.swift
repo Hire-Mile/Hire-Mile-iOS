@@ -43,4 +43,6 @@ class GlobalVariables: NSObject {
     
     static var finishedFeedback = false
     
+    static var jobRefId = ""
+    
 }

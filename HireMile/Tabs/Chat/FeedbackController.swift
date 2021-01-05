@@ -115,6 +115,10 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("HELOOO")
+        print(GlobalVariables.jobRefId)
+        print("HELOOO")
+        
         view.backgroundColor = UIColor.white
         
         self.view.addSubview(profileImageView)
@@ -283,24 +287,12 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
             MBProgressHUD.showAdded(to: self.view, animated: true)
             Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
                 let name : String = (snapshot.value as? String)!
-                print("GLOBAL")
-                print(GlobalVariables.chatPartnerId)
-                print("GLOBAL")
                 Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
                     if let token : String = (snapshot.value as? String) {
-                        print("token")
-                        print(token)
-                        print("token")
                         let sender = PushNotificationSender()
                         sender.sendPushNotification(to: token, title: "\(name) gave you feedback!", body: "Open 'My Reviews' on the menu bar to see")
-                        
-                        print("done 2")
-                        
                         self.addAnotherReview()
                     } else {
-                        
-                        print("done 1")
-                        
                         self.addAnotherReview()
                     }
                 }
@@ -310,20 +302,15 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
     
     func addAnotherReview() {
         Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("number-of-ratings").observeSingleEvent(of: .value, with: { (snapshot) in
-            
             if let value = snapshot.value as? NSNumber {
-                
-                
                 let newNumber = Float(value)
                 self.numberToUpload = Int(newNumber) + 1
                 self.nextAction()
-                print("ALLES GOTTTTT")
             }
         })
     }
     
     func nextAction() {
-        print("hey")
         Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("number-of-ratings").setValue(numberToUpload)
         self.addReview()
     }
@@ -343,8 +330,14 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
             GlobalVariables.indexToDelete = 0
             let alert = UIAlertController(title: "Success", message: "Thanks for your feedback!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+                print("ok")
             }))
             GlobalVariables.finishedFeedback = true
+            
+            // add to running
+            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("completed")
+            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("reason-or-description").setValue(self.tf.text!)
+            
             MBProgressHUD.hide(for: self.view, animated: true)
             let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
             let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController

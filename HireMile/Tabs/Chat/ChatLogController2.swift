@@ -33,6 +33,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     var jobId = ""
     var chatId = ""
     var isShowing = false
+    var jobRefId = ""
     
     let cellId = "myCellId"
     
@@ -272,6 +273,11 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                 }
                 let message = Message(dictionary: dictionary)
                 
+                if let jobRefId = message.jobRefId {
+                    self.jobRefId = jobRefId
+                    GlobalVariables.jobRefId = jobRefId
+                }
+                
                 if message.serviceProvider == Auth.auth().currentUser!.uid {
                     print("i own the project")
                     if message.firstTime == true {
@@ -368,9 +374,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     fileprivate func thumbnailImageForFileUrl(_ fileUrl: URL) -> UIImage? {
         let asset = AVAsset(url: fileUrl)
         let imageGenerator = AVAssetImageGenerator(asset: asset)
-        
         do {
-        
             let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60), actualTime: nil)
             return UIImage(cgImage: thumbnailCGImage)
             
@@ -556,6 +560,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let postImageView = UIImageView()
         postImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         postImageView.layer.cornerRadius = 30
+        postImageView.contentMode = .scaleAspectFill
         postImageView.layer.masksToBounds = true
         postImageView.translatesAutoresizingMaskIntoConstraints = false
         myView.addSubview(postImageView)
@@ -845,6 +850,18 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         self.myView.removeFromSuperview()
         // if user accepts or declines, mark the first message as first time false
         Database.database().reference().child("Messages").child(chatId).child("first-time").setValue(false)
+        // add to running
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs")
+        let infoToAdd : Dictionary<String, Any> = [
+            "author-uid" : "\(user!.id!)",
+            "is-rating-nil" : true,
+            "job-key" : "\(self.jobId)",
+            "job-status" : "running",
+            "rating" : 0,
+            "reason-or-description" : "NULL"
+        ]
+        let postFeed = ["\(self.jobRefId)" : infoToAdd]
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").updateChildValues(postFeed)
     }
     
     @objc func doneButtonPressed() {
@@ -904,8 +921,35 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Yes, Cancel Job", style: .default, handler: { (action) in
             print("cancel job")
+            // send message to user that job is cancelled
+            let properties = ["text": "HIREMILE: This conversation and job has been deleted. For more information, please navigate to the 'My Jobs' section."] as [String : Any]
+            self.sendMessageWithProperties(properties)
+            // remove all children in messages for corresponding job
+            GlobalVariables.finishedFeedback = true
+            // send user a notification
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+                let name : String = (snapshot.value as? String)!
+                Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
+                    if let token : String = (snapshot.value as? String) {
+                        let sender = PushNotificationSender()
+                        Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("cancelled")
+                        sender.sendPushNotification(to: token, title: "\(name) cancelled your job!", body: "Open 'My Jobs' to find more")
+                        self.nextAction()
+                    } else {
+                        self.nextAction()
+                    }
+                }
+            }
         }))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func nextAction() {
+        GlobalVariables.finishedFeedback = true
+        let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+        let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+        UIApplication.shared.keyWindow?.rootViewController = vc
+        // my jobs..?
     }
 
 }

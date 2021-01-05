@@ -169,30 +169,30 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if segmentedControl.selectedSegmentIndex == 0 {
-            let alert = UIAlertController(title: "Ending Job?", message: "How are you going to end this job?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Cancel Job", style: .default, handler: { (action) in
-                // alert other user that job has been cancelled
-                // change the dict to cancelled, so it shows up in the cancelled the project.
-                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").child(self.running[indexPath.row].idThingy!).child("job-status").setValue("canceled")
-                // reload stuff
-                self.viewWillAppear(true)
-            }))
-            alert.addAction(UIAlertAction(title: "Complete Job", style: .default, handler: { (action) in
-                // change the dict to completed
-                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").child(self.running[indexPath.row].idThingy!).child("job-status").setValue("completed")
-                // reload stuff
-                self.viewWillAppear(true)
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        } else if segmentedControl.selectedSegmentIndex == 1 {
-            print("nothing")
-        } else if segmentedControl.selectedSegmentIndex == 2 {
-            print("nothing")
-        } else {
-            print("shouldnt be printed :)")
-        }
+//        if segmentedControl.selectedSegmentIndex == 0 {
+//            let alert = UIAlertController(title: "Ending Job?", message: "How are you going to end this job?", preferredStyle: .actionSheet)
+//            alert.addAction(UIAlertAction(title: "Cancel Job", style: .default, handler: { (action) in
+//                // alert other user that job has been cancelled
+//                // change the dict to cancelled, so it shows up in the cancelled the project.
+//                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").child(self.running[indexPath.row].idThingy!).child("job-status").setValue("canceled")
+//                // reload stuff
+//                self.viewWillAppear(true)
+//            }))
+//            alert.addAction(UIAlertAction(title: "Complete Job", style: .default, handler: { (action) in
+//                // change the dict to completed
+//                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").child(self.running[indexPath.row].idThingy!).child("job-status").setValue("completed")
+//                // reload stuff
+//                self.viewWillAppear(true)
+//            }))
+//            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//        } else if segmentedControl.selectedSegmentIndex == 1 {
+//            print("nothing")
+//        } else if segmentedControl.selectedSegmentIndex == 2 {
+//            print("nothing")
+//        } else {
+//            print("shouldnt be printed :)")
+//        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -343,7 +343,7 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             Database.database().reference().child("Jobs").child(self.canceled[indexPath.row].jobKey!).child("title").observe(.value) { (snapshot) in
                 let pictureString : String = (snapshot.value as? String)!
-                cell.reviewLabel.text = "\(pictureString)\n\(self.canceled[indexPath.row].reasonOrDescripiotn!)"
+                cell.reviewLabel.text = "\(pictureString)"
             }
             
             return cell
@@ -374,7 +374,7 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if segmentedControl.selectedSegmentIndex == 0 {
-            return 185
+            return 135
         } else if segmentedControl.selectedSegmentIndex == 1 {
             return 135
         } else if segmentedControl.selectedSegmentIndex == 2 {
@@ -448,27 +448,6 @@ class MyJobsRunningCell: UITableViewCell {
         return label
     }()
     
-    let endJobView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.white
-        view.layer.cornerRadius = 17.5
-        view.layer.borderColor = UIColor.mainBlue.cgColor
-        view.layer.borderWidth = 2
-        return view
-    }()
-    
-    let endJobLabel : UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "End Job"
-        label.textColor = UIColor.mainBlue
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.numberOfLines = 1
-        label.textAlignment = NSTextAlignment.center
-        return label
-    }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
@@ -479,8 +458,6 @@ class MyJobsRunningCell: UITableViewCell {
         addSubview(reviewLabel)
         addSubview(postImageView)
         addSubview(priceDateLabel)
-        addSubview(endJobView)
-        addSubview(endJobLabel)
         
         //ios 9 constraint anchors
         //need x,y,width,height anchors
@@ -508,16 +485,6 @@ class MyJobsRunningCell: UITableViewCell {
         priceDateLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         priceDateLabel.bottomAnchor.constraint(equalTo: self.postImageView.topAnchor, constant: -5).isActive = true
         priceDateLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
-        
-        endJobView.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        endJobView.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        endJobView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
-        endJobView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        
-        endJobLabel.leftAnchor.constraint(equalTo: endJobView.leftAnchor).isActive = true
-        endJobLabel.topAnchor.constraint(equalTo: endJobView.topAnchor).isActive = true
-        endJobLabel.rightAnchor.constraint(equalTo: endJobView.rightAnchor).isActive = true
-        endJobLabel.bottomAnchor.constraint(equalTo: endJobView.bottomAnchor).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
