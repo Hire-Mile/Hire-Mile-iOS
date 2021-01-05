@@ -17,7 +17,6 @@ import MBProgressHUD
 class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     let imagePicker = UIImagePickerController()
-    
     var timer : Timer?
     var estimateWidth = 160.0
     var cellMarginSize = 16.0
@@ -85,8 +84,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
                 GlobalVariables.isDeleting = true
                 print(GlobalVariables.indexToDelete)
-                print("GlobalVariables.indexToDelete")
-                print("hi")
                 GlobalVariables.finishedFeedback = false
             }))
             self.present(alert, animated: true, completion: nil)
@@ -430,6 +427,14 @@ class HomeCell: UICollectionViewCell {
 
 class MenuListController: UITableViewController {
     
+    var allRatings = [Int]()
+    
+    var finalRating = 0
+    
+    var ratingNumber = 0
+    
+    var findingRating = true
+    
     let items = ["Recent", "My Jobs", "My Reviews", "Favorites", "Settings", "Sign Out"]
         
     override func viewDidLoad() {
@@ -488,15 +493,19 @@ class MenuListController: UITableViewController {
                 cell.nameLabel.text = userName
             }
             
-            // find rating
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
-                let value = ratingNum.value as? NSNumber
-                let newNumber = Float(value!)
-                if newNumber == 100 {
-                    cell.ratingView.alpha = 0
-                } else {
-                    cell.ratingView.alpha = 1
-                    cell.ratingLabel.text = String(newNumber)
+            cell.ratingLabel.text = String(self.finalRating)
+            
+            if self.findingRating == true {
+                // find rating
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
+                    let value = ratingNum.value as? NSNumber
+                    let newNumber = Float(value!)
+                    if newNumber == 100 {
+                        cell.ratingView.alpha = 0
+                    } else {
+                        // get all ratings
+                        self.getAllRatings()
+                    }
                 }
             }
             
@@ -507,6 +516,20 @@ class MenuListController: UITableViewController {
             cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)
             cell.textLabel?.text = items[indexPath.row]
             return cell
+        }
+    }
+    
+    func getAllRatings() {
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = ReviewStructure()
+                job.ratingNumber = value["rating-number"] as? Int ?? 0
+                self.ratingNumber += 1
+                self.finalRating += job.ratingNumber!
+            }
+            self.finalRating = self.finalRating / self.ratingNumber
+            self.findingRating = false
+            self.tableView.reloadData()
         }
     }
     
