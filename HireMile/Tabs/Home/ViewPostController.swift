@@ -84,13 +84,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         tf.tintColor = UIColor.mainBlue
         tf.textColor = UIColor.black
         tf.backgroundColor = UIColor.white
-        tf.text = "  Say Something..."
         tf.borderStyle = .none
-        tf.layer.cornerRadius = 20
-        tf.layer.borderWidth = 2
         tf.returnKeyType = .done
-        tf.layer.borderColor = UIColor(red: 242/255, green: 235/255, blue: 235/255, alpha: 1).cgColor
-        tf.attributedPlaceholder = NSAttributedString(string: "  Say Something...", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 131/255, green: 131/255, blue: 131/255, alpha: 1), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)])
+        tf.placeholder = "Say Something..."
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -106,6 +102,16 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    let largeView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 20
+        view.layer.borderWidth = 2
+        view.layer.borderColor = UIColor(red: 206/255, green: 206/255, blue: 206/255, alpha: 1).cgColor
+        view.backgroundColor = UIColor.white
+        return view
     }()
 
     override func viewDidLoad() {
@@ -170,8 +176,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.informationView.addSubview(self.descriptionLabel)
         self.informationView.addSubview(self.priceLabel)
         self.informationView.addSubview(self.profileImage)
-        self.view.addSubview(self.textField)
-        self.view.addSubview(self.seeAllButton)
+        self.view.addSubview(self.largeView)
+        self.largeView.addSubview(self.seeAllButton)
+        self.largeView.addSubview(self.textField)
     }
     
     func addConstraints() {
@@ -206,16 +213,20 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.profileImage.widthAnchor.constraint(equalToConstant: 50).isActive = true
         self.profileImage.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        self.textField.topAnchor.constraint(equalTo: self.informationView.bottomAnchor, constant: 20).isActive = true
-        self.textField.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        self.textField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.textField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-        self.textField.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0).isActive = true
+        self.largeView.topAnchor.constraint(equalTo: self.informationView.bottomAnchor, constant: 20).isActive = true
+        self.largeView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.largeView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.largeView.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        self.seeAllButton.rightAnchor.constraint(equalTo: self.textField.rightAnchor).isActive = true
+        self.seeAllButton.rightAnchor.constraint(equalTo: self.largeView.rightAnchor).isActive = true
         self.seeAllButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         self.seeAllButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        self.seeAllButton.centerYAnchor.constraint(equalTo: self.textField.centerYAnchor).isActive = true
+        self.seeAllButton.centerYAnchor.constraint(equalTo: self.largeView.centerYAnchor).isActive = true
+        
+        self.textField.topAnchor.constraint(equalTo: self.largeView.topAnchor).isActive = true
+        self.textField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.textField.leftAnchor.constraint(equalTo: self.largeView.leftAnchor, constant: 20).isActive = true
+        self.textField.rightAnchor.constraint(equalTo: self.seeAllButton.leftAnchor, constant: -10).isActive = true
     }
     
     func basicSetup() {
