@@ -55,6 +55,36 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.backgroundColor = UIColor.white
         return tableView
     }()
+    
+    let emptyView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let contentView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let bubbleImage : UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(systemName: "ellipses.bubble.fill")
+        image.contentMode = .scaleAspectFit
+        image.tintColor = UIColor.mainBlue
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
+    let mainText : UILabel = {
+        let label = UILabel()
+        label.text = "Nothing Here!"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +100,31 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        
+        self.view.addSubview(self.emptyView)
+        self.emptyView.alpha = 0
+        self.emptyView.topAnchor.constraint(equalTo: self.tableView.topAnchor).isActive = true
+        self.emptyView.leftAnchor.constraint(equalTo: self.tableView.leftAnchor).isActive = true
+        self.emptyView.rightAnchor.constraint(equalTo: self.tableView.rightAnchor).isActive = true
+        self.emptyView.bottomAnchor.constraint(equalTo: self.tableView.bottomAnchor).isActive = true
+        
+        self.emptyView.addSubview(self.contentView)
+        self.contentView.centerXAnchor.constraint(equalTo: self.emptyView.centerXAnchor).isActive = true
+        self.contentView.centerYAnchor.constraint(equalTo: self.emptyView.centerYAnchor, constant: -50).isActive = true
+        self.contentView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        self.contentView.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        
+        self.contentView.addSubview(bubbleImage)
+        self.bubbleImage.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
+        self.bubbleImage.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
+        self.bubbleImage.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+        self.bubbleImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        self.contentView.addSubview(mainText)
+        self.mainText.topAnchor.constraint(equalTo: self.bubbleImage.bottomAnchor).isActive = true
+        self.mainText.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
+        self.mainText.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+        self.mainText.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.view.backgroundColor = UIColor.white
         
@@ -159,6 +214,15 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if segmentedControl.selectedSegmentIndex == 0 {
+            if self.messages.count == 0 {
+                print("empty")
+                self.emptyView.alpha = 1
+                self.tableView.alpha = 0
+            } else {
+                print("not empty")
+                self.emptyView.alpha = 0
+                self.tableView.alpha = 1
+            }
             return self.messages.count
         } else if segmentedControl.selectedSegmentIndex == 1 {
             return 0
@@ -285,8 +349,26 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.refrshControl.endRefreshing()
     }
     
-    @objc func segmentedControlValueChanged(_ semder: UISegmentedControl) {
-        self.tableView.reloadData()
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+                self.tableView.alpha = 1
+            } completion: { (complete) in
+                if complete {
+                    self.emptyView.alpha = 0
+                    self.tableView.reloadData()
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+                self.tableView.alpha = 0
+            } completion: { (complete) in
+                if complete {
+                    self.emptyView.alpha = 1
+                    self.tableView.reloadData()
+                }
+            }
+        }
     }
 
 }
