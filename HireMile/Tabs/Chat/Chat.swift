@@ -89,13 +89,18 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.backButtonTitle = " "
+        
         self.view.addSubview(segmentedControl)
         self.segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25).isActive = true
         self.segmentedControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         self.segmentedControl.widthAnchor.constraint(equalToConstant: 250).isActive = true
         self.segmentedControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
+//        self.navigationItem.titleView = self.segmentedControl
+        
         self.view.addSubview(tableView)
+        self.tableView.separatorStyle = .none
         self.tableView.topAnchor.constraint(equalTo: self.segmentedControl.bottomAnchor, constant: 20).isActive = true
         self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true

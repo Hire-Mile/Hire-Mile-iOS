@@ -37,10 +37,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     
     let cellId = "myCellId"
     
+    let imagePicker = UIImagePickerController()
+    
     let inputTextField : UITextField = {
         let inputTextField = UITextField()
         inputTextField.placeholder = "Write here"
         inputTextField.textColor = UIColor.black
+        inputTextField.addTarget(self, action: #selector(textFieldDidChange(_:) ), for: .editingChanged)
         inputTextField.borderStyle = .none
         inputTextField.layer.cornerRadius = 20
         inputTextField.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
@@ -71,9 +74,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     let sendButton : UIButton = {
         let sendButton = UIButton(type: .system)
         sendButton.setTitle("SEND", for: .normal)
+        sendButton.isEnabled = false
         sendButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        sendButton.setTitleColor(UIColor.white, for: .normal)
-        sendButton.backgroundColor = UIColor.mainBlue
+        sendButton.setTitleColor(UIColor.darkGray, for: .normal)
+        sendButton.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
         sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
         sendButton.layer.cornerRadius = 20
         sendButton.translatesAutoresizingMaskIntoConstraints = false
@@ -98,8 +102,6 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.navigationItem.title = "Chat Log Controller"
-        
         collectionView.backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
         collectionView.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.alwaysBounceVertical = true
@@ -113,14 +115,14 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     
     func setupKeyboardObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardDidShow), name: UIResponder.keyboardDidShowNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        
+        navigationItem.backButtonTitle = " "
         
         self.tabBarController?.tabBar.isHidden = true
     }
@@ -334,11 +336,21 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func didSelectImage() {
-        let imagePickerController = UIImagePickerController()
-        imagePickerController.delegate = self
-        imagePickerController.mediaTypes = [kUTTypeImage as String]
-        imagePickerController.allowsEditing = true
-        self.present(imagePickerController, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Choose Your Source", message: "From where do you want to choose your photo?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
+            self.imagePicker.sourceType = .photoLibrary
+            self.imagePicker.allowsEditing = true
+            self.imagePicker.delegate = self
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
+            self.imagePicker.sourceType = .camera
+            self.imagePicker.allowsEditing = true
+            self.imagePicker.delegate = self
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -480,6 +492,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                 Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
                     let name : String = (snapshot.value as? String)!
                     sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)")
+                    self.checkNilValueTextField()
                 }
             }
             
@@ -950,6 +963,24 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
         UIApplication.shared.keyWindow?.rootViewController = vc
         // my jobs..?
+    }
+    
+    fileprivate func checkNilValueTextField() {
+        if self.inputTextField.text == nil || self.inputTextField.text == "" {
+            self.sendButton.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+            self.sendButton.setTitleColor(UIColor.darkGray, for: .normal)
+            self.sendButton.isEnabled = false
+        } else {
+            self.sendButton.backgroundColor = UIColor.mainBlue
+            self.sendButton.setTitleColor(UIColor.white, for: .normal)
+            self.sendButton.isEnabled = true
+        }
+    }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        // check for empty
+        print("editing")
+        checkNilValueTextField()
     }
 
 }
