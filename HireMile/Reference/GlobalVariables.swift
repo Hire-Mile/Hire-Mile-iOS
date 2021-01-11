@@ -45,4 +45,6 @@ class GlobalVariables: NSObject {
     
     static var jobRefId = ""
     
+    static var postImageDownlodUrl = ""
+    
 }

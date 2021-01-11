@@ -56,6 +56,7 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
         view.backgroundColor = .green
     
         tableView.delegate = self
+        tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.register(MyJobsRunningCell.self, forCellReuseIdentifier: "myJobsCellID")
         tableView.register(MyJobsCompletedgCell.self, forCellReuseIdentifier: "myJobsCompletedCellID")
@@ -109,7 +110,7 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     self.canceled.append(job)
                     print(job)
                 default:
-                    print("error")
+                    print(job.type)
                 }
             }
             self.tableView.reloadData()
@@ -422,7 +423,7 @@ class MyJobsRunningCell: UITableViewCell {
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.left
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
@@ -441,7 +442,7 @@ class MyJobsRunningCell: UITableViewCell {
         let label = UILabel()
 //        label.text = "24 Feb. 2018"
         label.text = ""
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.right
@@ -562,7 +563,7 @@ class MyJobsCompletedgCell: UITableViewCell {
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.left
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
@@ -581,7 +582,7 @@ class MyJobsCompletedgCell: UITableViewCell {
         let label = UILabel()
 //        label.text = "$30, 24 Feb. 2018"
         label.text = ""
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.right
@@ -696,7 +697,7 @@ class MyJobsCanceledCell: UITableViewCell {
         label.textColor = UIColor.black
         label.textAlignment = NSTextAlignment.left
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
@@ -713,7 +714,7 @@ class MyJobsCanceledCell: UITableViewCell {
     let priceDateLabel : UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
         label.textAlignment = NSTextAlignment.right

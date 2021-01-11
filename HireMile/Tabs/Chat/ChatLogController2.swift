@@ -105,7 +105,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         collectionView.backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
         collectionView.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.alwaysBounceVertical = true
-        collectionView.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 95, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 95, right: 0)
         collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 8, left: 0, bottom: 95, right: 0)
         collectionView.keyboardDismissMode = .interactive
         
@@ -219,12 +219,27 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
         
         if message.fromId == Auth.auth().currentUser?.uid {
+            if let uid = Auth.auth().currentUser?.uid {
+                Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
+                    let profileImageString : String = (snapshot.value as? String)!
+                    if profileImageString == "not-yet-selected" {
+                        cell.myProfileImageView.image = UIImage(systemName: "person.circle.fill")
+                        cell.myProfileImageView.tintColor = UIColor.lightGray
+                        cell.myProfileImageView.contentMode = .scaleAspectFill
+                    } else {
+                        cell.myProfileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                        cell.myProfileImageView.tintColor = UIColor.lightGray
+                        cell.myProfileImageView.contentMode = .scaleAspectFill
+                    }
+                }
+            }
             cell.bubbleView.backgroundColor = UIColor.mainBlue
             cell.textView.textColor = UIColor.white
             cell.profileImageView.isHidden = true
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
         } else {
+            cell.myProfileImageView.removeFromSuperview()
             cell.bubbleView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
             cell.textView.textColor = UIColor.black
             cell.profileImageView.isHidden = false
@@ -281,6 +296,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                 }
                 
                 if message.serviceProvider == Auth.auth().currentUser!.uid {
+                    let requestButton = UIBarButtonItem(title: "XXXXX", style: .done, target: self, action: #selector(self.requestButtonPressed))
+                    let stopJob = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(self.stopJobButton))
+                    stopJob.tintColor = UIColor.red
+                    let completeJob = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .done, target: self, action: #selector(self.completeJobButton))
+                    completeJob.tintColor = UIColor(red: 111/255, green: 210/255, blue: 89/255, alpha: 1)
+                    GlobalVariables.chatPartnerId = message.chatPartnerId()!
+                    self.navigationItem.rightBarButtonItems = [requestButton]
                     print("i own the project")
                     if message.firstTime == true {
                         print("first time")
@@ -288,19 +310,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                         self.jobId = message.postId!
                         self.theMessage = message.text!
                         self.firstTimeFunction()
+                    } else {
                     }
                     GlobalVariables.jobId = message.postId!
                     GlobalVariables.chatPartnerId = message.chatPartnerId()!
-                    // setup for owners
                 } else {
                     print("i am not the owner")
                     if message.firstTime == false {
-                        let stopJob = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(self.stopJobButton))
-                        stopJob.tintColor = UIColor.red
-                        let completeJob = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .done, target: self, action: #selector(self.completeJobButton))
-                        completeJob.tintColor = UIColor(red: 111/255, green: 210/255, blue: 89/255, alpha: 1)
-                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
-                        self.navigationItem.rightBarButtonItems = [stopJob, completeJob]
                         if let messagePostId = message.postId {
                             GlobalVariables.jobId = messagePostId
                         }
@@ -318,10 +334,27 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
     }
     
+    @objc func requestButtonPressed() {
+        let alert = UIAlertController(title: "TITLE HERE!", message: "ARE YOU SURE?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "XXXXX", style: .default, handler: { (action) in
+            print("hello")
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @objc func handleKeyboardWillShow(notification: NSNotification) {
         let keyboardFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
         let keyboardDuration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
-        containerViewBottomAnchor?.constant = -keyboardFrame!.height + 10
+        print("UIDevice.current.screenType")
+        print(UIDevice.current.screenType)
+        print("UIDevice.current.screenType")
+        switch UIDevice.current.screenType {
+        case .iPhones_6Plus_6sPlus_7Plus_8Plus:
+            containerViewBottomAnchor?.constant = -keyboardFrame!.height
+        default:
+            containerViewBottomAnchor?.constant = -keyboardFrame!.height + 25
+        }
         UIView.animate(withDuration: keyboardDuration!) {
             self.view.layoutIfNeeded()
         }
@@ -339,13 +372,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let alert = UIAlertController(title: "Choose Your Source", message: "From where do you want to choose your photo?", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
             self.imagePicker.sourceType = .photoLibrary
-            self.imagePicker.allowsEditing = true
+            self.imagePicker.allowsEditing = false
             self.imagePicker.delegate = self
             self.present(self.imagePicker, animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
             self.imagePicker.sourceType = .camera
-            self.imagePicker.allowsEditing = true
+            self.imagePicker.allowsEditing = false
             self.imagePicker.delegate = self
             self.present(self.imagePicker, animated: true, completion: nil)
         }))

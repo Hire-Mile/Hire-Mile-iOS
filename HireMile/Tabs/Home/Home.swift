@@ -203,6 +203,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
         let url = URL(string: self.allJobs[indexPath.row].imagePost!)
         GlobalVariables.imagePost.kf.setImage(with: url)
+        GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
         GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
         GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
         GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
@@ -433,6 +434,9 @@ class MenuListController: UITableViewController {
     
     var ratingNumber = 0
     
+    var rating
+        = 0
+    
     var findingRating = true
     
     let items = ["Recent", "My Jobs", "My Reviews", "Favorites", "Settings", "Sign Out"]
@@ -493,17 +497,16 @@ class MenuListController: UITableViewController {
                 cell.nameLabel.text = userName
             }
             
-            cell.ratingLabel.text = String(self.finalRating)
+            cell.ratingLabel.text = String(self.rating)
             
             if self.findingRating == true {
                 // find rating
-                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observeSingleEvent(of: .value) { (ratingNum) in
                     let value = ratingNum.value as? NSNumber
                     let newNumber = Float(value!)
-                    if newNumber == 100 {
+                    if newNumber == 0 {
                         cell.ratingView.alpha = 0
                     } else {
-                        // get all ratings
                         self.getAllRatings()
                     }
                 }
@@ -527,11 +530,26 @@ class MenuListController: UITableViewController {
                 self.ratingNumber += 1
                 self.finalRating += job.ratingNumber!
             }
-            self.finalRating = self.finalRating / self.ratingNumber
+            
+            let finalNumber = self.finalRating / self.ratingNumber
+            
+            self.rating = finalNumber
+             
             self.findingRating = false
             self.tableView.reloadData()
         }
     }
+    
+//    func getAllRatings() {
+//        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
+//            if let value = snapshot.value as? [String : Any] {
+//                let job = ReviewStructure()
+//                job.ratingNumber = value["rating-number"] as? Int ?? 0
+//                self.ratingNumber += 1
+//                self.finalRating += job.ratingNumber!
+//            }
+//        }
+//    }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {

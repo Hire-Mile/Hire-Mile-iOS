@@ -291,7 +291,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
                     if let token : String = (snapshot.value as? String) {
                         let sender = PushNotificationSender()
                         sender.sendPushNotification(to: token, title: "\(name) gave you feedback!", body: "Open 'My Reviews' on the menu bar to see")
-                        self.addAnotherReview()
+                        self.addAnotherReview() 
                     } else {
                         self.addAnotherReview()
                     }

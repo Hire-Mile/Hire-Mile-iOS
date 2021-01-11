@@ -216,17 +216,16 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         if self.findingRating == true {
             // find rating
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observeSingleEvent(of: .value) { (ratingNum) in
                 let value = ratingNum.value as? NSNumber
                 let newNumber = Float(value!)
-                if newNumber == 100 {
+                if newNumber == 0 {
                     self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                     self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                     self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                     self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                     self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                 } else {
-                    // get all ratings
                     self.getAllRatings()
                 }
             }
@@ -263,10 +262,10 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 self.ratingNumber += 1
                 self.finalRating += job.ratingNumber!
             }
-            self.finalRating = self.finalRating / self.ratingNumber
-            self.findingRating = false
             
-            switch self.finalRating {
+            let finalNumber = self.finalRating / self.ratingNumber
+            
+            switch finalNumber {
             case 0:
                 self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                 self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
