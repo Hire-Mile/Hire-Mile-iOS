@@ -92,12 +92,12 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     }()
     
     let seeAllButton : UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .mainBlue
-        button.setTitleColor(.white, for: .normal)
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+        button.setTitleColor(UIColor.darkGray, for: .normal)
         button.setTitle("SEND", for: .normal)
         button.addTarget(self, action: #selector(sendPressed), for: .touchUpInside)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.bold)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.bold)
         button.layer.cornerRadius = 20
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -109,7 +109,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 20
         view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor(red: 206/255, green: 206/255, blue: 206/255, alpha: 1).cgColor
+        view.layer.borderColor = UIColor.lightGray.cgColor
         view.backgroundColor = UIColor.white
         return view
     }()
@@ -121,7 +121,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.addSubviews()
         self.addConstraints()
         
-        self.carousel.image = GlobalVariables.postImage2.image
+        let url = URL(string: GlobalVariables.postImageDownlodUrl)
+        self.carousel.kf.setImage(with: url)
 //        self.carousel.image! = GlobalVariables.imagePost.image!
         self.titleLabel.text = GlobalVariables.postTitle
         self.descriptionLabel.text = GlobalVariables.postDescription
@@ -132,9 +133,11 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         }
         self.postId = GlobalVariables.postId
         
-        // use author to get profile image
-        print("Helo")
-        print("Helo")
+        Database.database().reference().child("Users").child(GlobalVariables.authorId).child("name").observe(.value) { (snapshot) in
+            let name : String = (snapshot.value as? String)!
+            self.navigationItem.title = name
+        }
+        
         print(GlobalVariables.authorId)
         self.authorId = GlobalVariables.authorId
         Database.database().reference().child("Users").child(GlobalVariables.authorId).child("profile-image").observe(.value) { (snapshot) in
@@ -301,7 +304,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func sendPressed() {
-        if self.textField.text != " " && self.textField.text != "  " && self.textField.text != "   " && self.textField.text != nil && self.textField.text != "  Say Something..." {
+        if self.textField.text != " " || self.textField.text != "  " || self.textField.text != "   " || self.textField.text != nil || self.textField.text != "  Say Something..." || self.textField.text != "" {
             let ref = Database.database().reference().child("Messages")
             let childRef = ref.childByAutoId()
             let toId = authorId

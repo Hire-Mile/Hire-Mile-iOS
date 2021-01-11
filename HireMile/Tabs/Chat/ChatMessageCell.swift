@@ -43,6 +43,16 @@ class ChatMessageCell: UICollectionViewCell {
         return imageView
     }()
     
+    let myProfileImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 16
+        imageView.layer.masksToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
     lazy var messageImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -70,6 +80,7 @@ class ChatMessageCell: UICollectionViewCell {
         addSubview(bubbleView)
         addSubview(textView)
         addSubview(profileImageView)
+        addSubview(myProfileImageView)
         
         bubbleView.addSubview(messageImageView)
         messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
@@ -82,7 +93,12 @@ class ChatMessageCell: UICollectionViewCell {
         profileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
         
-        bubbleViewRightAnchor = bubbleView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
+        myProfileImageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8).isActive = true
+        myProfileImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        myProfileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        myProfileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        
+        bubbleViewRightAnchor = bubbleView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -48)
         bubbleViewRightAnchor?.isActive = true
         bubbleViewLeftAnchor = bubbleView.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 8)
         
