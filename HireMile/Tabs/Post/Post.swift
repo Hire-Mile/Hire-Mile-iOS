@@ -219,14 +219,22 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         self.changeCategory.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
         self.changeCategory.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        self.view.addSubview(segmentedControl)
-        self.segmentedControl.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor, constant: 20).isActive = true
-        self.segmentedControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.segmentedControl.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        self.segmentedControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.view.addSubview(self.titleYourListing)
+        self.titleYourListing.delegate = self
+        self.titleYourListing.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor, constant: 20).isActive = true
+        self.titleYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.titleYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.titleYourListing.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        
+        self.view.addSubview(self.describeYourListing)
+        self.describeYourListing.delegate = self
+        self.describeYourListing.topAnchor.constraint(equalTo: self.titleYourListing.bottomAnchor, constant: 10).isActive = true
+        self.describeYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.describeYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.describeYourListing.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         self.view.addSubview(priceYourListing)
-        self.priceYourListing.topAnchor.constraint(equalTo: self.segmentedControl.bottomAnchor, constant: 20).isActive = true
+        self.priceYourListing.topAnchor.constraint(equalTo: self.describeYourListing.bottomAnchor, constant: 20).isActive = true
         self.priceYourListing.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         self.priceYourListing.widthAnchor.constraint(equalToConstant: 100).isActive = true
         self.priceYourListing.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -237,25 +245,11 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         self.bottomBorder3.rightAnchor.constraint(equalTo: self.priceYourListing.rightAnchor).isActive = true
         self.bottomBorder3.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
-        self.view.addSubview(self.titleYourListing)
-        self.titleYourListing.delegate = self
-        self.titleYourListing.topAnchor.constraint(equalTo: self.priceYourListing.bottomAnchor, constant: 20).isActive = true
-        self.titleYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.titleYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.titleYourListing.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        
         self.view.addSubview(self.bottomBorder)
         self.bottomBorder.topAnchor.constraint(equalTo: self.titleYourListing.bottomAnchor).isActive = true
         self.bottomBorder.leftAnchor.constraint(equalTo: self.titleYourListing.leftAnchor).isActive = true
         self.bottomBorder.rightAnchor.constraint(equalTo: self.titleYourListing.rightAnchor).isActive = true
         self.bottomBorder.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        
-        self.view.addSubview(self.describeYourListing)
-        self.describeYourListing.delegate = self
-        self.describeYourListing.topAnchor.constraint(equalTo: self.titleYourListing.bottomAnchor, constant: 10).isActive = true
-        self.describeYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.describeYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.describeYourListing.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         self.view.addSubview(self.bottomBorder2)
         self.bottomBorder2.topAnchor.constraint(equalTo: self.describeYourListing.bottomAnchor).isActive = true
@@ -362,7 +356,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     @objc func keyboardWillShow(notification: NSNotification) {
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y == 0 {
-                    self.view.frame.origin.y -= keyboardSize.height / 1.75
+                    self.view.frame.origin.y -= keyboardSize.height / 3
                 }
             }
     }
@@ -374,7 +368,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     }
     
     @objc func handlePost() {
-        if self.titleYourListing.text! == "" || self.describeYourListing.text! == "" || self.priceYourListing.text! == "" || self.categoryLabel.text != "+ Select Category" {
+        if self.titleYourListing.text! == "" || self.describeYourListing.text! == "" || self.priceYourListing.text! == "" || self.categoryLabel.text == "+ Select Category" {
             let alert = UIAlertController(title: "Error", message: "Please make sure that all fields are filled in and a category is selected", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -396,11 +390,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
                             print(metalImageUrl)
                             // info upload
                             var typeOfPrice = ""
-                            if self.segmentedControl.selectedSegmentIndex == 0 {
                                 typeOfPrice = "Total"
-                            } else {
-                                typeOfPrice = "Hourly"
-                            }
                             let infoToAdd : Dictionary<String, Any> = [
                                 "category" : "\(self.categoryLabel.text!)",
                                 "description" : "\(self.describeYourListing.text!)",
