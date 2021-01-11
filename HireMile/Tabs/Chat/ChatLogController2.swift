@@ -218,7 +218,19 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             cell.profileImageView.contentMode = .scaleAspectFill
         }
         
+        // get time sent
+        if let seconds = message.timestamp?.doubleValue {
+            let timeStampDate = Date(timeIntervalSince1970: seconds)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "hh:mm a"
+            cell.timeSent.text = dateFormatter.string(from: timeStampDate)
+        }
+        
         if message.fromId == Auth.auth().currentUser?.uid {
+            // current user
+            cell.leftAnchorRec?.isActive = false
+            cell.rightAnchorMe?.isActive = true
+            cell.timeSent.textAlignment = NSTextAlignment.right
             if let uid = Auth.auth().currentUser?.uid {
                 Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
                     let profileImageString : String = (snapshot.value as? String)!
@@ -239,6 +251,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
         } else {
+            // recipient
+            cell.leftAnchorRec?.isActive = true
+            cell.rightAnchorMe?.isActive = false
+            cell.timeSent.textAlignment = NSTextAlignment.left
             cell.myProfileImageView.removeFromSuperview()
             cell.bubbleView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
             cell.textView.textColor = UIColor.black
@@ -267,7 +283,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
         
         let width = UIScreen.main.bounds.width
-        return CGSize(width: width, height: height + 5)
+        return CGSize(width: width, height: height + 25)
     }
     
     private func estimateFrameForText(text: String) -> CGRect {
