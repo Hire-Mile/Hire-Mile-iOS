@@ -17,7 +17,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     var users = [UserStructure]()
     var allJobs = [JobStructure]()
     var justRes = [JobStructure]()
-    var isSearching = false
+    var isSearching = true
     
     let xButton : UIButton = {
         let button = UIButton()
@@ -146,7 +146,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     
     @objc func textFieldChange() {
         
-        self.justRes = self.allJobs.filter({$0.titleOfPost!.prefix(self.searchTextField.text!.count) == self.searchTextField.text!})
+        self.justRes = self.allJobs.filter({$0.titleOfPost!.prefix(self.searchTextField.text!.count).contains(self.searchTextField.text!)})
         
         self.isSearching = true
         self.tableView.reloadData()

@@ -337,6 +337,8 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
             // add to running
             Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("completed")
             Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("reason-or-description").setValue(self.tf.text!)
+            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("rating").setValue(self.rating)
+            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("is-rating-nil").setValue(false)
             
             MBProgressHUD.hide(for: self.view, animated: true)
             let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)

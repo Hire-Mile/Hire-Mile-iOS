@@ -92,13 +92,13 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String: Any] {
                 let job = MyJobStructure()
-                job.authorUid = value["author-uid"] as? String ?? "Error"
-                job.reasonOrDescripiotn = value["reason-or-description"] as? String ?? "Error"
-                job.jobKey = value["job-key"] as? String ?? "Error"
+                job.authorUid = value["author-uid"] as? String ?? "AUTHOR ID"
+                job.reasonOrDescripiotn = value["reason-or-description"] as? String ?? "REASON FALSE"
+                job.jobKey = value["job-key"] as? String ?? "JOB KEY FALSE"
                 job.rating = value["rating"] as? Int ?? 0
                 job.ratingIsNil = value["is-rating-nil"] as? Bool ?? true
-                job.type = value["job-status"] as? String ?? "Error"
-                job.idThingy = value["job-id-for-me"] as? String ?? "Error"
+                job.type = value["job-status"] as? String ?? "TYPE FALSE"
+                job.idThingy = value["job-id-for-me"] as? String ?? "ID FALSE"
                 switch job.type! {
                 case "running":
                     self.running.append(job)
@@ -106,7 +106,7 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 case "completed":
                     self.completed.append(job)
                     print(job)
-                case "canceled":
+                case "cancelled":
                     self.canceled.append(job)
                     print(job)
                 default:
@@ -259,6 +259,9 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                     cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                 } else {
+                    print("self.completed[indexPath.row].rating!")
+                    print(self.completed[indexPath.row].rating!)
+                    print("self.completed[indexPath.row].rating!")
                     switch self.completed[indexPath.row].rating! {
                     case 0:
                         cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)

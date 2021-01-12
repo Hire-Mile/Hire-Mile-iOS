@@ -34,6 +34,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     var chatId = ""
     var isShowing = false
     var jobRefId = ""
+    var isSearchingForServiceProvider = true
+
     
     let cellId = "myCellId"
     
@@ -305,36 +307,41 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                     return
                 }
                 let message = Message(dictionary: dictionary)
-                
                 if let jobRefId = message.jobRefId {
                     self.jobRefId = jobRefId
                     GlobalVariables.jobRefId = jobRefId
                 }
                 
-                if message.serviceProvider == Auth.auth().currentUser!.uid {
-                    let requestButton = UIBarButtonItem(title: "XXXXX", style: .done, target: self, action: #selector(self.requestButtonPressed))
-                    let stopJob = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(self.stopJobButton))
-                    stopJob.tintColor = UIColor.red
-                    let completeJob = UIBarButtonItem(image: UIImage(systemName: "checkmark"), style: .done, target: self, action: #selector(self.completeJobButton))
-                    completeJob.tintColor = UIColor(red: 111/255, green: 210/255, blue: 89/255, alpha: 1)
-                    GlobalVariables.chatPartnerId = message.chatPartnerId()!
-                    self.navigationItem.rightBarButtonItems = [requestButton]
-                    print("i own the project")
-                    if message.firstTime == true {
-                        print("first time")
-                        self.chatId = messageId
-                        self.jobId = message.postId!
-                        self.theMessage = message.text!
-                        self.firstTimeFunction()
+                if self.isSearchingForServiceProvider {
+                    if message.serviceProvider == Auth.auth().currentUser!.uid {
+                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
+                        self.isSearchingForServiceProvider = false
+                        print("i am jorge, the worker")
+                        if message.firstTime == true {
+                            print("first time")
+                            self.chatId = messageId
+                            self.jobId = message.postId!
+                            self.theMessage = message.text!
+                            self.firstTimeFunction()
+                        }
+                        GlobalVariables.jobId = message.postId!
+                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
                     } else {
-                    }
-                    GlobalVariables.jobId = message.postId!
-                    GlobalVariables.chatPartnerId = message.chatPartnerId()!
-                } else {
-                    print("i am not the owner")
-                    if message.firstTime == false {
-                        if let messagePostId = message.postId {
-                            GlobalVariables.jobId = messagePostId
+                        print("henry")
+                        if message.firstTime == false {
+                            let btnProfile = UIButton(type: .system)
+                            btnProfile.frame = CGRect(x: 0, y: 0, width: 80, height: 20)
+                            btnProfile.setTitle("FINISH", for: .normal)
+                            btnProfile.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+                            btnProfile.addTarget(self, action: #selector(self.requestButtonPressed), for: .touchUpInside)
+                            btnProfile.setTitleColor(UIColor.black, for: .normal)
+                            btnProfile.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+                            btnProfile.layer.cornerRadius = 10
+                            btnProfile.layer.masksToBounds = true
+                            self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: btnProfile)]
+                            if let messagePostId = message.postId {
+                                GlobalVariables.jobId = messagePostId
+                            }
                         }
                     }
                 }
@@ -351,10 +358,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func requestButtonPressed() {
-        let alert = UIAlertController(title: "TITLE HERE!", message: "ARE YOU SURE?", preferredStyle: .actionSheet)
+        let alert = UIAlertController(title: "Finishing Job! How Should We Mark It?", message: "Please select below, so we can log experience for your partner", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "XXXXX", style: .default, handler: { (action) in
-            print("hello")
+        alert.addAction(UIAlertAction(title: "Complete Job", style: .default, handler: { (action) in
+            self.completeJobButton()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel Job", style: .default, handler: { (action) in
+            self.stopJobButton()
         }))
         self.present(alert, animated: true, completion: nil)
     }
