@@ -17,10 +17,9 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var myJobs = [JobStructure]()
     
     var finalRating = 0
-    
     var ratingNumber = 0
-    
     var findingRating = true
+    var hires = 0
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -85,13 +84,81 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     let seperaterView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        return view
+    }()
+    
+    let toolBarView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let secondImportantView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let thirdImportantView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let secondTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "30"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let secondDescLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Hires"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.lightGray
+        return label
+    }()
+    
+    let thirdTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "7"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let thirdDescLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Jobs"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.lightGray
+        return label
+    }()
+    
+    let seperaterView2 : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return view
     }()
     
     let myServices : UILabel = {
         let label = UILabel()
-        label.text = "My Services ()"
+        label.text = "My Services"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -158,8 +225,56 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         seperaterView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         seperaterView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+        view.addSubview(toolBarView)
+        toolBarView.topAnchor.constraint(equalTo: self.seperaterView.bottomAnchor).isActive = true
+        toolBarView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        toolBarView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        toolBarView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        toolBarView.addSubview(secondImportantView)
+        secondImportantView.topAnchor.constraint(equalTo: toolBarView.topAnchor).isActive = true
+        secondImportantView.leftAnchor.constraint(equalTo: toolBarView.leftAnchor, constant: 15).isActive = true
+        secondImportantView.bottomAnchor.constraint(equalTo: toolBarView.bottomAnchor).isActive = true
+        secondImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 2).isActive = true
+        
+        secondImportantView.addSubview(secondTitleLabel)
+        secondTitleLabel.topAnchor.constraint(equalTo: secondImportantView.topAnchor).isActive = true
+        secondTitleLabel.leftAnchor.constraint(equalTo: secondImportantView.leftAnchor).isActive = true
+        secondTitleLabel.rightAnchor.constraint(equalTo: secondImportantView.rightAnchor).isActive = true
+        secondTitleLabel.bottomAnchor.constraint(equalTo: secondImportantView.bottomAnchor, constant: -15).isActive = true
+        
+        secondImportantView.addSubview(secondDescLabel)
+        secondDescLabel.topAnchor.constraint(equalTo: secondImportantView.topAnchor, constant: 25).isActive = true
+        secondDescLabel.leftAnchor.constraint(equalTo: secondImportantView.leftAnchor).isActive = true
+        secondDescLabel.rightAnchor.constraint(equalTo: secondImportantView.rightAnchor).isActive = true
+        secondDescLabel.bottomAnchor.constraint(equalTo: secondImportantView.bottomAnchor).isActive = true
+        
+        toolBarView.addSubview(thirdImportantView)
+        thirdImportantView.topAnchor.constraint(equalTo: toolBarView.topAnchor).isActive = true
+        thirdImportantView.rightAnchor.constraint(equalTo: toolBarView.rightAnchor, constant: -15).isActive = true
+        thirdImportantView.bottomAnchor.constraint(equalTo: toolBarView.bottomAnchor).isActive = true
+        thirdImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 2).isActive = true
+        
+        thirdImportantView.addSubview(thirdTitleLabel)
+        thirdTitleLabel.topAnchor.constraint(equalTo: thirdImportantView.topAnchor).isActive = true
+        thirdTitleLabel.leftAnchor.constraint(equalTo: thirdImportantView.leftAnchor).isActive = true
+        thirdTitleLabel.rightAnchor.constraint(equalTo: thirdImportantView.rightAnchor).isActive = true
+        thirdTitleLabel.bottomAnchor.constraint(equalTo: thirdImportantView.bottomAnchor, constant: -15).isActive = true
+        
+        thirdImportantView.addSubview(thirdDescLabel)
+        thirdDescLabel.topAnchor.constraint(equalTo: thirdImportantView.topAnchor, constant: 25).isActive = true
+        thirdDescLabel.leftAnchor.constraint(equalTo: thirdImportantView.leftAnchor).isActive = true
+        thirdDescLabel.rightAnchor.constraint(equalTo: thirdImportantView.rightAnchor).isActive = true
+        thirdDescLabel.bottomAnchor.constraint(equalTo: thirdImportantView.bottomAnchor).isActive = true
+        
+        view.addSubview(seperaterView2)
+        seperaterView2.topAnchor.constraint(equalTo: self.toolBarView.bottomAnchor).isActive = true
+        seperaterView2.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        seperaterView2.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        seperaterView2.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
         view.addSubview(myServices)
-        myServices.topAnchor.constraint(equalTo: self.seperaterView.bottomAnchor, constant: 25).isActive = true
+        myServices.topAnchor.constraint(equalTo: self.seperaterView2.bottomAnchor, constant: 25).isActive = true
         myServices.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
         myServices.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         myServices.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -208,6 +323,18 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }
         }
         
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String: Any] {
+                let job = MyJobStructure()
+                job.type = value["job-status"] as? String ?? "TYPE FALSE"
+                if job.type! == "completed" {
+                    self.hires += 1
+                }
+            }
+            // update label
+            self.secondTitleLabel.text = String(self.hires)
+        }
+        
         // name
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
             let userName : String = (snapshot.value as? String)!
@@ -250,6 +377,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     self.myJobs.append(job)
                 }
             }
+            self.thirdTitleLabel.text = String(self.myJobs.count)
             self.tableView.reloadData()
         }
     }
@@ -313,7 +441,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.myServices.text = "My Services (\(myJobs.count))"
+        self.myServices.text = "My Services"
         return myJobs.count
     }
     
@@ -344,7 +472,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return 175
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -410,8 +538,8 @@ class ProfileCell: UITableViewCell {
         let label = UILabel()
         label.text = "Sales"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = UIColor.lightGray
+        label.font = UIFont.systemFont(ofSize: 12)
         label.numberOfLines = 1
         return label
     }()
@@ -419,12 +547,34 @@ class ProfileCell: UITableViewCell {
     let priceNumber : UILabel = {
         let label = UILabel()
         label.text = "Cost"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
-        label.textColor = UIColor.mainBlue
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.textColor = UIColor.black
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
         return label
+    }()
+    
+    let editButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Edit", for: .normal)
+        button.setTitleColor(UIColor.mainBlue, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.mainBlue.cgColor
+        return button
+    }()
+    
+    let deleteButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Delete", for: .normal)
+        button.setTitleColor(UIColor.mainBlue, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.mainBlue.cgColor
+        return button
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -437,8 +587,8 @@ class ProfileCell: UITableViewCell {
         informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -25).isActive = true
         
         informationView.addSubview(postImageView)
-        postImageView.topAnchor.constraint(equalTo: informationView.topAnchor, constant: 0).isActive = true
-        postImageView.leftAnchor.constraint(equalTo: informationView.leftAnchor, constant: 0).isActive = true
+        postImageView.topAnchor.constraint(equalTo: informationView.topAnchor, constant: -10).isActive = true
+        postImageView.leftAnchor.constraint(equalTo: informationView.leftAnchor, constant: -10).isActive = true
         postImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         postImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
@@ -451,14 +601,30 @@ class ProfileCell: UITableViewCell {
         informationView.addSubview(titleJob)
         titleJob.topAnchor.constraint(equalTo: self.topAnchor, constant: 40).isActive = true
         titleJob.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
-        titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 10).isActive = true
+        titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         titleJob.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         informationView.addSubview(saleNumber)
-        saleNumber.topAnchor.constraint(equalTo: self.titleJob.bottomAnchor, constant: 0).isActive = true
+        saleNumber.topAnchor.constraint(equalTo: self.titleJob.bottomAnchor, constant: -5).isActive = true
         saleNumber.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
-        saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 10).isActive = true
+        saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         saleNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        informationView.addSubview(editButton)
+        editButton.layer.cornerRadius = 15
+        editButton.layer.masksToBounds = true
+        editButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+        editButton.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -15).isActive = true
+        editButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+        
+        informationView.addSubview(deleteButton)
+        deleteButton.layer.cornerRadius = 15
+        deleteButton.layer.masksToBounds = true
+        deleteButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+        deleteButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -15).isActive = true
+        deleteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
     }
     
     required init?(coder: NSCoder) {
