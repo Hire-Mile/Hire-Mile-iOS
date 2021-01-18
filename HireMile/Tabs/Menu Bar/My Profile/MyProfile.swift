@@ -467,6 +467,8 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
         
+        cell.selectionStyle = .none
+        
         let url = URL(string: self.myJobs[indexPath.row].imagePost!)
         cell.postImageView.kf.setImage(with: url)
         
@@ -496,11 +498,11 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         GlobalVariables.postId = self.myJobs[indexPath.row].postId!
         GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
         
-//        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+        self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 150
+        return 175
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -615,8 +617,16 @@ class ProfileCell: UITableViewCell {
         return button
     }()
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.selectionStyle = .none
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        isUserInteractionEnabled = true
             
         addSubview(informationView)
         informationView.topAnchor.constraint(equalTo: self.topAnchor, constant: 25).isActive = true
@@ -648,21 +658,21 @@ class ProfileCell: UITableViewCell {
         saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         saleNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-//        addSubview(editButton)
-//        editButton.layer.cornerRadius = 15
-//        editButton.layer.masksToBounds = true
-//        editButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
-//        editButton.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -15).isActive = true
-//        editButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-//        editButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
-//
-//        addSubview(deleteButton)
-//        deleteButton.layer.cornerRadius = 15
-//        deleteButton.layer.masksToBounds = true
-//        deleteButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
-//        deleteButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -15).isActive = true
-//        deleteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-//        deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+        contentView.addSubview(editButton)
+        editButton.layer.cornerRadius = 15
+        editButton.layer.masksToBounds = true
+        editButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+        editButton.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -15).isActive = true
+        editButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+
+        contentView.addSubview(deleteButton)
+        deleteButton.layer.cornerRadius = 15
+        deleteButton.layer.masksToBounds = true
+        deleteButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+        deleteButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -15).isActive = true
+        deleteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
     }
     
     required init?(coder: NSCoder) {
