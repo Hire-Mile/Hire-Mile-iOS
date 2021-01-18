@@ -10,11 +10,13 @@ import UIKit
 import Firebase
 
 @UIApplicationMain
- class AppDelegate: UIResponder, UIApplicationDelegate {
+ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
+        
+        UIApplication.shared.applicationIconBadgeNumber = 0
         
         // Override point for customization after application launch.
         return true

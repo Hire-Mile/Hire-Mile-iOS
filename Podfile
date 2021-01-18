@@ -21,5 +21,6 @@ target 'HireMile' do
   pod 'BulletinBoard'
   pod 'STPopup'
   pod 'Kingfisher'
+  pod 'ScrollableSegmentedControl'
 
 end

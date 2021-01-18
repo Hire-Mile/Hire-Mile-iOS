@@ -111,7 +111,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let secondTitleLabel : UILabel = {
         let label = UILabel()
-        label.text = "30"
+        label.text = "0"
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 20)
@@ -131,7 +131,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let thirdTitleLabel : UILabel = {
         let label = UILabel()
-        label.text = "7"
+        label.text = "0"
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 20)
@@ -297,17 +297,36 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let upload = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(uploadPressed))
-        let edit = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPressed))
-        
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.topItem?.title = " "
         self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
-        self.navigationItem.rightBarButtonItems = [upload, edit]
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        
+        let btnProfile = UIButton(type: .system)
+        btnProfile.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        btnProfile.setImage(UIImage(systemName: "pencil"), for: .normal)
+        btnProfile.tintColor = UIColor.black
+        btnProfile.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        btnProfile.addTarget(self, action: #selector(self.editPressed), for: .touchUpInside)
+        btnProfile.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+        btnProfile.layer.cornerRadius = 25
+        btnProfile.layer.masksToBounds = true
+        
+        let share = UIButton(type: .system)
+        share.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        share.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        share.tintColor = UIColor.black
+        share.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        share.addTarget(self, action: #selector(self.uploadPressed), for: .touchUpInside)
+        share.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+        share.layer.cornerRadius = 25
+        share.layer.masksToBounds = true
+        
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: btnProfile), UIBarButtonItem(customView: share)]
         
         // profile image view
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in
@@ -447,7 +466,10 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
-        cell.postImageView.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+        
+        let url = URL(string: self.myJobs[indexPath.row].imagePost!)
+        cell.postImageView.kf.setImage(with: url)
+        
         cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
         cell.postId = self.myJobs[indexPath.row].postId!
         cell.saleNumber.text = self.myJobs[indexPath.row].descriptionOfPost!
@@ -456,11 +478,17 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
         }
+        
+        cell.deleteButton.addTarget(self, action: #selector(deletePostPressed), for: .touchUpInside)
+        cell.editButton.addTarget(self, action: #selector(editPostPressed), for: .touchUpInside)
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+        let url = URL(string: self.myJobs[indexPath.row].imagePost!)
+        GlobalVariables.imagePost.kf.setImage(with: url)
+        GlobalVariables.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
         GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
         GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
         GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
@@ -468,11 +496,11 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         GlobalVariables.postId = self.myJobs[indexPath.row].postId!
         GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
         
-        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+//        self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 175
+        return 150
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -491,6 +519,14 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
             popoverController.sourceRect = self.view.bounds
         }
         self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc func deletePostPressed() {
+        print("delete")
+    }
+    
+    @objc func editPostPressed() {
+        print("edit")
     }
     
     @objc func editPressed() {
@@ -559,7 +595,8 @@ class ProfileCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("Edit", for: .normal)
         button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.backgroundColor = UIColor.white
+        button.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        button.isUserInteractionEnabled = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.mainBlue.cgColor
@@ -570,7 +607,8 @@ class ProfileCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("Delete", for: .normal)
         button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.backgroundColor = UIColor.white
+        button.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        button.isUserInteractionEnabled = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.mainBlue.cgColor
@@ -600,7 +638,7 @@ class ProfileCell: UITableViewCell {
         
         informationView.addSubview(titleJob)
         titleJob.topAnchor.constraint(equalTo: self.topAnchor, constant: 40).isActive = true
-        titleJob.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
+        titleJob.rightAnchor.constraint(equalTo: priceNumber.leftAnchor).isActive = true
         titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         titleJob.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
@@ -610,21 +648,21 @@ class ProfileCell: UITableViewCell {
         saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         saleNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        informationView.addSubview(editButton)
-        editButton.layer.cornerRadius = 15
-        editButton.layer.masksToBounds = true
-        editButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
-        editButton.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -15).isActive = true
-        editButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        editButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
-        
-        informationView.addSubview(deleteButton)
-        deleteButton.layer.cornerRadius = 15
-        deleteButton.layer.masksToBounds = true
-        deleteButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
-        deleteButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -15).isActive = true
-        deleteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+//        addSubview(editButton)
+//        editButton.layer.cornerRadius = 15
+//        editButton.layer.masksToBounds = true
+//        editButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+//        editButton.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -15).isActive = true
+//        editButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//        editButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+//
+//        addSubview(deleteButton)
+//        deleteButton.layer.cornerRadius = 15
+//        deleteButton.layer.masksToBounds = true
+//        deleteButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+//        deleteButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -15).isActive = true
+//        deleteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//        deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
     }
     
     required init?(coder: NSCoder) {

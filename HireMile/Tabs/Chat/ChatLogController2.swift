@@ -124,6 +124,15 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            for message in self.messages {
+                Database.database().reference().child("Messages").child(message.textId!).child("hasViewed").setValue(true)
+            }
+        }
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(named: "whiteback"), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        
         navigationItem.backButtonTitle = " "
         
         self.tabBarController?.tabBar.isHidden = true
@@ -228,27 +237,30 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             cell.timeSent.text = dateFormatter.string(from: timeStampDate)
         }
         
+        if let uid = Auth.auth().currentUser?.uid {
+            Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
+                let profileImageString : String = (snapshot.value as? String)!
+                if profileImageString == "not-yet-selected" {
+                    cell.myProfileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.myProfileImageView.tintColor = UIColor.lightGray
+                    cell.myProfileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.myProfileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.myProfileImageView.tintColor = UIColor.lightGray
+                    cell.myProfileImageView.contentMode = .scaleAspectFill
+                }
+            }
+        }
+        
         if message.fromId == Auth.auth().currentUser?.uid {
             // current user
+            print("cannot show")
             cell.leftAnchorRec?.isActive = false
             cell.rightAnchorMe?.isActive = true
             cell.timeSent.textAlignment = NSTextAlignment.right
-            if let uid = Auth.auth().currentUser?.uid {
-                Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
-                    let profileImageString : String = (snapshot.value as? String)!
-                    if profileImageString == "not-yet-selected" {
-                        cell.myProfileImageView.image = UIImage(systemName: "person.circle.fill")
-                        cell.myProfileImageView.tintColor = UIColor.lightGray
-                        cell.myProfileImageView.contentMode = .scaleAspectFill
-                    } else {
-                        cell.myProfileImageView.loadImageUsingCacheWithUrlString(profileImageString)
-                        cell.myProfileImageView.tintColor = UIColor.lightGray
-                        cell.myProfileImageView.contentMode = .scaleAspectFill
-                    }
-                }
-            }
             cell.bubbleView.backgroundColor = UIColor.mainBlue
             cell.textView.textColor = UIColor.white
+            cell.myProfileImageView.isHidden = false
             cell.profileImageView.isHidden = true
             cell.bubbleViewRightAnchor?.isActive = true
             cell.bubbleViewLeftAnchor?.isActive = false
@@ -257,7 +269,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             cell.leftAnchorRec?.isActive = true
             cell.rightAnchorMe?.isActive = false
             cell.timeSent.textAlignment = NSTextAlignment.left
-            cell.myProfileImageView.removeFromSuperview()
+            cell.myProfileImageView.isHidden = true
+            cell.profileImageView.isHidden = false
             cell.bubbleView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
             cell.textView.textColor = UIColor.black
             cell.profileImageView.isHidden = false
@@ -307,6 +320,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                     return
                 }
                 let message = Message(dictionary: dictionary)
+                
                 if let jobRefId = message.jobRefId {
                     self.jobRefId = jobRefId
                     GlobalVariables.jobRefId = jobRefId
@@ -525,7 +539,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let toId = user?.id
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
-        var values : [String : Any] = ["toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : false, "service-provider" : "??"] as [String : Any]
+        var values : [String : Any] = ["toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : false, "service-provider" : "??", "text-id" : childRef.key, "hasViewed" : false] as [String : Any]
         
         // append properties
         properties.forEach({values[$0] = $1})

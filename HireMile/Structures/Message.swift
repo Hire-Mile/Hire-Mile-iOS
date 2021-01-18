@@ -27,6 +27,9 @@ class Message: NSObject {
     
     var jobRefId : String?
     
+    var hasViewed : Bool?
+    var textId : String?
+    
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String
         self.text = dictionary["text"] as? String
@@ -42,6 +45,10 @@ class Message: NSObject {
         self.postId = dictionary["job-id"] as? String
         
         self.jobRefId = dictionary["job-ref-id"] as? String
+        
+        self.hasViewed = dictionary["hasViewed"] as? Bool ?? true
+        
+        self.textId = dictionary["text-id"] as? String ?? "Error"
     }
     
     func chatPartnerId() -> String? {

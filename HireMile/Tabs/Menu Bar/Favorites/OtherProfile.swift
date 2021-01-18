@@ -21,6 +21,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     var finalRating = 0
     var ratingNumber = 0
     var findingRating = true
+    var hires = 0
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -86,13 +87,81 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     let seperaterView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        return view
+    }()
+    
+    let toolBarView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let secondImportantView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let thirdImportantView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let secondTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let secondDescLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Hires"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.lightGray
+        return label
+    }()
+    
+    let thirdTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let thirdDescLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Jobs"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.lightGray
+        return label
+    }()
+    
+    let seperaterView2 : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return view
     }()
     
     let myServices : UILabel = {
         let label = UILabel()
-        label.text = "My Services (3)"
+        label.text = "My Services"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -122,6 +191,41 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Database.database().reference().child("Users").child(GlobalVariables.userUID).child("My_Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String: Any] {
+                let job = MyJobStructure()
+                job.type = value["job-status"] as? String ?? "TYPE FALSE"
+                if job.type! == "completed" {
+                    self.hires += 1
+                }
+            }
+            // update label
+            self.secondTitleLabel.text = String(self.hires)
+        }
+        
+        self.allJobs.removeAll()
+        self.myJobs.removeAll()
+        Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = JobStructure()
+                job.authorName = value["author"] as? String ?? "Error"
+                job.titleOfPost = value["title"] as? String ?? "Error"
+                job.descriptionOfPost = value["description"] as? String ?? "Error"
+                job.price = value["price"] as? Int ?? 0
+                job.category = value["category"] as? String ?? "Error"
+                job.imagePost = value["image"] as? String ?? "Error"
+                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                job.postId = value["postId"] as? String ?? "Error"
+                
+                if job.authorName ==  GlobalVariables.userUID {
+                    print("my name")
+                    self.myJobs.append(job)
+                }
+            }
+            self.thirdTitleLabel.text = String(self.myJobs.count)
+            self.tableView.reloadData()
+        }
         
         view.addSubview(profileImageView)
         profileImageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
@@ -171,8 +275,56 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         seperaterView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         seperaterView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
+        view.addSubview(toolBarView)
+        toolBarView.topAnchor.constraint(equalTo: self.seperaterView.bottomAnchor).isActive = true
+        toolBarView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        toolBarView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        toolBarView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        toolBarView.addSubview(secondImportantView)
+        secondImportantView.topAnchor.constraint(equalTo: toolBarView.topAnchor).isActive = true
+        secondImportantView.leftAnchor.constraint(equalTo: toolBarView.leftAnchor, constant: 15).isActive = true
+        secondImportantView.bottomAnchor.constraint(equalTo: toolBarView.bottomAnchor).isActive = true
+        secondImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 2).isActive = true
+        
+        secondImportantView.addSubview(secondTitleLabel)
+        secondTitleLabel.topAnchor.constraint(equalTo: secondImportantView.topAnchor).isActive = true
+        secondTitleLabel.leftAnchor.constraint(equalTo: secondImportantView.leftAnchor).isActive = true
+        secondTitleLabel.rightAnchor.constraint(equalTo: secondImportantView.rightAnchor).isActive = true
+        secondTitleLabel.bottomAnchor.constraint(equalTo: secondImportantView.bottomAnchor, constant: -15).isActive = true
+        
+        secondImportantView.addSubview(secondDescLabel)
+        secondDescLabel.topAnchor.constraint(equalTo: secondImportantView.topAnchor, constant: 25).isActive = true
+        secondDescLabel.leftAnchor.constraint(equalTo: secondImportantView.leftAnchor).isActive = true
+        secondDescLabel.rightAnchor.constraint(equalTo: secondImportantView.rightAnchor).isActive = true
+        secondDescLabel.bottomAnchor.constraint(equalTo: secondImportantView.bottomAnchor).isActive = true
+        
+        toolBarView.addSubview(thirdImportantView)
+        thirdImportantView.topAnchor.constraint(equalTo: toolBarView.topAnchor).isActive = true
+        thirdImportantView.rightAnchor.constraint(equalTo: toolBarView.rightAnchor, constant: -15).isActive = true
+        thirdImportantView.bottomAnchor.constraint(equalTo: toolBarView.bottomAnchor).isActive = true
+        thirdImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 2).isActive = true
+        
+        thirdImportantView.addSubview(thirdTitleLabel)
+        thirdTitleLabel.topAnchor.constraint(equalTo: thirdImportantView.topAnchor).isActive = true
+        thirdTitleLabel.leftAnchor.constraint(equalTo: thirdImportantView.leftAnchor).isActive = true
+        thirdTitleLabel.rightAnchor.constraint(equalTo: thirdImportantView.rightAnchor).isActive = true
+        thirdTitleLabel.bottomAnchor.constraint(equalTo: thirdImportantView.bottomAnchor, constant: -15).isActive = true
+        
+        thirdImportantView.addSubview(thirdDescLabel)
+        thirdDescLabel.topAnchor.constraint(equalTo: thirdImportantView.topAnchor, constant: 25).isActive = true
+        thirdDescLabel.leftAnchor.constraint(equalTo: thirdImportantView.leftAnchor).isActive = true
+        thirdDescLabel.rightAnchor.constraint(equalTo: thirdImportantView.rightAnchor).isActive = true
+        thirdDescLabel.bottomAnchor.constraint(equalTo: thirdImportantView.bottomAnchor).isActive = true
+        
+        view.addSubview(seperaterView2)
+        seperaterView2.topAnchor.constraint(equalTo: self.toolBarView.bottomAnchor).isActive = true
+        seperaterView2.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        seperaterView2.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        seperaterView2.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
         view.addSubview(myServices)
-        myServices.topAnchor.constraint(equalTo: self.seperaterView.bottomAnchor, constant: 25).isActive = true
+        myServices.topAnchor.constraint(equalTo: self.seperaterView2.bottomAnchor, constant: 25).isActive = true
         myServices.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
         myServices.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         myServices.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -210,24 +362,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
                 let name : String = (snapshot.value as? String)!
                 self.profileName.text = "\(name)"
-                // stars
-                if self.findingRating == true {
-                    // find rating
-                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("rating").observeSingleEvent(of: .value) { (ratingNum) in
-                        let value = ratingNum.value as? NSNumber
-                        let newNumber = Float(value!)
-                        if newNumber == 100 {
-                            self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                            self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                        } else {
-                            // get all ratings
-                            self.getAllRatings()
-                        }
-                    }
-                }
                 self.allJobs.removeAll()
                 self.myJobs.removeAll()
                 Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
@@ -250,48 +384,24 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
             }
         }
+        
+        getAllRatings()
 
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.navigationController?.navigationBar.barTintColor = .white
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .bottom, barMetrics: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.tintColor = UIColor.black
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
-        
-        // get array
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
-            if let value = listOfuserFavorite.value as? [String : Any] {
-                let user = UserStructure()
-                user.uid = value["uid"] as? String ?? "Error"
-                print("USERUID")
-                print(user.uid!)
-                print("USERUID")
-                if user.uid! == GlobalVariables.userUID {
-                    self.updateFollowingButton(isFollowing: true)
-                } else {
-                    self.updateFollowingButton(isFollowing: false)
-                }
-            }
-        }
-    }
-    
     func getAllRatings() {
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
+        Database.database().reference().child("Users").child(GlobalVariables.userUID).child("ratings").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = ReviewStructure()
                 job.ratingNumber = value["rating-number"] as? Int ?? 0
                 self.ratingNumber += 1
                 self.finalRating += job.ratingNumber!
             }
-            self.finalRating = self.finalRating / self.ratingNumber
-            self.findingRating = false
             
-            switch self.finalRating {
+            let finalNumber = self.finalRating / self.ratingNumber
+            
+            switch finalNumber {
             case 0:
                 self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
                 self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
@@ -334,6 +444,32 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.barTintColor = .white
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .bottom, barMetrics: .default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        
+        // get array
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
+            if let value = listOfuserFavorite.value as? [String : Any] {
+                let user = UserStructure()
+                user.uid = value["uid"] as? String ?? "Error"
+                print("USERUID")
+                print(user.uid!)
+                print("USERUID")
+                if user.uid! == GlobalVariables.userUID {
+                    self.updateFollowingButton(isFollowing: true)
+                } else {
+                    self.updateFollowingButton(isFollowing: false)
+                }
+            }
+        }
+    }
+    
     func updateFollowingButton(isFollowing: Bool) {
         switch isFollowing {
         case true:
@@ -372,7 +508,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.myServices.text = "My Services (\(myJobs.count))"
         return myJobs.count
     }
     

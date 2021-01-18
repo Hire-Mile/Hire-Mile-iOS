@@ -14,8 +14,10 @@ class PushNotificationSender {
         let urlString = "https://fcm.googleapis.com/fcm/send"
         let url = NSURL(string: urlString)!
         let paramString: [String : Any] = ["to" : token,
-                                           "notification" : ["title" : title, "body" : body],
-                                           "data" : ["user" : "test_id"]
+                                           "priority" : "high",
+                                           "notification" : ["title" : title, "body" : body, "badge" : 1, "sound" : "default", "identifier" : "chatMessage"],
+                                           "data" : ["user" : "test_id",
+                                           ]
         ]
         let request = NSMutableURLRequest(url: url as URL)
         request.httpMethod = "POST"
