@@ -35,7 +35,6 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     var isShowing = false
     var jobRefId = ""
     var isSearchingForServiceProvider = true
-
     
     let cellId = "myCellId"
     
@@ -124,7 +123,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             for message in self.messages {
                 Database.database().reference().child("Messages").child(message.textId!).child("hasViewed").setValue(true)
             }
@@ -414,6 +413,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             self.imagePicker.sourceType = .photoLibrary
             self.imagePicker.allowsEditing = false
             self.imagePicker.delegate = self
+            self.imagePicker.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
             self.present(self.imagePicker, animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
@@ -432,6 +432,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let videoUrl = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
+            print("its a video")
             handleVideoSelectedForUrl(videoUrl)
         } else {
             handleImageSelectedForInfo(info)
