@@ -22,6 +22,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     var cellMarginSize = 16.0
     var allJobs = [JobStructure]()
     var passingImage : UIImage?
+    var openingFromNotification = false
     
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
@@ -78,6 +79,17 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.observeMessages()
+        
+        if self.openingFromNotification == true {
+            print("opening from notfication")
+            let alert = UIAlertController(title: "help", message: "help[[ ehelp", preferredStyle: .alert)
+            self.present(alert, animated: true, completion: nil)
+            self.openingFromNotification = false
+        } else {
+            print("no hahah")
+        }
         
         if GlobalVariables.finishedFeedback == true {
             let alert = UIAlertController(title: "Success", message: "Thanks for your feedback!", preferredStyle: .alert)
@@ -186,8 +198,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
         myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
         
-        let url = URL(string: self.allJobs[indexPath.row].imagePost!)
-        myCell.firstServiceImage.kf.setImage(with: url)
+        if let url = URL(string: self.allJobs[indexPath.row].imagePost!) {
+            myCell.firstServiceImage.kf.setImage(with: url)
+        }
         
         myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
         if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
@@ -201,8 +214,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
-        let url = URL(string: self.allJobs[indexPath.row].imagePost!)
-        GlobalVariables.imagePost.kf.setImage(with: url)
         GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
         GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
         GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
@@ -323,6 +334,84 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             self.passingImage = originalImage
         }
         dismiss(animated: true, completion: nil)
+    }
+    
+    var messages = [Message]()
+    var messagesDictionary = [String : Message]()
+    
+    func observeMessages() {
+        self.messages.removeAll()
+        self.messagesDictionary.removeAll()
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference().child("User-Messages").child(uid)
+        ref.observe(.childAdded, with: { (snapshot) in
+            let userId = snapshot.key
+            Database.database().reference().child("User-Messages").child(uid).child(userId).observe(.childAdded) { (snapshot) in
+                let messageId = snapshot.key
+                print("featcu")
+                self.fetchMessageWithMessageId(messageId: messageId)
+            }
+        }, withCancel: nil)
+    }
+    
+    private func fetchMessageWithMessageId(messageId: String) {
+        let messagesReference = Database.database().reference().child("Messages").child(messageId)
+        messagesReference.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message(dictionary: dictionary)
+                if let chatPartnerId = message.chatPartnerId() {
+                    self.messagesDictionary[chatPartnerId] = message
+                }
+                self.attemptReloadData()
+            }
+        }, withCancel: nil)
+    }
+    
+    var ssstimer : Timer?
+    
+    func attemptReloadData() {
+        self.ssstimer?.invalidate()
+        self.ssstimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReload), userInfo: nil, repeats: false)
+    }
+    
+    @objc func handleReload() {
+        self.messages = Array(self.messagesDictionary.values)
+        self.messages.sort(by: { (message1, message2) -> Bool in
+            if let timestamp1 = message1.timestamp, let timestamp2 = message2.timestamp {
+                return timestamp1.intValue > timestamp2.intValue
+            }
+            return false
+        })
+        //this will crash because of background thread, so lets call this on dispatch_async main thread
+        DispatchQueue.main.async(execute: {
+            print("reload")
+            self.reloadData()
+        })
+    }
+    
+    func reloadData() {
+        for message in self.messages {
+            if message.hasViewed == false {
+                if let uid = Auth.auth().currentUser?.uid {
+                    if message.toId == uid {
+                        // maybe blue, depends on viewage
+                        if message.hasViewed == true {
+                            print("has viewed is true")
+                            // extract blue
+                        } else {
+                            print("has viewed is NOT true")
+                            // keep blue
+                            tabBarController?.tabBar.items?.last?.badgeValue = "1"
+                        }
+                    } else {
+                        // extract blue, not recipient
+                    }
+                }
+            }
+        }
     }
 
 }

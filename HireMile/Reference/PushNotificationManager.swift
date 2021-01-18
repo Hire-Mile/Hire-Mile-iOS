@@ -30,7 +30,14 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
             let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
             UNUserNotificationCenter.current().requestAuthorization(
                 options: authOptions,
-                completionHandler: {_, _ in })
+                completionHandler: {hello, hello1 in
+                    if hello1 != nil {
+                        print("Error Notifcaiton")
+                        print(hello1?.localizedDescription)
+                    } else {
+                        print("success ")
+                    }
+                })
             // For iOS 10 data message (sent via FCM)
             Messaging.messaging().delegate = self
         } else {
@@ -57,6 +64,6 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print(response)
+        print(response.notification.request.content)
     }
 }

@@ -53,6 +53,14 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         return view
     }()
     
+    let downArrow : UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+        button.tintColor = UIColor.lightGray
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     let titleYourListing : UITextField = {
         let tf = UITextField()
         tf.placeholder = "Title Your Listing"
@@ -95,16 +103,26 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         return segmentedControl
     }()
     
+    let moneyLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "$"
+        label.textAlignment = .left
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
     let priceYourListing : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "$0.00"
+        tf.placeholder = "0.00"
         tf.tintColor = UIColor.mainBlue
-        tf.font = UIFont.boldSystemFont(ofSize: 16)
+        tf.font = UIFont.boldSystemFont(ofSize: 20)
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.borderStyle = .none
         tf.textColor = UIColor.black
         tf.keyboardType = UIKeyboardType.decimalPad
-        tf.textAlignment = NSTextAlignment.center
+        tf.textAlignment = NSTextAlignment.left
         return tf
     }()
     
@@ -133,7 +151,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     
     let categoryLabel : UILabel = {
         let label = UILabel()
-        label.text = "+ Select Category"
+        label.text = "Select Category"
         label.textColor = UIColor.lightGray
         label.textAlignment = NSTextAlignment.left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -175,21 +193,21 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     let bottomBorder : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.darkGray
+        view.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
         return view
     }()
     
     let bottomBorder2 : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.darkGray
+        view.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
         return view
     }()
     
     let bottomBorder3 : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.darkGray
+        view.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
         return view
     }()
 
@@ -198,6 +216,10 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         
         self.view.backgroundColor = UIColor.white
         
+        self.titleYourListing.addTarget(self, action: #selector(titleEnabled), for: .editingChanged)
+        self.describeYourListing.addTarget(self, action: #selector(descriptionEnabled), for: .editingChanged)
+        self.priceYourListing.addTarget(self, action: #selector(pricingEnabled), for: .editingChanged)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
@@ -205,7 +227,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         self.backgroundImage.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
         self.backgroundImage.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         self.backgroundImage.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-        self.backgroundImage.heightAnchor.constraint(equalToConstant: 420).isActive = true
+        self.backgroundImage.heightAnchor.constraint(equalToConstant: 400).isActive = true
         
         self.view.addSubview(backButton)
         self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
@@ -215,47 +237,53 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
 
         self.view.addSubview(self.changeCategory)
         self.changeCategory.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor, constant:  -60).isActive = true
-        self.changeCategory.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.changeCategory.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.changeCategory.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        self.changeCategory.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
         self.changeCategory.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.view.addSubview(self.titleYourListing)
         self.titleYourListing.delegate = self
         self.titleYourListing.topAnchor.constraint(equalTo: self.backgroundImage.bottomAnchor, constant: 20).isActive = true
-        self.titleYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.titleYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.titleYourListing.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        self.titleYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        self.titleYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        self.titleYourListing.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         self.view.addSubview(self.describeYourListing)
         self.describeYourListing.delegate = self
-        self.describeYourListing.topAnchor.constraint(equalTo: self.titleYourListing.bottomAnchor, constant: 10).isActive = true
-        self.describeYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.describeYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.describeYourListing.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        self.describeYourListing.topAnchor.constraint(equalTo: self.titleYourListing.bottomAnchor, constant: 25).isActive = true
+        self.describeYourListing.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        self.describeYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        self.describeYourListing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        self.view.addSubview(moneyLabel)
+        self.moneyLabel.topAnchor.constraint(equalTo: self.describeYourListing.bottomAnchor, constant: 25).isActive = true
+        self.moneyLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        self.moneyLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        self.moneyLabel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         self.view.addSubview(priceYourListing)
-        self.priceYourListing.topAnchor.constraint(equalTo: self.describeYourListing.bottomAnchor, constant: 20).isActive = true
-        self.priceYourListing.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.priceYourListing.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        self.priceYourListing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.priceYourListing.topAnchor.constraint(equalTo: self.describeYourListing.bottomAnchor, constant: 25).isActive = true
+        self.priceYourListing.leftAnchor.constraint(equalTo: self.moneyLabel.rightAnchor).isActive = true
+        self.priceYourListing.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        self.priceYourListing.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         self.view.addSubview(self.bottomBorder3)
         self.bottomBorder3.topAnchor.constraint(equalTo: self.priceYourListing.bottomAnchor).isActive = true
-        self.bottomBorder3.leftAnchor.constraint(equalTo: self.priceYourListing.leftAnchor).isActive = true
-        self.bottomBorder3.rightAnchor.constraint(equalTo: self.priceYourListing.rightAnchor).isActive = true
-        self.bottomBorder3.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        self.bottomBorder3.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        self.bottomBorder3.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        self.bottomBorder3.heightAnchor.constraint(equalToConstant: 3).isActive = true
         
         self.view.addSubview(self.bottomBorder)
         self.bottomBorder.topAnchor.constraint(equalTo: self.titleYourListing.bottomAnchor).isActive = true
-        self.bottomBorder.leftAnchor.constraint(equalTo: self.titleYourListing.leftAnchor).isActive = true
-        self.bottomBorder.rightAnchor.constraint(equalTo: self.titleYourListing.rightAnchor).isActive = true
-        self.bottomBorder.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        self.bottomBorder.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        self.bottomBorder.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        self.bottomBorder.heightAnchor.constraint(equalToConstant: 3).isActive = true
         
         self.view.addSubview(self.bottomBorder2)
         self.bottomBorder2.topAnchor.constraint(equalTo: self.describeYourListing.bottomAnchor).isActive = true
-        self.bottomBorder2.leftAnchor.constraint(equalTo: self.describeYourListing.leftAnchor).isActive = true
-        self.bottomBorder2.rightAnchor.constraint(equalTo: self.describeYourListing.rightAnchor).isActive = true
-        self.bottomBorder2.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        self.bottomBorder2.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        self.bottomBorder2.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        self.bottomBorder2.heightAnchor.constraint(equalToConstant: 3).isActive = true
         
         self.view.addSubview(applyButton)
         self.applyButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
@@ -269,6 +297,12 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         self.categoryLabel.rightAnchor.constraint(equalTo: self.changeCategory.rightAnchor, constant: -15).isActive = true
         self.categoryLabel.bottomAnchor.constraint(equalTo: self.changeCategory.bottomAnchor).isActive = true
         
+        self.changeCategory.addSubview(downArrow)
+        self.downArrow.topAnchor.constraint(equalTo: self.changeCategory.topAnchor).isActive = true
+        self.downArrow.bottomAnchor.constraint(equalTo: self.changeCategory.bottomAnchor).isActive = true
+        self.downArrow.rightAnchor.constraint(equalTo: self.changeCategory.rightAnchor, constant: -15).isActive = true
+        self.downArrow.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        
         self.changeCategory.addSubview(chooseCategoryVutton)
         self.chooseCategoryVutton.topAnchor.constraint(equalTo: self.changeCategory.topAnchor).isActive = true
         self.chooseCategoryVutton.leftAnchor.constraint(equalTo: self.changeCategory.leftAnchor).isActive = true
@@ -277,8 +311,6 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
         
         self.pickerView.delegate = self
         self.pickerView.dataSource = self
-
-        // func here
         
         self.backgroundImage.image = GlobalVariables.postImage
     }
@@ -314,6 +346,13 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == self.priceYourListing {
+            self.pricingEnabled()
+        } else if textField == self.describeYourListing {
+            self.descriptionEnabled()
+        } else {
+            self.titleEnabled()
+        }
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -356,7 +395,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     @objc func keyboardWillShow(notification: NSNotification) {
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 if self.view.frame.origin.y == 0 {
-                    self.view.frame.origin.y -= keyboardSize.height / 3
+                    self.view.frame.origin.y -= keyboardSize.height / 2.5
                 }
             }
     }
@@ -529,9 +568,35 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     func seeIfhasPicked() {
         if self.hsaPicked {
             self.categoryLabel.textColor = UIColor.black
+            self.downArrow.isHidden = true
         } else {
             self.categoryLabel.textColor = UIColor.lightGray
+            self.downArrow.isHidden = false
         }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        self.bottomBorder3.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        self.bottomBorder2.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        self.bottomBorder.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+    }
+    
+    @objc func titleEnabled() {
+        self.bottomBorder3.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        self.bottomBorder2.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        self.bottomBorder.backgroundColor = UIColor.mainBlue
+    }
+    
+    @objc func descriptionEnabled() {
+        self.bottomBorder3.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        self.bottomBorder2.backgroundColor = UIColor.mainBlue
+        self.bottomBorder.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+    }
+    
+    @objc func pricingEnabled() {
+        self.bottomBorder3.backgroundColor = UIColor.mainBlue
+        self.bottomBorder2.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        self.bottomBorder.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
     }
     
 }

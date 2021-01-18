@@ -98,7 +98,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         button.setTitle("SEND", for: .normal)
         button.addTarget(self, action: #selector(sendPressed), for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.bold)
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 25
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -107,9 +107,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     let largeView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 20
-        view.layer.borderWidth = 2
-        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.cornerRadius = 25
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1).cgColor
         view.backgroundColor = UIColor.white
         return view
     }()
@@ -186,6 +186,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     func addConstraints() {
         
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20)]
+        
         self.carousel.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         self.carousel.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
         self.carousel.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
@@ -219,15 +221,15 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.largeView.topAnchor.constraint(equalTo: self.informationView.bottomAnchor, constant: 20).isActive = true
         self.largeView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.largeView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-        self.largeView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.largeView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.seeAllButton.rightAnchor.constraint(equalTo: self.largeView.rightAnchor).isActive = true
         self.seeAllButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        self.seeAllButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.seeAllButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.seeAllButton.centerYAnchor.constraint(equalTo: self.largeView.centerYAnchor).isActive = true
         
         self.textField.topAnchor.constraint(equalTo: self.largeView.topAnchor).isActive = true
-        self.textField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.textField.leftAnchor.constraint(equalTo: self.largeView.leftAnchor, constant: 20).isActive = true
         self.textField.rightAnchor.constraint(equalTo: self.seeAllButton.leftAnchor, constant: -10).isActive = true
     }
@@ -259,7 +261,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     @objc func keyboardUp(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             self.view.frame.origin.y = 0
-            self.view.frame.origin.y -= 100
+            self.view.frame.origin.y -= 110
         }
     }
     
@@ -311,7 +313,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
             let fromId = Auth.auth().currentUser!.uid
             let timestamp = Int(Date().timeIntervalSince1970)
             let key = Database.database().reference().child("Users").child(toId).child("My_Jobs").childByAutoId().key
-            let values = ["text": textField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : true, "service-provider" : toId, "job-id" : self.postId, "job-ref-id" : key] as [String : Any]
+            let values = ["text": textField.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : true, "service-provider" : toId, "job-id" : self.postId, "job-ref-id" : key, "hasViewed" : false, "text-id" : childRef.key] as [String : Any]
             childRef.updateChildValues(values) { (error, ref) in
                 if error != nil {
                     print(error ?? "")

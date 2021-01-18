@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import ScrollableSegmentedControl
 
 class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -29,23 +30,42 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return refreshControl
     }()
     
-    let segmentedControl : UISegmentedControl = {
-        let segmentedControl = UISegmentedControl()
+//    let segmentedControl : UISegmentedControl = {
+//        let segmentedControl = UISegmentedControl()
+//        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+//        segmentedControl.insertSegment(withTitle: "Messages", at: 0, animated: true)
+//        segmentedControl.insertSegment(withTitle: "Notifications", at: 1, animated: true)
+//        segmentedControl.selectedSegmentIndex = 0
+//        segmentedControl.layer.cornerRadius = 20
+//        segmentedControl.layer.borderColor = UIColor(red: 241/255, green: 239/255, blue: 239/255, alpha: 1).cgColor
+//        segmentedControl.layer.borderWidth = 2
+//        segmentedControl.layer.masksToBounds = true
+//        segmentedControl.backgroundColor = UIColor.mainBlue
+//        segmentedControl.setBackgroundImage(UIImage(named: "whiteback"), for: .normal, barMetrics: .default)
+//        segmentedControl.setBackgroundImage(UIImage(named: "mainBlue"), for: .selected, barMetrics: .default)
+//        segmentedControl.tintColor = UIColor.mainBlue
+//        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor(red: 130/255, green: 130/255, blue: 130/255, alpha: 1)], for: .normal)
+//        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.white], for: .selected)
+//        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+//        return segmentedControl
+//    }()
+    
+    let segmentedControl : ScrollableSegmentedControl = {
+        let segmentedControl = ScrollableSegmentedControl()
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentedControl.insertSegment(withTitle: "Messages", at: 0, animated: true)
-        segmentedControl.insertSegment(withTitle: "Notifications", at: 1, animated: true)
+        segmentedControl.insertSegment(withTitle: "Messages", at: 0)
+        segmentedControl.insertSegment(withTitle: "Notifications", at: 1)
         segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.layer.cornerRadius = 20
-        segmentedControl.layer.borderColor = UIColor(red: 241/255, green: 239/255, blue: 239/255, alpha: 1).cgColor
-        segmentedControl.layer.borderWidth = 2
         segmentedControl.layer.masksToBounds = true
-        segmentedControl.backgroundColor = UIColor.mainBlue
-        segmentedControl.setBackgroundImage(UIImage(named: "whiteback"), for: .normal, barMetrics: .default)
-        segmentedControl.setBackgroundImage(UIImage(named: "mainBlue"), for: .selected, barMetrics: .default)
+        segmentedControl.backgroundColor = UIColor.white
         segmentedControl.tintColor = UIColor.mainBlue
+        segmentedControl.underlineSelected = true
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor(red: 130/255, green: 130/255, blue: 130/255, alpha: 1)], for: .normal)
-        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.white], for: .selected)
+        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+        segmentedControl.selectedSegmentContentColor = .blue
+        segmentedControl.segmentContentColor = .purple
+        segmentedControl.fixedSegmentWidth = false
         return segmentedControl
     }()
     
@@ -79,25 +99,36 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let mainText : UILabel = {
         let label = UILabel()
-        label.text = "Nothing Here!"
+        label.text = "No messages yet"
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 20)
+        return label
+    }()
+    
+    let descText : UILabel = {
+        let label = UILabel()
+        label.text = "When people contact you about your items on HireMile, you'll see them here!"
+        label.numberOfLines = 5
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.mainText.text = "You have no messages"
+        self.descText.text = "When people contact you about your items on HireMile, you'll see them here!"
+        
         navigationItem.backButtonTitle = " "
         
         self.view.addSubview(segmentedControl)
         self.segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25).isActive = true
         self.segmentedControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.segmentedControl.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        self.segmentedControl.widthAnchor.constraint(equalToConstant: 200).isActive = true
         self.segmentedControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-//        self.navigationItem.titleView = self.segmentedControl
         
         self.view.addSubview(tableView)
         self.tableView.separatorStyle = .none
@@ -131,6 +162,12 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.mainText.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
         self.mainText.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
+        self.contentView.addSubview(descText)
+        self.descText.topAnchor.constraint(equalTo: self.mainText.bottomAnchor, constant: -10).isActive = true
+        self.descText.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: -20).isActive = true
+        self.descText.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: 20).isActive = true
+        self.descText.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        
         self.view.backgroundColor = UIColor.white
         
         tableView.delegate = self
@@ -148,13 +185,17 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        tabBarController?.tabBar.items?.last?.badgeValue = "1"
+        
         self.tabBarController?.tabBar.isHidden = false
         
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
-        self.navigationController?.navigationBar.topItem?.title = "Chat"
+        self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         
         tTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(supposedToDelete), userInfo: nil, repeats: true)
     }
@@ -242,6 +283,27 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             let message = messages[indexPath.row]
             cell.message = message
+            
+            if let uid = Auth.auth().currentUser?.uid {
+                if cell.message?.toId == uid {
+                    // maybe blue, depends on viewage
+                    if cell.message?.hasViewed == true {
+                        // extract blue
+                        cell.backgroundColor = .white
+                        cell.isRead()
+                    } else {
+                        // keep blue
+                        print("again2")
+                        cell.backgroundColor = .white
+                        cell.isUnread()
+                    }
+                } else {
+                    // extract blue, not recipient
+                    print("again3")
+                    cell.backgroundColor = .white
+                    cell.isRead()
+                }
+            }
             
             return cell
         } else if segmentedControl.selectedSegmentIndex == 1 {
@@ -356,6 +418,9 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
+            self.mainText.text = "You have no messages"
+            self.descText.text = "When people contact you about your items on HireMile, you'll see them here!"
+            self.bubbleImage.image = UIImage(systemName: "ellipses.bubble.fill")
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
                 self.tableView.alpha = 1
             } completion: { (complete) in
@@ -365,6 +430,9 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 }
             }
         } else {
+            self.mainText.text = "You have no notifications"
+            self.descText.text = "When HireMile sends info about activity or opportunities, you can find them here!"
+            self.bubbleImage.image = UIImage(systemName: "bell.fill")
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
                 self.tableView.alpha = 0
             } completion: { (complete) in
@@ -420,10 +488,6 @@ class MessagesCellCell: UITableViewCell {
             self.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
             self.detailTextLabel?.isHidden = false
             self.detailTextLabel?.textColor = UIColor.darkGray
-            
-            // remove unread circle
-            self.hasSeenView.removeFromSuperview()
-            self.timeStamp.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
             
             self.detailTextLabel?.text = message?.text
             
@@ -495,6 +559,9 @@ class MessagesCellCell: UITableViewCell {
         return view
     }()
     
+    var isUnreadConstraints = [NSLayoutConstraint]()
+    var isReadConstraints = [NSLayoutConstraint]()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
@@ -507,20 +574,41 @@ class MessagesCellCell: UITableViewCell {
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-        addSubview(hasSeenView)
-        hasSeenView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
-        hasSeenView.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 10).isActive = true
-        hasSeenView.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        hasSeenView.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        
-        addSubview(timeStamp)
-        timeStamp.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
-        timeStamp.bottomAnchor.constraint(equalTo: self.hasSeenView.topAnchor, constant: -5).isActive = true
-        timeStamp.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        timeStamp.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        self.isUnreadConstraints = [
+                                    hasSeenView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
+                                    hasSeenView.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 10),
+                                    hasSeenView.widthAnchor.constraint(equalToConstant: 25),
+                                    hasSeenView.heightAnchor.constraint(equalToConstant: 25),
+            
+                                    timeStamp.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
+                                    timeStamp.bottomAnchor.constraint(equalTo: self.hasSeenView.topAnchor, constant: -5),
+                                    timeStamp.widthAnchor.constraint(equalToConstant: 100),
+                                    timeStamp.heightAnchor.constraint(equalToConstant: 15)
+                                ]
+            
+        self.isReadConstraints = [
+                                    timeStamp.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
+                                    timeStamp.topAnchor.constraint(equalTo: self.centerYAnchor, constant: -5),
+                                    timeStamp.widthAnchor.constraint(equalToConstant: 100),
+                                    timeStamp.heightAnchor.constraint(equalToConstant: 15)
+                                ]
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func isUnread() {
+        self.addSubview(timeStamp)
+        self.addSubview(hasSeenView)
+        NSLayoutConstraint.deactivate(self.isReadConstraints)
+        NSLayoutConstraint.activate(self.isUnreadConstraints)
+    }
+    
+    func isRead() {
+        self.addSubview(timeStamp)
+        self.hasSeenView.removeFromSuperview()
+        NSLayoutConstraint.deactivate(self.isUnreadConstraints)
+        NSLayoutConstraint.activate(self.isReadConstraints)
     }
 }

@@ -125,6 +125,7 @@ PODS:
   - NVActivityIndicatorView/Base (5.0.1)
   - PromisesObjC (1.2.10)
   - Protobuf (3.14.0)
+  - ScrollableSegmentedControl (1.5.0)
   - SideMenu (6.5.0)
   - STPopup (1.8.7)
   - SVProgressHUD (2.2.5)
@@ -142,6 +143,7 @@ DEPENDENCIES:
   - Kingfisher
   - MBProgressHUD
   - NVActivityIndicatorView
+  - ScrollableSegmentedControl
   - SideMenu
   - STPopup
   - SVProgressHUD
@@ -174,6 +176,7 @@ SPEC REPOS:
     - NVActivityIndicatorView
     - PromisesObjC
     - Protobuf
+    - ScrollableSegmentedControl
     - SideMenu
     - STPopup
     - SVProgressHUD
@@ -205,11 +208,12 @@ SPEC CHECKSUMS:
   NVActivityIndicatorView: 738e843cb8924e9e4fc3e559d0728031624bf860
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   Protobuf: 0cde852566359049847168e51bd1c690e0f70056
+  ScrollableSegmentedControl: 2e64bbe8968a7fcd8aae5014434481464fcdfe60
   SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
   STPopup: a9045557bc48a0df51fbb7bf0544447c5fe84d34
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: 1cab672c2cc84bb18744d4ade82f1aa09be0d05c
+PODFILE CHECKSUM: 0faa6a116773129cd9c228d169aaf1be5a93fb56
 
 COCOAPODS: 1.10.0

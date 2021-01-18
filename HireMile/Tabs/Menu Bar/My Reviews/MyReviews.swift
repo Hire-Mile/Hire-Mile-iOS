@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class MyReviews: UITableViewController {
+class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var ratings = [ReviewStructure]()
     
@@ -23,6 +23,52 @@ class MyReviews: UITableViewController {
         refreshControl.addTarget(self, action: #selector(refreshAction), for: .valueChanged)
         return refreshControl
     }()
+    
+    let tableView : UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+    
+    let emptyView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let contentView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let bubbleImage : UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(systemName: "star.fill")
+        image.contentMode = .scaleAspectFit
+        image.tintColor = UIColor.mainBlue
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
+    let mainText : UILabel = {
+        let label = UILabel()
+        label.text = "No ratings yet"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        return label
+    }()
+    
+    let descText : UILabel = {
+        let label = UILabel()
+        label.text = "When people mark your job as complete, you find your ratings here!"
+        label.numberOfLines = 5
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 16)
+        return label
+    }()
  
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +77,43 @@ class MyReviews: UITableViewController {
         tableView.dataSource = self
         tableView.allowsSelection = true
         tableView.register(MyReviewsCell.self, forCellReuseIdentifier: "reviewsCellID")
+        
+        self.view.addSubview(tableView)
+        self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.tableView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        self.tableView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
+        self.view.addSubview(self.emptyView)
+        self.emptyView.alpha = 0
+        self.emptyView.topAnchor.constraint(equalTo: self.tableView.topAnchor).isActive = true
+        self.emptyView.leftAnchor.constraint(equalTo: self.tableView.leftAnchor).isActive = true
+        self.emptyView.rightAnchor.constraint(equalTo: self.tableView.rightAnchor).isActive = true
+        self.emptyView.bottomAnchor.constraint(equalTo: self.tableView.bottomAnchor).isActive = true
+        
+        self.emptyView.addSubview(self.contentView)
+        self.contentView.centerXAnchor.constraint(equalTo: self.emptyView.centerXAnchor).isActive = true
+        self.contentView.centerYAnchor.constraint(equalTo: self.emptyView.centerYAnchor, constant: -50).isActive = true
+        self.contentView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        self.contentView.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        
+        self.contentView.addSubview(bubbleImage)
+        self.bubbleImage.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
+        self.bubbleImage.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
+        self.bubbleImage.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+        self.bubbleImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        self.contentView.addSubview(mainText)
+        self.mainText.topAnchor.constraint(equalTo: self.bubbleImage.bottomAnchor).isActive = true
+        self.mainText.leftAnchor.constraint(equalTo: self.contentView.leftAnchor).isActive = true
+        self.mainText.rightAnchor.constraint(equalTo: self.contentView.rightAnchor).isActive = true
+        self.mainText.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+        self.contentView.addSubview(descText)
+        self.descText.topAnchor.constraint(equalTo: self.mainText.bottomAnchor, constant: -10).isActive = true
+        self.descText.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: -20).isActive = true
+        self.descText.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: 20).isActive = true
+        self.descText.heightAnchor.constraint(equalToConstant: 75).isActive = true
         
         // get the number of ratings
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observe(.value) { (snapshot) in
@@ -91,21 +174,21 @@ class MyReviews: UITableViewController {
     
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
  
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.isRatingsNil == true {
-            print("none")
+            self.noRatings()
             return 0
         } else {
-            print("here are ratings.count: \(self.ratings.count)")
+            self.yesRatings()
             return self.ratings.count
         }
     }
  
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reviewsCellID", for: indexPath) as! MyReviewsCell
         Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("image").observeSingleEvent(of: .value, with: { (snapshot) in
             if let imageUrl : String = (snapshot.value as? String) {
@@ -178,7 +261,7 @@ class MyReviews: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 175
     }
     
@@ -189,6 +272,20 @@ class MyReviews: UITableViewController {
     
     @objc func hideRefrsh() {
         self.refrshControl.endRefreshing()
+    }
+    
+    func noRatings() {
+        UIView.animate(withDuration: 0.3) {
+            self.emptyView.alpha = 1
+            self.tableView.alpha = 0
+        }
+    }
+    
+    func yesRatings() {
+        UIView.animate(withDuration: 0.3) {
+            self.emptyView.alpha = 0
+            self.tableView.alpha = 1
+        }
     }
 
 }
