@@ -35,7 +35,6 @@
 		784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E725629F94000C5F26 /* ForgotPassword.swift */; };
 		784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646E92562ADB9000C5F26 /* TabBarController.swift */; };
 		784646EE2562ADFC000C5F26 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646ED2562ADFC000C5F26 /* Chat.swift */; };
-		784646F02562CAEA000C5F26 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646EF2562CAEA000C5F26 /* Post.swift */; };
 		784B6023256ED04C0024F4C8 /* MyReviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784B6022256ED04C0024F4C8 /* MyReviews.swift */; };
 		786A33212565931300B58265 /* CategoryPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A33202565931300B58265 /* CategoryPostController.swift */; };
 		786A3323256596E700B58265 /* FilterLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A3322256596E700B58265 /* FilterLauncher.swift */; };
@@ -59,6 +58,9 @@
 		78C0B8BB25878C45002866A9 /* JobStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C0B8BA25878C45002866A9 /* JobStructure.swift */; };
 		78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5CA352565515E00BF59AB /* ViewPostController.swift */; };
 		78D6F616259A11E600D2A0CE /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */; };
+		78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */; };
+		78D9FFC125B89E2B00F00EA1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBF25B89E2A00F00EA1 /* Post.swift */; };
+		78D9FFC525B8A23800F00EA1 /* FinishLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFC425B8A23800F00EA1 /* FinishLauncher.swift */; };
 		78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A06256B99EC00DFABEB /* Favorites.swift */; };
 		78DA5A09256C1CE000DFABEB /* OtherProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A08256C1CE000DFABEB /* OtherProfile.swift */; };
 		78E02C3D25A1C01F00337370 /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */; };
@@ -98,7 +100,6 @@
 		784646E725629F94000C5F26 /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		784646E92562ADB9000C5F26 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		784646ED2562ADFC000C5F26 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
-		784646EF2562CAEA000C5F26 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		784B6022256ED04C0024F4C8 /* MyReviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviews.swift; sourceTree = "<group>"; };
 		786A33202565931300B58265 /* CategoryPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPostController.swift; sourceTree = "<group>"; };
 		786A3322256596E700B58265 /* FilterLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLauncher.swift; sourceTree = "<group>"; };
@@ -122,6 +123,9 @@
 		78C0B8BA25878C45002866A9 /* JobStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobStructure.swift; sourceTree = "<group>"; };
 		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
 		78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
+		78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLauncher.swift; sourceTree = "<group>"; };
+		78D9FFBF25B89E2A00F00EA1 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		78D9FFC425B8A23800F00EA1 /* FinishLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishLauncher.swift; sourceTree = "<group>"; };
 		78DA5A06256B99EC00DFABEB /* Favorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
 		78DA5A08256C1CE000DFABEB /* OtherProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfile.swift; sourceTree = "<group>"; };
 		78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
@@ -302,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				784646ED2562ADFC000C5F26 /* Chat.swift */,
+				78D9FFC425B8A23800F00EA1 /* FinishLauncher.swift */,
 				788D44B1257E9C1F002AF9CB /* CashInAlert.swift */,
 				78295A8D2597770A00004CE7 /* ChatLogController2.swift */,
 				78F8F85425A33BE80021FD60 /* FeedbackController.swift */,
@@ -360,7 +365,8 @@
 		78FE863D257D603D00E5D758 /* Post */ = {
 			isa = PBXGroup;
 			children = (
-				784646EF2562CAEA000C5F26 /* Post.swift */,
+				78D9FFBF25B89E2A00F00EA1 /* Post.swift */,
+				78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */,
 				7870133F2579721A0019C24A /* Camera.swift */,
 			);
 			path = Post;
@@ -513,7 +519,9 @@
 				78C0B8BB25878C45002866A9 /* JobStructure.swift in Sources */,
 				78277F7F2576C06500B8C7BD /* MyProfile.swift in Sources */,
 				78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */,
+				78D9FFC525B8A23800F00EA1 /* FinishLauncher.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
+				78D9FFC125B89E2B00F00EA1 /* Post.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignIn.swift in Sources */,
 				78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */,
 				78008CD72569B8E4005E4A15 /* Password.swift in Sources */,
@@ -522,9 +530,9 @@
 				786A3323256596E700B58265 /* FilterLauncher.swift in Sources */,
 				78295B1B2599133C00004CE7 /* NewMessageController.swift in Sources */,
 				787B018825685BE600BBC392 /* Email.swift in Sources */,
-				784646F02562CAEA000C5F26 /* Post.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				78008CD22569B7DA005E4A15 /* ResetPassword.swift in Sources */,
+				78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */,
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
 				788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */,
 				78BFDBFD25B471E000A1D8B5 /* UserMessageStructure.swift in Sources */,
