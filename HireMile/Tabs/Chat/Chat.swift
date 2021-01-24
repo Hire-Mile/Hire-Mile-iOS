@@ -185,7 +185,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        tabBarController?.tabBar.items?.last?.badgeValue = "1"
+        tabBarController?.tabBar.items?.last?.badgeValue = nil
         
         self.tabBarController?.tabBar.isHidden = false
         
@@ -283,7 +283,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
             let message = messages[indexPath.row]
             cell.message = message
-            
+
             if let uid = Auth.auth().currentUser?.uid {
                 if cell.message?.toId == uid {
                     // maybe blue, depends on viewage
@@ -526,6 +526,7 @@ class MessagesCellCell: UITableViewCell {
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 24
         imageView.layer.masksToBounds = true
@@ -535,7 +536,6 @@ class MessagesCellCell: UITableViewCell {
     
     let timeStamp : UILabel = {
         let label = UILabel()
-        label.text = "10 mins"
         label.textAlignment = NSTextAlignment.right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 10)
@@ -552,11 +552,21 @@ class MessagesCellCell: UITableViewCell {
     
     let hasSeenView : UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.mainBlue
+        view.backgroundColor = UIColor.red
         view.layer.cornerRadius = 12.5
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    let numberLabel : UILabel = {
+        let label = UILabel()
+        label.text = "1+"
+        label.textColor = UIColor.white
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 12)
+        return label
     }()
     
     var isUnreadConstraints = [NSLayoutConstraint]()
@@ -574,21 +584,27 @@ class MessagesCellCell: UITableViewCell {
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
+        hasSeenView.addSubview(numberLabel)
+        numberLabel.topAnchor.constraint(equalTo: hasSeenView.topAnchor).isActive = true
+        numberLabel.bottomAnchor.constraint(equalTo: hasSeenView.bottomAnchor).isActive = true
+        numberLabel.leftAnchor.constraint(equalTo: hasSeenView.leftAnchor).isActive = true
+        numberLabel.rightAnchor.constraint(equalTo: hasSeenView.rightAnchor).isActive = true
+        
         self.isUnreadConstraints = [
-                                    hasSeenView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
-                                    hasSeenView.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 10),
+                                    hasSeenView.centerYAnchor.constraint(equalTo: self.profileImageView.topAnchor, constant: 5),
+                                    hasSeenView.centerXAnchor.constraint(equalTo: self.profileImageView.rightAnchor, constant: -5),
                                     hasSeenView.widthAnchor.constraint(equalToConstant: 25),
                                     hasSeenView.heightAnchor.constraint(equalToConstant: 25),
             
                                     timeStamp.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
-                                    timeStamp.bottomAnchor.constraint(equalTo: self.hasSeenView.topAnchor, constant: -5),
+                                    timeStamp.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -5),
                                     timeStamp.widthAnchor.constraint(equalToConstant: 100),
                                     timeStamp.heightAnchor.constraint(equalToConstant: 15)
                                 ]
             
         self.isReadConstraints = [
                                     timeStamp.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16),
-                                    timeStamp.topAnchor.constraint(equalTo: self.centerYAnchor, constant: -5),
+                                    timeStamp.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -5),
                                     timeStamp.widthAnchor.constraint(equalToConstant: 100),
                                     timeStamp.heightAnchor.constraint(equalToConstant: 15)
                                 ]

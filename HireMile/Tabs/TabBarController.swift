@@ -85,7 +85,6 @@ class TabBarController2: UITabBar {
     }
 
     @objc func test() {
-        print("my name is jeff")
         GlobalVariables.isGoingToPost = true
     }
 }

@@ -61,6 +61,9 @@
 		78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */; };
 		78D9FFC125B89E2B00F00EA1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBF25B89E2A00F00EA1 /* Post.swift */; };
 		78D9FFC525B8A23800F00EA1 /* FinishLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFC425B8A23800F00EA1 /* FinishLauncher.swift */; };
+		78D9FFC825BB148400F00EA1 /* EditPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFC725BB148400F00EA1 /* EditPost.swift */; };
+		78D9FFCB25BB150700F00EA1 /* EditPostLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFCA25BB150700F00EA1 /* EditPostLauncher.swift */; };
+		78D9FFCE25BDCABE00F00EA1 /* RatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFCD25BDCABE00F00EA1 /* RatingController.swift */; };
 		78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A06256B99EC00DFABEB /* Favorites.swift */; };
 		78DA5A09256C1CE000DFABEB /* OtherProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DA5A08256C1CE000DFABEB /* OtherProfile.swift */; };
 		78E02C3D25A1C01F00337370 /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */; };
@@ -126,6 +129,9 @@
 		78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLauncher.swift; sourceTree = "<group>"; };
 		78D9FFBF25B89E2A00F00EA1 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		78D9FFC425B8A23800F00EA1 /* FinishLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishLauncher.swift; sourceTree = "<group>"; };
+		78D9FFC725BB148400F00EA1 /* EditPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPost.swift; sourceTree = "<group>"; };
+		78D9FFCA25BB150700F00EA1 /* EditPostLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostLauncher.swift; sourceTree = "<group>"; };
+		78D9FFCD25BDCABE00F00EA1 /* RatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingController.swift; sourceTree = "<group>"; };
 		78DA5A06256B99EC00DFABEB /* Favorites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorites.swift; sourceTree = "<group>"; };
 		78DA5A08256C1CE000DFABEB /* OtherProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfile.swift; sourceTree = "<group>"; };
 		78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
@@ -172,6 +178,7 @@
 				78DA5A06256B99EC00DFABEB /* Favorites.swift */,
 				78DA5A08256C1CE000DFABEB /* OtherProfile.swift */,
 				788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */,
+				78D9FFCD25BDCABE00F00EA1 /* RatingController.swift */,
 			);
 			path = Favorites;
 			sourceTree = "<group>";
@@ -180,6 +187,8 @@
 			isa = PBXGroup;
 			children = (
 				78277F7E2576C06500B8C7BD /* MyProfile.swift */,
+				78D9FFC725BB148400F00EA1 /* EditPost.swift */,
+				78D9FFCA25BB150700F00EA1 /* EditPostLauncher.swift */,
 			);
 			path = "My Profile";
 			sourceTree = "<group>";
@@ -549,6 +558,8 @@
 				78277F822576C78C00B8C7BD /* SearchController.swift in Sources */,
 				78295A8E2597770A00004CE7 /* ChatLogController2.swift in Sources */,
 				780A7F622562D565009BD93A /* Home.swift in Sources */,
+				78D9FFC825BB148400F00EA1 /* EditPost.swift in Sources */,
+				78D9FFCE25BDCABE00F00EA1 /* RatingController.swift in Sources */,
 				788A028E2583A19800C77434 /* ReviewStructure.swift in Sources */,
 				7886ED9A25836BE300260D2F /* UserStructure.swift in Sources */,
 				78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */,
@@ -569,6 +580,7 @@
 				782F7DB12590E0560064100F /* HomeCatObject.swift in Sources */,
 				784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */,
 				78295B0725990AE000004CE7 /* UserChat.swift in Sources */,
+				78D9FFCB25BB150700F00EA1 /* EditPostLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

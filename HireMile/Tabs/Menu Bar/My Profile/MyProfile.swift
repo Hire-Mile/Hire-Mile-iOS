@@ -11,7 +11,13 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol MyTableViewCellDelegate {
+    func didTapEditButton(withIndex: Int)
+}
+
+class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate {
+    
+    var indexPathrow = 0
     
     var allJobs = [JobStructure]()
     var myJobs = [JobStructure]()
@@ -468,6 +474,8 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
         
         cell.selectionStyle = .none
+        cell.delegate = self
+        cell.index = indexPath
         
         let url = URL(string: self.myJobs[indexPath.row].imagePost!)
         cell.postImageView.kf.setImage(with: url)
@@ -482,7 +490,6 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
         
         cell.deleteButton.addTarget(self, action: #selector(deletePostPressed), for: .touchUpInside)
-        cell.editButton.addTarget(self, action: #selector(editPostPressed), for: .touchUpInside)
         
         return cell
     }
@@ -496,7 +503,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
         GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
         GlobalVariables.authorId = self.myJobs[indexPath.row].authorName!
         GlobalVariables.postId = self.myJobs[indexPath.row].postId!
-        GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
+        GlobalVariables.categoryName = self.myJobs[indexPath.row].typeOfPrice!
         
         self.navigationController?.pushViewController(ViewPostController(), animated: true)
     }
@@ -514,7 +521,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @objc func uploadPressed() {
         let text = "Hire or get work on the fastest and easiest platform"
-        let url : NSURL = NSURL(string: "https://www.google.com")!
+        let url : NSURL = NSURL(string: "https://www.hiremile.com")!
         let vc = UIActivityViewController(activityItems: [text, url], applicationActivities: [])
         if let popoverController = vc.popoverPresentationController {
             popoverController.sourceView = self.view
@@ -528,18 +535,34 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     @objc func editPostPressed() {
-        print("edit")
     }
     
     @objc func editPressed() {
         self.navigationController?.pushViewController(EditProfile(), animated: true)
+    }
+    
+    func didTapEditButton(withIndex index: Int) {
+        let url = URL(string: self.myJobs[index].imagePost!)
+        GlobalVariables.imagePost.kf.setImage(with: url)
+        GlobalVariables.postImageDownlodUrl = self.myJobs[indexPathrow].imagePost!
+        GlobalVariables.postTitle = self.myJobs[indexPathrow].titleOfPost!
+        GlobalVariables.postDescription = self.myJobs[indexPathrow].descriptionOfPost!
+        GlobalVariables.postPrice = self.myJobs[indexPathrow].price!
+        GlobalVariables.authorId = self.myJobs[indexPathrow].authorName!
+        GlobalVariables.postId = self.myJobs[indexPathrow].postId!
+        GlobalVariables.type = self.myJobs[indexPathrow].typeOfPrice!
+        self.navigationController?.pushViewController(EditPost(), animated: true)
     }
 
 }
 
 class ProfileCell: UITableViewCell {
     
+    var delegate : MyTableViewCellDelegate?
+    
     var postId = ""
+    
+    var index : IndexPath?
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
@@ -673,6 +696,12 @@ class ProfileCell: UITableViewCell {
         deleteButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -15).isActive = true
         deleteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+        
+        editButton.addTarget(self, action: #selector(editPostPressed), for: .touchUpInside)
+    }
+    
+    @objc func editPostPressed() {
+        delegate?.didTapEditButton(withIndex: (index?.row)!)
     }
     
     required init?(coder: NSCoder) {

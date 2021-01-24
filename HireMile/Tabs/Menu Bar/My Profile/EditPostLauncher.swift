@@ -1,15 +1,15 @@
 //
-//  FilterLauncher.swift
+//  EditPostLauncher.swift
 //  HireMile
 //
-//  Created by JJ Zapata on 11/18/20.
-//  Copyright © 2020 Jorge Zapata. All rights reserved.
+//  Created by JJ Zapata on 1/22/21.
+//  Copyright © 2021 Jorge Zapata. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
-class PostLauncher: NSObject {
+class EditPostLauncher: NSObject {
 
     let height : CGFloat = 400
 
@@ -37,7 +37,7 @@ class PostLauncher: NSObject {
     let filterTitle : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Posted"
+        label.text = "Updated!"
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 24)
@@ -48,7 +48,7 @@ class PostLauncher: NSObject {
     let filterDescription : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Your service has been posted! Use your profile to find your job listing."
+        label.text = "Your service has been updated! Use your profile to find your job listing."
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 16)

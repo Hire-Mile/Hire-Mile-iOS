@@ -123,7 +123,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         let url = URL(string: GlobalVariables.postImageDownlodUrl)
         self.carousel.kf.setImage(with: url)
-//        self.carousel.image! = GlobalVariables.imagePost.image!
+        GlobalVariables.postImageDownlodUrl = ""
         self.titleLabel.text = GlobalVariables.postTitle
         self.descriptionLabel.text = GlobalVariables.postDescription
         if GlobalVariables.type == "Hourly" {
