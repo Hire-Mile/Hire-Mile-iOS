@@ -40,6 +40,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     
     let imagePicker = UIImagePickerController()
     
+    let filterLauncher = FinishLauncher()
+    
     let inputTextField : UITextField = {
         let inputTextField = UITextField()
         inputTextField.placeholder = "Write here"
@@ -371,15 +373,9 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func requestButtonPressed() {
-        let alert = UIAlertController(title: "Finishing Job! How Should We Mark It?", message: "Please select below, so we can log experience for your partner", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Complete Job", style: .default, handler: { (action) in
-            self.completeJobButton()
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel Job", style: .default, handler: { (action) in
-            self.stopJobButton()
-        }))
-        self.present(alert, animated: true, completion: nil)
+        self.filterLauncher.showFilter()
+        self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
+        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
     }
     
     @objc func handleKeyboardWillShow(notification: NSNotification) {
@@ -988,47 +984,38 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func completeJobButton() {
-        let alert = UIAlertController(title: "Mark as complete?", message: "Are you sure you want to mark this job as 'completed'? This conversation will then be removed.", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Yes, Complete", style: .default, handler: { (action) in
-            print("complete")
-            // show loader for 1 second
-            MBProgressHUD.showAdded(to: self.view, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                MBProgressHUD.hide(for: self.view, animated: true)
-                let feedbackController = FeedbackController()
-                self.navigationController?.pushViewController(feedbackController, animated: true)
-            }
-        }))
-        self.present(alert, animated: true, completion: nil)
+        // show loader for 1 second
+        self.filterLauncher.handleDismiss()
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            MBProgressHUD.hide(for: self.view, animated: true)
+            let feedbackController = FeedbackController()
+            self.navigationController?.pushViewController(feedbackController, animated: true)
+        }
     }
     
     @objc func stopJobButton() {
-        let alert = UIAlertController(title: "Are you sure you want to cancel this job?", message: "Your conversation and proposal will be removed", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "Yes, Cancel Job", style: .default, handler: { (action) in
-            print("cancel job")
-            // send message to user that job is cancelled
-            let properties = ["text": "HIREMILE: This conversation and job has been deleted. For more information, please navigate to the 'My Jobs' section."] as [String : Any]
-            self.sendMessageWithProperties(properties)
-            // remove all children in messages for corresponding job
-            GlobalVariables.finishedFeedback = true
-            // send user a notification
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-                let name : String = (snapshot.value as? String)!
-                Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
-                    if let token : String = (snapshot.value as? String) {
-                        let sender = PushNotificationSender()
-                        Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("cancelled")
-                        sender.sendPushNotification(to: token, title: "\(name) cancelled your job!", body: "Open 'My Jobs' to find more")
-                        self.nextAction()
-                    } else {
-                        self.nextAction()
-                    }
+        print("cancel job")
+        self.filterLauncher.handleDismiss()
+        // send message to user that job is cancelled
+        let properties = ["text": "HIREMILE: This conversation and job has been deleted. For more information, please navigate to the 'My Jobs' section."] as [String : Any]
+        self.sendMessageWithProperties(properties)
+        // remove all children in messages for corresponding job
+        GlobalVariables.finishedFeedback = true
+        // send user a notification
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+            let name : String = (snapshot.value as? String)!
+            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
+                if let token : String = (snapshot.value as? String) {
+                    let sender = PushNotificationSender()
+                    Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("cancelled")
+                    sender.sendPushNotification(to: token, title: "\(name) cancelled your job!", body: "Open 'My Jobs' to find more")
+                    self.nextAction()
+                } else {
+                    self.nextAction()
                 }
             }
-        }))
-        self.present(alert, animated: true, completion: nil)
+        }
     }
     
     func nextAction() {

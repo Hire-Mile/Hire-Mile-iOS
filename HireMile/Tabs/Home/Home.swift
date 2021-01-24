@@ -198,8 +198,8 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
         myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
         
-        if let url = URL(string: self.allJobs[indexPath.row].imagePost!) {
-            myCell.firstServiceImage.kf.setImage(with: url)
+        if let url = self.allJobs[indexPath.row].imagePost {
+            myCell.firstServiceImage.loadImageUsingCacheWithUrlString(url)
         }
         
         myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!

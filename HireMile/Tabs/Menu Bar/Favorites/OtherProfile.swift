@@ -26,7 +26,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "profilepic")
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.layer.cornerRadius = 37.5
         imageView.clipsToBounds = true
@@ -124,7 +123,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     let secondDescLabel : UILabel = {
         let label = UILabel()
-        label.text = "Hires"
+        label.text = "Reviews"
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
@@ -188,21 +187,17 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
         return button
     }()
+    
+    let ratingsButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor.clear
+        button.addTarget(self, action: #selector(ratingTapped), for: .touchUpInside)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        Database.database().reference().child("Users").child(GlobalVariables.userUID).child("My_Jobs").observe(.childAdded) { (snapshot) in
-            if let value = snapshot.value as? [String: Any] {
-                let job = MyJobStructure()
-                job.type = value["job-status"] as? String ?? "TYPE FALSE"
-                if job.type! == "completed" {
-                    self.hires += 1
-                }
-            }
-            // update label
-            self.secondTitleLabel.text = String(self.hires)
-        }
         
         self.allJobs.removeAll()
         self.myJobs.removeAll()
@@ -341,11 +336,17 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         statusButton.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
         statusButton.leftAnchor.constraint(equalTo: self.star5.rightAnchor, constant: 30).isActive = true
         
+        view.addSubview(ratingsButton)
+        ratingsButton.topAnchor.constraint(equalTo: self.secondImportantView.topAnchor).isActive = true
+        ratingsButton.bottomAnchor.constraint(equalTo: self.secondImportantView.bottomAnchor).isActive = true
+        ratingsButton.rightAnchor.constraint(equalTo: self.secondImportantView.rightAnchor).isActive = true
+        ratingsButton.leftAnchor.constraint(equalTo: self.secondImportantView.leftAnchor).isActive = true
+        
         view.backgroundColor = UIColor.white
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ProfileCell.self, forCellReuseIdentifier: "profileCell")
+        tableView.register(OtherProfileCell.self, forCellReuseIdentifier: "profileCell")
         
         // image
         let uid = GlobalVariables.userUID
@@ -391,7 +392,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func getAllRatings() {
-        Database.database().reference().child("Users").child(GlobalVariables.userUID).child("ratings").observe(.childAdded) { (snapshot) in
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = ReviewStructure()
                 job.ratingNumber = value["rating-number"] as? Int ?? 0
@@ -400,6 +401,8 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
             
             let finalNumber = self.finalRating / self.ratingNumber
+            
+            self.secondTitleLabel.text = String(self.ratingNumber)
             
             switch finalNumber {
             case 0:
@@ -478,14 +481,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.statusButton.setTitle("Following", for: .normal)
                 self.statusButton.setTitleColor(UIColor.white, for: .normal)
                 self.isFollowing = true
-                Database.database().reference().child("Users").child(self.userUid).child("fcmToken").observe(.value) { (snapshot) in
-                    let token : String = (snapshot.value as? String)!
-                    let sender = PushNotificationSender()
-                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-                        let userName : String = (snapshot.value as? String)!
-                        sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!")
-                    }
-                }
             } completion: { (completion) in
                 print("updated button")
             }
@@ -512,7 +507,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! OtherProfileCell
         cell.postImageView.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
         cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
         cell.postId = self.myJobs[indexPath.row].postId!
@@ -527,6 +522,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+        GlobalVariables.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
         GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
         GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
         GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
@@ -551,16 +547,35 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             ]
             let postFeed = ["\(GlobalVariables.userUID)" : userInformation]
             Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+            Database.database().reference().child("Users").child(self.userUid).child("fcmToken").observe(.value) { (snapshot) in
+                let token : String = (snapshot.value as? String)!
+                let sender = PushNotificationSender()
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+                    let userName : String = (snapshot.value as? String)!
+                    sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!")
+                }
+            }
+        }
+    }
+    
+    @objc func ratingTapped() {
+        if self.ratingNumber != 0 {
+            GlobalVariables.reviewAuthUid = GlobalVariables.userUID
+            self.navigationController?.pushViewController(RatingController(), animated: true)
+        } else {
+            return
         }
     }
 
 }
 
-class MyProfileCell: UITableViewCell {
+class OtherProfileCell: UITableViewCell {
+    
+    var postId = ""
     
     let postImageView : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "working")
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 15
@@ -581,7 +596,7 @@ class MyProfileCell: UITableViewCell {
     
     let titleJob : UILabel = {
         let label = UILabel()
-        label.text = "Car Rental"
+        label.text = "Name"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -591,26 +606,35 @@ class MyProfileCell: UITableViewCell {
     
     let saleNumber : UILabel = {
         let label = UILabel()
-        label.text = "10 sales"
+        label.text = "Sales"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = UIColor.lightGray
+        label.font = UIFont.systemFont(ofSize: 12)
         label.numberOfLines = 1
         return label
     }()
     
     let priceNumber : UILabel = {
         let label = UILabel()
-        label.text = "$30"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.text = "Cost"
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.textColor = UIColor.black
         label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         return label
     }()
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.selectionStyle = .none
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        isUserInteractionEnabled = true
             
         addSubview(informationView)
         informationView.topAnchor.constraint(equalTo: self.topAnchor, constant: 25).isActive = true
@@ -619,8 +643,8 @@ class MyProfileCell: UITableViewCell {
         informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -25).isActive = true
         
         informationView.addSubview(postImageView)
-        postImageView.topAnchor.constraint(equalTo: informationView.topAnchor, constant: 0).isActive = true
-        postImageView.leftAnchor.constraint(equalTo: informationView.leftAnchor, constant: 0).isActive = true
+        postImageView.topAnchor.constraint(equalTo: informationView.topAnchor, constant: -10).isActive = true
+        postImageView.leftAnchor.constraint(equalTo: informationView.leftAnchor, constant: -10).isActive = true
         postImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         postImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
@@ -628,18 +652,18 @@ class MyProfileCell: UITableViewCell {
         priceNumber.topAnchor.constraint(equalTo: informationView.topAnchor, constant: 10).isActive = true
         priceNumber.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -10).isActive = true
         priceNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        priceNumber.widthAnchor.constraint(equalToConstant: 38).isActive = true
+        priceNumber.widthAnchor.constraint(equalToConstant: 80).isActive = true
         
         informationView.addSubview(titleJob)
         titleJob.topAnchor.constraint(equalTo: self.topAnchor, constant: 40).isActive = true
-        titleJob.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
-        titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 10).isActive = true
+        titleJob.rightAnchor.constraint(equalTo: priceNumber.leftAnchor).isActive = true
+        titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         titleJob.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         informationView.addSubview(saleNumber)
-        saleNumber.topAnchor.constraint(equalTo: self.titleJob.bottomAnchor, constant: 0).isActive = true
+        saleNumber.topAnchor.constraint(equalTo: self.titleJob.bottomAnchor, constant: -5).isActive = true
         saleNumber.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
-        saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 10).isActive = true
+        saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         saleNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
     }
     
