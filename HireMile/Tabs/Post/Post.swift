@@ -22,7 +22,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     let filterLauncher = PostLauncher()
     let imagePicker = UIImagePickerController()
     let pickeringView = UIPickerView()
-    let pickerData = ["Development / Design", "Repairs / Cleaning", "Teaching / Tutoring", "Writing", "Sales & Marketing", "SEO", "Public Relations", "Translation", "Other"]
+    let pickerData = ["Barbers", "Nails", "Hair Salon", "Carpenter", "Cleaning", "Auto", "Technology", "Other"]
 
     let backButton : UIButton = {
         let button = UIButton()

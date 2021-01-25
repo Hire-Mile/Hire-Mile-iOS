@@ -16,6 +16,9 @@ import MBProgressHUD
 
 class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
+    let imageArray = ["", ""]
+    let titles = ["Barbers", "Nails", "Hair Salon", "Carpenter", "Cleaning", "Auto", "Technology"]
+    
     let imagePicker = UIImagePickerController()
     var timer : Timer?
     var estimateWidth = 160.0
@@ -33,23 +36,58 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     let searchButton : UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+        button.backgroundColor = UIColor.clear
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(searchButtonPressed), for: .touchUpInside)
-        button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        button.layer.cornerRadius = 20
-        button.tintColor = UIColor(red: 112/255, green: 112/255, blue: 112/255, alpha: 1)
         return button
     }()
     
     let menuButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "line.horizontal.3"), for: .normal)
+        button.setImage(UIImage(named: "36775"), for: .normal)
         button.addTarget(self, action: #selector(sideMenuTappped), for: .touchUpInside)
-        button.tintColor = UIColor(red: 39/255, green: 39/255, blue: 39/255, alpha: 1)
         return button
     }()
+    
+    let searchView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 25
+        return view
+    }()
+    
+    let searchImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "magnifyingglass")
+        imageView.tintColor = UIColor.lightGray
+        imageView.backgroundColor = .clear
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let searchLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Search Services"
+        label.textColor = UIColor.lightGray
+        label.textAlignment = NSTextAlignment.left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        return label
+    }()
+    
+    let categoriesLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Browse by category"
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textAlignment = NSTextAlignment.left
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    var categoryCollectionView : UICollectionView?
     
     lazy var slideInMenu : CGFloat = self.view.frame.width  * 0.30
     
@@ -58,8 +96,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     var menu : SideMenuNavigationController?
     
     var myCollectionView : UICollectionView?
-    
-    var titles = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,8 +144,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
         layout.itemSize = CGSize(width: 60, height: 60)
         
-        myCollectionView = UICollectionView(frame: CGRect(x: 6, y: 100, width: self.view.frame.width - 12, height: self.view.frame.height - 100), collectionViewLayout: layout)
+        myCollectionView = UICollectionView(frame: CGRect(x: 6, y: 290, width: self.view.frame.width - 12, height: self.view.frame.height - 325), collectionViewLayout: layout)
         myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
+        categoryCollectionView?.register(HomeCategoryCell.self, forCellWithReuseIdentifier: "CategoryCellID")
         myCollectionView?.backgroundColor = UIColor.white
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
@@ -131,20 +168,60 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func addSubviews() {
-        self.view.addSubview(searchButton)
         self.view.addSubview(menuButton)
+        self.view.addSubview(searchView)
+        self.view.addSubview(searchImage)
+        self.view.addSubview(searchLabel)
+        self.view.addSubview(searchButton)
+        self.view.addSubview(categoriesLabel)
     }
     
     func addConstraints() {
-        self.searchButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50).isActive = true
-        self.searchButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-        self.searchButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        self.searchButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         
-        self.menuButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50).isActive = true
+        self.menuButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 65).isActive = true
         self.menuButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.menuButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        self.menuButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        self.menuButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        self.menuButton.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        self.searchView.leftAnchor.constraint(equalTo: self.menuButton.rightAnchor, constant: 20).isActive = true
+        self.searchView.centerYAnchor.constraint(equalTo: self.menuButton.centerYAnchor).isActive = true
+        self.searchView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.searchView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        
+        self.searchImage.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        self.searchImage.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        self.searchImage.leftAnchor.constraint(equalTo: self.searchView.leftAnchor, constant: 20).isActive = true
+        self.searchImage.centerYAnchor.constraint(equalTo: self.searchView.centerYAnchor).isActive = true
+        
+        self.searchLabel.leftAnchor.constraint(equalTo: self.searchImage.rightAnchor, constant: 10).isActive = true
+        self.searchLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        self.searchLabel.rightAnchor.constraint(equalTo: self.searchView.rightAnchor, constant: 10).isActive = true
+        self.searchLabel.centerYAnchor.constraint(equalTo: self.searchView.centerYAnchor).isActive = true
+        
+        self.searchButton.topAnchor.constraint(equalTo: self.searchView.topAnchor, constant: 0).isActive = true
+        self.searchButton.rightAnchor.constraint(equalTo: self.searchView.rightAnchor).isActive = true
+        self.searchButton.leftAnchor.constraint(equalTo: self.searchView.leftAnchor).isActive = true
+        self.searchButton.bottomAnchor.constraint(equalTo: self.searchView.bottomAnchor).isActive = true
+        
+        self.categoriesLabel.topAnchor.constraint(equalTo: self.searchView.bottomAnchor, constant: 15).isActive = true
+        self.categoriesLabel.leftAnchor.constraint(equalTo: self.menuButton.leftAnchor).isActive = true
+        self.categoriesLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        self.categoriesLabel.rightAnchor.constraint(equalTo: self.searchView.rightAnchor).isActive = true
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.scrollDirection = .horizontal
+        
+        self.categoryCollectionView = UICollectionView(frame: CGRect(x: 20, y: 155, width: self.view.frame.width - 40, height: 115), collectionViewLayout: layout)
+        self.categoryCollectionView!.translatesAutoresizingMaskIntoConstraints = false
+        self.categoryCollectionView!.backgroundColor = UIColor.white
+        self.categoryCollectionView!.alwaysBounceVertical = false
+        self.categoryCollectionView!.alwaysBounceHorizontal = true
+        self.categoryCollectionView!.dataSource = self
+        self.categoryCollectionView!.showsHorizontalScrollIndicator = false
+        self.categoryCollectionView!.showsVerticalScrollIndicator = false
+        self.categoryCollectionView!.delegate = self
+        view.addSubview(self.categoryCollectionView!)
     }
     
     func basicSetup() {
@@ -187,46 +264,75 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        if collectionView == self.myCollectionView {
+            return 1
+        } else {
+            return 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.allJobs.count
+        if collectionView == self.myCollectionView {
+            return self.allJobs.count
+        } else {
+            return self.titles.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
-        myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
-        
-        if let url = self.allJobs[indexPath.row].imagePost {
-            myCell.firstServiceImage.loadImageUsingCacheWithUrlString(url)
-        }
-        
-        myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
-        if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
-            myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
+        if collectionView == self.myCollectionView {
+            let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
+            myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
+            
+            if let url = self.allJobs[indexPath.row].imagePost {
+                myCell.firstServiceImage.loadImageUsingCacheWithUrlString(url)
+            }
+            
+            myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
+            if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
+                myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
+            } else {
+                myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!)"
+            }
+            myCell.backgroundColor = UIColor.white
+            return myCell
         } else {
-            myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!)"
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCellID", for: indexPath) as! HomeCategoryCell
+            cell.title.text = self.titles[indexPath.row]
+            cell.imageView.image = UIImage(named: "")
+            return cell
         }
-        myCell.backgroundColor = UIColor.white
-        return myCell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
-        GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
-        GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
-        GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
-        GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
-        GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
-        GlobalVariables.postId = self.allJobs[indexPath.row].postId!
-        GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
-        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+        if collectionView == self.myCollectionView {
+            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+            GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
+            GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
+            GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
+            GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
+            GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
+            GlobalVariables.postId = self.allJobs[indexPath.row].postId!
+            GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+            self.navigationController?.pushViewController(ViewPostController(), animated: true)
+        } else {
+            let controller = CategoryPostController()
+            controller.category = self.titles[indexPath.row]
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = self.calculateWidth()
-        return CGSize(width: width, height: width)
+        if collectionView == self.myCollectionView {
+            let width = self.calculateWidth()
+            return CGSize(width: width, height: width)
+        } else {
+            return CGSize(width: 90, height: 115)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     func calculateWidth() -> CGFloat {
