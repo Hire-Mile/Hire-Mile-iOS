@@ -13,19 +13,21 @@ import FirebaseDatabase
 
 protocol MyTableViewCellDelegate {
     func didTapEditButton(withIndex: Int)
+    func didTapDeleteButton(withIndex: Int)
 }
 
 class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate {
     
     var indexPathrow = 0
-    
+    var indexTappeedd = 0
     var allJobs = [JobStructure]()
     var myJobs = [JobStructure]()
-    
     var finalRating = 0
     var ratingNumber = 0
     var findingRating = true
     var hires = 0
+    
+    let filterLauncher = DeleteLauncher()
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
@@ -489,8 +491,6 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
         }
         
-        cell.deleteButton.addTarget(self, action: #selector(deletePostPressed), for: .touchUpInside)
-        
         return cell
     }
     
@@ -512,13 +512,6 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         return 175
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-            print("delete")
-        }
-        return [deleteAction]
-    }
-    
     @objc func uploadPressed() {
         let text = "Hire or get work on the fastest and easiest platform"
         let url : NSURL = NSURL(string: "https://www.hiremile.com")!
@@ -531,10 +524,9 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     }
     
     @objc func deletePostPressed() {
-        print("delete")
-    }
-    
-    @objc func editPostPressed() {
+        Database.database().reference().child("Jobs").child(self.myJobs[indexTappeedd].postId!).removeValue()
+        self.filterLauncher.handleDismiss()
+        self.viewWillAppear(true)
     }
     
     @objc func editPressed() {
@@ -552,6 +544,13 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         GlobalVariables.postId = self.myJobs[indexPathrow].postId!
         GlobalVariables.type = self.myJobs[indexPathrow].typeOfPrice!
         self.navigationController?.pushViewController(EditPost(), animated: true)
+    }
+    
+    func didTapDeleteButton(withIndex index: Int) {
+        print("hello, \(index)")
+        self.indexTappeedd = index
+        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.deletePostPressed), for: .touchUpInside)
+        self.filterLauncher.showFilter()
     }
 
 }
@@ -698,10 +697,15 @@ class ProfileCell: UITableViewCell {
         deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
         
         editButton.addTarget(self, action: #selector(editPostPressed), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deletePostPressed), for: .touchUpInside)
     }
     
     @objc func editPostPressed() {
         delegate?.didTapEditButton(withIndex: (index?.row)!)
+    }
+    
+    @objc func deletePostPressed() {
+        delegate?.didTapDeleteButton(withIndex: (index?.row)!)
     }
     
     required init?(coder: NSCoder) {

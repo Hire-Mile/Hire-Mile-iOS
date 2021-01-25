@@ -39,6 +39,8 @@
 		786A33212565931300B58265 /* CategoryPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A33202565931300B58265 /* CategoryPostController.swift */; };
 		786A3323256596E700B58265 /* FilterLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A3322256596E700B58265 /* FilterLauncher.swift */; };
 		787013402579721A0019C24A /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7870133F2579721A0019C24A /* Camera.swift */; };
+		78767E0F25BEF7D000CBF2B8 /* DeleteLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78767E0E25BEF7CF00CBF2B8 /* DeleteLauncher.swift */; };
+		78767E1225BF1A6D00CBF2B8 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78767E1125BF1A6D00CBF2B8 /* CategoryCell.swift */; };
 		787B0181256838E400BBC392 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B0180256838E400BBC392 /* Settings.swift */; };
 		787B018425685BD600BBC392 /* EditProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018325685BD600BBC392 /* EditProfile.swift */; };
 		787B018825685BE600BBC392 /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787B018725685BE600BBC392 /* Email.swift */; };
@@ -107,6 +109,8 @@
 		786A33202565931300B58265 /* CategoryPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPostController.swift; sourceTree = "<group>"; };
 		786A3322256596E700B58265 /* FilterLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLauncher.swift; sourceTree = "<group>"; };
 		7870133F2579721A0019C24A /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
+		78767E0E25BEF7CF00CBF2B8 /* DeleteLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteLauncher.swift; sourceTree = "<group>"; };
+		78767E1125BF1A6D00CBF2B8 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		787B0180256838E400BBC392 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		787B018325685BD600BBC392 /* EditProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfile.swift; sourceTree = "<group>"; };
 		787B018725685BE600BBC392 /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
@@ -187,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				78277F7E2576C06500B8C7BD /* MyProfile.swift */,
+				78767E0E25BEF7CF00CBF2B8 /* DeleteLauncher.swift */,
 				78D9FFC725BB148400F00EA1 /* EditPost.swift */,
 				78D9FFCA25BB150700F00EA1 /* EditPostLauncher.swift */,
 			);
@@ -198,6 +203,7 @@
 			children = (
 				782F7DDE25932FE80064100F /* ItemCell.swift */,
 				782F7DDF25932FE80064100F /* ItemCell.xib */,
+				78767E1125BF1A6D00CBF2B8 /* CategoryCell.swift */,
 			);
 			path = ItemCell;
 			sourceTree = "<group>";
@@ -576,8 +582,10 @@
 				78E02C3D25A1C01F00337370 /* PushNotificationManager.swift in Sources */,
 				78E02C4025A1C4BA00337370 /* PushNotificationSender.swift in Sources */,
 				784646DF2561C854000C5F26 /* PageCell.swift in Sources */,
+				78767E1225BF1A6D00CBF2B8 /* CategoryCell.swift in Sources */,
 				784646DD2561C5A7000C5F26 /* SwipingController.swift in Sources */,
 				782F7DB12590E0560064100F /* HomeCatObject.swift in Sources */,
+				78767E0F25BEF7D000CBF2B8 /* DeleteLauncher.swift in Sources */,
 				784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */,
 				78295B0725990AE000004CE7 /* UserChat.swift in Sources */,
 				78D9FFCB25BB150700F00EA1 /* EditPostLauncher.swift in Sources */,
@@ -721,14 +729,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0950;
+				MARKETING_VERSION = 1.09555;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
@@ -743,14 +751,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0950;
+				MARKETING_VERSION = 1.09555;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;

@@ -15,7 +15,11 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
     let filterLauncher = FilterLauncher()
     
-    var category = ""
+    var category : String? {
+        didSet {
+            navigationItem.title = category
+        }
+    }
     var allJobs = [JobStructure]()
 
     private let refrshControl : UIRefreshControl = {
@@ -65,10 +69,9 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
     func basicSetup() {
         self.view.backgroundColor = UIColor.white
-
+        
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.tintColor = UIColor.black
-        self.navigationController?.navigationBar.topItem?.title = GlobalVariables.categoryName
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(filterPressed))
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
@@ -76,8 +79,6 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.refreshControl = refrshControl
-        
-        self.category = GlobalVariables.categoryName
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -103,6 +104,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+        GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
         GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
         GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
         GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
@@ -133,7 +135,10 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
                 job.imagePost = value["image"] as? String ?? "Error"
                 job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                 job.postId = value["postId"] as? String ?? "Error"
-                self.allJobs.append(job)
+                
+                if job.category == self.category {
+                    self.allJobs.append(job)
+                }
             }
             self.allJobs.reverse()
             self.tableView.reloadData()
