@@ -22,7 +22,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     let filterLauncher = PostLauncher()
     let imagePicker = UIImagePickerController()
     let pickeringView = UIPickerView()
-    let pickerData = ["Barbers", "Nails", "Hair Salon", "Carpenter", "Cleaning", "Auto", "Technology", "Other"]
+    let pickerData = ["Barbers", "Salons", "Nails", "Cleaning", "Auto", "Technology", "Moving", "Carpenter"]
 
     let backButton : UIButton = {
         let button = UIButton()
@@ -64,7 +64,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
 
     let titleYourListing : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Title Your Listing"
+        tf.placeholder = "Title Your Service"
         tf.tintColor = UIColor.mainBlue
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.borderStyle = .none
@@ -75,7 +75,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
 
     let describeYourListing : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "Describe Your Listing"
+        tf.placeholder = "Describe Your Service"
         tf.tintColor = UIColor.mainBlue
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.borderStyle = .none

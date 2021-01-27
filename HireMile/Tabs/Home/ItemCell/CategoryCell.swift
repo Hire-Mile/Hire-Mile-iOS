@@ -59,14 +59,8 @@ class HomeCategoryCell: UICollectionViewCell {
         self.circleView.addSubview(imageView)
         self.imageView.centerXAnchor.constraint(equalTo: self.circleView.centerXAnchor).isActive = true
         self.imageView.centerYAnchor.constraint(equalTo: self.circleView.centerYAnchor).isActive = true
-        self.imageView.widthAnchor.constraint(equalToConstant: 58).isActive = true
-        self.imageView.heightAnchor.constraint(equalToConstant: 58).isActive = true
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        // Initialization code
+        self.imageView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        self.imageView.heightAnchor.constraint(equalToConstant: 35).isActive = true
     }
     
 }

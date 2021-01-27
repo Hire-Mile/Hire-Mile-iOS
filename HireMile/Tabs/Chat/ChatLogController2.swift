@@ -613,7 +613,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     
     let jobTitle : UILabel = {
         let jobTitle = UILabel()
-        jobTitle.text = "Job Title"
+        jobTitle.text = "Service Title"
         jobTitle.textColor = UIColor.black
         jobTitle.font = UIFont.boldSystemFont(ofSize: 24)
         jobTitle.translatesAutoresizingMaskIntoConstraints = false
@@ -963,7 +963,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                         Database.database().reference().child("Users").child(chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
                             if let token : String = (snapshot.value as? String) {
                                 let sender = PushNotificationSender()
-                                sender.sendPushNotification(to: token, title: "Job Declined", body: "\(self.jobTitle.text!) was declined: \(self.tf.text!)")
+                                sender.sendPushNotification(to: token, title: "Service Declined", body: "\(self.jobTitle.text!) was declined: \(self.tf.text!)")
                                 GlobalVariables.isDeleting = true
                                 GlobalVariables.indexToDelete = GlobalVariables.indexToDelete
                                 self.navigationController?.popViewController(animated: true)
@@ -998,7 +998,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         print("cancel job")
         self.filterLauncher.handleDismiss()
         // send message to user that job is cancelled
-        let properties = ["text": "HIREMILE: This conversation and job has been deleted. For more information, please navigate to the 'My Jobs' section."] as [String : Any]
+        let properties = ["text": "HIREMILE: This conversation and service has been deleted. For more information, please navigate to the 'My Jobs' section."] as [String : Any]
         self.sendMessageWithProperties(properties)
         // remove all children in messages for corresponding job
         GlobalVariables.finishedFeedback = true
@@ -1009,7 +1009,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                 if let token : String = (snapshot.value as? String) {
                     let sender = PushNotificationSender()
                     Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("cancelled")
-                    sender.sendPushNotification(to: token, title: "\(name) cancelled your job!", body: "Open 'My Jobs' to find more")
+                    sender.sendPushNotification(to: token, title: "\(name) cancelled your service!", body: "Open 'My Jobs' to find more")
                     self.nextAction()
                 } else {
                     self.nextAction()

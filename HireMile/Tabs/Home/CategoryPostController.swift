@@ -136,8 +136,14 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
                 job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                 job.postId = value["postId"] as? String ?? "Error"
                 
-                if job.category == self.category {
+                if self.category == "Trending" {
+                    print("trending")
                     self.allJobs.append(job)
+                } else {
+                    print(self.category)
+                    if job.category == self.category {
+                        self.allJobs.append(job)
+                    }
                 }
             }
             self.allJobs.reverse()

@@ -609,6 +609,8 @@ class MyJobsCompletedgCell: UITableViewCell {
         addSubview(reviewLabel)
         addSubview(postImageView)
         addSubview(priceDateLabel)
+        
+        selectionStyle = .none
 //
 //        //ios 9 constraint anchors
 //        //need x,y,width,height anchors
@@ -652,8 +654,8 @@ class MyJobsCompletedgCell: UITableViewCell {
         reviewLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
         reviewLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -16).isActive = true
 
-        postImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        postImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        postImageView.widthAnchor.constraint(equalToConstant: 90).isActive = true
+        postImageView.heightAnchor.constraint(equalToConstant: 55).isActive = true
         postImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 10).isActive = true
         postImageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
 
@@ -752,9 +754,9 @@ class MyJobsCanceledCell: UITableViewCell {
         reviewLabel.widthAnchor.constraint(equalToConstant: 150).isActive = true
         reviewLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        postImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        postImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        postImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0).isActive = true
+        postImageView.widthAnchor.constraint(equalToConstant: 90).isActive = true
+        postImageView.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        postImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         postImageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20).isActive = true
         
         priceDateLabel.widthAnchor.constraint(equalToConstant: 115).isActive = true

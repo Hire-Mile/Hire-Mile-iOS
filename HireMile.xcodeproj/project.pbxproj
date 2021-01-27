@@ -59,6 +59,8 @@
 		78BFDBFD25B471E000A1D8B5 /* UserMessageStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BFDBFC25B471DF00A1D8B5 /* UserMessageStructure.swift */; };
 		78C0B8BB25878C45002866A9 /* JobStructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C0B8BA25878C45002866A9 /* JobStructure.swift */; };
 		78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5CA352565515E00BF59AB /* ViewPostController.swift */; };
+		78D5FB9725C1B04000E3504C /* RatingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5FB9625C1B03E00E3504C /* RatingsController.swift */; };
+		78D5FB9A25C1FF9700E3504C /* OtherRatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5FB9925C1FF9700E3504C /* OtherRatingController.swift */; };
 		78D6F616259A11E600D2A0CE /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */; };
 		78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */; };
 		78D9FFC125B89E2B00F00EA1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBF25B89E2A00F00EA1 /* Post.swift */; };
@@ -129,6 +131,8 @@
 		78BFDBFC25B471DF00A1D8B5 /* UserMessageStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageStructure.swift; sourceTree = "<group>"; };
 		78C0B8BA25878C45002866A9 /* JobStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobStructure.swift; sourceTree = "<group>"; };
 		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
+		78D5FB9625C1B03E00E3504C /* RatingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsController.swift; sourceTree = "<group>"; };
+		78D5FB9925C1FF9700E3504C /* OtherRatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherRatingController.swift; sourceTree = "<group>"; };
 		78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLauncher.swift; sourceTree = "<group>"; };
 		78D9FFBF25B89E2A00F00EA1 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -183,6 +187,7 @@
 				78DA5A08256C1CE000DFABEB /* OtherProfile.swift */,
 				788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */,
 				78D9FFCD25BDCABE00F00EA1 /* RatingController.swift */,
+				78D5FB9925C1FF9700E3504C /* OtherRatingController.swift */,
 			);
 			path = Favorites;
 			sourceTree = "<group>";
@@ -194,6 +199,7 @@
 				78767E0E25BEF7CF00CBF2B8 /* DeleteLauncher.swift */,
 				78D9FFC725BB148400F00EA1 /* EditPost.swift */,
 				78D9FFCA25BB150700F00EA1 /* EditPostLauncher.swift */,
+				78D5FB9625C1B03E00E3504C /* RatingsController.swift */,
 			);
 			path = "My Profile";
 			sourceTree = "<group>";
@@ -339,7 +345,6 @@
 				78AD20FE25724C17004A1487 /* GlobalVariables.swift */,
 				78E02C3C25A1C01F00337370 /* PushNotificationManager.swift */,
 				78E02C3F25A1C4BA00337370 /* PushNotificationSender.swift */,
-				78F8F85925A482F30021FD60 /* ReviewObject.swift */,
 			);
 			path = Reference;
 			sourceTree = "<group>";
@@ -355,6 +360,7 @@
 				78295B0625990AE000004CE7 /* UserChat.swift */,
 				78295B0925990C1C00004CE7 /* Message.swift */,
 				78BFDBFC25B471DF00A1D8B5 /* UserMessageStructure.swift */,
+				78F8F85925A482F30021FD60 /* ReviewObject.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -572,6 +578,7 @@
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
 				7886ED92258127DD00260D2F /* PostStructure.swift in Sources */,
 				78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */,
+				78D5FB9725C1B04000E3504C /* RatingsController.swift in Sources */,
 				78F8F85A25A482F30021FD60 /* ReviewObject.swift in Sources */,
 				787B0181256838E400BBC392 /* Settings.swift in Sources */,
 				78AD2101257290B1004A1487 /* MyJobs.swift in Sources */,
@@ -588,6 +595,7 @@
 				78767E0F25BEF7D000CBF2B8 /* DeleteLauncher.swift in Sources */,
 				784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */,
 				78295B0725990AE000004CE7 /* UserChat.swift in Sources */,
+				78D5FB9A25C1FF9700E3504C /* OtherRatingController.swift in Sources */,
 				78D9FFCB25BB150700F00EA1 /* EditPostLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
