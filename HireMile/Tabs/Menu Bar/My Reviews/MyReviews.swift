@@ -62,7 +62,7 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let descText : UILabel = {
         let label = UILabel()
-        label.text = "When people mark your job as complete, you find your ratings here!"
+        label.text = "When people mark your jobs as complete, you find your reviews here!"
         label.numberOfLines = 5
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -116,7 +116,7 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.descText.heightAnchor.constraint(equalToConstant: 75).isActive = true
         
         // get the number of ratings
-        Database.database().reference().child("Users").child(GlobalVariables.userUID).child("number-of-ratings").observe(.value) { (snapshot) in
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observe(.value) { (snapshot) in
             let value = snapshot.value as? NSNumber
             let newNumber = Float(value!)
             // and create and if statement if the user has any ratings or not.
@@ -134,7 +134,7 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     func searchForReviews() {
         self.ratings.removeAll()
-        Database.database().reference().child("Users").child(GlobalVariables.userUID).child("ratings").observe(.childAdded) { (snapshotRatings) in
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshotRatings) in
             if let value = snapshotRatings.value as? [String: Any] {
                 let rating = ReviewStructure()
                 rating.userUid = value["user-id"] as? String ?? "Error"

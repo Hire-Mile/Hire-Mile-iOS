@@ -22,12 +22,14 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     var ratingNumber = 0
     var findingRating = true
     var hires = 0
+    var iamfollowedby = 0
+    var totalusers = [UserStructure]()
+    var finalNumber = 0
     
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        imageView.layer.cornerRadius = 37.5
+        imageView.backgroundColor = UIColor.black
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -35,7 +37,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     let profileName : UILabel = {
         let label = UILabel()
-        label.text = "Jorge Zapata"
+        label.text = "Name"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 20)
@@ -86,7 +88,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     let seperaterView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        view.backgroundColor = UIColor.white
         return view
     }()
     
@@ -111,6 +113,13 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         return view
     }()
     
+    let fourthImportantView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
     let secondTitleLabel : UILabel = {
         let label = UILabel()
         label.text = "0"
@@ -123,7 +132,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     let secondDescLabel : UILabel = {
         let label = UILabel()
-        label.text = "Reviews"
+        label.text = "Services"
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
@@ -143,7 +152,27 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     let thirdDescLabel : UILabel = {
         let label = UILabel()
-        label.text = "Jobs"
+        label.text = "Reviews"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.lightGray
+        return label
+    }()
+    
+    let fourthTitleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "0"
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let fourthDescLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Followers"
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
@@ -154,7 +183,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     let seperaterView2 : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        view.backgroundColor = UIColor.white
         return view
     }()
     
@@ -176,11 +205,93 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         return tableView
     }()
     
+    let mainView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 30
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let backButtonView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 21
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let backButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        button.backgroundColor = .clear
+        return button
+    }()
+    
+    let backButtonImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        imageView.tintColor = UIColor.black
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: "chevron.backward")
+        return imageView
+    }()
+    
+    let shareButtonView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 21
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let shareButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(uploadPressed), for: .touchUpInside)
+        button.backgroundColor = .clear
+        return button
+    }()
+    
+    let shareButtonImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        imageView.tintColor = UIColor.black
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: "square.and.arrow.up")
+        return imageView
+    }()
+    
+    let bottomBar1 : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.mainBlue
+        return view
+    }()
+    
+    let bottomBar2 : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.mainBlue
+        return view
+    }()
+    
+    let bottomBar3 : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.mainBlue
+        return view
+    }()
+    
     let statusButton : UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.mainBlue
-        button.setTitle("Following", for: .normal)
-        button.layer.cornerRadius = 15
+        button.setTitle("Follow", for: .normal)
+        button.layer.cornerRadius = 22
         button.addTarget(self, action: #selector(followingPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
@@ -191,13 +302,15 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     let ratingsButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.clear
-        button.addTarget(self, action: #selector(ratingTapped), for: .touchUpInside)
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(ratingsButtonPressed), for: .touchUpInside)
         return button
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.updateFollowingButton(isFollowing: false)
         
         self.allJobs.removeAll()
         self.myJobs.removeAll()
@@ -218,59 +331,79 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                     self.myJobs.append(job)
                 }
             }
-            self.thirdTitleLabel.text = String(self.myJobs.count)
+            self.secondTitleLabel.text = String(self.myJobs.count)
             self.tableView.reloadData()
         }
         
         view.addSubview(profileImageView)
-        profileImageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
-        profileImageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 75).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        profileImageView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        profileImageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        profileImageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 270).isActive = true
         
-        view.addSubview(profileName)
-        profileName.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
-        profileName.leftAnchor.constraint(equalTo: self.profileImageView.rightAnchor, constant: 10).isActive = true
-        profileName.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -10).isActive = true
-        profileName.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        view.backgroundColor = UIColor.white
         
-        view.addSubview(star1)
-        star1.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 5).isActive = true
-        star1.leftAnchor.constraint(equalTo: self.profileImageView.rightAnchor, constant: 10).isActive = true
-        star1.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        star1.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        view.addSubview(mainView)
+        mainView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        mainView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        mainView.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: -30).isActive = true
         
-        view.addSubview(star2)
-        star2.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 5).isActive = true
-        star2.leftAnchor.constraint(equalTo: self.star1.rightAnchor, constant: 5).isActive = true
-        star2.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        star2.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        view.addSubview(backButtonView)
+        backButtonView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        backButtonView.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        backButtonView.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        backButtonView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         
-        view.addSubview(star3)
-        star3.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 5).isActive = true
-        star3.leftAnchor.constraint(equalTo: self.star2.rightAnchor, constant: 5).isActive = true
-        star3.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        star3.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        backButtonView.addSubview(backButtonImage)
+        backButtonImage.centerXAnchor.constraint(equalTo: self.backButtonView.centerXAnchor).isActive = true
+        backButtonImage.centerYAnchor.constraint(equalTo: self.backButtonView.centerYAnchor).isActive = true
+        backButtonImage.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        backButtonImage.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        view.addSubview(star4)
-        star4.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 5).isActive = true
-        star4.leftAnchor.constraint(equalTo: self.star3.rightAnchor, constant: 5).isActive = true
-        star4.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        star4.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        backButtonView.addSubview(backButton)
+        backButton.topAnchor.constraint(equalTo: backButtonView.topAnchor).isActive = true
+        backButton.leftAnchor.constraint(equalTo: backButtonView.leftAnchor).isActive = true
+        backButton.rightAnchor.constraint(equalTo: backButtonView.rightAnchor).isActive = true
+        backButton.bottomAnchor.constraint(equalTo: backButtonView.bottomAnchor).isActive = true
         
-        view.addSubview(star5)
-        star5.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 5).isActive = true
-        star5.leftAnchor.constraint(equalTo: self.star4.rightAnchor, constant: 5).isActive = true
-        star5.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        star5.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        mainView.addSubview(profileName)
+        profileName.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: 32).isActive = true
+        profileName.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
+        profileName.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -160).isActive = true
+        profileName.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        view.addSubview(seperaterView)
-        seperaterView.topAnchor.constraint(equalTo: self.profileImageView.bottomAnchor, constant: 25).isActive = true
+        mainView.addSubview(statusButton)
+        statusButton.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -32).isActive = true
+        statusButton.widthAnchor.constraint(equalToConstant: 120).isActive = true
+        statusButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        statusButton.centerYAnchor.constraint(equalTo: self.profileName.centerYAnchor).isActive = true
+        
+        view.addSubview(shareButtonView)
+        shareButtonView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        shareButtonView.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        shareButtonView.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        shareButtonView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
+        
+        shareButtonView.addSubview(shareButtonImage)
+        shareButtonImage.centerXAnchor.constraint(equalTo: self.shareButtonView.centerXAnchor).isActive = true
+        shareButtonImage.centerYAnchor.constraint(equalTo: self.shareButtonView.centerYAnchor).isActive = true
+        shareButtonImage.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        shareButtonImage.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        shareButtonView.addSubview(shareButton)
+        shareButton.topAnchor.constraint(equalTo: shareButtonView.topAnchor).isActive = true
+        shareButton.leftAnchor.constraint(equalTo: shareButtonView.leftAnchor).isActive = true
+        shareButton.rightAnchor.constraint(equalTo: shareButtonView.rightAnchor).isActive = true
+        shareButton.bottomAnchor.constraint(equalTo: shareButtonView.bottomAnchor).isActive = true
+        
+        mainView.addSubview(seperaterView)
+        seperaterView.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 15).isActive = true
         seperaterView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         seperaterView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         seperaterView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
-        view.addSubview(toolBarView)
+        mainView.addSubview(toolBarView)
         toolBarView.topAnchor.constraint(equalTo: self.seperaterView.bottomAnchor).isActive = true
         toolBarView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         toolBarView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
@@ -278,9 +411,9 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         
         toolBarView.addSubview(secondImportantView)
         secondImportantView.topAnchor.constraint(equalTo: toolBarView.topAnchor).isActive = true
-        secondImportantView.leftAnchor.constraint(equalTo: toolBarView.leftAnchor, constant: 15).isActive = true
+        secondImportantView.leftAnchor.constraint(equalTo: toolBarView.leftAnchor).isActive = true
         secondImportantView.bottomAnchor.constraint(equalTo: toolBarView.bottomAnchor).isActive = true
-        secondImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 2).isActive = true
+        secondImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 3).isActive = true
         
         secondImportantView.addSubview(secondTitleLabel)
         secondTitleLabel.topAnchor.constraint(equalTo: secondImportantView.topAnchor).isActive = true
@@ -294,11 +427,17 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         secondDescLabel.rightAnchor.constraint(equalTo: secondImportantView.rightAnchor).isActive = true
         secondDescLabel.bottomAnchor.constraint(equalTo: secondImportantView.bottomAnchor).isActive = true
         
+//        secondImportantView.addSubview(bottomBar1)
+//        bottomBar1.bottomAnchor.constraint(equalTo: secondImportantView.bottomAnchor).isActive = true
+//        bottomBar1.leftAnchor.constraint(equalTo: secondImportantView.leftAnchor, constant: 20).isActive = true
+//        bottomBar1.rightAnchor.constraint(equalTo: secondImportantView.rightAnchor, constant: -20).isActive = true
+//        bottomBar1.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        
         toolBarView.addSubview(thirdImportantView)
         thirdImportantView.topAnchor.constraint(equalTo: toolBarView.topAnchor).isActive = true
-        thirdImportantView.rightAnchor.constraint(equalTo: toolBarView.rightAnchor, constant: -15).isActive = true
+        thirdImportantView.leftAnchor.constraint(equalTo: secondImportantView.rightAnchor).isActive = true
         thirdImportantView.bottomAnchor.constraint(equalTo: toolBarView.bottomAnchor).isActive = true
-        thirdImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 2).isActive = true
+        thirdImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 3).isActive = true
         
         thirdImportantView.addSubview(thirdTitleLabel)
         thirdTitleLabel.topAnchor.constraint(equalTo: thirdImportantView.topAnchor).isActive = true
@@ -312,35 +451,59 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         thirdDescLabel.rightAnchor.constraint(equalTo: thirdImportantView.rightAnchor).isActive = true
         thirdDescLabel.bottomAnchor.constraint(equalTo: thirdImportantView.bottomAnchor).isActive = true
         
-        view.addSubview(seperaterView2)
+//        thirdImportantView.addSubview(bottomBar2)
+//        bottomBar2.bottomAnchor.constraint(equalTo: thirdImportantView.bottomAnchor).isActive = true
+//        bottomBar2.leftAnchor.constraint(equalTo: thirdImportantView.leftAnchor, constant: 20).isActive = true
+//        bottomBar2.rightAnchor.constraint(equalTo: thirdImportantView.rightAnchor, constant: -20).isActive = true
+//        bottomBar2.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        
+        toolBarView.addSubview(fourthImportantView)
+        fourthImportantView.topAnchor.constraint(equalTo: toolBarView.topAnchor).isActive = true
+        fourthImportantView.rightAnchor.constraint(equalTo: toolBarView.rightAnchor).isActive = true
+        fourthImportantView.bottomAnchor.constraint(equalTo: toolBarView.bottomAnchor).isActive = true
+        fourthImportantView.widthAnchor.constraint(equalToConstant: view.frame.width / 3).isActive = true
+
+        fourthImportantView.addSubview(fourthTitleLabel)
+        fourthTitleLabel.topAnchor.constraint(equalTo: fourthImportantView.topAnchor).isActive = true
+        fourthTitleLabel.leftAnchor.constraint(equalTo: fourthImportantView.leftAnchor).isActive = true
+        fourthTitleLabel.rightAnchor.constraint(equalTo: fourthImportantView.rightAnchor).isActive = true
+        fourthTitleLabel.bottomAnchor.constraint(equalTo: fourthImportantView.bottomAnchor, constant: -15).isActive = true
+
+        fourthImportantView.addSubview(fourthDescLabel)
+        fourthDescLabel.topAnchor.constraint(equalTo: fourthImportantView.topAnchor, constant: 25).isActive = true
+        fourthDescLabel.leftAnchor.constraint(equalTo: fourthImportantView.leftAnchor).isActive = true
+        fourthDescLabel.rightAnchor.constraint(equalTo: fourthImportantView.rightAnchor).isActive = true
+        fourthDescLabel.bottomAnchor.constraint(equalTo: fourthImportantView.bottomAnchor).isActive = true
+        
+//        fourthImportantView.addSubview(bottomBar3)
+//        bottomBar3.bottomAnchor.constraint(equalTo: fourthImportantView.bottomAnchor).isActive = true
+//        bottomBar3.leftAnchor.constraint(equalTo: fourthImportantView.leftAnchor, constant: 20).isActive = true
+//        bottomBar3.rightAnchor.constraint(equalTo: fourthImportantView.rightAnchor, constant: -20).isActive = true
+//        bottomBar3.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        
+        mainView.addSubview(seperaterView2)
         seperaterView2.topAnchor.constraint(equalTo: self.toolBarView.bottomAnchor).isActive = true
         seperaterView2.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         seperaterView2.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         seperaterView2.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
-        view.addSubview(myServices)
+        mainView.addSubview(myServices)
         myServices.topAnchor.constraint(equalTo: self.seperaterView2.bottomAnchor, constant: 25).isActive = true
-        myServices.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        myServices.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 32).isActive = true
         myServices.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         myServices.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        view.addSubview(tableView)
+        mainView.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: self.myServices.bottomAnchor, constant: 10).isActive = true
-        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16).isActive = true
+        tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -5).isActive = true
         tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 10).isActive = true
         
-        view.addSubview(statusButton)
-        statusButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
-        statusButton.bottomAnchor.constraint(equalTo: self.seperaterView.bottomAnchor, constant: -20).isActive = true
-        statusButton.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
-        statusButton.leftAnchor.constraint(equalTo: self.star5.rightAnchor, constant: 30).isActive = true
-        
-        view.addSubview(ratingsButton)
-        ratingsButton.topAnchor.constraint(equalTo: self.secondImportantView.topAnchor).isActive = true
-        ratingsButton.bottomAnchor.constraint(equalTo: self.secondImportantView.bottomAnchor).isActive = true
-        ratingsButton.rightAnchor.constraint(equalTo: self.secondImportantView.rightAnchor).isActive = true
-        ratingsButton.leftAnchor.constraint(equalTo: self.secondImportantView.leftAnchor).isActive = true
+        thirdImportantView.addSubview(ratingsButton)
+        self.ratingsButton.topAnchor.constraint(equalTo: thirdImportantView.topAnchor).isActive = true
+        self.ratingsButton.bottomAnchor.constraint(equalTo: thirdImportantView.bottomAnchor).isActive = true
+        self.ratingsButton.leftAnchor.constraint(equalTo: thirdImportantView.leftAnchor).isActive = true
+        self.ratingsButton.rightAnchor.constraint(equalTo: thirdImportantView.rightAnchor).isActive = true
         
         view.backgroundColor = UIColor.white
         
@@ -386,7 +549,24 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
         }
         
-        getAllRatings()
+        self.getAllFollowers()
+        
+        if self.findingRating == true {
+            // find rating
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observeSingleEvent(of: .value) { (ratingNum) in
+                let value = ratingNum.value as? NSNumber
+                let newNumber = Float(value!)
+                if newNumber == 0 {
+                    self.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    self.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                } else {
+                    self.getAllRatings()
+                }
+            }
+        }
 
         // Do any additional setup after loading the view.
     }
@@ -397,12 +577,16 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let job = ReviewStructure()
                 job.ratingNumber = value["rating-number"] as? Int ?? 0
                 self.ratingNumber += 1
+                print("found rating")
                 self.finalRating += job.ratingNumber!
             }
             
-            let finalNumber = self.finalRating / self.ratingNumber
+            print(self.ratingNumber)
+            self.thirdTitleLabel.text = String(self.ratingNumber)
+            print("updating rating label")
             
-            self.secondTitleLabel.text = String(self.ratingNumber)
+            let finalNumber = self.finalRating / self.ratingNumber
+            self.finalNumber = finalNumber
             
             switch finalNumber {
             case 0:
@@ -447,27 +631,63 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     
+    func getAllFollowers() {
+        self.totalusers.removeAll()
+        Database.database().reference().child("Users").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let user = UserStructure()
+                user.uid = value["uid"] as? String ?? "Error"
+                print("hello user, \(snapshot.key)")
+                Database.database().reference().child("Users").child(snapshot.key).child("favorites").observe(.childAdded) { (favoritesSnap) in
+                    if let favorites = favoritesSnap.value as? [String : Any] {
+                        let favorite = UserStructure()
+                        favorite.uid = favoritesSnap.key
+                        print("\(snapshot.key) is following \(favorite.uid)")
+                        if favorite.uid == GlobalVariables.userUID {
+                            print("i am followed by \(snapshot.key)")
+                            self.iamfollowedby += 1
+                        }
+                    }
+                }
+            }
+        }
+        Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.setFollowPeople), userInfo: nil, repeats: false)
+    }
+    
+    @objc func setFollowPeople() {
+        print("hi")
+        self.fourthTitleLabel.text = "\(self.iamfollowedby)"
+    }
+    
+    @objc func uploadPressed() {
+        let text = "Hire or get work on the fastest and easiest platform"
+        let url : NSURL = NSURL(string: "https://www.hiremile.com")!
+        let vc = UIActivityViewController(activityItems: [text, url], applicationActivities: [])
+        if let popoverController = vc.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = self.view.bounds
+        }
+        self.present(vc, animated: true, completion: nil)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.barTintColor = .white
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .bottom, barMetrics: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.view.backgroundColor = UIColor.white
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.isNavigationBarHidden = true
+        self.navigationController?.navigationBar.topItem?.title = " "
         self.navigationController?.navigationBar.tintColor = UIColor.black
-        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         
         // get array
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
             if let value = listOfuserFavorite.value as? [String : Any] {
                 let user = UserStructure()
                 user.uid = value["uid"] as? String ?? "Error"
-                print("USERUID")
-                print(user.uid!)
-                print("USERUID")
                 if user.uid! == GlobalVariables.userUID {
                     self.updateFollowingButton(isFollowing: true)
-                } else {
-                    self.updateFollowingButton(isFollowing: false)
+                    return
                 }
             }
         }
@@ -558,12 +778,16 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    @objc func ratingTapped() {
+    @objc func backButtonPressed() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func ratingsButtonPressed() {
         if self.ratingNumber != 0 {
-            GlobalVariables.reviewAuthUid = GlobalVariables.userUID
-            self.navigationController?.pushViewController(RatingController(), animated: true)
-        } else {
-            return
+            let controller = OtherRatingController()
+            controller.finalRating = self.finalNumber
+            controller.userUid = GlobalVariables.userUID
+            self.navigationController?.pushViewController(controller, animated: true)
         }
     }
 

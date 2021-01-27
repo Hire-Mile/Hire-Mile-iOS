@@ -24,7 +24,7 @@ class FinishLauncher: NSObject {
     
     let stopJob : UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Cancel Job", for: .normal)
+        button.setTitle("Cancel Service", for: .normal)
         button.setTitleColor(UIColor.mainBlue, for: .normal)
         button.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +37,7 @@ class FinishLauncher: NSObject {
     
     let completeJob : UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Complete Job", for: .normal)
+        button.setTitle("Complete Service", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor.mainBlue
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -49,7 +49,7 @@ class FinishLauncher: NSObject {
     let filterTitle : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Finish Job?"
+        label.text = "Finish Service?"
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 24)

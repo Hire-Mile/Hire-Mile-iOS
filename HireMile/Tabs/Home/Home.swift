@@ -16,8 +16,8 @@ import MBProgressHUD
 
 class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
-    let imageArray = ["", ""]
-    let titles = ["Barbers", "Nails", "Hair Salon", "Carpenter", "Cleaning", "Auto", "Technology"]
+    let imageArray = ["barber", "hair-salon", "nail", "cleaning", "Towing", "phone", "moving", "Carpentry"]
+    let titles = ["Barbers", "Salons", "Nails", "Cleaning", "Auto", "Technology", "Moving", "Carpenter"]
     
     let imagePicker = UIImagePickerController()
     var timer : Timer?
@@ -103,6 +103,34 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let pushManager = PushNotificationManager(userID: Auth.auth().currentUser!.uid)
         pushManager.registerForPushNotifications()
         
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: 60, height: 60)
+        
+        myCollectionView = UICollectionView(frame: CGRect(x: 6, y: 290, width: self.view.frame.width - 12, height: self.view.frame.height - 325), collectionViewLayout: layout)
+        myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
+        myCollectionView?.backgroundColor = UIColor.white
+        myCollectionView?.dataSource = self
+        myCollectionView?.delegate = self
+        view.addSubview(myCollectionView ?? UICollectionView())
+        myCollectionView?.refreshControl = refrshControl
+        
+        let layou2: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layou2.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layou2.scrollDirection = .horizontal
+        
+        self.categoryCollectionView = UICollectionView(frame: CGRect(x: 20, y: 155, width: self.view.frame.width - 40, height: 115), collectionViewLayout: layou2)
+        self.categoryCollectionView!.translatesAutoresizingMaskIntoConstraints = false
+        self.categoryCollectionView!.backgroundColor = UIColor.white
+        self.categoryCollectionView!.alwaysBounceVertical = false
+        self.categoryCollectionView!.alwaysBounceHorizontal = true
+        self.categoryCollectionView!.dataSource = self
+        self.categoryCollectionView!.showsHorizontalScrollIndicator = false
+        self.categoryCollectionView!.showsVerticalScrollIndicator = false
+        self.categoryCollectionView!.delegate = self
+        self.categoryCollectionView!.register(HomeCategoryCell.self, forCellWithReuseIdentifier: "CategoryCellID")
+        view.addSubview(self.categoryCollectionView!)
+        
         // Functions to throw
         self.addSubviews()
         self.addConstraints()
@@ -139,19 +167,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         
         // Functions to throw
         self.basicSetup()
-        
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: 60, height: 60)
-        
-        myCollectionView = UICollectionView(frame: CGRect(x: 6, y: 290, width: self.view.frame.width - 12, height: self.view.frame.height - 325), collectionViewLayout: layout)
-        myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
-        categoryCollectionView?.register(HomeCategoryCell.self, forCellWithReuseIdentifier: "CategoryCellID")
-        myCollectionView?.backgroundColor = UIColor.white
-        myCollectionView?.dataSource = self
-        myCollectionView?.delegate = self
-        view.addSubview(myCollectionView ?? UICollectionView())
-        myCollectionView?.refreshControl = refrshControl
         
         self.setupCategory()
         
@@ -207,21 +222,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.categoriesLabel.leftAnchor.constraint(equalTo: self.menuButton.leftAnchor).isActive = true
         self.categoriesLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         self.categoriesLabel.rightAnchor.constraint(equalTo: self.searchView.rightAnchor).isActive = true
-        
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.scrollDirection = .horizontal
-        
-        self.categoryCollectionView = UICollectionView(frame: CGRect(x: 20, y: 155, width: self.view.frame.width - 40, height: 115), collectionViewLayout: layout)
-        self.categoryCollectionView!.translatesAutoresizingMaskIntoConstraints = false
-        self.categoryCollectionView!.backgroundColor = UIColor.white
-        self.categoryCollectionView!.alwaysBounceVertical = false
-        self.categoryCollectionView!.alwaysBounceHorizontal = true
-        self.categoryCollectionView!.dataSource = self
-        self.categoryCollectionView!.showsHorizontalScrollIndicator = false
-        self.categoryCollectionView!.showsVerticalScrollIndicator = false
-        self.categoryCollectionView!.delegate = self
-        view.addSubview(self.categoryCollectionView!)
     }
     
     func basicSetup() {
@@ -296,10 +296,15 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             }
             myCell.backgroundColor = UIColor.white
             return myCell
+        } else if collectionView == self.categoryCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCellID", for: indexPath) as! HomeCategoryCell
+            cell.title.text = self.titles[indexPath.row]
+            cell.imageView.image = UIImage(named: self.imageArray[indexPath.row])
+            return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCellID", for: indexPath) as! HomeCategoryCell
             cell.title.text = self.titles[indexPath.row]
-            cell.imageView.image = UIImage(named: "")
+            cell.imageView.image = UIImage(named: self.imageArray[indexPath.row])
             return cell
         }
     }
@@ -311,6 +316,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
             GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
             GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
+            GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
             GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
             GlobalVariables.postId = self.allJobs[indexPath.row].postId!
             GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
@@ -754,8 +760,10 @@ class MenuListController: UITableViewController {
             switch indexPath.row {
             case 0:
                 print("0")
+                let controller = CategoryPostController()
+                controller.category = "Trending"
                 GlobalVariables.categoryName = "Trending"
-                self.navigationController?.pushViewController(CategoryPostController(), animated: true)
+                self.navigationController?.pushViewController(controller, animated: true)
             case 1:
                 print("my jobs")
                 self.navigationController?.pushViewController(MyJobs(), animated: true)

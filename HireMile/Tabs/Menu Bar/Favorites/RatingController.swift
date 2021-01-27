@@ -62,7 +62,7 @@ class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     let descText : UILabel = {
         let label = UILabel()
-        label.text = "When people mark your job as complete, you find your ratings here!"
+        label.text = "When people mark your service as complete, you find your ratings here!"
         label.numberOfLines = 5
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false

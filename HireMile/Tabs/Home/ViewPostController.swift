@@ -37,7 +37,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let titleLabel : UILabel = {
         let label = UILabel()
-        label.text = "Job Title"
+        label.text = "Service Title"
         label.font = UIFont.boldSystemFont(ofSize: 23)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -48,7 +48,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let descriptionLabel : UILabel = {
         let label = UILabel()
-        label.text = "Job Description"
+        label.text = "Service Description"
         label.font = UIFont.systemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black

@@ -48,7 +48,7 @@ class EditPostLauncher: NSObject {
     let filterDescription : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Your service has been updated! Use your profile to find your job listing."
+        label.text = "Your service has been updated! Use your profile to find your service listing."
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 16)
