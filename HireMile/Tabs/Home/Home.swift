@@ -284,8 +284,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
             myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
             
-            if let url = self.allJobs[indexPath.row].imagePost {
-                myCell.firstServiceImage.loadImageUsingCacheWithUrlString(url)
+            if let urlAddress = self.allJobs[indexPath.row].imagePost {
+                let url = URL(string: urlAddress)
+                myCell.firstServiceImage.loadImage(from: url!)
             }
             
             myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
@@ -392,8 +393,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         if GlobalVariables.presentToCat == true {
             
             GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
-            let url = URL(string: GlobalVariables.catId.imagePost!)
-            GlobalVariables.imagePost.kf.setImage(with: url)
+            GlobalVariables.postImageDownlodUrl = GlobalVariables.catId.imagePost!
             GlobalVariables.postTitle = GlobalVariables.catId.titleOfPost!
             GlobalVariables.postDescription = GlobalVariables.catId.descriptionOfPost!
             GlobalVariables.postPrice = GlobalVariables.catId.price!
@@ -546,8 +546,8 @@ class HomeCell: UICollectionViewCell {
         return view
     }()
     
-    let firstServiceImage : UIImageView = {
-        let imageView = UIImageView()
+    let firstServiceImage : CustomImageView = {
+        let imageView = CustomImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
 //        imageView.image = UIImage(named: "working")

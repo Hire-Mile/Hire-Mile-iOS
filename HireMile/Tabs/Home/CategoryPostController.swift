@@ -91,7 +91,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath) as! CategoryCell
-        cell.titleImageView.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+        cell.titleImageView.loadImage(from: URL(string: self.allJobs[indexPath.row].imagePost!)!)
         cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
         cell.postId = self.allJobs[indexPath.row].postId!
         if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
@@ -166,9 +166,8 @@ class CategoryCell: UITableViewCell {
     
     var postId = ""
 
-    let titleImageView : UIImageView = {
-        let imageView = UIImageView()
-//        imageView.image = UIImage(named: "haircut")
+    let titleImageView : CustomImageView = {
+        let imageView = CustomImageView()
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true

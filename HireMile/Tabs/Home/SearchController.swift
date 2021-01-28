@@ -13,7 +13,7 @@ import FirebaseDatabase
 
 class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
-    let results = ["Web Design", "Car Rental", "App Design", "IT"   ]
+    let results = ["Web Design", "Car Rental", "App Design", "IT" ]
     var users = [UserStructure]()
     var allJobs = [JobStructure]()
     var justRes = [JobStructure]()
@@ -46,7 +46,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         tf.textColor = UIColor.black
         tf.textAlignment = NSTextAlignment.left
         tf.backgroundColor = UIColor.white
-        tf.borderStyle = UITextField.BorderStyle.line
+        tf.borderStyle = UITextField.BorderStyle.none
         tf.layer.borderColor = UIColor.white.cgColor
         tf.layer.borderWidth = 1
         tf.font = UIFont.systemFont(ofSize: 20)
@@ -175,7 +175,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.isSearching {
             let cell = tableView.dequeueReusableCell(withIdentifier: "mySearchCell", for: indexPath) as! CategoryCell
-            cell.titleImageView.loadImageUsingCacheWithUrlString(self.justRes[indexPath.row].imagePost!)
+            cell.titleImageView.loadImage(from: URL(string: self.justRes[indexPath.row].imagePost!)!)
             cell.titleLabel.text = self.justRes[indexPath.row].titleOfPost!
             cell.postId = self.justRes[indexPath.row].postId!
             if self.justRes[indexPath.row].typeOfPrice == "Hourly" {
@@ -186,7 +186,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "mySearchCell", for: indexPath) as! CategoryCell
-            cell.titleImageView.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+            cell.titleImageView.loadImage(from: URL(string: self.allJobs[indexPath.row].imagePost!)!)
             cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
             cell.postId = self.allJobs[indexPath.row].postId!
             if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
