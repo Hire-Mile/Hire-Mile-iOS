@@ -94,7 +94,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
     let bottomBar : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.darkGray
+        view.backgroundColor = UIColor.lightGray
         return view
     }()
     
@@ -153,7 +153,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         self.titleLabel.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.view.addSubview(rateLabel)
-        self.rateLabel.text = "Rate me"
+        self.rateLabel.text = "Rate Me"
         self.rateLabel.textAlignment = .center
         self.rateLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 20).isActive = true
         self.rateLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
