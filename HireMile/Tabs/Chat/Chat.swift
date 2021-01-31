@@ -487,6 +487,7 @@ class MessagesCellCell: UITableViewCell {
             
             self.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
             self.detailTextLabel?.isHidden = false
+            self.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
             self.detailTextLabel?.textColor = UIColor.darkGray
             
             self.detailTextLabel?.text = message?.text
@@ -538,7 +539,7 @@ class MessagesCellCell: UITableViewCell {
         let label = UILabel()
         label.textAlignment = NSTextAlignment.right
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.boldSystemFont(ofSize: 10)
         label.textColor = UIColor.darkGray
         return label
     }()

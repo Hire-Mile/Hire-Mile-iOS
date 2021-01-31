@@ -647,9 +647,9 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         postImageView.layer.masksToBounds = true
         postImageView.translatesAutoresizingMaskIntoConstraints = false
         myView.addSubview(postImageView)
-        postImageView.heightAnchor.constraint(equalToConstant: 125).isActive = true
-        postImageView.widthAnchor.constraint(equalToConstant: 125).isActive = true
-        postImageView.centerYAnchor.constraint(equalTo: infoView.topAnchor).isActive = true
+        postImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        postImageView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        postImageView.centerYAnchor.constraint(equalTo: infoView.topAnchor, constant: 35).isActive = true
         postImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
         infoView.addSubview(jobTitle)
@@ -661,7 +661,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let priceTitle = UILabel()
         priceTitle.text = "Price"
         priceTitle.textColor = UIColor.black
-        priceTitle.font = UIFont.boldSystemFont(ofSize: 18)
+        priceTitle.font = UIFont.boldSystemFont(ofSize: 22)
         priceTitle.translatesAutoresizingMaskIntoConstraints = false
         priceTitle.textAlignment = NSTextAlignment.center
         infoView.addSubview(priceTitle)
@@ -787,13 +787,14 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         self.bottomBar.topAnchor.constraint(equalTo: self.tf.bottomAnchor).isActive = true
         self.bottomBar.leftAnchor.constraint(equalTo: self.tf.leftAnchor).isActive = true
         self.bottomBar.rightAnchor.constraint(equalTo: self.tf.rightAnchor).isActive = true
-        self.bottomBar.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        self.bottomBar.heightAnchor.constraint(equalToConstant: 2).isActive = true
         
         let declineButton = UIButton(type: .system)
         declineButton.setTitle("I'm busy", for: .normal)
         declineButton.setTitleColor(UIColor.darkGray, for: .normal)
         declineButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         declineButton.addTarget(self, action: #selector(imbusy), for: .touchUpInside)
+        declineButton.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
         declineButton.layer.cornerRadius = 25
         declineButton.layer.borderWidth = 2
         declineButton.layer.borderColor = UIColor.darkGray.cgColor

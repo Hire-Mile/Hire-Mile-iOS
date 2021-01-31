@@ -104,14 +104,15 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         pushManager.registerForPushNotifications()
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layout.itemSize = CGSize(width: 60, height: 60)
         
-        myCollectionView = UICollectionView(frame: CGRect(x: 6, y: 290, width: self.view.frame.width - 12, height: self.view.frame.height - 325), collectionViewLayout: layout)
+        myCollectionView = UICollectionView(frame: CGRect(x: 15, y: 290, width: self.view.frame.width - 30, height: self.view.frame.height - 400), collectionViewLayout: layout)
         myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
         myCollectionView?.backgroundColor = UIColor.white
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
+//        myCollectionView?.backgroundColor = UIColor.red
         view.addSubview(myCollectionView ?? UICollectionView())
         myCollectionView?.refreshControl = refrshControl
         
@@ -463,7 +464,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             let userId = snapshot.key
             Database.database().reference().child("User-Messages").child(uid).child(userId).observe(.childAdded) { (snapshot) in
                 let messageId = snapshot.key
-                print("featcu")
                 self.fetchMessageWithMessageId(messageId: messageId)
             }
         }, withCancel: nil)
@@ -540,8 +540,8 @@ class HomeCell: UICollectionViewCell {
         view.backgroundColor = UIColor.white
         view.layer.cornerRadius = 15
         view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 30
-        view.layer.shadowOpacity = 0.09
+        view.layer.shadowRadius = 7
+        view.layer.shadowOpacity = 0.1
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -603,7 +603,7 @@ class HomeCell: UICollectionViewCell {
     func setup() {
         
         addSubview(firstServiceView)
-        firstServiceView.anchor(top: topAnchor, paddingTop: 10, bottom: bottomAnchor, paddingBottom: -10, left: leftAnchor, paddingLeft: 10, right: rightAnchor, paddingRight: -10, width: 0, height: 0)
+        firstServiceView.anchor(top: topAnchor, paddingTop: 0, bottom: bottomAnchor, paddingBottom: 0, left: leftAnchor, paddingLeft: 0, right: rightAnchor, paddingRight: 0, width: 0, height: 0)
         
         firstServiceView.addSubview(firstServiceImage)
         firstServiceImage.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]

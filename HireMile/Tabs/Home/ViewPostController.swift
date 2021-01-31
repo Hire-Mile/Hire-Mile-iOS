@@ -341,7 +341,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
                 self.textField.text = nil
                 
                 let alert = UIAlertController(title: "Message Sent", message: "Your messsage was sent successfully", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
+                    self.navigationController?.popViewController(animated: true)
+                }))
                 self.present(alert, animated: true, completion: nil)
             }
         } else {
