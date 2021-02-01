@@ -591,6 +591,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         self.navigationController?.navigationBar.tintColor = UIColor.black
 //        self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationController?.navigationBar.shadowImage = UIImage()
+        navigationItem.backButtonTitle = " "
         
         let btnProfile = UIButton(type: .system)
         btnProfile.frame = CGRect(x: 0, y: 0, width: 50, height: 50)

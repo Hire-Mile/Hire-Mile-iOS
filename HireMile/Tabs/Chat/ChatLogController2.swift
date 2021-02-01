@@ -31,6 +31,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     var messageType = ""
     var theMessage = ""
     var jobId = ""
+    var fromKeyboard = false
     var chatId = ""
     var isShowing = false
     var jobRefId = ""
@@ -217,6 +218,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             cell.textView.isHidden = true
         }
         
+        cell.messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
+        
         return cell
     }
     
@@ -373,6 +376,11 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func requestButtonPressed() {
+        containerViewBottomAnchor?.constant = 0
+        self.inputTextField.resignFirstResponder()
+        UIView.animate(withDuration: 1) {
+            self.view.layoutIfNeeded()
+        }
         self.filterLauncher.showFilter()
         self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
         self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
@@ -396,6 +404,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func handleKeyboardWillHide(notification: NSNotification) {
+        self.fromKeyboard = false
         containerViewBottomAnchor?.constant = 0
         let keyboardDuration = (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue
         UIView.animate(withDuration: keyboardDuration!) {
@@ -520,6 +529,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     
     @objc func handleKeyboardDidShow() {
         if messages.count > 0 {
+            self.fromKeyboard = true
             let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
             self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
         }
@@ -834,6 +844,17 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         doneButton.rightAnchor.constraint(equalTo: acceptButton.rightAnchor).isActive = true
         
         handlePopInPopOut()
+    }
+    
+    @objc func handleImageTap(tapGesture: UITapGestureRecognizer) {
+        containerViewBottomAnchor?.constant = 0
+        self.inputTextField.resignFirstResponder()
+        UIView.animate(withDuration: 1) {
+            self.view.layoutIfNeeded()
+        }
+        if let imageView = tapGesture.view as? UIImageView {
+            self.performZoomInForStartingImageView(startingImageView: imageView)
+        }
     }
     
     var bottomConstraint : NSLayoutConstraint?

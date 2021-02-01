@@ -549,6 +549,7 @@ class MessagesCellCell: UITableViewCell {
         
         textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
         detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y + 2, width: ((self.frame.width - 75) - 30), height: detailTextLabel!.frame.height)
+        selectionStyle = .none
     }
     
     let hasSeenView : UIView = {
