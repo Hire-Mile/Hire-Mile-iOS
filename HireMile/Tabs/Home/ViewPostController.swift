@@ -60,7 +60,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     let priceLabel : UILabel = {
         let label = UILabel()
         label.text = "Price"
-        label.font = UIFont.systemFont(ofSize: 17)
+        label.font = UIFont.boldSystemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
         label.numberOfLines = 1
@@ -246,6 +246,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationItem.backButtonTitle = ""
     }
     
     func changeButtonStatus() {

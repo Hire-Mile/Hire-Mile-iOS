@@ -60,7 +60,6 @@ class ChatMessageCell: UICollectionViewCell {
         imageView.layer.masksToBounds = true
         imageView.isUserInteractionEnabled = true
         imageView.contentMode = .scaleAspectFill
-        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
         return imageView
     }()
     
@@ -79,12 +78,6 @@ class ChatMessageCell: UICollectionViewCell {
     
     var leftAnchorRec : NSLayoutConstraint?
     var rightAnchorMe : NSLayoutConstraint?
-    
-    @objc func handleImageTap(tapGesture: UITapGestureRecognizer) {
-        if let imageView = tapGesture.view as? UIImageView {
-            self.chatLogController?.performZoomInForStartingImageView(startingImageView: imageView)
-        }
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
