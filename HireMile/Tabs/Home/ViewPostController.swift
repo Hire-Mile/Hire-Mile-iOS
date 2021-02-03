@@ -17,6 +17,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     var postId = ""
     var authorId = ""
     
+    let launcher = ProposalPopup()
+    
     let carousel : UIImageView = {
         let carousel = UIImageView()
         carousel.contentMode = .scaleAspectFill
@@ -340,18 +342,21 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
                 }
                 
                 self.textField.text = nil
+                self.textField.resignFirstResponder()
                 
-                let alert = UIAlertController(title: "Message Sent", message: "Your messsage was sent successfully", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
-                    self.navigationController?.popViewController(animated: true)
-                }))
-                self.present(alert, animated: true, completion: nil)
+                self.launcher.showFilter()
+                self.launcher.applyButton.addTarget(self, action: #selector(self.handleDismiss), for: .touchUpInside)
             }
         } else {
             let alert = UIAlertController(title: "Error", message: "Please enter valid text", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
+    }
+    
+    @objc func handleDismiss() {
+        self.launcher.handleDismiss()
+        self.navigationController?.popViewController(animated: true)
     }
 
 }

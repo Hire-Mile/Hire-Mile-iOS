@@ -54,7 +54,7 @@ class FavoriteRemoveView: NSObject {
     let filterTitle : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Remove Favorite?"
+        label.text = "Sure to unfollow?"
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 20)
@@ -189,6 +189,7 @@ class FavoriteRemoveView: NSObject {
                 self.blackView.alpha = 0
                 if let window = UIApplication.shared.keyWindow {
                     self.filterView.frame = CGRect(x: 0, y: window.frame.height, width: self.filterView.frame.width, height: self.filterView.frame.height)
+                    GlobalVariables.removedSomon = true
                 }
             }
         }
