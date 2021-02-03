@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class Favorites: UITableViewController {
+class Favorites: UITableViewController, FavoritesCellProtocol {
     
     var favorites = [UserStructure]()
     
@@ -28,11 +28,20 @@ class Favorites: UITableViewController {
         super.viewDidLoad()
         
         tableView.delegate = self
+        tableView.separatorColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
         tableView.dataSource = self
         tableView.allowsSelection = true
         tableView.register(FavoritesCell.self, forCellReuseIdentifier: "favoritesCellID")
         
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(checkForRelaod), userInfo: nil, repeats: true)
+        
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func checkForRelaod() {
+        if GlobalVariables.removedSomon == true {
+            self.pullData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,14 +100,6 @@ class Favorites: UITableViewController {
             let snapshot : String = (snapshot.value as? String)!
             cell.textLabel?.text = snapshot
         }
-        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("email").observe(.value) { (snapshot) in
-            let snapshot : String = (snapshot.value as? String)!
-            if snapshot.contains("@") || snapshot.contains(".") {
-                cell.detailTextLabel?.text = snapshot
-            } else {
-                cell.detailTextLabel?.text = "Hiremile Contributer"
-            }
-        }
         Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("profile-image").observe(.value) { (snapshot) in
             let snapshot : String = (snapshot.value as? String)!
             if snapshot == "not-yet-selected" {
@@ -109,68 +110,82 @@ class Favorites: UITableViewController {
                 cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
             }
         }
-        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        cell.detailTextLabel?.isHidden = false
-        cell.detailTextLabel?.textColor = UIColor.darkGray
-        cell.detailTextLabel?.text = "Position"
-        cell.favoriteButton.imageView?.contentMode = .scaleAspectFill
+        cell.delegate = self
+        cell.index = indexPath
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("name").observe(.value) { (name) in
-            let name : String = (name.value as? String)!
-            Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("profile-image").observe(.value) { (snapshot) in
-                let snapshot : String = (snapshot.value as? String)!
-                if snapshot == "not-yet-selected" {
-                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[indexPath.row].uid!, isImageNil: true)
-                } else {
-                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[indexPath.row].uid!, isImageNil: false)
-                }
-            }
-        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
+    
+    func didSelectFavoriteButton(withIndex index: Int) {
+        Database.database().reference().child("Users").child(self.favorites[index].uid!).child("name").observe(.value) { (name) in
+            let name : String = (name.value as? String)!
+            Database.database().reference().child("Users").child(self.favorites[index].uid!).child("profile-image").observe(.value) { (snapshot) in
+                let snapshot : String = (snapshot.value as? String)!
+                if snapshot == "not-yet-selected" {
+                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[index].uid!, isImageNil: true)
+                } else {
+                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[index].uid!, isImageNil: false)
+                }
+            }
+        }
+    }
 
 }
 
+
+protocol FavoritesCellProtocol {
+    func didSelectFavoriteButton(withIndex index: Int)
+}
+
 class FavoritesCell: UITableViewCell {
+    
+    var index : IndexPath?
+    
+    var delegate : FavoritesCellProtocol?
+    
+    let favoriteButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1).cgColor
+        button.setTitle("Following", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
         
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
-        detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y - 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
+        textLabel?.frame = CGRect(x: 75, y: self.contentView.frame.height / 3, width: textLabel!.frame.width, height: textLabel!.frame.height)
     }
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 24
+        imageView.layer.cornerRadius = 22.5
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
-    }()
-    
-    let favoriteButton : UIButton = {
-        let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
-        button.tintColor = UIColor.mainBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.imageView?.contentMode = .scaleAspectFill
-        button.clipsToBounds = true
-        button.imageView?.tintColor = UIColor.mainBlue
-        return button
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         addSubview(profileImageView)
-        addSubview(favoriteButton)
+        contentView.addSubview(favoriteButton)
+    
+        textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        
+        self.selectionStyle = .none
         
         //ios 9 constraint anchors
         //need x,y,width,height anchors
@@ -179,13 +194,19 @@ class FavoritesCell: UITableViewCell {
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
+        favoriteButton.addTarget(self, action: #selector(tapper), for: .touchUpInside)
         favoriteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
         favoriteButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        favoriteButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        favoriteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        favoriteButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        favoriteButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    @objc func tapper() {
+        delegate?.didSelectFavoriteButton(withIndex: (index?.row)!)
+    }
 }
+

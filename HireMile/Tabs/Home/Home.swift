@@ -20,6 +20,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     let titles = ["Barbers", "Salons", "Nails", "Cleaning", "Auto", "Technology", "Moving", "Carpenter"]
     
     let imagePicker = UIImagePickerController()
+    
+    let launcher = FeedbackLauncher()
+    
     var timer : Timer?
     var estimateWidth = 160.0
     var cellMarginSize = 16.0
@@ -157,13 +160,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         if GlobalVariables.finishedFeedback == true {
-            let alert = UIAlertController(title: "Success", message: "Thanks for your feedback!", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
-                GlobalVariables.isDeleting = true
-                print(GlobalVariables.indexToDelete)
-                GlobalVariables.finishedFeedback = false
-            }))
-            self.present(alert, animated: true, completion: nil)
+            self.launcher.showFilter()
         }
         
         // Functions to throw
@@ -511,10 +508,8 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
                     if message.toId == uid {
                         // maybe blue, depends on viewage
                         if message.hasViewed == true {
-                            print("has viewed is true")
                             // extract blue
                         } else {
-                            print("has viewed is NOT true")
                             // keep blue
                             tabBarController?.tabBar.items?.last?.badgeValue = "1"
                         }
@@ -640,7 +635,8 @@ class MenuListController: UITableViewController {
     
     var findingRating = true
     
-    let items = ["Recent", "My Jobs", "My Reviews", "Favorites", "Settings", "Sign Out"]
+//    let items = ["Recent", "My Jobs", "My Reviews", "Favorites", "Settings", "Sign Out"]
+    let items = ["My Jobs", "My Reviews", "Favorites", "Settings", "Sign Out"]
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -757,26 +753,60 @@ class MenuListController: UITableViewController {
             print("profile")
             self.navigationController?.pushViewController(MyProfile(), animated: true)
         } else {
+//            switch indexPath.row {
+//            case 0:
+//                print("0")
+//                let controller = CategoryPostController()
+//                controller.category = "Trending"
+//                GlobalVariables.categoryName = "Trending"
+//                self.navigationController?.pushViewController(controller, animated: true)
+//            case 1:
+//                print("my jobs")
+//                self.navigationController?.pushViewController(MyJobs(), animated: true)
+//            case 2:
+//                print("4")
+//                self.navigationController?.pushViewController(MyReviews(), animated: true)
+//            case 3:
+//                print("5")
+//                self.navigationController?.pushViewController(Favorites(), animated: true)
+//            case 4:
+//                print("6")
+//                self.navigationController?.pushViewController(Settings(), animated: true)
+//            case 5:
+//                let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
+//                    let firebaseAuth = Auth.auth()
+//                    do {
+//                        try firebaseAuth.signOut()
+//                    } catch let signOutError as NSError {
+//                        print("Error signing out: \(signOutError)")
+//                        let errorAlert = UIAlertController(title: "Error", message: signOutError.localizedDescription, preferredStyle: .alert)
+//                        errorAlert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+//                        self.present(errorAlert, animated: true, completion: nil)
+//                    }
+//                    let controller = SignIn()
+//                    controller.modalPresentationStyle = .fullScreen
+//                    self.present(controller, animated: true, completion: nil)
+//                }))
+//                alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+//                self.present(alert, animated: true, completion: nil)
+//            default:
+//                print("other")
+//            }
             switch indexPath.row {
             case 0:
-                print("0")
-                let controller = CategoryPostController()
-                controller.category = "Trending"
-                GlobalVariables.categoryName = "Trending"
-                self.navigationController?.pushViewController(controller, animated: true)
-            case 1:
                 print("my jobs")
                 self.navigationController?.pushViewController(MyJobs(), animated: true)
-            case 2:
+            case 1:
                 print("4")
                 self.navigationController?.pushViewController(MyReviews(), animated: true)
-            case 3:
+            case 2:
                 print("5")
                 self.navigationController?.pushViewController(Favorites(), animated: true)
-            case 4:
+            case 3:
                 print("6")
                 self.navigationController?.pushViewController(Settings(), animated: true)
-            case 5:
+            case 4:
                 let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
                     let firebaseAuth = Auth.auth()

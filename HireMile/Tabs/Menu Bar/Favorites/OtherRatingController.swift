@@ -299,8 +299,9 @@ class OtherRatingController: UIViewController, UITableViewDelegate, UITableViewD
         cell.reviewLabel.text! = self.completed[indexPath.row].reasonOrDescripiotn!
         
         Database.database().reference().child("Jobs").child(self.completed[indexPath.row].jobKey!).child("image").observe(.value) { (snapshot) in
-            let pictureString : String = (snapshot.value as? String)!
-            cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+            if let pictureString : String = (snapshot.value as? String) {
+                cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+            }
         }
         
         return cell

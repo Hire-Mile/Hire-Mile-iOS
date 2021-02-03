@@ -216,18 +216,26 @@ class RatingsController: UIViewController, UITableViewDelegate, UITableViewDataS
         let cell = tableView.dequeueReusableCell(withIdentifier: "myRatingsCompletedCellID", for: indexPath) as! MyJobsCompletedgCell
         
         Database.database().reference().child("Users").child(self.completed[indexPath.row].authorUid!).child("name").observe(.value) { (snapshot) in
-            let nameString : String = (snapshot.value as? String)!
-            cell.userNameLabel.text! = nameString
+            if let nameString : String = (snapshot.value as? String) {
+                cell.userNameLabel.text! = nameString
+            } else {
+                cell.userNameLabel.text! = "Unknown"
+            }
         }
         
         Database.database().reference().child("Users").child(self.completed[indexPath.row].authorUid!).child("profile-image").observe(.value) { (snapshot) in
-            let profileImageString : String = (snapshot.value as? String)!
-            if profileImageString == "not-yet-selected" {
-                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
+            if let profileImageString : String = (snapshot.value as? String) {
+                if profileImageString == "not-yet-selected" {
+                    cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                }
             } else {
-                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
                 cell.profileImageView.tintColor = UIColor.lightGray
                 cell.profileImageView.contentMode = .scaleAspectFill
             }
@@ -290,8 +298,9 @@ class RatingsController: UIViewController, UITableViewDelegate, UITableViewDataS
         cell.reviewLabel.text! = self.completed[indexPath.row].reasonOrDescripiotn!
         
         Database.database().reference().child("Jobs").child(self.completed[indexPath.row].jobKey!).child("image").observe(.value) { (snapshot) in
-            let pictureString : String = (snapshot.value as? String)!
-            cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+            if let pictureString : String = (snapshot.value as? String) {
+                cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+            }
         }
         
         return cell

@@ -25,7 +25,8 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     var iamfollowedby = 0
     var totalusers = [UserStructure]()
     var finalNumber = 0
-    
+    var followers = [UserStructure]()
+
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -306,6 +307,14 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         button.addTarget(self, action: #selector(ratingsButtonPressed), for: .touchUpInside)
         return button
     }()
+    
+    let followersButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(followersButtonPressed), for: .touchUpInside)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -571,6 +580,16 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         // Do any additional setup after loading the view.
     }
     
+    @objc func setFollowPeople() {
+        print("followers:")
+        self.fourthImportantView.addSubview(followersButton)
+        self.followersButton.topAnchor.constraint(equalTo: self.fourthImportantView.topAnchor).isActive = true
+        self.followersButton.leftAnchor.constraint(equalTo: self.fourthImportantView.leftAnchor).isActive = true
+        self.followersButton.rightAnchor.constraint(equalTo: self.fourthImportantView.rightAnchor).isActive = true
+        self.followersButton.bottomAnchor.constraint(equalTo: self.fourthImportantView.bottomAnchor).isActive = true
+        self.fourthTitleLabel.text = "\(self.iamfollowedby)"
+    }
+    
     func getAllRatings() {
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
@@ -646,6 +665,9 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                         if favorite.uid == GlobalVariables.userUID {
                             print("i am followed by \(snapshot.key)")
                             self.iamfollowedby += 1
+                            let follower = UserStructure()
+                            follower.uid = snapshot.key
+                            self.followers.append(follower)
                         }
                     }
                 }
@@ -654,9 +676,11 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.setFollowPeople), userInfo: nil, repeats: false)
     }
     
-    @objc func setFollowPeople() {
-        print("hi")
-        self.fourthTitleLabel.text = "\(self.iamfollowedby)"
+    @objc func followersButtonPressed() {
+        print("followed pressed")
+        let controller = FollowersController()
+        controller.followers = self.followers
+        self.present(controller, animated: true, completion: nil)
     }
     
     @objc func uploadPressed() {

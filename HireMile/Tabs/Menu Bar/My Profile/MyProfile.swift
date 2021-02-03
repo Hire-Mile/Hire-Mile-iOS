@@ -29,6 +29,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     var totalusers = [UserStructure]()
     var iamfollowedby = 0
     var finalNumber = 0
+    var followers = [UserStructure]()
     
     let filterLauncher = DeleteLauncher()
     
@@ -324,6 +325,14 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .clear
         button.addTarget(self, action: #selector(ratingsButtonPressed), for: .touchUpInside)
+        return button
+    }()
+    
+    let followersButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(followersButtonPressed), for: .touchUpInside)
         return button
     }()
 
@@ -632,6 +641,9 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                         if favorite.uid == Auth.auth().currentUser!.uid {
                             print("i am followed by \(snapshot.key)")
                             self.iamfollowedby += 1
+                            let follower = UserStructure()
+                            follower.uid = snapshot.key
+                            self.followers.append(follower)
                         }
                     }
                 }
@@ -641,7 +653,13 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     }
     
     @objc func setFollowPeople() {
-        print("hi")
+        print("followers:")
+        print(self.followers)
+        self.fourthImportantView.addSubview(followersButton)
+        self.followersButton.topAnchor.constraint(equalTo: self.fourthImportantView.topAnchor).isActive = true
+        self.followersButton.leftAnchor.constraint(equalTo: self.fourthImportantView.leftAnchor).isActive = true
+        self.followersButton.rightAnchor.constraint(equalTo: self.fourthImportantView.rightAnchor).isActive = true
+        self.followersButton.bottomAnchor.constraint(equalTo: self.fourthImportantView.bottomAnchor).isActive = true
         self.fourthTitleLabel.text = "\(self.iamfollowedby)"
     }
     
@@ -805,6 +823,13 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             controller.finalRating = self.finalNumber
             self.navigationController?.pushViewController(controller, animated: true)
         }
+    }
+    
+    @objc func followersButtonPressed() {
+        print("followed pressed")
+        let controller = FollowersController()
+        controller.followers = self.followers
+        self.present(controller, animated: true, completion: nil)
     }
 
 }

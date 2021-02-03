@@ -60,4 +60,6 @@ class GlobalVariables: NSObject {
     
     static var reviewAuthUid = ""
     
+    static var removedSomon = false
+    
 }

@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class Settings: UITableViewController {  // change to tableview tonoller
     
-    let titles = ["Edit Profile", "Password", "youremail@gmail.com"]
+    var titles = ["Edit Profile", "Password", "youremail@gmail.com"]
     let images = ["person.crop.circle", "lock", "envelope"]
 
     override func viewDidLoad() {
@@ -42,6 +45,23 @@ class Settings: UITableViewController {  // change to tableview tonoller
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.allowsSelection = true
+        
+        getEmail()
+    }
+    
+    func getEmail() {
+        // remove last item
+        self.titles.removeLast()
+        
+        // get item and append
+        if let email = Auth.auth().currentUser?.email {
+            self.titles.append(email)
+        } else {
+            self.titles.append("Email Settings")
+        }
+        
+        // update tableview
+        self.tableView.reloadData()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -59,6 +79,7 @@ class Settings: UITableViewController {  // change to tableview tonoller
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCellID", for: indexPath) as! SettingsCell
         cell.textLabel?.text = titles[indexPath.row]
+        
         cell.profileImageView.image = UIImage(systemName: images[indexPath.row])
         return cell
     }

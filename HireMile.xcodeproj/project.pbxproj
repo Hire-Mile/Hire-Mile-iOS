@@ -12,6 +12,9 @@
 		78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD12569B7DA005E4A15 /* ChangePassword.swift */; };
 		78008CD72569B8E4005E4A15 /* Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD62569B8E4005E4A15 /* Password.swift */; };
 		780A7F622562D565009BD93A /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780A7F612562D565009BD93A /* Home.swift */; };
+		781F45E325C97555004F9C45 /* FeedbackLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781F45E225C97555004F9C45 /* FeedbackLauncher.swift */; };
+		781F45E625C975FD004F9C45 /* ProposalPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781F45E525C975FD004F9C45 /* ProposalPopup.swift */; };
+		781F45EA25CACEEB004F9C45 /* FollowersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781F45E925CACEEB004F9C45 /* FollowersController.swift */; };
 		78277F7F2576C06500B8C7BD /* MyProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78277F7E2576C06500B8C7BD /* MyProfile.swift */; };
 		78277F822576C78C00B8C7BD /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78277F812576C78C00B8C7BD /* SearchController.swift */; };
 		78295A8E2597770A00004CE7 /* ChatLogController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78295A8D2597770A00004CE7 /* ChatLogController2.swift */; };
@@ -82,6 +85,9 @@
 		78008CD12569B7DA005E4A15 /* ChangePassword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
 		78008CD62569B8E4005E4A15 /* Password.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Password.swift; sourceTree = "<group>"; };
 		780A7F612562D565009BD93A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		781F45E225C97555004F9C45 /* FeedbackLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLauncher.swift; sourceTree = "<group>"; };
+		781F45E525C975FD004F9C45 /* ProposalPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProposalPopup.swift; sourceTree = "<group>"; };
+		781F45E925CACEEB004F9C45 /* FollowersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersController.swift; sourceTree = "<group>"; };
 		78277F7E2576C06500B8C7BD /* MyProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfile.swift; sourceTree = "<group>"; };
 		78277F812576C78C00B8C7BD /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		78295A8D2597770A00004CE7 /* ChatLogController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController2.swift; sourceTree = "<group>"; };
@@ -190,6 +196,7 @@
 				788D44B4257EA25D002AF9CB /* FavoriteRemoveView.swift */,
 				78D9FFCD25BDCABE00F00EA1 /* RatingController.swift */,
 				78D5FB9925C1FF9700E3504C /* OtherRatingController.swift */,
+				781F45E925CACEEB004F9C45 /* FollowersController.swift */,
 			);
 			path = Favorites;
 			sourceTree = "<group>";
@@ -294,6 +301,8 @@
 				786A33202565931300B58265 /* CategoryPostController.swift */,
 				786A3322256596E700B58265 /* FilterLauncher.swift */,
 				78277F812576C78C00B8C7BD /* SearchController.swift */,
+				781F45E225C97555004F9C45 /* FeedbackLauncher.swift */,
+				781F45E525C975FD004F9C45 /* ProposalPopup.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -557,12 +566,14 @@
 				787B018825685BE600BBC392 /* Email.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				78008CD22569B7DA005E4A15 /* ResetPassword.swift in Sources */,
+				781F45E625C975FD004F9C45 /* ProposalPopup.swift in Sources */,
 				78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */,
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
 				788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */,
 				78BFDBFD25B471E000A1D8B5 /* UserMessageStructure.swift in Sources */,
 				78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */,
 				78295B0A25990C1C00004CE7 /* Message.swift in Sources */,
+				781F45E325C97555004F9C45 /* FeedbackLauncher.swift in Sources */,
 				78295B1A2599133C00004CE7 /* MessagesController.swift in Sources */,
 				78D6F616259A11E600D2A0CE /* ChatMessageCell.swift in Sources */,
 				784B6023256ED04C0024F4C8 /* MyReviews.swift in Sources */,
@@ -584,6 +595,7 @@
 				78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */,
 				78D5FB9725C1B04000E3504C /* RatingsController.swift in Sources */,
 				78F8F85A25A482F30021FD60 /* ReviewObject.swift in Sources */,
+				781F45EA25CACEEB004F9C45 /* FollowersController.swift in Sources */,
 				787B0181256838E400BBC392 /* Settings.swift in Sources */,
 				78AD2101257290B1004A1487 /* MyJobs.swift in Sources */,
 				788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */,
@@ -741,14 +753,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0956;
+				MARKETING_VERSION = 1.0957;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
@@ -763,14 +775,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0956;
+				MARKETING_VERSION = 1.0957;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
