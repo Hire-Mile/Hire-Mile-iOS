@@ -2,23 +2,25 @@
 //  SearchController.swift
 //  HireMile
 //
-//  Created by JJ Zapata on 12/1/20.
-//  Copyright © 2020 Jorge Zapata. All rights reserved.
+//  Created by JJ Zapata on 3/28/21.
+//  Copyright © 2021 Jorge Zapata. All rights reserved.
 //
 
 import UIKit
 import Firebase
+import Foundation
 import FirebaseAuth
 import FirebaseDatabase
 import ScrollableSegmentedControl
 
 class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    let results = ["Web Design", "Car Rental", "App Design", "IT" ]
+    let results = ["Web Design", "Car Rental", "App Design", "IT"]
     let categories = ["Auto", "Barber", "Carpentry", "Cleaning", "Moving", "Salon", "Beauty", "Technology", "Towing"]
+    var keywords = [String]()
     var users = [UserStructure]()
     var allJobs = [JobStructure]()
-    var justRes = [JobStructure]()
+    var justRes = [String]()
     var isSearching = true
     var allUsers = [UserProfileStructure]()
     var userres = [UserProfileStructure]()
@@ -125,7 +127,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         self.searchTextField.delegate = self
         self.searchTextField.becomeFirstResponder()
         
-        self.tableView.register(CategoryCell.self, forCellReuseIdentifier: "SearcListCell")
+        self.tableView.register(SearchCellKeyword.self, forCellReuseIdentifier: "SearcListCell")
         self.tableView.register(SearchProfilkeCell.self, forCellReuseIdentifier: "Saefls")
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -235,8 +237,33 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
                 self.allJobs.append(job)
             }
             self.allJobs.reverse()
-            self.tableView.reloadData()
+            self.pullData2()
         }
+    }
+    
+    func pullData2() {
+        let blockedWords = ["The", "the", "a", "A", "An", "an", "this", "This", "i", "I", "need", "Need", "must", "Must", "someone", "Someone", "somebody", "Somebody", "that", "That", "can", "Can", "he", "He", "she", "She", "", " ", "and", "And", "For", "for"]
+        
+        // append all words from post descriptions and or titles
+        for post in allJobs {
+            let title = post.titleOfPost!.lowercased()
+            let description = post.descriptionOfPost!.lowercased()
+
+            let titles = title.components(separatedBy: " ")
+            let descriptions = description.components(separatedBy: " ")
+            
+            keywords.append(contentsOf: titles)
+            keywords.append(contentsOf: descriptions)
+        }
+        
+        // remove blocked words
+        for word in blockedWords {
+            if keywords.contains(word) {
+                keywords.removeAll(where: { $0 == word})
+            }
+        }
+        
+        keywords = keywords.removingDuplicates()
     }
     
     func pullUsers() {
@@ -280,7 +307,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     @objc func textFieldChange() {
         
         if self.mode == "services" {
-            self.justRes = self.allJobs.filter({$0.titleOfPost!.lowercased().prefix(self.searchTextField.text!.lowercased().count).contains(self.searchTextField.text!.lowercased())})
+            self.justRes = self.keywords.filter({$0.lowercased().prefix(self.searchTextField.text!.lowercased().count).contains(self.searchTextField.text!.lowercased())})
         } else if self.mode == "workers" {
             print("worker filter")
             self.userres = self.allUsers.filter({$0.username!.lowercased().prefix(self.searchTextField.text!.lowercased().count).contains(self.searchTextField.text!.lowercased())})
@@ -329,7 +356,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.mode == "services" {
-            return 150
+            return 50
         } else {
             return 100
         }
@@ -338,29 +365,34 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.mode == "services" {
             if self.isSearching {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "SearcListCell", for: indexPath) as! CategoryCell
-                cell.titleImageView.loadImage(from: URL(string: self.justRes[indexPath.row].imagePost!)!)
-                cell.titleLabel.text = self.justRes[indexPath.row].titleOfPost!
-                cell.postId = self.justRes[indexPath.row].postId!
-                if self.justRes[indexPath.row].typeOfPrice == "Hourly" {
-                    cell.priceTag.text = "$\(self.justRes[indexPath.row].price!) / Hour"
-                } else {
-                    cell.priceTag.text = "$\(self.justRes[indexPath.row].price!)"
-                }
+                let cell = tableView.dequeueReusableCell(withIdentifier: "SearcListCell", for: indexPath) as! SearchCellKeyword
+//                cell.titleImageView.loadImage(from: URL(string: self.justRes[indexPath.row].imagePost!)!)
+//                cell.titleLabel.text = self.justRes[indexPath.row].titleOfPost!
+//                cell.postId = self.justRes[indexPath.row].postId!
+//                if self.justRes[indexPath.row].typeOfPrice == "Hourly" {
+//                    cell.priceTag.text = "$\(self.justRes[indexPath.row].price!) / Hour"
+//                } else {
+//                    cell.priceTag.text = "$\(self.justRes[indexPath.row].price!)"
+//                }
+                
+                cell.textLabel?.text = justRes[indexPath.row].capitalized
                 
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "SearcListCell", for: indexPath) as! CategoryCell
-                cell.backgroundColor = .white
-                cell.titleImageView.loadImage(from: URL(string: self.allJobs[indexPath.row].imagePost!)!)
-                cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
-                cell.desscription.text = self.allJobs[indexPath.row].descriptionOfPost!
-                cell.postId = self.allJobs[indexPath.row].postId!
-                if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
-                    cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
-                } else {
-                    cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!)"
-                }
+                let cell = tableView.dequeueReusableCell(withIdentifier: "SearcListCell", for: indexPath) as! SearchCellKeyword
+//                cell.backgroundColor = .white
+//                cell.titleImageView.loadImage(from: URL(string: self.allJobs[indexPath.row].imagePost!)!)
+//                cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
+//                cell.desscription.text = self.allJobs[indexPath.row].descriptionOfPost!
+//                cell.postId = self.allJobs[indexPath.row].postId!
+//                if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
+//                    cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
+//                } else {
+//                    cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!)"
+//                }
+                
+                cell.textLabel?.text = keywords[indexPath.row].capitalized
+                
                 return cell
             }
         } else {
@@ -410,13 +442,13 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         if self.mode == "services" {
             if self.isSearching {
                 self.dismiss(animated: true) {
-                    GlobalVariables.catId = self.justRes[indexPath.row]
-                    GlobalVariables.presentToCat = true
+//                    GlobalVariables.catId = self.justRes[indexPath.row]
+//                    GlobalVariables.presentToCat = true
                 }
             } else {
                 self.dismiss(animated: true) {
-                    GlobalVariables.catId = self.allJobs[indexPath.row]
-                    GlobalVariables.presentToCat = true
+//                    GlobalVariables.catId = self.allJobs[indexPath.row]
+//                    GlobalVariables.presentToCat = true
                 }
             }
         } else {
@@ -625,4 +657,18 @@ class UserProfileStructure: NSObject {
     var userimage : String?
     var email : String?
     
+}
+
+
+class SearchCellKeyword : UITableViewCell {
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
+        backgroundColor = UIColor.white
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
