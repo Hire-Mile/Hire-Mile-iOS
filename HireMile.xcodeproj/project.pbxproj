@@ -23,7 +23,6 @@
 		781F45EF25CD82D5004F9C45 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781F45EE25CD82D4004F9C45 /* Map.swift */; };
 		781FAB9B260765C600C27A6E /* MapPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781FAB9A260765C600C27A6E /* MapPage.swift */; };
 		78277F7F2576C06500B8C7BD /* MyProfile2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78277F7E2576C06500B8C7BD /* MyProfile2.swift */; };
-		78277F822576C78C00B8C7BD /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78277F812576C78C00B8C7BD /* SearchController.swift */; };
 		78295A8E2597770A00004CE7 /* ChatLogController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78295A8D2597770A00004CE7 /* ChatLogController2.swift */; };
 		78295ACD2597CBAE00004CE7 /* TabStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78295ACC2597CBAE00004CE7 /* TabStoryboard.storyboard */; };
 		78295B0725990AE000004CE7 /* UserChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78295B0625990AE000004CE7 /* UserChat.swift */; };
@@ -69,6 +68,8 @@
 		788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */; };
 		788D44FE257FDA79002AF9CB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 788D44FD257FDA79002AF9CB /* GoogleService-Info.plist */; };
 		78917537260112EB006FFF06 /* Biometrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78917536260112EB006FFF06 /* Biometrics.swift */; };
+		78A98BFE261100B800E1A8D9 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A98BFD261100B800E1A8D9 /* SearchController.swift */; };
+		78A98C022611013000E1A8D9 /* SearchController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A98C012611013000E1A8D9 /* SearchController2.swift */; };
 		78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FA25723E4D004A1487 /* AddCard.swift */; };
 		78AD20FD25724B0B004A1487 /* CashOutLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FC25724B0B004A1487 /* CashOutLauncher.swift */; };
 		78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AD20FE25724C17004A1487 /* GlobalVariables.swift */; };
@@ -111,7 +112,6 @@
 		781F45EE25CD82D4004F9C45 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		781FAB9A260765C600C27A6E /* MapPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPage.swift; sourceTree = "<group>"; };
 		78277F7E2576C06500B8C7BD /* MyProfile2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfile2.swift; sourceTree = "<group>"; };
-		78277F812576C78C00B8C7BD /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		78295A8D2597770A00004CE7 /* ChatLogController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController2.swift; sourceTree = "<group>"; };
 		78295ACC2597CBAE00004CE7 /* TabStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabStoryboard.storyboard; sourceTree = "<group>"; };
 		78295B0625990AE000004CE7 /* UserChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChat.swift; sourceTree = "<group>"; };
@@ -160,6 +160,8 @@
 		788D44B7257ECA41002AF9CB /* PasswordSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordSuccess.swift; sourceTree = "<group>"; };
 		788D44FD257FDA79002AF9CB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		78917536260112EB006FFF06 /* Biometrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biometrics.swift; sourceTree = "<group>"; };
+		78A98BFD261100B800E1A8D9 /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		78A98C012611013000E1A8D9 /* SearchController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController2.swift; sourceTree = "<group>"; };
 		78AD20FA25723E4D004A1487 /* AddCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCard.swift; sourceTree = "<group>"; };
 		78AD20FC25724B0B004A1487 /* CashOutLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashOutLauncher.swift; sourceTree = "<group>"; };
 		78AD20FE25724C17004A1487 /* GlobalVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariables.swift; sourceTree = "<group>"; };
@@ -339,7 +341,8 @@
 				78D5CA352565515E00BF59AB /* ViewPostController.swift */,
 				786A33202565931300B58265 /* CategoryPostController.swift */,
 				786A3322256596E700B58265 /* FilterLauncher.swift */,
-				78277F812576C78C00B8C7BD /* SearchController.swift */,
+				78A98BFD261100B800E1A8D9 /* SearchController.swift */,
+				78A98C012611013000E1A8D9 /* SearchController2.swift */,
 				781F45E225C97555004F9C45 /* FeedbackLauncher.swift */,
 				781F45E525C975FD004F9C45 /* ProposalPopup.swift */,
 				781F45EE25CD82D4004F9C45 /* Map.swift */,
@@ -639,6 +642,7 @@
 				78147A7925EFB2CC00828998 /* NotificationObject.swift in Sources */,
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
 				788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */,
+				78A98C022611013000E1A8D9 /* SearchController2.swift in Sources */,
 				78BFDBFD25B471E000A1D8B5 /* UserMessageStructure.swift in Sources */,
 				78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */,
 				78295B0A25990C1C00004CE7 /* Message.swift in Sources */,
@@ -655,7 +659,6 @@
 				788D44B5257EA25D002AF9CB /* FavoriteRemoveView.swift in Sources */,
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
 				7801D9BF25D296E100BB0B33 /* AllowLocation.swift in Sources */,
-				78277F822576C78C00B8C7BD /* SearchController.swift in Sources */,
 				78295A8E2597770A00004CE7 /* ChatLogController2.swift in Sources */,
 				780A7F622562D565009BD93A /* Home.swift in Sources */,
 				78D9FFC825BB148400F00EA1 /* EditPost.swift in Sources */,
@@ -676,6 +679,7 @@
 				780766BF260DBF4400962F4E /* TimePickerSwift.swift in Sources */,
 				78AD2101257290B1004A1487 /* MyJobs.swift in Sources */,
 				788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */,
+				78A98BFE261100B800E1A8D9 /* SearchController.swift in Sources */,
 				78B793C425703FBF00EFA7D1 /* Payment.swift in Sources */,
 				784646EE2562ADFC000C5F26 /* Chat.swift in Sources */,
 				784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */,
