@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import FirebaseAuth
 import FirebaseDatabase
 
 class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -27,6 +26,7 @@ class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSo
     let tableView : UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -69,6 +69,25 @@ class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSo
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
+    
+    var user : String? {
+        didSet {
+            // get the number of ratings
+            Database.database().reference().child("Users").child(user!).child("number-of-ratings").observe(.value) { (snapshot) in
+                if let value = snapshot.value as? NSNumber {
+                    let newNumber = Float(value)
+                    // and create and if statement if the user has any ratings or not.
+                    if newNumber == 0 {
+                        // show nothing on the tableview
+                        self.tableView.reloadData()
+                    } else {
+                        // if the user does have ratings, need to put them into the tableview
+                        self.searchForReviews()
+                    }
+                }
+            }
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,20 +135,6 @@ class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.descText.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: -20).isActive = true
         self.descText.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: 20).isActive = true
         self.descText.heightAnchor.constraint(equalToConstant: 75).isActive = true
-        
-        // get the number of ratings
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observe(.value) { (snapshot) in
-            let value = snapshot.value as? NSNumber
-            let newNumber = Float(value!)
-            // and create and if statement if the user has any ratings or not.
-            if newNumber == 0 {
-                // show nothing on the tableview
-                self.tableView.reloadData()
-            } else {
-                // if the user does have ratings, need to put them into the tableview
-                self.searchForReviews()
-            }
-        }
 
         // Do any additional setup after loading the view.
     }
@@ -143,13 +148,14 @@ class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func searchForReviews() {
         self.ratings.removeAll()
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshotRatings) in
+        Database.database().reference().child("Users").child(user!).child("ratings").observe(.childAdded) { (snapshotRatings) in
             if let value = snapshotRatings.value as? [String: Any] {
                 let rating = ReviewStructure()
                 rating.userUid = value["user-id"] as? String ?? "Error"
                 rating.ratingNumber = value["rating-number"] as? Int ?? 0
                 rating.postId = value["post-id"] as? String ?? "Error"
                 rating.descriptionOfRating = value["description"] as? String ?? "Error"
+                rating.timestamp = value["timestamp"] as? Int ?? 0
                 self.isRatingsNil = false
                 self.ratings.append(rating)
             }
@@ -182,64 +188,81 @@ class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
         })
         Database.database().reference().child("Users").child(self.ratings[indexPath.row].userUid!).child("name").observe(.value) { (snapshot) in
-            let name : String = (snapshot.value as? String)!
-            cell.userNameLabel.text = name
-        }
-        Database.database().reference().child("Users").child(self.ratings[indexPath.row].userUid!).child("profile-image").observe(.value) { (snapshot) in
-            let profileImageString : String = (snapshot.value as? String)!
-            if profileImageString == "not-yet-selected" {
-                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
-            } else {
-                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
+            if let name : String = (snapshot.value as? String) {
+                cell.userNameLabel.text = name
             }
         }
-        print("review")
-        print(self.ratings[indexPath.row].ratingNumber!)
-        print("review")
-        cell.reviewLabel.text = self.ratings[indexPath.row].descriptionOfRating!
-        switch Int(self.ratings[indexPath.row].ratingNumber!) {
-            case 0:
-                cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 1:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 2:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 3:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor.mainBlue
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 4:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor.mainBlue
-                cell.star4.tintColor = UIColor.mainBlue
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 5:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor.mainBlue
-                cell.star4.tintColor = UIColor.mainBlue
-                cell.star5.tintColor = UIColor.mainBlue
-            default:
-                print("different review value, star cannot be formed: \(Int(self.ratings[indexPath.row].ratingNumber!))")
+        Database.database().reference().child("Users").child(self.ratings[indexPath.row].userUid!).child("profile-image").observe(.value) { (snapshot) in
+            if let profileImageString : String = (snapshot.value as? String) {
+                if profileImageString == "not-yet-selected" {
+                    cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                }
+            }
+        }
+        
+        if let timestamp = self.ratings[indexPath.row].timestamp {
+            if timestamp == 0 {
+                cell.date.isHidden = true
+            } else {
+                let formatter = DateFormatter()
+                formatter.dateStyle = .medium
+                cell.date.text = "\(formatter.string(from: Date(timeIntervalSince1970: Double(timestamp))))"
+                cell.date.isHidden = false
+            }
+        } else {
+            cell.date.isHidden = true
+        }
+        
+        if let review = self.ratings[indexPath.row].descriptionOfRating {
+            cell.reviewLabel.text = review
+        }
+        if let rating : Int = self.ratings[indexPath.row].ratingNumber {
+            switch rating {
+                case 0:
+                    cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 1:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 2:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 3:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor.mainBlue
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 4:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor.mainBlue
+                    cell.star4.tintColor = UIColor.mainBlue
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 5:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor.mainBlue
+                    cell.star4.tintColor = UIColor.mainBlue
+                    cell.star5.tintColor = UIColor.mainBlue
+                default:
+                    print("different review value, star cannot be formed: \(Int(self.ratings[indexPath.row].ratingNumber!))")
+            }
         }
         cell.selectionStyle = .none
         return cell
@@ -257,7 +280,6 @@ class RatingController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.topItem?.title = "My Reviews"
-        self.navigationController?.navigationBar.tintColor = UIColor.mainBlue
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 247/255, green: 248/255, blue: 248/255, alpha: 1)
         self.navigationController?.navigationBar.setBackgroundImage(nil, for: .bottom, barMetrics: .default)
         self.navigationController?.navigationBar.shadowImage = nil

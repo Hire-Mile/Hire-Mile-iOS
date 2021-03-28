@@ -62,4 +62,12 @@ class GlobalVariables: NSObject {
     
     static var removedSomon = false
     
+    static var isSearching = false
+    
+    static var searchCat = ""
+    
+    static var presentToUserProfile = false
+    
+    static var userPresentationId = ""
+    
 }

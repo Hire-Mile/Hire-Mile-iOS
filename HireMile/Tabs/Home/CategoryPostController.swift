@@ -72,9 +72,11 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
         
         self.navigationController?.isNavigationBarHidden = false
         self.navigationController?.navigationBar.tintColor = UIColor.black
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(filterPressed))
-        self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationItem.backButtonTitle = ""
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(named: "whiteback"), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -93,6 +95,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath) as! CategoryCell
         cell.titleImageView.loadImage(from: URL(string: self.allJobs[indexPath.row].imagePost!)!)
         cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
+        cell.desscription.text = self.allJobs[indexPath.row].descriptionOfPost!
         cell.postId = self.allJobs[indexPath.row].postId!
         if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
             cell.priceTag.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
@@ -115,7 +118,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
+        return 150
     }
 
     @objc func filterPressed() {
@@ -140,7 +143,6 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
                     print("trending")
                     self.allJobs.append(job)
                 } else {
-                    print(self.category)
                     if job.category == self.category {
                         self.allJobs.append(job)
                     }
@@ -158,109 +160,6 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
 
     @objc func hideRefrsh() {
         self.refrshControl.endRefreshing()
-    }
-
-}
-
-class CategoryCell: UITableViewCell {
-    
-    var postId = ""
-
-    let titleImageView : CustomImageView = {
-        let imageView = CustomImageView()
-        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 20
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-
-    let infoView : UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.white
-        view.layer.cornerRadius = 15
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 30
-        view.layer.shadowOpacity = 0.2
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 15
-        return view
-    }()
-    
-    let priceTag : UILabel = {
-        let label = UILabel()
-        label.text = "Price"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
-        label.textColor = UIColor.mainBlue
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .right
-        return label
-    }()
-
-    let titleLabel : UILabel = {
-        let label = UILabel()
-        label.text = "Title"
-        label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
-        label.textColor = UIColor.black
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        return label
-    }()
-
-    let locationAndTime : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 13)
-        label.textColor = UIColor.white
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        return label
-    }()
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
-        backgroundColor = UIColor.white
-        setup()
-    }
-
-    func setup() {
-        addSubview(titleImageView)
-        titleImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-        titleImageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -30).isActive = true
-        titleImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 30).isActive = true
-        titleImageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -40).isActive = true
-
-        addSubview(infoView)
-        infoView.topAnchor.constraint(equalTo: titleImageView.bottomAnchor, constant: -20).isActive = true
-        infoView.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
-        infoView.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
-        infoView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
-
-        infoView.addSubview(titleLabel)
-        titleLabel.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 10).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -10).isActive = true
-        titleLabel.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: -10).isActive = true
-        titleLabel.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 10).isActive = true
-
-        infoView.addSubview(priceTag)
-        priceTag.topAnchor.constraint(equalTo: infoView.topAnchor, constant: 10).isActive = true
-        priceTag.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -10).isActive = true
-        priceTag.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: -10).isActive = true
-        priceTag.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 10).isActive = true
-
-        addSubview(locationAndTime)
-        locationAndTime.topAnchor.constraint(equalTo: titleImageView.topAnchor, constant: 10).isActive = true
-        locationAndTime.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        locationAndTime.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
-        locationAndTime.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
 }

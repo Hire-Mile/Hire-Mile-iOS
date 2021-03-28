@@ -14,5 +14,6 @@ class ReviewStructure: NSObject {
     var ratingNumber : Int?
     var postId : String?
     var descriptionOfRating : String?
+    var timestamp : Int?
 
 }

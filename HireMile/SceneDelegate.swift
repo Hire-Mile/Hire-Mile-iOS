@@ -20,18 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
-        
-        let onboardingBoolean = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
-        if onboardingBoolean == false {
-            let layout = UICollectionViewFlowLayout()
-            layout.scrollDirection = .horizontal
-            let swipingController = SwipingController(collectionViewLayout: layout)
-            window?.rootViewController = swipingController
-            window?.makeKeyAndVisible()
-        } else {
-            window?.rootViewController = UINavigationController(rootViewController: SignIn())
-            window?.makeKeyAndVisible()
-        }
+        window?.rootViewController = UINavigationController(rootViewController: SignIn())
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

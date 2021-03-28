@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 import Firebase
 import Kingfisher
 import FirebaseAuth
@@ -15,8 +16,14 @@ import MBProgressHUD
 import FirebaseStorage
 import FirebaseDatabase
 import MobileCoreServices
+import CoreLocation
 
-class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+protocol UserCellDelegate {
+    func didPressButton(_ tag: Int)
+}
+
+class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate, MKMapViewDelegate, UserCellDelegate {
+    
     
     var user : UserChat? {
         didSet {
@@ -25,16 +32,36 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
     }
     
+    let locationManager = CLLocationManager()
+    
+    var myLocation : CLLocationCoordinate2D?
+    
+    var isShowingExtra = false
+    
+    var enableButton : Bool?
+    
+    var imageView : UIImageView?
+    
     var messages = [Message]()
+    
     var startingFrame : CGRect?
+    
     var blackBackground : UIView?
+    
     var messageType = ""
+    
     var theMessage = ""
+    
     var jobId = ""
+    
     var fromKeyboard = false
+    
     var chatId = ""
+    
     var isShowing = false
+    
     var jobRefId = ""
+    
     var isSearchingForServiceProvider = true
     
     let cellId = "myCellId"
@@ -67,7 +94,18 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     let attachmentButton : UIButton = {
         let attachmentButton = UIButton(type: .system)
         attachmentButton.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
-        attachmentButton.setImage(UIImage(systemName: "camera"), for: .normal)
+        attachmentButton.setImage(UIImage(named: "grid-alone"), for: .normal)
+        attachmentButton.tintColor = UIColor.darkGray
+        attachmentButton.layer.cornerRadius = 20
+        attachmentButton.addTarget(self, action: #selector(didSelectGrid), for: .touchUpInside)
+        attachmentButton.translatesAutoresizingMaskIntoConstraints = false
+        return attachmentButton
+    }()
+    
+    let cameraButton : UIButton = {
+        let attachmentButton = UIButton(type: .system)
+        attachmentButton.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
+        attachmentButton.setImage(UIImage(named: "cam-alone"), for: .normal)
         attachmentButton.tintColor = UIColor.darkGray
         attachmentButton.layer.cornerRadius = 20
         attachmentButton.addTarget(self, action: #selector(didSelectImage), for: .touchUpInside)
@@ -77,13 +115,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     
     let sendButton : UIButton = {
         let sendButton = UIButton(type: .system)
-        sendButton.setTitle("SEND", for: .normal)
-        sendButton.isEnabled = false
-        sendButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        sendButton.setTitleColor(UIColor.darkGray, for: .normal)
-        sendButton.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+        sendButton.backgroundColor = UIColor(red: 247/255, green: 247/255, blue: 247/255, alpha: 1)
         sendButton.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
         sendButton.layer.cornerRadius = 20
+        sendButton.setImage(UIImage(named: "send-inactive"), for: .normal)
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         return sendButton
     }()
@@ -102,6 +137,85 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         containerView.translatesAutoresizingMaskIntoConstraints = false
         return containerView
     }()
+    
+    let optionView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let firstButton : UIButton = {
+        let view = UIButton()
+        view.addTarget(self, action: #selector(booking), for: .touchUpInside)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setImage(UIImage(named: "booking"), for: .normal)
+        return view
+    }()
+    
+    let secondButton : UIButton = {
+        let view = UIButton()
+        view.addTarget(self, action: #selector(didSelectImagePhoto), for: .touchUpInside)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setImage(UIImage(named: "photo"), for: .normal)
+        return view
+    }()
+    
+    let thirdButton : UIButton = {
+        let view = UIButton()
+        view.addTarget(self, action: #selector(location), for: .touchUpInside)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setImage(UIImage(named: "locatiom"), for: .normal)
+        return view
+    }()
+    
+    let fourthButton : UIButton = {
+        let view = UIButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addTarget(self, action: #selector(exitExtra), for: .touchUpInside)
+        view.setImage(UIImage(named: "close-circle"), for: .normal)
+        return view
+    }()
+    
+    let firstLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Booking"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+        label.textAlignment = NSTextAlignment.center
+        return label
+    }()
+    
+    let secondLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Image"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+        label.textAlignment = NSTextAlignment.center
+        return label
+    }()
+    
+    let thirdLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Location"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+        label.textAlignment = NSTextAlignment.center
+        return label
+    }()
+    
+    let fourthLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Close"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+        label.textAlignment = NSTextAlignment.center
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,6 +229,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         
         self.setupInputComponents()
         self.setupKeyboardObservers()
+        
+        self.enableButton = false
+        if enableButton == true {
+            self.sendButton.tintColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+        } else {
+            self.sendButton.tintColor = UIColor(red: 213/255, green: 213/255, blue: 213/255, alpha: 1)
+        }
     }
     
     func setupKeyboardObservers() {
@@ -138,6 +259,12 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         navigationItem.backButtonTitle = " "
         
         self.tabBarController?.tabBar.isHidden = true
+        
+        self.navigationController?.navigationBar.layer.shadowColor = UIColor.black.cgColor
+        self.navigationController?.navigationBar.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
+        self.navigationController?.navigationBar.layer.shadowRadius = 5.0
+        self.navigationController?.navigationBar.layer.shadowOpacity = 0.2
+        self.navigationController?.navigationBar.layer.masksToBounds = false
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -149,6 +276,17 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     var containerViewBottomAnchor : NSLayoutConstraint?
     
     func setupInputComponents() {
+        
+        self.collectionView.showsHorizontalScrollIndicator = false
+        self.collectionView.showsVerticalScrollIndicator = false
+        
+        view.addSubview(optionView)
+        setupOptionView()
+        optionView.heightAnchor.constraint(equalToConstant: 90).isActive = true
+        optionView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        optionView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        optionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        
         view.addSubview(containerView)
         containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         containerViewBottomAnchor = containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -162,30 +300,90 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         secondContainer.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
         secondContainer.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
         
-        containerView.addSubview(sendButton)
-        sendButton.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -10).isActive = true
-        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        sendButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        sendButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
         containerView.addSubview(attachmentButton)
-        attachmentButton.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 10).isActive = true
+        attachmentButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
         attachmentButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
         attachmentButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
         attachmentButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
+        containerView.addSubview(cameraButton)
+        cameraButton.leftAnchor.constraint(equalTo: attachmentButton.rightAnchor, constant: 16).isActive = true
+        cameraButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        cameraButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        cameraButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
         containerView.addSubview(inputTextView)
-        inputTextView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        inputTextView.leftAnchor.constraint(equalTo: attachmentButton.rightAnchor, constant: 10).isActive = true
-        inputTextView.rightAnchor.constraint(equalTo: sendButton.leftAnchor, constant: -10).isActive = true
+        inputTextView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20).isActive = true
+        inputTextView.leftAnchor.constraint(equalTo: cameraButton.rightAnchor, constant: 16).isActive = true
+        inputTextView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
         inputTextView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        containerView.addSubview(sendButton)
+        sendButton.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -5).isActive = true
+        sendButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20).isActive = true
+        sendButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        sendButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         inputTextView.addSubview(inputTextField)
         inputTextField.delegate = self
-        inputTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        inputTextField.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20).isActive = true
         inputTextField.leftAnchor.constraint(equalTo: inputTextView.leftAnchor, constant: 10).isActive = true
-        inputTextField.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -10).isActive = true
+        inputTextField.rightAnchor.constraint(equalTo: inputTextView.rightAnchor, constant: -45).isActive = true
         inputTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
+    }
+    
+    func setupOptionView() {
+        
+        let spacing : Int = Int(((self.view.frame.size.width - 60) - 160) / 3)
+        print(spacing)
+        
+        optionView.addSubview(firstButton)
+        firstButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        firstButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        firstButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30).isActive = true
+        firstButton.centerYAnchor.constraint(equalTo: optionView.centerYAnchor, constant: -10).isActive = true
+        
+        optionView.addSubview(fourthButton)
+        fourthButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        fourthButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        fourthButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30).isActive = true
+        fourthButton.centerYAnchor.constraint(equalTo: optionView.centerYAnchor, constant: -10).isActive = true
+        
+        optionView.addSubview(secondButton)
+        secondButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        secondButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        secondButton.leftAnchor.constraint(equalTo: firstButton.rightAnchor, constant: CGFloat(spacing)).isActive = true
+        secondButton.centerYAnchor.constraint(equalTo: optionView.centerYAnchor, constant: -10).isActive = true
+        
+        optionView.addSubview(thirdButton)
+        thirdButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        thirdButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        thirdButton.leftAnchor.constraint(equalTo: secondButton.rightAnchor, constant: CGFloat(spacing)).isActive = true
+        thirdButton.centerYAnchor.constraint(equalTo: optionView.centerYAnchor, constant: -10).isActive = true
+        
+        optionView.addSubview(firstLabel)
+        firstLabel.topAnchor.constraint(equalTo: firstButton.bottomAnchor, constant: 8).isActive = true
+        firstLabel.leftAnchor.constraint(equalTo: firstButton.leftAnchor, constant: -15).isActive = true
+        firstLabel.rightAnchor.constraint(equalTo: firstButton.rightAnchor, constant: 15).isActive = true
+        firstLabel.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        
+        optionView.addSubview(secondLabel)
+        secondLabel.topAnchor.constraint(equalTo: secondButton.bottomAnchor, constant: 8).isActive = true
+        secondLabel.leftAnchor.constraint(equalTo: secondButton.leftAnchor, constant: -15).isActive = true
+        secondLabel.rightAnchor.constraint(equalTo: secondButton.rightAnchor, constant: 15).isActive = true
+        secondLabel.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        
+        optionView.addSubview(thirdLabel)
+        thirdLabel.topAnchor.constraint(equalTo: thirdButton.bottomAnchor, constant: 8).isActive = true
+        thirdLabel.leftAnchor.constraint(equalTo: thirdButton.leftAnchor, constant: -15).isActive = true
+        thirdLabel.rightAnchor.constraint(equalTo: thirdButton.rightAnchor, constant: 15).isActive = true
+        thirdLabel.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        
+        optionView.addSubview(fourthLabel)
+        fourthLabel.topAnchor.constraint(equalTo: fourthButton.bottomAnchor, constant: 8).isActive = true
+        fourthLabel.leftAnchor.constraint(equalTo: fourthButton.leftAnchor, constant: -15).isActive = true
+        fourthLabel.rightAnchor.constraint(equalTo: fourthButton.rightAnchor, constant: 15).isActive = true
+        fourthLabel.heightAnchor.constraint(equalToConstant: 15).isActive = true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -206,6 +404,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         
         cell.chatLogController = self
         
+        cell.index = indexPath
+        
         let message = messages[indexPath.row]
         cell.textView.text = message.text
         setupCell(cell: cell, message: message)
@@ -220,10 +420,13 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         
         cell.messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
         
+        cell.delegate = self
+        
         return cell
     }
     
     private func setupCell(cell: ChatMessageCell, message: Message) {
+        
         if let profileImageUrl = self.user?.profileImageUrl {
             cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
         } else {
@@ -258,7 +461,6 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         
         if message.fromId == Auth.auth().currentUser?.uid {
             // current user
-            print("cannot show")
             cell.leftAnchorRec?.isActive = false
             cell.rightAnchorMe?.isActive = true
             cell.timeSent.textAlignment = NSTextAlignment.right
@@ -289,6 +491,27 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         } else {
             cell.messageImageView.isHidden = true
         }
+        
+        // location setup
+        if let location = message.isLocation {
+            if location {
+                cell.mapView.isHidden = false
+                cell.mapButton.isHidden = false
+                if let long = message.long, let lat = message.lat {
+                    let annotation = MKPointAnnotation()
+                    annotation.title = "Location"
+                    let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                    annotation.coordinate = coordinate
+                    let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
+                    cell.mapView.setRegion(region, animated: false)
+                    cell.mapView.addAnnotation(annotation)
+                }
+                cell.bubbleWidthAnchor?.constant = 200
+            } else {
+                cell.mapView.isHidden = true
+                cell.mapButton.isHidden = true
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -299,6 +522,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             height = estimateFrameForText(text: text).height + 15
         } else if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue {
             height = CGFloat(imageHeight / imageWidth * 200)
+        } else if let location = message.isLocation {
+            if location {
+                height = 150
+            }
         }
         
         let width = UIScreen.main.bounds.width
@@ -352,8 +579,8 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                             btnProfile.setTitle("FINISH", for: .normal)
                             btnProfile.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
                             btnProfile.addTarget(self, action: #selector(self.requestButtonPressed), for: .touchUpInside)
-                            btnProfile.setTitleColor(UIColor.black, for: .normal)
-                            btnProfile.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+                            btnProfile.setTitleColor(UIColor.white, for: .normal)
+                            btnProfile.backgroundColor = UIColor.mainBlue
                             btnProfile.layer.cornerRadius = 10
                             btnProfile.layer.masksToBounds = true
                             self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: btnProfile)]
@@ -413,22 +640,88 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func didSelectImage() {
-        let alert = UIAlertController(title: "Choose Your Source", message: "From where do you want to choose your photo?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
-            self.imagePicker.sourceType = .photoLibrary
-            self.imagePicker.allowsEditing = false
-            self.imagePicker.delegate = self
-            self.imagePicker.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
-            self.imagePicker.sourceType = .camera
-            self.imagePicker.allowsEditing = false
-            self.imagePicker.delegate = self
-            self.present(self.imagePicker, animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        self.imagePicker.sourceType = .camera
+        self.imagePicker.allowsEditing = false
+        self.imagePicker.delegate = self
+        self.present(self.imagePicker, animated: true, completion: nil)
+    }
+    
+    @objc func didSelectImagePhoto() {
+        self.imagePicker.sourceType = .photoLibrary
+        self.imagePicker.allowsEditing = false
+        self.imagePicker.delegate = self
+        self.present(self.imagePicker, animated: true, completion: nil)
+    }
+    
+    @objc func booking() {
+        let key = false
+        if key == true {
+            let booking = Booking()
+            self.navigationController?.pushViewController(booking, animated: true)
+        } else {
+            let alert = UIAlertController(title: "Feature Unavailable", message: "This feature is coming soon! Stay tuned!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func location() {
+        checkLocationServices()
+         
+         MBProgressHUD.showAdded(to: view, animated: true)
+         if let location = self.locationManager.location?.coordinate {
+             let properties = [
+                 "isLocation" : true,
+                 "long-cord" : location.longitude,
+                 "lat-cord" : location.latitude
+             ] as [String : Any]
+             sendMessageWithProperties(properties)
+             MBProgressHUD.hide(for: self.view, animated: true)
+         } else {
+             MBProgressHUD.hide(for: self.view, animated: true)
+             let alert = UIAlertController(title: "Error", message: "Please make sure all locaation settings are allowed", preferredStyle: .alert)
+             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+             present(alert, animated: true, completion: nil)
+         }
+    }
+    
+    @objc func checkLocationServices() {
+        if CLLocationManager.locationServicesEnabled() {
+            setupLocationManager()
+            checkLocationAuthorization()
+        } else {
+            print("TURN ON")
+        }
+    }
+    
+    func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    func checkLocationAuthorization() {
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+            break
+        case .denied:
+            // Show alert instructing them how to turn on permissions
+            let alert = UIAlertController(title: "Cannot find location", message: "Please go to Settings and allow location to view this screen!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            break
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted:
+            // Show an alert letting them know what's up
+            let alert = UIAlertController(title: "Cannot find location", message: "Your location is marked as 'restricted'", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            break
+        case .authorizedAlways:
+            locationManager.startUpdatingLocation()
+            break
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -468,7 +761,6 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         do {
             let thumbnailCGImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60), actualTime: nil)
             return UIImage(cgImage: thumbnailCGImage)
-            
         } catch let err {
             print(err)
         }
@@ -523,8 +815,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     @objc func handleSend() {
-        let properties = ["text": inputTextField.text!] as [String : Any]
-        sendMessageWithProperties(properties)
+        if inputTextField.text != nil && inputTextField.text != "" {
+            let properties = ["text": inputTextField.text!] as [String : Any]
+            sendMessageWithProperties(properties)
+        }
     }
     
     @objc func handleKeyboardDidShow() {
@@ -571,7 +865,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                 let sender = PushNotificationSender()
                 Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
                     let name : String = (snapshot.value as? String)!
-                    sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)")
+                    sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)", page: false, senderId: Auth.auth().currentUser!.uid, recipient: toId!)
                     self.checkNilValueTextField()
                 }
             }
@@ -581,18 +875,35 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     }
     
     func performZoomInForStartingImageView(startingImageView: UIImageView) {
+        
         startingFrame = startingImageView.superview?.convert((startingImageView.frame), to: nil)
         let zoomingImageView = UIImageView(frame: startingFrame!)
         zoomingImageView.image = startingImageView.image
         zoomingImageView.isUserInteractionEnabled = true
         zoomingImageView.layer.cornerRadius = 16
         zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
+        
+        let exitButton = UIButton(type: .system)
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        exitButton.backgroundColor = .clear
+        exitButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        exitButton.tintColor = UIColor.white
+        self.imageView = zoomingImageView
+        exitButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOutButton)))
+        
         if let keyWindow = UIApplication.shared.keyWindow {
             blackBackground = UIView(frame: keyWindow.frame)
             self.blackBackground?.backgroundColor = .black
             self.blackBackground?.alpha = 0
             keyWindow.addSubview(blackBackground!)
             keyWindow.addSubview(zoomingImageView)
+            
+            blackBackground?.addSubview(exitButton)
+            exitButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+            exitButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
+            exitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            exitButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            
             UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
                 let height = self.startingFrame!.height / self.startingFrame!.width * keyWindow.frame.width
                 zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
@@ -611,6 +922,14 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             } completion: { (completed) in
                 zoomOutImageView.removeFromSuperview()
             }
+        }
+    }
+    
+    @objc func handleZoomOutButton() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+            self.blackBackground?.alpha = 0
+            self.imageView?.alpha = 0
+        } completion: { (completed) in
         }
     }
     
@@ -857,6 +1176,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
     }
     
+    @objc func handleMapTap() {
+        print("hrye")
+    }
+    
     var bottomConstraint : NSLayoutConstraint?
     
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -957,16 +1280,25 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         Database.database().reference().child("Messages").child(chatId).child("first-time").setValue(false)
         // add to running
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs")
+        let timestamp = Int(Date().timeIntervalSince1970)
         let infoToAdd : Dictionary<String, Any> = [
             "author-uid" : "\(user!.id!)",
             "is-rating-nil" : true,
             "job-key" : "\(self.jobId)",
             "job-status" : "running",
             "rating" : 0,
-            "reason-or-description" : "NULL"
+            "reason-or-description" : "NULL",
+            "running-time" : timestamp
         ]
         let postFeed = ["\(self.jobRefId)" : infoToAdd]
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("My_Jobs").updateChildValues(postFeed)
+        
+        Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
+            if let token : String = (snapshot.value as? String) {
+                let sender = PushNotificationSender()
+                sender.sendPushNotification(to: token, title: "Service Accepted", body: "A recent job job proposal of yours has been accepted. Check your chats!", page: true, senderId: Auth.auth().currentUser!.uid, recipient: GlobalVariables.chatPartnerId)
+            }
+        }
     }
     
     @objc func doneButtonPressed() {
@@ -985,7 +1317,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                         Database.database().reference().child("Users").child(chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
                             if let token : String = (snapshot.value as? String) {
                                 let sender = PushNotificationSender()
-                                sender.sendPushNotification(to: token, title: "Service Declined", body: "\(self.jobTitle.text!) was declined: \(self.tf.text!)")
+                                sender.sendPushNotification(to: token, title: "Service Declined", body: "\(self.jobTitle.text!) was declined: \(self.tf.text!)", page: true, senderId: Auth.auth().currentUser!.uid, recipient: chatPartnerId)
                                 GlobalVariables.isDeleting = true
                                 GlobalVariables.indexToDelete = GlobalVariables.indexToDelete
                                 self.navigationController?.popViewController(animated: true)
@@ -1031,7 +1363,9 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
                 if let token : String = (snapshot.value as? String) {
                     let sender = PushNotificationSender()
                     Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("cancelled")
-                    sender.sendPushNotification(to: token, title: "\(name) cancelled your service!", body: "Open 'My Jobs' to find more")
+                    let timestamp = Int(Date().timeIntervalSince1970)
+                    Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("cancel-stamp").setValue(timestamp)
+                    sender.sendPushNotification(to: token, title: "\(name) cancelled your service!", body: "Open 'My Jobs' to find more", page: true, senderId: Auth.auth().currentUser!.uid, recipient: GlobalVariables.chatPartnerId)
                     self.nextAction()
                 } else {
                     self.nextAction()
@@ -1045,25 +1379,77 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
         let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
         UIApplication.shared.keyWindow?.rootViewController = vc
-        // my jobs..?
     }
     
     fileprivate func checkNilValueTextField() {
         if self.inputTextField.text == nil || self.inputTextField.text == "" {
-            self.sendButton.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
-            self.sendButton.setTitleColor(UIColor.darkGray, for: .normal)
-            self.sendButton.isEnabled = false
+            self.enableButton = false
+            if enableButton == true {
+                self.sendButton.tintColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+            } else {
+                self.sendButton.tintColor = UIColor(red: 213/255, green: 213/255, blue: 213/255, alpha: 1)
+            }
         } else {
-            self.sendButton.backgroundColor = UIColor.mainBlue
-            self.sendButton.setTitleColor(UIColor.white, for: .normal)
-            self.sendButton.isEnabled = true
+            self.enableButton = true
+            if enableButton == true {
+                self.sendButton.tintColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+            } else {
+                self.sendButton.tintColor = UIColor(red: 213/255, green: 213/255, blue: 213/255, alpha: 1)
+            }
         }
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-        // check for empty
-        print("editing")
         checkNilValueTextField()
+    }
+    
+    @objc func didSelectGrid() {
+        self.inputTextField.resignFirstResponder()
+        isShowing.toggle()
+        setupOpenArea()
+    }
+    
+    func setupOpenArea() {
+        if isShowing == true {
+            UIView.animate(withDuration: 0.2) {
+                self.containerView.alpha = 0
+            }
+        } else {
+            UIView.animate(withDuration: 0.2) {
+                self.containerView.alpha = 1
+            }
+        }
+    }
+    
+    @objc func exitExtra() {
+        UIView.animate(withDuration: 0.2) {
+            self.containerView.alpha = 1
+        }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let message = messages[indexPath.row]
+        if let location = message.isLocation {
+            if location {
+                inputTextField.resignFirstResponder()
+                let mapPage = MapPage()
+                mapPage.location = CLLocationCoordinate2D(latitude: message.lat!, longitude: message.long!)
+                navigationController?.pushViewController(mapPage, animated: true)
+            }
+        }
+    }
+    
+    func didPressButton(_ tag: Int) {
+        print("selected location with index: \(tag)")
+        let message = messages[tag]
+        if let location = message.isLocation {
+            if location {
+                inputTextField.resignFirstResponder()
+                let mapPage = MapPage()
+                mapPage.location = CLLocationCoordinate2D(latitude: message.lat!, longitude: message.long!)
+                navigationController?.pushViewController(mapPage, animated: true)
+            }
+        }
     }
 
 }

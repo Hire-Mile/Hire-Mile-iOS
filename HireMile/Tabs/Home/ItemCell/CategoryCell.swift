@@ -64,3 +64,57 @@ class HomeCategoryCell: UICollectionViewCell {
     }
     
 }
+
+
+class PostCategoryCell: UICollectionViewCell {
+    
+    let title : UILabel = {
+        let label = UILabel()
+        label.text = "Hi"
+        label.textColor = UIColor.black
+        label.numberOfLines = 2
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        return label
+    }()
+    
+    let circleView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let imageView : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.backgroundColor = .white
+        
+        self.addSubview(title)
+        self.title.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        self.title.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+        self.title.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+        self.title.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.addSubview(circleView)
+        self.circleView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        self.circleView.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -10).isActive = true
+        self.circleView.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        self.circleView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        
+        self.circleView.addSubview(imageView)
+        self.imageView.centerXAnchor.constraint(equalTo: self.circleView.centerXAnchor).isActive = true
+        self.imageView.centerYAnchor.constraint(equalTo: self.circleView.centerYAnchor).isActive = true
+        self.imageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        self.imageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+    }
+    
+}

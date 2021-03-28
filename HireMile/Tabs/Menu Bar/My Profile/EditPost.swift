@@ -23,6 +23,18 @@ class EditPost: UIViewController, UITextFieldDelegate {
     let filterLauncher = EditPostLauncher()
     let pickeringView = UIPickerView()
     let pickerData = ["Development / Design", "Repairs / Cleaning", "Teaching / Tutoring", "Writing", "Sales & Marketing", "SEO", "Public Relations", "Translation", "Other"]
+    
+    let backButton : UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+        button.imageView?.tintColor = UIColor.black
+        button.tintColor = UIColor.black
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 12
+        button.backgroundColor = UIColor.white
+        button.addTarget(self, action: #selector(exitTapped), for: .touchUpInside)
+        return button
+    }()
 
     let backgroundImage : UIImageView = {
         let imageView = UIImageView()
@@ -179,6 +191,12 @@ class EditPost: UIViewController, UITextFieldDelegate {
         self.backgroundImage.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         self.backgroundImage.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         self.backgroundImage.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        
+        self.view.addSubview(backButton)
+        self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        self.backButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 15).isActive = true
+        self.backButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.backButton.widthAnchor.constraint(equalToConstant: 40).isActive = true
 
         self.view.addSubview(self.titleYourListing)
         self.titleYourListing.delegate = self
@@ -272,7 +290,7 @@ class EditPost: UIViewController, UITextFieldDelegate {
     @objc func exitTapped() {
         let alert = UIAlertController(title: "Are you sure you want to cancel?", message: "Your current post will not be saved", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
-            self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
         }))
         alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)

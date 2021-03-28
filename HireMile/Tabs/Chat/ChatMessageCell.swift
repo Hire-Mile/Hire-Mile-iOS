@@ -7,10 +7,15 @@
 //
 
 import UIKit
+import MapKit
 
 class ChatMessageCell: UICollectionViewCell {
     
     var chatLogController : ChatLogController2?
+    
+    var delegate: UserCellDelegate?
+    
+    var index : IndexPath?
     
     let textView: UITextView = {
         let tv = UITextView()
@@ -63,6 +68,26 @@ class ChatMessageCell: UICollectionViewCell {
         return imageView
     }()
     
+    lazy var mapView: MKMapView = {
+        let imageView = MKMapView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 16
+        imageView.layer.masksToBounds = true
+        imageView.isUserInteractionEnabled = true
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    var mapButton: UIButton = {
+        let imageView = UIButton()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 16
+        imageView.clipsToBounds = true
+        imageView.layer.masksToBounds = true
+        imageView.isUserInteractionEnabled = true
+        return imageView
+    }()
+    
     let timeSent : UILabel = {
         let label = UILabel()
         label.textAlignment = NSTextAlignment.center
@@ -94,14 +119,26 @@ class ChatMessageCell: UICollectionViewCell {
         messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
         messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
         
+        bubbleView.addSubview(mapView)
+        mapView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        mapView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        mapView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
+        mapView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
+        
+        contentView.addSubview(mapButton)
+        mapButton.addTarget(self, action: #selector(mapButtonAction), for: .touchUpInside)
+        mapButton.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        mapButton.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        mapButton.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
+        mapButton.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
+        
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
         profileImageView.bottomAnchor.constraint(equalTo: self.bubbleView.bottomAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
         
         myProfileImageView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8).isActive = true
-        myProfileImageView.bottomAnchor.constraint(equalTo: self.bubbleView.bottomAnchor
-        ).isActive = true
+        myProfileImageView.bottomAnchor.constraint(equalTo: self.bubbleView.bottomAnchor).isActive = true
         myProfileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
         myProfileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
         
@@ -128,6 +165,10 @@ class ChatMessageCell: UICollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func mapButtonAction() {
+        delegate?.didPressButton(index!.row)
     }
     
 }

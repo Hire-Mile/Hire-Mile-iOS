@@ -60,8 +60,8 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         segmentedControl.backgroundColor = UIColor.white
         segmentedControl.tintColor = UIColor.mainBlue
         segmentedControl.underlineSelected = true
-        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor(red: 130/255, green: 130/255, blue: 130/255, alpha: 1)], for: .normal)
-        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
+        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 19), NSAttributedString.Key.foregroundColor: UIColor(red: 130/255, green: 130/255, blue: 130/255, alpha: 1)], for: .normal)
+        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 19), NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
         segmentedControl.selectedSegmentContentColor = .blue
         segmentedControl.segmentContentColor = .purple
@@ -90,7 +90,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let bubbleImage : UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(systemName: "ellipses.bubble.fill")
+        image.image = UIImage(named: "not-message")
         image.contentMode = .scaleAspectFit
         image.tintColor = UIColor.mainBlue
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -119,6 +119,9 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.tableView.showsHorizontalScrollIndicator = false
+        self.tableView.showsVerticalScrollIndicator = false
+        
         self.mainText.text = "You have no messages"
         self.descText.text = "When people contact you about your items on HireMile, you'll see them here!"
         
@@ -127,7 +130,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.view.addSubview(segmentedControl)
         self.segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25).isActive = true
         self.segmentedControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.segmentedControl.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        self.segmentedControl.widthAnchor.constraint(equalToConstant: 240).isActive = true
         self.segmentedControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         self.view.addSubview(tableView)
@@ -178,6 +181,8 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.register(MessagesCellCell.self, forCellReuseIdentifier: "myMessagesCellID")
         
         observeMessages()
+        
+        observeNotificaations()
 
         // Do any additional setup after loading the view.
     }
@@ -202,6 +207,26 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var messages = [Message]()
     var messagesDictionary = [String : Message]()
+    
+    var notifications = [NotificationObject]()
+    
+    func observeNotificaations() {
+        self.notifications.removeAll()
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("Notifcations").observe(.childAdded) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let notification = NotificationObject()
+                notification.title = value["title"] as? String ?? "Error"
+                notification.body = value["description"] as? String ?? "Error"
+                notification.senderId = value["author"] as? String ?? "Error"
+                notification.image = value["image"] as? String ?? "Error"
+                notification.postId = value["postId"] as? String ?? "Error"
+                notification.date = value["timestamp"] as? Int ?? 0
+                self.notifications.append(notification)
+            }
+            self.notifications.reverse()
+            self.tableView.reloadData()
+        }
+    }
     
     func observeMessages() {
         self.messages.removeAll()
@@ -261,17 +286,22 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if segmentedControl.selectedSegmentIndex == 0 {
             if self.messages.count == 0 {
-                print("empty")
                 self.emptyView.alpha = 1
                 self.tableView.alpha = 0
             } else {
-                print("not empty")
                 self.emptyView.alpha = 0
                 self.tableView.alpha = 1
             }
             return self.messages.count
         } else if segmentedControl.selectedSegmentIndex == 1 {
-            return 0
+            if self.notifications.count == 0 {
+                self.emptyView.alpha = 1
+                self.tableView.alpha = 0
+            } else {
+                self.emptyView.alpha = 0
+                self.tableView.alpha = 1
+            }
+            return self.notifications.count
         } else {
             return 0
         }
@@ -305,19 +335,47 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 }
             }
             
+            cell.profileButton.addTarget(self, action: #selector(mapsHit), for: .touchUpInside)
+            cell.profileButton.tag = indexPath.row
+            
             return cell
         } else if segmentedControl.selectedSegmentIndex == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myNotificationsCellID", for: indexPath) as! NotificationCell
-            cell.profileImageView.image = UIImage(named: "ProfileIcon")
-            cell.textLabel?.text = titles[indexPath.row]
+            if let title = self.notifications[indexPath.row].title {
+                cell.textLabel?.text = title
+            }
+            if let body = self.notifications[indexPath.row].body {
+                cell.detailTextLabel?.text = body
+            }
+            if let timestamp = self.notifications[indexPath.row].date {
+                let formatter = DateFormatter()
+                formatter.dateStyle = .medium
+                cell.timeStamp.text = "\(formatter.string(from: Date(timeIntervalSince1970: Double(timestamp))))"
+            }
+            if let image = self.notifications[indexPath.row].senderId {
+                Database.database().reference().child("Users").child(image).child("profile-image").observe(.value) { (snapshot) in
+                    if let imageurl = snapshot.value as? String {
+                        cell.profileImageView.loadImageUsingCacheWithUrlString(imageurl)
+                    }
+                }
+            }
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
             cell.detailTextLabel?.isHidden = false
             cell.detailTextLabel?.textColor = UIColor.darkGray
-            cell.detailTextLabel?.text = descriptions[indexPath.row]
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "myJobsCellID", for: indexPath) as! MyJobsRunningCell
             return cell
+        }
+    }
+    
+    @objc func mapsHit(sender: UIButton) {
+        let index = sender.tag
+        Database.database().reference().child("Users").child(self.messages[index].chatPartnerId()!).observe(.value) { (snapshot) in
+            let profileUID : String = (snapshot.key as? String)!
+            print(profileUID)
+            GlobalVariables.userUID = profileUID
+            self.navigationController?.pushViewController(OtherProfile(), animated: true)
         }
     }
     
@@ -352,6 +410,10 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }
             
         } else if segmentedControl.selectedSegmentIndex == 1 {
+            if let user = self.notifications[indexPath.row].senderId {
+                GlobalVariables.userUID = user
+                self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            }
         } else {
             //
         }
@@ -362,21 +424,35 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        let message = self.messages[indexPath.row]
-        if let chatPartnerId = message.chatPartnerId() {
-            Database.database().reference().child("User-Messages").child(uid).child(chatPartnerId).removeValue { (error, ref) in
-                if error != nil {
-                    print("error deleting message: \(error!.localizedDescription)")
-                } else {
-                    print("success")
-                }
-                self.messages.remove(at: indexPath.row)
-                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        if self.segmentedControl.selectedSegmentIndex == 0 {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
             }
+            let message = self.messages[indexPath.row]
+            if let chatPartnerId = message.chatPartnerId() {
+                Database.database().reference().child("User-Messages").child(uid).child(chatPartnerId).removeValue { (error, ref) in
+                    Database.database().reference().child("User-Messages").child(chatPartnerId).child(uid).removeValue { (error, ref) in
+                        if error != nil {
+                            print("error deleting message: \(error!.localizedDescription)")
+                        } else {
+                            print("success")
+                            self.messages.remove(at: indexPath.row)
+                            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                        }
+                    }
+                }
+            }
+        } else {
+            print(self.notifications[indexPath.row].postId!)
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("Notifcations").child(self.notifications[indexPath.row].postId!).removeValue { (error, ref) in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+            }
+            self.notifications.remove(at: indexPath.row)
+            self.viewDidLoad()
         }
+        
     }
     
     @objc func supposedToDelete() {
@@ -420,7 +496,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         if sender.selectedSegmentIndex == 0 {
             self.mainText.text = "You have no messages"
             self.descText.text = "When people contact you about your items on HireMile, you'll see them here!"
-            self.bubbleImage.image = UIImage(systemName: "ellipses.bubble.fill")
+            self.bubbleImage.image = UIImage(named: "not-message")
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
                 self.tableView.alpha = 1
             } completion: { (complete) in
@@ -432,7 +508,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         } else {
             self.mainText.text = "You have no notifications"
             self.descText.text = "When HireMile sends info about activity or opportunities, you can find them here!"
-            self.bubbleImage.image = UIImage(systemName: "bell.fill")
+            self.bubbleImage.image = UIImage(named: "not-notification")
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
                 self.tableView.alpha = 0
             } completion: { (complete) in
@@ -451,8 +527,14 @@ class NotificationCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
-        detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y - 2, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
+        textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.size.width, height: textLabel!.frame.height)
+        detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y + 2, width: ((self.frame.width - 75) - 30), height: detailTextLabel!.frame.height)
+        selectionStyle = .none
+        
+        self.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        self.detailTextLabel?.isHidden = false
+        self.detailTextLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
+        self.detailTextLabel?.textColor = UIColor.darkGray
     }
     
     let profileImageView: UIImageView = {
@@ -464,6 +546,15 @@ class NotificationCell: UITableViewCell {
         return imageView
     }()
     
+    let timeStamp : UILabel = {
+        let label = UILabel()
+        label.textAlignment = NSTextAlignment.right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 10)
+        label.textColor = UIColor.darkGray
+        return label
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
@@ -472,6 +563,14 @@ class NotificationCell: UITableViewCell {
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        addSubview(timeStamp)
+        timeStamp.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
+        timeStamp.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -5).isActive = true
+        timeStamp.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        timeStamp.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        
+//        textLabel?.rightAnchor.constraint(equalTo: timeStamp.leftAnchor).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -524,6 +623,13 @@ class MessagesCellCell: UITableViewCell {
             }
         }
     }
+    
+    let profileButton : UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.clear
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
@@ -578,6 +684,7 @@ class MessagesCellCell: UITableViewCell {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         addSubview(profileImageView)
+        contentView.addSubview(profileButton)
         
         //ios 9 constraint anchors
         //need x,y,width,height anchors
@@ -585,6 +692,11 @@ class MessagesCellCell: UITableViewCell {
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        profileButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        profileButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        profileButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         hasSeenView.addSubview(numberLabel)
         numberLabel.topAnchor.constraint(equalTo: hasSeenView.topAnchor).isActive = true
@@ -629,4 +741,12 @@ class MessagesCellCell: UITableViewCell {
         NSLayoutConstraint.deactivate(self.isUnreadConstraints)
         NSLayoutConstraint.activate(self.isReadConstraints)
     }
+    
+    func mapsHit(sender: UIButton){
+            let indexPathOfThisCell = sender.tag
+            print("This button is at \(indexPathOfThisCell) row")
+            // get indexPath.row from cell
+            // do something with it
+
+        }
 }

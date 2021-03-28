@@ -113,7 +113,8 @@ class ChangePassword: UIViewController, UITextFieldDelegate {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         title = "Change Password"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.isNavigationBarHidden = false
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         
 
         self.currentPassword.delegate = self

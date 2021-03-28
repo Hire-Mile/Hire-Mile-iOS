@@ -22,5 +22,9 @@ target 'HireMile' do
   pod 'STPopup'
   pod 'Kingfisher'
   pod 'ScrollableSegmentedControl'
+  pod 'Firebase/Crashlytics'
+  pod 'PhoneNumberKit'
+  pod 'FSCalendar'
+  pod 'DatePickerDialog'
 
 end

@@ -44,7 +44,7 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let bubbleImage : UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(systemName: "star.fill")
+        image.image = UIImage(named: "no-review")
         image.contentMode = .scaleAspectFit
         image.tintColor = UIColor.mainBlue
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -84,6 +84,9 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.tableView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
         self.tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         
+        self.tableView.showsHorizontalScrollIndicator = false
+        self.tableView.showsVerticalScrollIndicator = false
+        
         self.view.addSubview(self.emptyView)
         self.emptyView.alpha = 0
         self.emptyView.topAnchor.constraint(equalTo: self.tableView.topAnchor).isActive = true
@@ -117,15 +120,16 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         // get the number of ratings
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observe(.value) { (snapshot) in
-            let value = snapshot.value as? NSNumber
-            let newNumber = Float(value!)
-            // and create and if statement if the user has any ratings or not.
-            if newNumber == 0 {
-                // show nothing on the tableview
-                self.tableView.reloadData()
-            } else {
-                // if the user does have ratings, need to put them into the tableview
-                self.searchForReviews()
+            if let value = snapshot.value as? NSNumber {
+                let newNumber = Float(value)
+                // and create and if statement if the user has any ratings or not.
+                if newNumber == 0 {
+                    // show nothing on the tableview
+                    self.tableView.reloadData()
+                } else {
+                    // if the user does have ratings, need to put them into the tableview
+                    self.searchForReviews()
+                }
             }
         }
     
@@ -141,6 +145,7 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 rating.ratingNumber = value["rating-number"] as? Int ?? 0
                 rating.postId = value["post-id"] as? String ?? "Error"
                 rating.descriptionOfRating = value["description"] as? String ?? "Error"
+                rating.timestamp = value["timestamp"] as? Int ?? 0
                 self.isRatingsNil = false
                 self.ratings.append(rating)
             }
@@ -166,6 +171,9 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
         self.navigationController?.navigationBar.shadowImage = nil
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
+        self.navigationItem.backButtonTitle = ""
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(named: "whiteback"), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
  
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -187,78 +195,150 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
             return self.ratings.count
         }
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("image").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let imageUrl : String = (snapshot.value as? String) {
+                GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(imageUrl)
+                GlobalVariables.postImageDownlodUrl = imageUrl
+                Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("title").observe(.value) { (titoe) in
+                    if let titleOf : String = (titoe.value as? String) {
+                        GlobalVariables.postTitle = titleOf
+                        Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("description").observe(.value) { (dsce) in
+                            if let descriptionOf : String = (dsce.value as? String) {
+                                GlobalVariables.postDescription = descriptionOf
+                                Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("price").observe(.value) { (prices) in
+                                    if let priceOf : Int = (prices.value as? Int) {
+                                        GlobalVariables.postPrice = priceOf
+                                        GlobalVariables.userUID = self.ratings[indexPath.row].userUid!
+                                        GlobalVariables.authorId = self.ratings[indexPath.row].userUid!
+                                        GlobalVariables.postId = self.ratings[indexPath.row].postId!
+                                        GlobalVariables.type = "total"
+                                        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+                                    }else {
+                                        print("price")
+                                    }
+                                }
+                            }else {
+                                print("unknown description")
+                            }
+                        }
+                    } else {
+                        print("unknown title")
+                    }
+                }
+            } else {
+                print("unknown image")
+            }
+        })
+    }
  
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reviewsCellID", for: indexPath) as! MyReviewsCell
-        Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("image").observeSingleEvent(of: .value, with: { (snapshot) in
-            if let imageUrl : String = (snapshot.value as? String) {
-                cell.postImageView.loadImageUsingCacheWithUrlString(imageUrl)
-            } else {
-                print("not able to find")
+        if let postId = self.ratings[indexPath.row].postId {
+            Database.database().reference().child("Jobs").child(postId).child("image").observeSingleEvent(of: .value, with: { (snapshot) in
+                if let imageUrl : String = (snapshot.value as? String) {
+                    cell.postImageView.loadImageUsingCacheWithUrlString(imageUrl)
+                } else {
+                    print("not able to find")
+                }
+            })
+        }
+        if let userId = self.ratings[indexPath.row].userUid {
+            Database.database().reference().child("Users").child(userId).child("name").observe(.value) { (snapshot) in
+                if let name : String = (snapshot.value as? String) {
+                    cell.userNameLabel.text = name
+                }
             }
-        })
-        Database.database().reference().child("Users").child(self.ratings[indexPath.row].userUid!).child("name").observe(.value) { (snapshot) in
-            let name : String = (snapshot.value as? String)!
-            cell.userNameLabel.text = name
-        }
-        Database.database().reference().child("Users").child(self.ratings[indexPath.row].userUid!).child("profile-image").observe(.value) { (snapshot) in
-            let profileImageString : String = (snapshot.value as? String)!
-            if profileImageString == "not-yet-selected" {
-                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
-            } else {
-                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
+            
+            cell.profileButton.addTarget(self, action: #selector(mapsHit), for: .touchUpInside)
+            cell.profileButton.tag = indexPath.row
+            
+            Database.database().reference().child("Users").child(userId).child("profile-image").observe(.value) { (snapshot) in
+                if let profileImageString : String = (snapshot.value as? String) {
+                    if profileImageString == "not-yet-selected" {
+                        cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                        cell.profileImageView.tintColor = UIColor.lightGray
+                        cell.profileImageView.contentMode = .scaleAspectFill
+                    } else {
+                        cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                        cell.profileImageView.tintColor = UIColor.lightGray
+                        cell.profileImageView.contentMode = .scaleAspectFill
+                    }
+                }
             }
         }
-        print("review")
-        print(self.ratings[indexPath.row].ratingNumber!)
-        print("review")
-        cell.reviewLabel.text = self.ratings[indexPath.row].descriptionOfRating!
-        switch Int(self.ratings[indexPath.row].ratingNumber!) {
-            case 0:
-                cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 1:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 2:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 3:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor.mainBlue
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 4:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor.mainBlue
-                cell.star4.tintColor = UIColor.mainBlue
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            case 5:
-                cell.star1.tintColor = UIColor.mainBlue
-                cell.star2.tintColor = UIColor.mainBlue
-                cell.star3.tintColor = UIColor.mainBlue
-                cell.star4.tintColor = UIColor.mainBlue
-                cell.star5.tintColor = UIColor.mainBlue
-            default:
-                print("different review value, star cannot be formed: \(Int(self.ratings[indexPath.row].ratingNumber!))")
+        
+        if let description = self.ratings[indexPath.row].descriptionOfRating {
+            cell.reviewLabel.text = description
         }
+        
+        if let timestamp = self.ratings[indexPath.row].timestamp {
+            if timestamp == 0 {
+                cell.date.isHidden = true
+            } else {
+                let formatter = DateFormatter()
+                formatter.dateStyle = .medium
+                cell.date.text = "\(formatter.string(from: Date(timeIntervalSince1970: Double(timestamp))))"
+                cell.date.isHidden = false
+            }
+        }
+        
+        if let rating : Int = self.ratings[indexPath.row].ratingNumber {
+            switch rating {
+                case 0:
+                    cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 1:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 2:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 3:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor.mainBlue
+                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 4:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor.mainBlue
+                    cell.star4.tintColor = UIColor.mainBlue
+                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                case 5:
+                    cell.star1.tintColor = UIColor.mainBlue
+                    cell.star2.tintColor = UIColor.mainBlue
+                    cell.star3.tintColor = UIColor.mainBlue
+                    cell.star4.tintColor = UIColor.mainBlue
+                    cell.star5.tintColor = UIColor.mainBlue
+                default:
+                    print("different review value, star cannot be formed: \(Int(self.ratings[indexPath.row].ratingNumber!))")
+            }
+        }
+        
         cell.selectionStyle = .none
         return cell
+    }
+    
+    @objc func mapsHit(sender: UIButton) {
+        let index = sender.tag
+        Database.database().reference().child("Users").child(self.ratings[index].userUid!).observe(.value) { (snapshot) in
+            if let profileUID : String = (snapshot.key as? String) {
+                GlobalVariables.userUID = profileUID
+                self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -307,6 +387,23 @@ class MyReviewsCell: UITableViewCell {
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
+    }()
+    
+    let date : UILabel = {
+        let label = UILabel()
+        label.text = "Date"
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.lightGray
+        label.textAlignment = NSTextAlignment.right
+        return label
+    }()
+    
+    let profileButton : UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.clear
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     let userNameLabel : UILabel = {
@@ -380,6 +477,7 @@ class MyReviewsCell: UITableViewCell {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         addSubview(profileImageView)
+        addSubview(date)
         addSubview(userNameLabel)
         addSubview(star1)
         addSubview(star2)
@@ -388,6 +486,7 @@ class MyReviewsCell: UITableViewCell {
         addSubview(star5)
         addSubview(reviewLabel)
         addSubview(postImageView)
+        contentView.addSubview(profileButton)
         
         //ios 9 constraint anchors
         //need x,y,width,height anchors
@@ -396,9 +495,19 @@ class MyReviewsCell: UITableViewCell {
         profileImageView.widthAnchor.constraint(equalToConstant: 60).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
+        profileButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 16).isActive = true
+        profileButton.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        profileButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        date.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        date.topAnchor.constraint(equalTo: self.topAnchor, constant: 18).isActive = true
+        date.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -16).isActive = true
+        date.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
         userNameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 16).isActive = true
         userNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 18).isActive = true
-        userNameLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 16).isActive = true
+        userNameLabel.rightAnchor.constraint(equalTo: date.leftAnchor).isActive = true
         userNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         star1.topAnchor.constraint(equalTo: self.userNameLabel.bottomAnchor, constant: 0).isActive = true

@@ -17,5 +17,8 @@ class MyJobStructure: NSObject {
     var rating: Int?
     var type : String?
     var idThingy : String?
+    var runningStamp : Int?
+    var completedStamp : Int?
+    var cancelStamp : Int?
 
 }

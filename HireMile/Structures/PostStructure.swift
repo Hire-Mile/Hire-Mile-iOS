@@ -18,5 +18,7 @@ class JobStructure: NSObject {
     var imagePost : String?
     var typeOfPrice : String?
     var postId : String?
+    var lat : Float?
+    var long : Float?
 
 }

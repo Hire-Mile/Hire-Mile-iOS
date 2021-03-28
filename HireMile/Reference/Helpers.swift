@@ -10,7 +10,10 @@ import Foundation
 import UIKit
 
 extension UIColor {
-    static var mainBlue = UIColor(red: 120/255, green: 196/255, blue: 248/255, alpha: 1)
+    static var mainBlue = UIColor(red: 76/255, green: 193/255, blue: 255/255, alpha: 1)
+    static var unselectedColor : UIColor = UIColor(red: 171/255, green: 169/255, blue: 169/255, alpha: 1)
+    static var selectedColor : UIColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
+    static var boldSelectedColor : UIColor = UIColor(red: 93/255, green: 93/255, blue: 93/255, alpha: 1)
     func as1ptImage() -> UIImage {
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
         let ctx = UIGraphicsGetCurrentContext()
@@ -327,5 +330,60 @@ extension UIImage{
         let rectangleImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return rectangleImage!
+    }
+}
+extension UITextField {
+    
+    func setInputViewDatePickerForSignUp(target: Any, selector: Selector) {
+        // Create a UIDatePicker object and assign to inputView
+        let screenWidth = UIScreen.main.bounds.width
+        let datePicker = UIDatePicker(frame: CGRect(x: 0, y: 0, width: screenWidth, height: 216))//1
+        datePicker.datePickerMode = .date //2
+        // iOS 14 and above
+        if #available(iOS 14, *) {// Added condition for iOS 14
+          datePicker.preferredDatePickerStyle = .wheels
+          datePicker.sizeToFit()
+        }
+        self.inputView = datePicker //3
+        
+        // Create a toolbar and assign it to inputAccessoryView
+        let toolBar = UIToolbar(frame: CGRect(x: 0.0, y: 0.0, width: screenWidth, height: 44.0)) //4
+        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil) //5
+        let cancel = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: #selector(tapCancel)) // 6
+        let barButton = UIBarButtonItem(title: "Done", style: .plain, target: target, action: selector) //7
+        toolBar.setItems([cancel, flexible, barButton], animated: false) //8
+        self.inputAccessoryView = toolBar //9
+    }
+    
+    @objc func tapCancel() {
+        self.resignFirstResponder()
+    }
+    
+    func setImage(image: UIImage) {
+        let imageMobile = UIImageView(frame: CGRect(x: 1.0, y: 5.0, width: 20.0, height: 20.0))
+        imageMobile.image = image
+        imageMobile.tintColor = UIColor(red: 162/255, green: 162/255, blue: 162/255, alpha: 1)
+        imageMobile.contentMode = UIView.ContentMode.scaleAspectFill
+        let imageContainerView = UIView(frame: CGRect(x: 20.0, y: 0.0, width: 30.0, height: 30.0))
+        imageContainerView.addSubview(imageMobile)
+        leftView = imageContainerView
+        leftViewMode = .always
+    }
+    
+}
+
+extension String {
+    func height(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
+    
+        return ceil(boundingBox.height)
+    }
+
+    func width(withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)
+        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedString.Key.font: font], context: nil)
+
+        return ceil(boundingBox.width)
     }
 }

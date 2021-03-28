@@ -28,7 +28,12 @@ class Message: NSObject {
     var jobRefId : String?
     
     var hasViewed : Bool?
+    
     var textId : String?
+    
+    var isLocation : Bool?
+    var long : Double?
+    var lat : Double?
     
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String
@@ -49,6 +54,10 @@ class Message: NSObject {
         self.hasViewed = dictionary["hasViewed"] as? Bool ?? true
         
         self.textId = dictionary["text-id"] as? String ?? "Error"
+        
+        self.isLocation = dictionary["isLocation"] as? Bool ?? false
+        self.long = dictionary["long-cord"] as? Double
+        self.lat = dictionary["lat-cord"] as? Double
     }
     
     func chatPartnerId() -> String? {

@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class Settings: UITableViewController {  // change to tableview tonoller
+class Settings: UITableViewController {
     
     var titles = ["Edit Profile", "Password", "youremail@gmail.com"]
     let images = ["person.crop.circle", "lock", "envelope"]

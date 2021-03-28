@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import Foundation
 import FirebaseAuth
+import LocalAuthentication
 import AuthenticationServices
 import FirebaseDatabase
 import MBProgressHUD
@@ -18,6 +19,10 @@ import CryptoKit
 class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate, UITextFieldDelegate {
     
     var currentNonce: String?
+    
+    let context = LAContext()
+    
+    var error: NSError?
     
     let welcomeLabel : UILabel = {
         let label = UILabel()
@@ -37,6 +42,7 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         textfield.tintColor = UIColor.mainBlue
         textfield.placeholder = "Enter your email"
         textfield.borderStyle = .roundedRect
+        textfield.autocapitalizationType = .none
         textfield.layer.cornerRadius = 15
         textfield.textColor = UIColor.black
         textfield.keyboardType = .emailAddress
@@ -50,6 +56,7 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         textfield.tintColor = UIColor.mainBlue
         textfield.placeholder = "Enter your password"
         textfield.borderStyle = .roundedRect
+        textfield.autocapitalizationType = .none
         textfield.layer.cornerRadius = 15
         textfield.textColor = UIColor.black
         textfield.keyboardType = .default
@@ -70,7 +77,7 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     }()
     
     let loginButton : UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("Login", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor.mainBlue
@@ -119,15 +126,36 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     
     func autoSignIn() {
         if Auth.auth().currentUser != nil {
-            print(Auth.auth().currentUser!.uid)
-//            let controller = TabBarController()
-//            controller.modalPresentationStyle = .fullScreen
-//            self.present(controller, animated: false, completion: nil)
-            
-            
-            let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
-            let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
-            UIApplication.shared.keyWindow?.rootViewController = vc
+            // biometrics stuff
+            if UserDefaults.standard.bool(forKey: "biometrics") {
+                if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                        let reason = "Please Identify Yourself!"
+
+                        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                            [unowned self] success, authenticationError in
+
+                            DispatchQueue.main.async {
+                                if success {
+                                    let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                                    let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                                    UIApplication.shared.keyWindow?.rootViewController = vc
+                                } else {
+                                    let ac = UIAlertController(title: "Authentication failed", message: "Sorry!", preferredStyle: .alert)
+                                    ac.addAction(UIAlertAction(title: "OK", style: .default))
+                                    present(ac, animated: true)
+                                }
+                            }
+                        }
+                    } else {
+                        let ac = UIAlertController(title: "Biometrics not available", message: "Your device is not configured for Touch ID.", preferredStyle: .alert)
+                        ac.addAction(UIAlertAction(title: "OK", style: .default))
+                        present(ac, animated: true)
+                    }
+            } else {
+                let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                UIApplication.shared.keyWindow?.rootViewController = vc
+            }
         }
     }
     
@@ -176,6 +204,21 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         self.signUpButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.signUpButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.signUpButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0).isActive = true
+        
+        self.emailTextField.delegate = self
+        self.passwordTextField.delegate = self
+    }
+    
+    func checkUserAgainstDatabase(completion: @escaping (_ success: Bool, _ error: NSError?) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        currentUser.getIDTokenForcingRefresh(true) { (idToken, error) in
+            if let error = error {
+                completion(false, error as NSError?)
+                print(error.localizedDescription)
+            } else {
+                completion(true, nil)
+            }
+        }
     }
     
     @objc func forgotPasswordPressed() {
