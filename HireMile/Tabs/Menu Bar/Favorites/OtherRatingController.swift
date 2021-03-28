@@ -224,83 +224,92 @@ class OtherRatingController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "myRatingsCompletedCellID", for: indexPath) as! MyJobsCompletedgCell
         
-        Database.database().reference().child("Users").child(self.completed[indexPath.row].authorUid!).child("name").observe(.value) { (snapshot) in
-            let nameString : String = (snapshot.value as? String)!
-            cell.userNameLabel.text! = nameString
-        }
-        
-        Database.database().reference().child("Users").child(self.completed[indexPath.row].authorUid!).child("profile-image").observe(.value) { (snapshot) in
-            let profileImageString : String = (snapshot.value as? String)!
-            if profileImageString == "not-yet-selected" {
-                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
-            } else {
-                cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
+        if let authorId = self.completed[indexPath.row].authorUid {
+            Database.database().reference().child("Users").child(authorId).child("name").observe(.value) { (snapshot) in
+                if let nameString : String = (snapshot.value as? String) {
+                    cell.userNameLabel.text! = nameString
+                }
             }
-        }
-        
-        if self.completed[indexPath.row].ratingIsNil! == false {
-            if self.completed[indexPath.row].rating! == 100 {
-                cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-            } else {
-                print("self.completed[indexPath.row].rating!")
-                print(self.completed[indexPath.row].rating!)
-                print("self.completed[indexPath.row].rating!")
-                switch self.completed[indexPath.row].rating! {
-                case 0:
-                    cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                case 1:
-                    cell.star1.tintColor = UIColor.mainBlue
-                    cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                case 2:
-                    cell.star1.tintColor = UIColor.mainBlue
-                    cell.star2.tintColor = UIColor.mainBlue
-                    cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                case 3:
-                    cell.star1.tintColor = UIColor.mainBlue
-                    cell.star2.tintColor = UIColor.mainBlue
-                    cell.star3.tintColor = UIColor.mainBlue
-                    cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                case 4:
-                    cell.star1.tintColor = UIColor.mainBlue
-                    cell.star2.tintColor = UIColor.mainBlue
-                    cell.star3.tintColor = UIColor.mainBlue
-                    cell.star4.tintColor = UIColor.mainBlue
-                    cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
-                case 5:
-                    cell.star1.tintColor = UIColor.mainBlue
-                    cell.star2.tintColor = UIColor.mainBlue
-                    cell.star3.tintColor = UIColor.mainBlue
-                    cell.star4.tintColor = UIColor.mainBlue
-                    cell.star5.tintColor = UIColor.mainBlue
-                default:
-                    print("hello")
+            
+            Database.database().reference().child("Users").child(authorId).child("profile-image").observe(.value) { (snapshot) in
+                if let profileImageString : String = (snapshot.value as? String) {
+                    if profileImageString == "not-yet-selected" {
+                        cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                        cell.profileImageView.tintColor = UIColor.lightGray
+                        cell.profileImageView.contentMode = .scaleAspectFill
+                    } else {
+                        cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                        cell.profileImageView.tintColor = UIColor.lightGray
+                        cell.profileImageView.contentMode = .scaleAspectFill
+                    }
                 }
             }
         }
         
-        cell.reviewLabel.text! = self.completed[indexPath.row].reasonOrDescripiotn!
+        if let ratingBool = self.completed[indexPath.row].ratingIsNil {
+            if ratingBool == false {
+                if let rating = self.completed[indexPath.row].rating {
+                    if rating == 100 {
+                        cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                    } else {
+                        switch rating {
+                        case 0:
+                            cell.star1.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        case 1:
+                            cell.star1.tintColor = UIColor.mainBlue
+                            cell.star2.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        case 2:
+                            cell.star1.tintColor = UIColor.mainBlue
+                            cell.star2.tintColor = UIColor.mainBlue
+                            cell.star3.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        case 3:
+                            cell.star1.tintColor = UIColor.mainBlue
+                            cell.star2.tintColor = UIColor.mainBlue
+                            cell.star3.tintColor = UIColor.mainBlue
+                            cell.star4.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                            cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        case 4:
+                            cell.star1.tintColor = UIColor.mainBlue
+                            cell.star2.tintColor = UIColor.mainBlue
+                            cell.star3.tintColor = UIColor.mainBlue
+                            cell.star4.tintColor = UIColor.mainBlue
+                            cell.star5.tintColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 1)
+                        case 5:
+                            cell.star1.tintColor = UIColor.mainBlue
+                            cell.star2.tintColor = UIColor.mainBlue
+                            cell.star3.tintColor = UIColor.mainBlue
+                            cell.star4.tintColor = UIColor.mainBlue
+                            cell.star5.tintColor = UIColor.mainBlue
+                        default:
+                            print("hello")
+                        }
+                    }
+                }
+            }
+        }
         
-        Database.database().reference().child("Jobs").child(self.completed[indexPath.row].jobKey!).child("image").observe(.value) { (snapshot) in
-            if let pictureString : String = (snapshot.value as? String) {
-                cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+        if let description = self.completed[indexPath.row].reasonOrDescripiotn {
+            cell.reviewLabel.text! = description
+        }
+        
+        if let key = self.completed[indexPath.row].jobKey {
+            Database.database().reference().child("Jobs").child(key).child("image").observe(.value) { (snapshot) in
+                if let pictureString : String = (snapshot.value as? String) {
+                    cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+                }
             }
         }
         

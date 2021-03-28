@@ -16,6 +16,17 @@ import Firebase
         
         FirebaseApp.configure()
         
+        UINavigationBar.appearance().tintColor = UIColor.black
+        
+        print("🚀 HIREMILE launched! 🚀")
+        
+//        let firebaseAuth = Auth.auth()
+//        do {
+//            try firebaseAuth.signOut()
+//        } catch let signOutError as NSError {
+//            print("Error signing out: \(signOutError)")
+//        }
+        
         UIApplication.shared.applicationIconBadgeNumber = 0
         
         // Override point for customization after application launch.

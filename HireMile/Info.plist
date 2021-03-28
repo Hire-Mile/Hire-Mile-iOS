@@ -21,7 +21,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Please allow the camera for taking photos!</string>
+	<string>Please allow the camera for posting images or chatting with others!</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Allow this if you are interested in locking your application with FaceID</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Please allow us to use your location, so your services are visible to the map</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Please allow the photo library to upload photos from your camera roll!</string>
 	<key>UIApplicationSceneManifest</key>
@@ -54,8 +58,7 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

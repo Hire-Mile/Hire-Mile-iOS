@@ -77,7 +77,7 @@ class Email: UIViewController, UITextFieldDelegate {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         title = "Change Email"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         
 
         self.currentPassword.delegate = self

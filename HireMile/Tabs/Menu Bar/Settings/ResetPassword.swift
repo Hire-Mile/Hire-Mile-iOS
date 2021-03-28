@@ -121,7 +121,8 @@ class ResetPassword: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         title = "Reset Password"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.isNavigationBarHidden = false
+        self.navigationController?.navigationBar.prefersLargeTitles = false    
     }
     
     @objc func sendResendLink() {

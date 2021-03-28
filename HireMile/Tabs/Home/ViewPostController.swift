@@ -19,6 +19,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     let launcher = ProposalPopup()
     
+    var height : CGFloat = 0
+    
     let carousel : UIImageView = {
         let carousel = UIImageView()
         carousel.contentMode = .scaleAspectFill
@@ -53,19 +55,26 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         label.text = "Service Description"
         label.font = UIFont.systemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 3
         label.textColor = UIColor.black
-        label.numberOfLines = 1
+//        label.isScrollEnabled = true
+//        label.alwaysBounceHorizontal = false
+//        label.alwaysBounceVertical = true
+        label.backgroundColor = .white
         label.textAlignment = .left
+//        label.isSelectable = false
+//        label.isEditable = false
         return label
     }()
     
-    let priceLabel : UILabel = {
-        let label = UILabel()
+    let priceLabel : UITextView = {
+        let label = UITextView()
         label.text = "Price"
+        label.isSelectable = false
+        label.isEditable = false
         label.font = UIFont.boldSystemFont(ofSize: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
-        label.numberOfLines = 1
         label.textAlignment = .left
         return label
     }()
@@ -115,19 +124,45 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         view.backgroundColor = UIColor.white
         return view
     }()
+    
+    @objc func pressed() {
+        let alert = UIAlertController(title: "Would you like to report this post?", message: "Management And Administration will notice", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Yes, Report Post", style: .default, handler: { (action) in
+            let block = UIAlertController(title: "Post Report", message: "", preferredStyle: .alert)
+            block.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            let key = Database.database().reference().child("Reported-Posts").childByAutoId().key
+            let values = [
+                "post-id" : self.postId,
+                "key" : key,
+                "reporter" : Auth.auth().currentUser!.uid
+            ]
+            Database.database().reference().child("Reported-Posts").child(key!).updateChildValues(values) { (error, ref) in
+                self.present(block, animated: true, completion: nil)
+            }
+        }))
+        if let popoverController = alert.popoverPresentationController {
+          popoverController.sourceView = self.view
+          popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "exclamationmark.bubble"), landscapeImagePhone: UIImage(systemName: "exclamationmark.bubble"), style: .plain, target: self, action: #selector(pressed))
+        
         // Functions to throw
-        self.addSubviews()
-        self.addConstraints()
         
         let url = URL(string: GlobalVariables.postImageDownlodUrl)
         self.carousel.kf.setImage(with: url)
         GlobalVariables.postImageDownlodUrl = ""
         self.titleLabel.text = GlobalVariables.postTitle
         self.descriptionLabel.text = GlobalVariables.postDescription
+        self.height = self.estimateFrameForText(text: self.descriptionLabel.text!).height
+        self.addSubviews()
+        self.addConstraints()
         if GlobalVariables.type == "Hourly" {
             self.priceLabel.text = "$\(GlobalVariables.postPrice) / Hour"
         } else {
@@ -135,29 +170,27 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         }
         self.postId = GlobalVariables.postId
         
-        Database.database().reference().child("Users").child(GlobalVariables.authorId).child("name").observe(.value) { (snapshot) in
-            let name : String = (snapshot.value as? String)!
-            self.navigationItem.title = name
-        }
+        self.authorId = GlobalVariables.authorId
         
         print(GlobalVariables.authorId)
         self.authorId = GlobalVariables.authorId
         Database.database().reference().child("Users").child(GlobalVariables.authorId).child("profile-image").observe(.value) { (snapshot) in
-            let profileImageUrl : String = (snapshot.value as? String)!
-            if profileImageUrl == "not-yet-selected" {
-                self.profileImage.image = UIImage(systemName: "person.circle.fill")
-                self.profileImage.tintColor = UIColor.lightGray
-                self.profileImage.contentMode = .scaleAspectFill
-            } else {
-                self.profileImage.loadImageUsingCacheWithUrlString(profileImageUrl)
+            if let profileImageUrl : String = (snapshot.value as? String) {
+                if profileImageUrl == "not-yet-selected" {
+                    self.profileImage.image = UIImage(systemName: "person.circle.fill")
+                    self.profileImage.tintColor = UIColor.lightGray
+                    self.profileImage.contentMode = .scaleAspectFill
+                } else {
+                    self.profileImage.loadImageUsingCacheWithUrlString(profileImageUrl)
+                }
+                GlobalVariables.postTitle = ""
+                GlobalVariables.postDescription = ""
+                GlobalVariables.postPrice = 0
+                GlobalVariables.authorId = ""
+                GlobalVariables.authorImageView = ""
+                GlobalVariables.postId = ""
+                GlobalVariables.userUID = ""
             }
-            GlobalVariables.postTitle = ""
-            GlobalVariables.postDescription = ""
-            GlobalVariables.postPrice = 0
-            GlobalVariables.authorId = ""
-            GlobalVariables.authorImageView = ""
-            GlobalVariables.postId = ""
-            GlobalVariables.userUID = ""
         }
         
         // Do any additional setup after loading the view.
@@ -172,6 +205,16 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         profileImage.isUserInteractionEnabled = true
         profileImage.addGestureRecognizer(tapGestureRecognizer)
+        
+        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(setName), userInfo: nil, repeats: false)
+    }
+    
+    @objc func setName() {
+        Database.database().reference().child("Users").child(self.authorId).child("name").observe(.value) { (snapshot) in
+            if let name : String = (snapshot.value as? String) {
+                self.navigationItem.title = name
+            }
+        }
     }
     
     func addSubviews() {
@@ -190,6 +233,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 20)]
         
+        let heightConstraint = self.informationView.heightAnchor.constraint(equalToConstant: 175)
+        let bottomConstraint = self.informationView.bottomAnchor.constraint(equalTo: self.priceLabel.bottomAnchor)
+        
         self.carousel.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         self.carousel.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
         self.carousel.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
@@ -198,20 +244,21 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.informationView.topAnchor.constraint(equalTo: self.carousel.bottomAnchor, constant: 20).isActive = true
         self.informationView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -20).isActive = true
         self.informationView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 20).isActive = true
-        self.informationView.heightAnchor.constraint(equalToConstant: 125).isActive = true
+        heightConstraint.isActive = true
+        bottomConstraint.isActive = false
         
         self.titleLabel.topAnchor.constraint(equalTo: self.informationView.topAnchor, constant: 15).isActive = true
         self.titleLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 15).isActive = true
-        self.titleLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -20).isActive = true
+        self.titleLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -75).isActive = true
         self.titleLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: -5).isActive = true
         self.descriptionLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 15).isActive = true
         self.descriptionLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -75).isActive = true
-        self.descriptionLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.descriptionLabel.heightAnchor.constraint(equalToConstant: self.height + 30).isActive = true
         
         self.priceLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: -15).isActive = true
-        self.priceLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 15).isActive = true
+        self.priceLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 10).isActive = true
         self.priceLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -15).isActive = true
         self.priceLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
@@ -234,6 +281,15 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.textField.leftAnchor.constraint(equalTo: self.largeView.leftAnchor, constant: 20).isActive = true
         self.textField.rightAnchor.constraint(equalTo: self.seeAllButton.leftAnchor, constant: -10).isActive = true
+        
+        heightConstraint.isActive = false
+        bottomConstraint.isActive = true
+    }
+    
+    private func estimateFrameForText(text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17)], context: nil)
     }
     
     func basicSetup() {
@@ -249,6 +305,9 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.navigationController?.navigationBar.tintColor = UIColor.black
         self.navigationController?.navigationBar.barTintColor = UIColor.white
         self.navigationItem.backButtonTitle = ""
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(named: "whiteback"), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
     }
     
     func changeButtonStatus() {
@@ -264,7 +323,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     @objc func keyboardUp(notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             self.view.frame.origin.y = 0
-            self.view.frame.origin.y -= 110
+            self.view.frame.origin.y -= 90
         }
     }
     
@@ -277,9 +336,10 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         // send uid
         Database.database().reference().child("Jobs").child(postId).child("author").observe(.value) { (snapshot) in
-            let profileUID : String = (snapshot.value as? String)!
-            GlobalVariables.userUID = profileUID
-            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            if let profileUID : String = (snapshot.value as? String) {
+                GlobalVariables.userUID = profileUID
+                self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            }
         }
         // following
     }
@@ -299,17 +359,28 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        self.view.frame.origin.y = 0
+        self.view.frame.origin.y += 90
         return (true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.frame.origin.y = 0
-        self.view.endEditing(true)
+        if self.textField.isFirstResponder {
+            self.view.frame.origin.y += 90
+            self.view.endEditing(true)
+        }
     }
     
+    func calculateHeight(text: String, width: CGFloat) -> CGFloat {
+            let constraintRect = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+            let boundingBox = text.boundingRect(with: constraintRect,
+                                            options: NSStringDrawingOptions.usesLineFragmentOrigin,
+                                            attributes: [NSAttributedString.Key.font: self],
+                                            context: nil)
+            return boundingBox.height
+        }
+    
     @objc func sendPressed() {
-        if self.textField.text != " " || self.textField.text != "  " || self.textField.text != "   " || self.textField.text != nil || self.textField.text != "  Say Something..." || self.textField.text != "" {
+        if self.textField.text != " " && self.textField.text != "  " && self.textField.text != "   " && self.textField.text != nil && self.textField.text != "  Say Something..." && self.textField.text != "" {
             let ref = Database.database().reference().child("Messages")
             let childRef = ref.childByAutoId()
             let toId = authorId
@@ -322,32 +393,34 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
                     print(error ?? "")
                     return
                 }
-                
+
                 guard let messageId = childRef.key else { return }
-                
+
                 let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(toId).child(messageId)
                 userMessagesRef.setValue(1)
-                
+
                 let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId).child(fromId).child(messageId)
                 recipientUserMessagesRef.setValue(1)
-                
-                
+
+
                 Database.database().reference().child("Users").child(toId).child("fcmToken").observe(.value) { (snapshot) in
                     let token : String = (snapshot.value as? String)!
                     let sender = PushNotificationSender()
                     Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
                         let name : String = (snapshot.value as? String)!
-                        sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)")
+                        sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)", page: true, senderId: Auth.auth().currentUser!.uid, recipient: toId)
                     }
                 }
-                
+
                 self.textField.text = nil
                 self.textField.resignFirstResponder()
-                
+
                 self.launcher.showFilter()
                 self.launcher.applyButton.addTarget(self, action: #selector(self.handleDismiss), for: .touchUpInside)
             }
+            print("not empty")
         } else {
+            print("empty")
             let alert = UIAlertController(title: "Error", message: "Please enter valid text", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)

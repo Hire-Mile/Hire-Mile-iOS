@@ -24,7 +24,7 @@ class ProposalPopup: NSObject {
     }()
 
     let applyButton : UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitle("Okay", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor.mainBlue
@@ -42,17 +42,6 @@ class ProposalPopup: NSObject {
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 24)
         label.numberOfLines = 1
-        return label
-    }()
-
-    let filterDescription : UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Your message was sent successfully"
-        label.textAlignment = .center
-        label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.numberOfLines = 3
         return label
     }()
 
@@ -78,17 +67,11 @@ class ProposalPopup: NSObject {
         self.applyButton.bottomAnchor.constraint(equalTo: self.filterView.bottomAnchor, constant: -50).isActive = true
         self.applyButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
-        filterView.addSubview(filterDescription)
-        self.filterDescription.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 60).isActive = true
-        self.filterDescription.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -60).isActive = true
-        self.filterDescription.bottomAnchor.constraint(equalTo: self.applyButton.topAnchor, constant: -25).isActive = true
-        self.filterDescription.heightAnchor.constraint(equalToConstant: 60).isActive = true
-
         filterView.addSubview(filterTitle)
         self.filterTitle.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
         self.filterTitle.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
-        self.filterTitle.bottomAnchor.constraint(equalTo: self.filterDescription.topAnchor, constant: -25).isActive = true
-        self.filterTitle.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        self.filterTitle.bottomAnchor.constraint(equalTo: self.applyButton.topAnchor, constant: -25).isActive = true
+        self.filterTitle.heightAnchor.constraint(equalToConstant: 80).isActive = true
 
         filterView.addSubview(filterImage)
         self.filterImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -107,7 +90,7 @@ class ProposalPopup: NSObject {
             window.addSubview(filterView)
 
             let y = window.frame.height - height
-            filterView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 400)
+            filterView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: height)
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                 self.blackView.alpha = 1
                 self.filterView.frame = CGRect(x: 0, y: y, width: self.filterView.frame.width, height: self.filterView.frame.height)

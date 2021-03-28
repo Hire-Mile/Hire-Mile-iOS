@@ -49,63 +49,76 @@ class FollowersController: UITableViewController, FavoritesCellProtocol {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "followres", for: indexPath) as! FavoritesCell
         cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        Database.database().reference().child("Users").child(self.followers[indexPath.row].uid!).child("name").observe(.value) { (snapshot) in
-            let snapshot : String = (snapshot.value as? String)!
-            cell.textLabel?.text = snapshot
-        }
-        Database.database().reference().child("Users").child(self.followers[indexPath.row].uid!).child("profile-image").observe(.value) { (snapshot) in
-            let snapshot : String = (snapshot.value as? String)!
-            if snapshot == "not-yet-selected" {
-                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
+        
+        if let uid = self.followers[indexPath.row].uid {
+            Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
+                if let snapshot : String = (snapshot.value as? String) {
+                    cell.textLabel?.text = snapshot
+                    cell.delegate = self
+                    cell.index = indexPath
+                }
+            }
+            
+            Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
+                let snapshot : String = (snapshot.value as? String)!
+                if snapshot == "not-yet-selected" {
+                    cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.profileImageView.tintColor = UIColor.lightGray
+                    cell.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+                }
+            }
+            
+            if self.favorites.contains(uid) {
+                cell.favoriteButton.backgroundColor = .white
+                cell.favoriteButton.setTitle("Following", for: .normal)
+                cell.favoriteButton.setTitleColor(UIColor.black, for: .normal)
             } else {
-                cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+                cell.favoriteButton.backgroundColor = .mainBlue
+                cell.favoriteButton.setTitle("Follow", for: .normal)
+                cell.favoriteButton.setTitleColor(UIColor.white, for: .normal)
             }
         }
-        // set to following or not following
-        if self.favorites.contains(self.followers[indexPath.row].uid!) {
-            cell.favoriteButton.backgroundColor = .white
-            cell.favoriteButton.setTitle("Following", for: .normal)
-            cell.favoriteButton.setTitleColor(UIColor.black, for: .normal)
-        } else {
-            cell.favoriteButton.backgroundColor = .mainBlue
-            cell.favoriteButton.setTitle("Follow", for: .normal)
-            cell.favoriteButton.setTitleColor(UIColor.white, for: .normal)
-        }
-        cell.delegate = self
-        cell.index = indexPath
         return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("hello")
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let profileUID : String = self.followers[indexPath.row].uid {
+            GlobalVariables.userUID = profileUID
+            let controller = OtherProfile()
+            self.present(controller, animated: true, completion: nil)
+        }
+    }
+    
     func didSelectFavoriteButton(withIndex index: Int) {
         print("selected index \(index)")
-        if self.favorites.contains(self.followers[index].uid!) {
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(self.followers[index].uid!).removeValue()
-            self.viewDidLoad()
-        } else {
-            let userInformation : Dictionary<String, Any> = [
-                "uid" : "\(self.followers[index].uid!)"
-            ]
-            let postFeed = ["\(self.followers[index].uid!)" : userInformation]
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
-            Database.database().reference().child("Users").child(self.followers[index].uid!).child("fcmToken").observe(.value) { (snapshot) in
-                let token : String = (snapshot.value as? String)!
-                let sender = PushNotificationSender()
-                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-                    let userName : String = (snapshot.value as? String)!
-                    sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!")
+        if let uid = self.followers[index].uid {
+            if self.favorites.contains(uid) {
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(uid).removeValue()
+                self.viewDidLoad()
+            } else {
+                let userInformation : Dictionary<String, Any> = [
+                    "uid" : "\(self.followers[index].uid!)"
+                ]
+                let postFeed = ["\(self.followers[index].uid!)" : userInformation]
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+                Database.database().reference().child("Users").child(self.followers[index].uid!).child("fcmToken").observe(.value) { (snapshot) in
+                    if let token : String = (snapshot.value as? String) {
+                        let sender = PushNotificationSender()
+                        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+                            if let userName : String = (snapshot.value as? String) {
+                                sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.followers[index].uid!)
+                            }
+                        }
+                    }
                 }
+                self.viewDidLoad()
             }
-            self.viewDidLoad()
         }
     }
 

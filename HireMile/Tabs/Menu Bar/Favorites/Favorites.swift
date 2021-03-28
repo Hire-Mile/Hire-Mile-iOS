@@ -65,6 +65,9 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
         self.tableView.allowsSelection = true
         self.tableView.refreshControl = refrshControl
         
+        self.tableView.showsHorizontalScrollIndicator = false
+        self.tableView.showsVerticalScrollIndicator = false
+        
         self.pullData()
     }
     
@@ -78,7 +81,10 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
             if let value = listOfuserFavorite.value as? [String : Any] {
                 let user = UserStructure()
-                user.uid = value["uid"] as? String ?? "Error"
+                guard let uid = value["uid"] as? String else {
+                    return
+                }
+                user.uid = uid
                 self.favorites.append(user)
             }
             self.tableView.reloadData()
@@ -96,26 +102,72 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoritesCellID", for: indexPath) as! FavoritesCell
         cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("name").observe(.value) { (snapshot) in
-            let snapshot : String = (snapshot.value as? String)!
-            cell.textLabel?.text = snapshot
-        }
-        Database.database().reference().child("Users").child(self.favorites[indexPath.row].uid!).child("profile-image").observe(.value) { (snapshot) in
-            let snapshot : String = (snapshot.value as? String)!
-            if snapshot == "not-yet-selected" {
-                cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
-                cell.profileImageView.tintColor = UIColor.lightGray
-                cell.profileImageView.contentMode = .scaleAspectFill
-            } else {
-                cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+        
+        if let uid = self.favorites[indexPath.row].uid {
+            Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
+                if let snapshot : String = (snapshot.value as? String) {
+                    cell.textLabel?.text = snapshot
+                } else {
+                    cell.textLabel?.text = "Deleted User"
+                    
+                    cell.favoriteButton.setTitle("Delete", for: .normal)
+                    cell.favoriteButton.backgroundColor = UIColor.systemRed
+                    cell.favoriteButton.setTitleColor(UIColor.white, for: .normal)
+                    
+                    cell.delegate = self
+                    cell.index = indexPath
+                }
             }
+            Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
+                if let snapshot : String = (snapshot.value as? String) {
+                    if snapshot == "not-yet-selected" {
+                        cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                        cell.profileImageView.tintColor = UIColor.lightGray
+                        cell.profileImageView.contentMode = .scaleAspectFill
+                        
+                        cell.profileButton.addTarget(self, action: #selector(self.mapsHit), for: .touchUpInside)
+                        cell.profileButton.tag = indexPath.row
+                    } else {
+                        cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+                        
+                        cell.profileButton.addTarget(self, action: #selector(self.mapsHit), for: .touchUpInside)
+                        cell.profileButton.tag = indexPath.row
+                    }
+                } else {
+                    cell.textLabel?.text = "Deleted User"
+                    
+                    cell.favoriteButton.titleLabel?.text = "Delete"
+                    cell.favoriteButton.backgroundColor = UIColor.systemRed
+                    cell.favoriteButton.titleLabel?.textColor = UIColor.white
+                    
+                    cell.delegate = self
+                    cell.index = indexPath
+                }
+            }
+            
+            cell.delegate = self
+            cell.index = indexPath
+        } else {
+            cell.textLabel?.text = "Deleted User"
+            
+            cell.favoriteButton.titleLabel?.text = "Delete"
+            cell.favoriteButton.backgroundColor = UIColor.systemRed
+            cell.favoriteButton.titleLabel?.textColor = UIColor.white
+            
+            cell.delegate = self
+            cell.index = indexPath
         }
-        cell.delegate = self
-        cell.index = indexPath
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    @objc func mapsHit(sender: UIButton) {
+        let index = sender.tag
+        Database.database().reference().child("Users").child(self.favorites[index].uid!).observe(.value) { (snapshot) in
+            let profileUID : String = (snapshot.key as? String)!
+            print(profileUID)
+            GlobalVariables.userUID = profileUID
+            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -123,15 +175,23 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
     }
     
     func didSelectFavoriteButton(withIndex index: Int) {
+        print("hi")
         Database.database().reference().child("Users").child(self.favorites[index].uid!).child("name").observe(.value) { (name) in
-            let name : String = (name.value as? String)!
-            Database.database().reference().child("Users").child(self.favorites[index].uid!).child("profile-image").observe(.value) { (snapshot) in
-                let snapshot : String = (snapshot.value as? String)!
-                if snapshot == "not-yet-selected" {
-                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[index].uid!, isImageNil: true)
-                } else {
-                    self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[index].uid!, isImageNil: false)
+            if let name : String = (name.value as? String) {
+                Database.database().reference().child("Users").child(self.favorites[index].uid!).child("profile-image").observe(.value) { (snapshot) in
+                    if let snapshot : String = (snapshot.value as? String) {
+                        if snapshot == "not-yet-selected" {
+                            self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[index].uid!, isImageNil: true)
+                        } else {
+                            self.removeView.showFilter(withName: name, withImage: snapshot, withUid: self.favorites[index].uid!, isImageNil: false)
+                        }
+                    }
                 }
+            } else {
+                print("hi1")
+                print(self.favorites[index].uid!)
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(self.favorites[index].uid!).removeValue()
+                self.pullData()
             }
         }
     }
@@ -177,10 +237,18 @@ class FavoritesCell: UITableViewCell {
         return imageView
     }()
     
+    let profileButton : UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.clear
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         
         addSubview(profileImageView)
+        contentView.addSubview(profileButton)
         contentView.addSubview(favoriteButton)
     
         textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
@@ -193,6 +261,11 @@ class FavoritesCell: UITableViewCell {
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        profileButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        profileButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        profileButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         favoriteButton.addTarget(self, action: #selector(tapper), for: .touchUpInside)
         favoriteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true

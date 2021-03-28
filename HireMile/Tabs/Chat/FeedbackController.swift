@@ -286,14 +286,15 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         } else {
             MBProgressHUD.showAdded(to: self.view, animated: true)
             Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-                let name : String = (snapshot.value as? String)!
-                Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
-                    if let token : String = (snapshot.value as? String) {
-                        let sender = PushNotificationSender()
-                        sender.sendPushNotification(to: token, title: "\(name) gave you feedback!", body: "Open 'My Reviews' on the menu bar to see")
-                        self.addAnotherReview() 
-                    } else {
-                        self.addAnotherReview()
+                if let name : String = (snapshot.value as? String) {
+                    Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
+                        if let token : String = (snapshot.value as? String) {
+                            let sender = PushNotificationSender()
+                            sender.sendPushNotification(to: token, title: "\(name) gave you feedback!", body: "Open 'My Reviews' on the menu bar to see", page: true, senderId: Auth.auth().currentUser!.uid, recipient: GlobalVariables.chatPartnerId)
+                            self.addAnotherReview()
+                        } else {
+                            self.addAnotherReview()
+                        }
                     }
                 }
             }
@@ -316,10 +317,13 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
     }
     
     func addReview() {
+        let timestamp = Int(Date().timeIntervalSince1970)
         let values = [
             "user-id" : Auth.auth().currentUser!.uid,
             "rating-number" : rating,
             "post-id" : GlobalVariables.jobId,
+//            "post-id" : GlobalVariables.jobRefId,
+            "timestamp" : timestamp,
             "description" : self.tf.text!,
         ] as [String : Any]
         let key = Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").childByAutoId().key
@@ -335,15 +339,27 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
             GlobalVariables.finishedFeedback = true
             
             // add to running
+            let timestamp = Int(Date().timeIntervalSince1970)
+            
             Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("completed")
+            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("complete-stamp").setValue(timestamp)
             Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("reason-or-description").setValue(self.tf.text!)
             Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("rating").setValue(self.rating)
             Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("is-rating-nil").setValue(false)
             
-            MBProgressHUD.hide(for: self.view, animated: true)
-            let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
-            let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
-            UIApplication.shared.keyWindow?.rootViewController = vc
+            // REMOVE CHAT
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            let chatPartnerId = GlobalVariables.chatPartnerId
+            Database.database().reference().child("User-Messages").child(uid).child(chatPartnerId).removeValue { (error, ref) in
+                Database.database().reference().child("User-Messages").child(chatPartnerId).child(uid).removeValue { (error, ref) in
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                    let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                    UIApplication.shared.keyWindow?.rootViewController = vc
+                }
+            }
         }
     }
 

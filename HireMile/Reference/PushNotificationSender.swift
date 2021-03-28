@@ -7,10 +7,35 @@
 //
 
 import UIKit
+import Firebase
 import Foundation
 
 class PushNotificationSender {
-    func sendPushNotification(to token: String, title: String, body: String) {
+    func sendPushNotification(to token: String, title: String, body: String, page show: Bool, senderId uid: String, recipient ruid: String) {
+        if show {
+            if let key = Database.database().reference().child("Users").child(token).childByAutoId().key {
+                let data : Dictionary<String, Any> = [
+                    "timestamp" : Int(Date().timeIntervalSince1970),
+                    "title" : title,
+                    "description" : body,
+                    "author" : uid,
+                    "postId" : "\(key)",
+                ]
+                let postFeed = ["\(key)" : data]
+                Database.database().reference().child("Users").child(ruid).child("Notifcations").updateChildValues(postFeed) { (inboxError, ref) in
+                    if let inboxError = inboxError {
+                        print("There was an error uploading the set JSON to the users notifcation inbox via Firebase: \(inboxError.localizedDescription)")
+                    } else {
+                        self.pushNotification(to: token, title: title, body: body)
+                    }
+                }
+            }
+        } else {
+            self.pushNotification(to: token, title: title, body: body)
+        }
+    }
+    
+    func pushNotification(to token: String, title: String, body: String) {
         let urlString = "https://fcm.googleapis.com/fcm/send"
         let url = NSURL(string: urlString)!
         let paramString: [String : Any] = ["to" : token,

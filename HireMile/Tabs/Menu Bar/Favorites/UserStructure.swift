@@ -13,5 +13,6 @@ class UserStructure: NSObject {
     var uid : String?
     var profileImageView : String?
     var username : String?
+    var notification : String?
 
 }
