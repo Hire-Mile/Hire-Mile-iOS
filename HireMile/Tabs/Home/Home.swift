@@ -505,8 +505,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     @objc func searchButtonPressed() {
         let controller = SearchController()
-        controller.modalPresentationStyle = .overFullScreen
-        self.present(controller, animated: true, completion: nil)
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func timerFunction() {
@@ -808,7 +807,7 @@ class CategoryCell: UITableViewCell {
 //        locationAndTime.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
 //        locationAndTime.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

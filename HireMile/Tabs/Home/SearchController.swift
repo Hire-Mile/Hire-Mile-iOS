@@ -272,36 +272,20 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
             if let value = snapshot.value as? [String : Any] {
                 let user = UserProfileStructure()
                 user.userid = snapshot.key
-                user.username = value["username"] as? String ?? "Error"
-                user.name = value["name"] as? String ?? "Error"
-                user.userimage = value["profile-image"] as? String ?? "Error"
-                user.email = value["email"] as? String ?? "Error"
-                self.allUsers.append(user)
+                user.username = value["username"] as? String
+                user.name = value["name"] as? String
+                user.userimage = value["profile-image"] as? String
+                user.email = value["email"] as? String
+                
+                if user.userid == nil || user.username == nil || user.name == nil || user.userimage == nil || user.email == nil {
+                    return
+                } else {
+                    self.allUsers.append(user)
+                }
             }
             self.allUsers.reverse()
             self.tableView.reloadData()
         }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("returning")
-        self.keyBoardBottomConstraint?.isActive = false
-        self.bottomTableViewConstraint?.isActive = true
-        textField.resignFirstResponder()
-        self.view.frame.origin.y = 0
-        return (true)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.keyBoardBottomConstraint?.isActive = false
-        self.bottomTableViewConstraint?.isActive = true
-        self.view.frame.origin.y = 0
-        self.view.endEditing(true)
-    }
-    
-    @objc func xmarktouched () {
-        self.isSearching = false
-        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func textFieldChange() {
@@ -441,15 +425,15 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.mode == "services" {
             if self.isSearching {
-                self.dismiss(animated: true) {
-//                    GlobalVariables.catId = self.justRes[indexPath.row]
-//                    GlobalVariables.presentToCat = true
-                }
+                let controller = SearchResults()
+                controller.modalPresentationStyle = .fullScreen
+                controller.keyword = self.justRes[indexPath.row]
+                self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
             } else {
-                self.dismiss(animated: true) {
-//                    GlobalVariables.catId = self.allJobs[indexPath.row]
-//                    GlobalVariables.presentToCat = true
-                }
+                let controller = SearchResults()
+                controller.modalPresentationStyle = .fullScreen
+                controller.keyword = self.keywords[indexPath.row]
+                self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
             }
         } else {
             if self.searchTextField.text == "" {
@@ -470,6 +454,26 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
                 }
             }
         }
+    }
+    
+    @objc func xmarktouched () {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("returning")
+        self.keyBoardBottomConstraint?.isActive = false
+        self.bottomTableViewConstraint?.isActive = true
+        textField.resignFirstResponder()
+        self.view.frame.origin.y = 0
+        return (true)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.keyBoardBottomConstraint?.isActive = false
+        self.bottomTableViewConstraint?.isActive = true
+        self.view.frame.origin.y = 0
+        self.view.endEditing(true)
     }
 
 }
@@ -540,14 +544,14 @@ class CustomTextField : UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.clearButton = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 15, height: 15)))
-        clearButton?.setImage(UIImage(systemName: "xmark")!, for: .normal)
-
-        self.rightView = clearButton
-        clearButton?.addTarget(self, action: #selector(clearClicked), for: .touchUpInside)
-
-        self.clearButtonMode = .never
-        self.rightViewMode = .always
+//        self.clearButton = UIButton(frame: CGRect(origin: .zero, size: CGSize(width: 15, height: 15)))
+//        clearButton?.setImage(UIImage(systemName: "xmark")!, for: .normal)
+//
+//        self.rightView = clearButton
+//        clearButton?.addTarget(self, action: #selector(clearClicked), for: .touchUpInside)
+//
+//        self.clearButtonMode = .never
+//        self.rightViewMode = .always
     }
 
     @objc func clearClicked() {

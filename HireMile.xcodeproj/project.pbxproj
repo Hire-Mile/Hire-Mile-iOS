@@ -54,6 +54,7 @@
 		785D000E2609C8300060622A /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D000D2609C8300060622A /* Booking.swift */; };
 		786A33212565931300B58265 /* CategoryPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A33202565931300B58265 /* CategoryPostController.swift */; };
 		786A3323256596E700B58265 /* FilterLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A3322256596E700B58265 /* FilterLauncher.swift */; };
+		786C8E3D2611A2160051729D /* SearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786C8E3C2611A2160051729D /* SearchResults.swift */; };
 		787013402579721A0019C24A /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7870133F2579721A0019C24A /* Camera.swift */; };
 		78767E0F25BEF7D000CBF2B8 /* DeleteLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78767E0E25BEF7CF00CBF2B8 /* DeleteLauncher.swift */; };
 		78767E1225BF1A6D00CBF2B8 /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78767E1125BF1A6D00CBF2B8 /* CategoryCell.swift */; };
@@ -146,6 +147,7 @@
 		785D000D2609C8300060622A /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		786A33202565931300B58265 /* CategoryPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPostController.swift; sourceTree = "<group>"; };
 		786A3322256596E700B58265 /* FilterLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLauncher.swift; sourceTree = "<group>"; };
+		786C8E3C2611A2160051729D /* SearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResults.swift; sourceTree = "<group>"; };
 		7870133F2579721A0019C24A /* Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		78767E0E25BEF7CF00CBF2B8 /* DeleteLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteLauncher.swift; sourceTree = "<group>"; };
 		78767E1125BF1A6D00CBF2B8 /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 				781F45E225C97555004F9C45 /* FeedbackLauncher.swift */,
 				781F45E525C975FD004F9C45 /* ProposalPopup.swift */,
 				781F45EE25CD82D4004F9C45 /* Map.swift */,
+				786C8E3C2611A2160051729D /* SearchResults.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -648,6 +651,7 @@
 				78295B0A25990C1C00004CE7 /* Message.swift in Sources */,
 				784C0E5E25F92ABD0075C6B5 /* InfoPage.swift in Sources */,
 				781F45E325C97555004F9C45 /* FeedbackLauncher.swift in Sources */,
+				786C8E3D2611A2160051729D /* SearchResults.swift in Sources */,
 				78295B1A2599133C00004CE7 /* MessagesController.swift in Sources */,
 				784C0E8E25FD25670075C6B5 /* CheckBox.swift in Sources */,
 				78D6F616259A11E600D2A0CE /* ChatMessageCell.swift in Sources */,
@@ -839,7 +843,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 42;
+				CURRENT_PROJECT_VERSION = 44;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
@@ -847,7 +851,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9999955;
+				MARKETING_VERSION = 1.999995553;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
@@ -862,14 +866,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 42;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9999955;
+				MARKETING_VERSION = 1.999995553;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
