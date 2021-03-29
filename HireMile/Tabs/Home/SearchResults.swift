@@ -45,7 +45,10 @@ class SearchResults: UITableViewController {
                     job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                     job.postId = value["postId"] as? String ?? "Error"
                     if let title = job.titleOfPost, let description = job.descriptionOfPost {
-                        if title.contains(keyword) || description.contains(keyword) {
+                        print(title)
+                        print(description)
+                        if title.lowercased().contains(keyword.lowercased()) || description.lowercased().contains(keyword.lowercased()) {
+                            print("hey there")
                             self.allJobs.append(job)
                         }
                     }
