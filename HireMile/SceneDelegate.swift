@@ -22,6 +22,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.rootViewController = UINavigationController(rootViewController: SignIn())
         window?.makeKeyAndVisible()
+        
+//        window?.rootViewController = UINavigationController(rootViewController: SearchResults())
+//        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
