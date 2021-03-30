@@ -187,7 +187,7 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
     
     func addSubviews() {
-        self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: 1000)
+        self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: 800)
         self.view.addSubview(scrollView)
         self.scrollView.addSubview(welcomeLabel)
         self.scrollView.addSubview(nameTextField)
@@ -202,6 +202,8 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
     
     func addConstraints() {
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
         self.scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         self.scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true

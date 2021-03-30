@@ -24,6 +24,13 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     
     var error: NSError?
     
+    let scrollView : UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.backgroundColor = UIColor.white
+        return scrollView
+    }()
+    
     let welcomeLabel : UILabel = {
         let label = UILabel()
         let attributedText = NSMutableAttributedString(string: "Welcome to", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20), NSAttributedString.Key.foregroundColor: UIColor.black])
@@ -88,11 +95,61 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         return button
     }()
     
+    let orLine : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.lightGray
+        return view
+    }()
+    
+    
+    let orLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Or"
+        label.textColor = UIColor.darkGray
+        label.textAlignment = NSTextAlignment.center
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.backgroundColor = UIColor.white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let appleButton : ASAuthorizationAppleIDButton = {
         let button = ASAuthorizationAppleIDButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.cornerRadius = 22.5
         button.addTarget(self, action: #selector(applePressed), for: .touchUpInside)
+        return button
+    }()
+    
+    let googleButton : UIButton = {
+        let button = UIButton(type: .system)
+        let attributedTitle = NSMutableAttributedString(string: "Sign In with ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
+        attributedTitle.append(NSMutableAttributedString(string: "G", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 251/255, green: 188/255, blue: 5/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "g", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "l", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 51/255, green: 168/255, blue: 83/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "e", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 22.5
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(googlePressed), for: .touchUpInside)
+        return button
+    }()
+    
+    let facebookButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Sign In with Facebook", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor(red: 46/255, green: 78/255, blue: 167/255, alpha: 1)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 22.5
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(googlePressed), for: .touchUpInside)
         return button
     }()
     
@@ -160,17 +217,30 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
     
     func addSubviews() {
-        self.view.addSubview(welcomeLabel)
-        self.view.addSubview(emailTextField)
-        self.view.addSubview(passwordTextField)
-        self.view.addSubview(forgotPasswordButton)
-        self.view.addSubview(loginButton)
-        self.view.addSubview(appleButton)
-        self.view.addSubview(signUpButton)
+        self.scrollView.contentSize = CGSize(width: self.view.frame.width, height: 800)
+        self.view.addSubview(scrollView)
+        self.scrollView.addSubview(welcomeLabel)
+        self.scrollView.addSubview(emailTextField)
+        self.scrollView.addSubview(passwordTextField)
+        self.scrollView.addSubview(forgotPasswordButton)
+        self.scrollView.addSubview(loginButton)
+        self.scrollView.addSubview(orLine)
+        self.scrollView.addSubview(orLabel)
+        self.scrollView.addSubview(appleButton)
+        self.scrollView.addSubview(googleButton)
+        self.scrollView.addSubview(facebookButton)
+        self.scrollView.addSubview(signUpButton)
     }
     
     func addConstraints() {
-        self.welcomeLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 30).isActive = true
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.showsHorizontalScrollIndicator = false
+        self.scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        self.scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        self.scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+        
+        self.welcomeLabel.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 30).isActive = true
         self.welcomeLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.welcomeLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 20).isActive = true
         self.welcomeLabel.heightAnchor.constraint(equalToConstant: 150).isActive = true
@@ -190,20 +260,40 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         self.forgotPasswordButton.widthAnchor.constraint(equalToConstant: 130).isActive = true
         self.forgotPasswordButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        self.loginButton.topAnchor.constraint(equalTo: self.forgotPasswordButton.bottomAnchor, constant: 20).isActive = true
+        self.loginButton.topAnchor.constraint(equalTo: self.forgotPasswordButton.bottomAnchor, constant: 15).isActive = true
         self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.loginButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.loginButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
-        self.appleButton.topAnchor.constraint(equalTo: self.loginButton.bottomAnchor, constant: 20).isActive = true
+        self.orLine.topAnchor.constraint(equalTo: self.loginButton.bottomAnchor, constant: 25).isActive = true
+        self.orLine.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.orLine.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.orLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        self.orLabel.topAnchor.constraint(equalTo: self.loginButton.bottomAnchor).isActive = true
+        self.orLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        self.orLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.orLabel.bottomAnchor.constraint(equalTo: appleButton.topAnchor).isActive = true
+
+        self.appleButton.topAnchor.constraint(equalTo: self.orLine.bottomAnchor, constant: 25).isActive = true
         self.appleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.appleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.appleButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        
-        self.signUpButton.topAnchor.constraint(equalTo: self.appleButton.bottomAnchor, constant: 30).isActive = true
+
+        self.googleButton.topAnchor.constraint(equalTo: self.appleButton.bottomAnchor, constant: 20).isActive = true
+        self.googleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.googleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.googleButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+
+        self.facebookButton.topAnchor.constraint(equalTo: self.googleButton.bottomAnchor, constant: 20).isActive = true
+        self.facebookButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.facebookButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.facebookButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+
+        self.signUpButton.topAnchor.constraint(equalTo: self.facebookButton.bottomAnchor, constant: 30).isActive = true
         self.signUpButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.signUpButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-        self.signUpButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0).isActive = true
+        self.signUpButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.emailTextField.delegate = self
         self.passwordTextField.delegate = self
@@ -236,6 +326,14 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     
     @objc func applePressed() {
         signUpWithApple()
+    }
+    
+    @objc func googlePressed() {
+        print("google pressed")
+    }
+    
+    @objc func facebookPressed() {
+        print("facebook pressed")
     }
     
     @objc func signUpPressed() {
