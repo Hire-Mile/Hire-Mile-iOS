@@ -1101,7 +1101,7 @@ class MenuListController: UITableViewController {
                 errorAlert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
                 self.present(errorAlert, animated: true, completion: nil)
             }
-            let controller = SignIn()
+            let controller = WelcomeScreen()
             controller.modalPresentationStyle = .fullScreen
             self.present(controller, animated: true, completion: nil)
         }))

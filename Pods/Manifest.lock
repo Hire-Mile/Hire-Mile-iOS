@@ -6,6 +6,22 @@ PODS:
   - AppAuth/ExternalUserAgent (1.4.0)
   - BulletinBoard (4.1.2)
   - DatePickerDialog (4.0)
+  - FacebookCore (0.9.0):
+    - FBSDKCoreKit (~> 5.0)
+  - FacebookLogin (0.9.0):
+    - FacebookCore (~> 0.9.0)
+    - FBSDKCoreKit (~> 5.0)
+    - FBSDKLoginKit (~> 5.0)
+  - FBSDKCoreKit (5.15.1):
+    - FBSDKCoreKit/Basics (= 5.15.1)
+    - FBSDKCoreKit/Core (= 5.15.1)
+  - FBSDKCoreKit/Basics (5.15.1)
+  - FBSDKCoreKit/Core (5.15.1):
+    - FBSDKCoreKit/Basics
+  - FBSDKLoginKit (5.15.1):
+    - FBSDKLoginKit/Login (= 5.15.1)
+  - FBSDKLoginKit/Login (5.15.1):
+    - FBSDKCoreKit (~> 5.0)
   - Firebase/Analytics (6.30.0):
     - Firebase/Core
   - Firebase/Auth (6.30.0):
@@ -121,6 +137,7 @@ PODS:
   - GTMSessionFetcher/Core (1.4.0)
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
+  - JGProgressHUD (2.2)
   - Kingfisher (5.15.8):
     - Kingfisher/Core (= 5.15.8)
   - Kingfisher/Core (5.15.8)
@@ -146,11 +163,14 @@ PODS:
   - SideMenu (6.5.0)
   - STPopup (1.8.7)
   - SVProgressHUD (2.2.5)
+  - SwiftyJSON (5.0.0)
   - ZKCarousel (1.1.0)
 
 DEPENDENCIES:
   - BulletinBoard
   - DatePickerDialog
+  - FacebookCore
+  - FacebookLogin
   - Firebase/Analytics
   - Firebase/Auth
   - Firebase/Core
@@ -160,6 +180,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - FSCalendar
   - GoogleSignIn
+  - JGProgressHUD
   - Kingfisher
   - MBProgressHUD
   - NVActivityIndicatorView
@@ -168,6 +189,7 @@ DEPENDENCIES:
   - SideMenu
   - STPopup
   - SVProgressHUD
+  - SwiftyJSON
   - ZKCarousel
 
 SPEC REPOS:
@@ -175,6 +197,10 @@ SPEC REPOS:
     - AppAuth
     - BulletinBoard
     - DatePickerDialog
+    - FacebookCore
+    - FacebookLogin
+    - FBSDKCoreKit
+    - FBSDKLoginKit
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuth
@@ -193,6 +219,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
+    - JGProgressHUD
     - Kingfisher
     - leveldb-library
     - MBProgressHUD
@@ -205,12 +232,17 @@ SPEC REPOS:
     - SideMenu
     - STPopup
     - SVProgressHUD
+    - SwiftyJSON
     - ZKCarousel
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   BulletinBoard: 1c0cb191b6c6245d08f51bd2445f1e36414ec0ed
   DatePickerDialog: ccff2f91ff7a018057a4d72fa5ad6de49c8cb0cd
+  FacebookCore: ba86524b66cfa86d0f8e65d08faa8504a9f732dd
+  FacebookLogin: 6cee9fd6e1fe976fe8f7eec199e27b28b14f5d63
+  FBSDKCoreKit: 1d5acf7c9d7a2f92bb1a242dc60cae5b7adb91df
+  FBSDKLoginKit: f1ea8026a58b52d30c9f2e6a58ca7d813619fb83
   Firebase: 210f41ca352067d83b1ba4fd2e7fb49a0c017397
   FirebaseAnalytics: a299a86ef70fcc6aa011418bc65a7e101fb9636c
   FirebaseAuth: 300433de340c1b058dbb8aec224a3f1bcfda5184
@@ -229,6 +261,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  JGProgressHUD: d83d7a981b85d11205e19ff8ad5bb9c40571c847
   Kingfisher: a3c03d702433fa6cfedabb2bddbe076fb8f2e902
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
@@ -241,8 +274,9 @@ SPEC CHECKSUMS:
   SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
   STPopup: a9045557bc48a0df51fbb7bf0544447c5fe84d34
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: 2dbee58f5b9971f6471eb372ad834d66901985c1
+PODFILE CHECKSUM: e6af11aedd9b6c738a9d53a2fb3637e0b2c4f8bd
 
 COCOAPODS: 1.10.1
