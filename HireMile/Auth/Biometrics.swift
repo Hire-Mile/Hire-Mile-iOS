@@ -124,6 +124,9 @@ class Biometrics: UIViewController {
     
     @objc func laterPressed() {
         UserDefaults.standard.setValue(false, forKey: "biometrics")
+        let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+        let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+        UIApplication.shared.keyWindow?.rootViewController = vc
     }
     
     @objc func configurePressed() {

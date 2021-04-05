@@ -13,9 +13,12 @@ import FirebaseAuth
 import AuthenticationServices
 import FirebaseDatabase
 import MBProgressHUD
+import GoogleSignIn
+import FacebookCore
+import FacebookLogin
 import CryptoKit
 
-class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate, UITextFieldDelegate {
+class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate, UITextFieldDelegate, GIDSignInDelegate {
     
     var currentNonce: String?
     var largeName = ""
@@ -120,11 +123,61 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         return button
     }()
     
+    let orLine : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.lightGray
+        return view
+    }()
+    
+    
+    let orLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Or"
+        label.textColor = UIColor.darkGray
+        label.textAlignment = NSTextAlignment.center
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.backgroundColor = UIColor.white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let appleButton : ASAuthorizationAppleIDButton = {
-        let button = ASAuthorizationAppleIDButton(type: .signUp, style: .black)
+        let button = ASAuthorizationAppleIDButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.cornerRadius = 22.5
         button.addTarget(self, action: #selector(applePressed), for: .touchUpInside)
+        return button
+    }()
+    
+    let googleButton : UIButton = {
+        let button = UIButton(type: .system)
+        let attributedTitle = NSMutableAttributedString(string: "Sign Up with ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
+        attributedTitle.append(NSMutableAttributedString(string: "G", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 251/255, green: 188/255, blue: 5/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "g", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "l", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 51/255, green: 168/255, blue: 83/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "e", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 22.5
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(googlePressed), for: .touchUpInside)
+        return button
+    }()
+    
+    let facebookButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Sign Up with Facebook", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor(red: 46/255, green: 78/255, blue: 167/255, alpha: 1)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        button.layer.cornerRadius = 22.5
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(facebookPressed), for: .touchUpInside)
         return button
     }()
     
@@ -166,6 +219,8 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         
         // Functions to throw
         self.basicSetup()
+        
+        GIDSignIn.sharedInstance().delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -196,7 +251,11 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
 //        self.scrollView.addSubview(zipCodeTextField)
         self.scrollView.addSubview(passwordTextField)
         self.scrollView.addSubview(signUpButton)
+        self.scrollView.addSubview(orLine)
+        self.scrollView.addSubview(orLabel)
         self.scrollView.addSubview(appleButton)
+        self.scrollView.addSubview(googleButton)
+        self.scrollView.addSubview(facebookButton)
         self.scrollView.addSubview(signInButton)
         scrollView.addSubview(extraView)
     }
@@ -245,13 +304,33 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         self.signUpButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.signUpButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.signUpButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        
+        self.orLine.topAnchor.constraint(equalTo: self.signUpButton.bottomAnchor, constant: 25).isActive = true
+        self.orLine.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.orLine.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.orLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        
+        self.orLabel.topAnchor.constraint(equalTo: self.signUpButton.bottomAnchor).isActive = true
+        self.orLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        self.orLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        self.orLabel.bottomAnchor.constraint(equalTo: appleButton.topAnchor).isActive = true
 
-        self.appleButton.topAnchor.constraint(equalTo: self.signUpButton.bottomAnchor, constant: 20).isActive = true
+        self.appleButton.topAnchor.constraint(equalTo: self.orLine.bottomAnchor, constant: 25).isActive = true
         self.appleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.appleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.appleButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
-        self.signInButton.topAnchor.constraint(equalTo: self.appleButton.bottomAnchor, constant: 30).isActive = true
+        self.googleButton.topAnchor.constraint(equalTo: self.appleButton.bottomAnchor, constant: 20).isActive = true
+        self.googleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.googleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.googleButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+
+        self.facebookButton.topAnchor.constraint(equalTo: self.googleButton.bottomAnchor, constant: 20).isActive = true
+        self.facebookButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.facebookButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.facebookButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
+
+        self.signInButton.topAnchor.constraint(equalTo: self.facebookButton.bottomAnchor, constant: 30).isActive = true
         self.signInButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.signInButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.signInButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -278,7 +357,7 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
     
     @objc func loginPressed() {
-        let controller = SignIn()
+        let controller = SignInController()
         controller.modalPresentationStyle = .fullScreen
         self.present(controller, animated: true, completion: nil)
     }
@@ -441,8 +520,7 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
                                                             "email" : "\(Auth.auth().currentUser!.email!)",
                                                             "profile-image" : "not-yet-selected",
                                                             "rating" : 100,
-                                                            "zipcode" : 0,
-                                                            "dob" : "Signed in with Apple - Unknown",
+//                                                            "dob" : "Signed in with Apple - Unknown",
 //                                                            "zipcode" : 0,
                                                             "services" : 0,
                                                             "number-of-ratings" : 0 
@@ -479,6 +557,104 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
         print("Sign in with Apple errored: \(errror)")
+    }
+    
+    @objc func googlePressed() {
+        GIDSignIn.sharedInstance()?.presentingViewController = self
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
+    @objc func facebookPressed() {
+        let loginManager = LoginManager()
+        loginManager.logIn(permissions: [Permission.email, Permission.publicProfile], viewController: self) { (result) in
+            switch result {
+            case .success(granted: _, declined: _, token: _):
+                print("successfully logged into facebook")
+                self.signIntoFirebase()
+            case .failed(let err):
+                let alert = UIAlertController(title: "Error", message: err.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            case .cancelled:
+                print("cancelled")
+            }
+        }
+    }
+    
+    fileprivate func signIntoFirebase() {
+        MBProgressHUD.showAdded(to: view, animated: true)
+        guard let accessTokenString = AccessToken.current?.tokenString else { return }
+        let credential = FacebookAuthProvider.credential(withAccessToken: accessTokenString)
+        Auth.auth().signIn(with: credential) { (user, err) in
+            if let error = err {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            let uid = user?.user.uid
+            let email = user?.user.email
+            let username = user?.user.displayName
+            let profilePic = user?.user.photoURL
+            let infoToAdd : Dictionary<String, Any> = [
+                "name" : "\(username!)",
+                "email" : "\(email!)",
+                "profile-image" : "\(profilePic!)",
+                "rating" : 100,
+//                    "dob" : "Signed in with Apple - Unknown",
+//                    "zipcode" : 0,
+                "services" : 0,
+                "number-of-ratings" : 0
+            ]
+            Database.database().reference().child("Users").child(uid!).updateChildValues(infoToAdd)
+            let userInformation : Dictionary<String, Any> = [
+                "uid" : "\(uid!)"
+            ]
+            let postFeed = ["\(uid!)" : userInformation]
+            Database.database().reference().child("Users").child(uid!).child("favorites").updateChildValues(postFeed)
+            self.successCompletion()
+        }
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+        if let error = error {
+            print("ERROR: \(error.localizedDescription)")
+            return
+        }
+        guard let authentication = user.authentication else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
+        Auth.auth().signInAndRetrieveData(with: credential) { (result, authError) in
+            if let error = authError {
+                print("failed to sign in with firebase credential from google sign in")
+                let alert = UIAlertController(title: "Error", message: "Please try again, could not connect to Database", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                return
+            } else {
+                let uid = result?.user.uid
+                let email = result?.user.email
+                let username = result?.user.displayName
+                let profilePic = result?.user.photoURL
+                let infoToAdd : Dictionary<String, Any> = [
+                    "name" : "\(username!)",
+                    "email" : "\(email!)",
+                    "profile-image" : "\(profilePic!)",
+                    "rating" : 100,
+//                    "dob" : "Signed in with Apple - Unknown",
+//                    "zipcode" : 0,
+                    "services" : 0,
+                    "number-of-ratings" : 0
+                ]
+                Database.database().reference().child("Users").child(uid!).updateChildValues(infoToAdd)
+                let userInformation : Dictionary<String, Any> = [
+                    "uid" : "\(uid!)"
+                ]
+                let postFeed = ["\(uid!)" : userInformation]
+                Database.database().reference().child("Users").child(uid!).child("favorites").updateChildValues(postFeed)
+                self.successCompletion()
+            }
+        }
     }
 
 }

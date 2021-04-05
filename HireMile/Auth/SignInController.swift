@@ -14,9 +14,12 @@ import LocalAuthentication
 import AuthenticationServices
 import FirebaseDatabase
 import MBProgressHUD
+import GoogleSignIn
+import FacebookCore
+import FacebookLogin
 import CryptoKit
 
-class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate, UITextFieldDelegate {
+class SignInController: UIViewController, ASAuthorizationControllerPresentationContextProviding, ASAuthorizationControllerDelegate, UITextFieldDelegate, GIDSignInDelegate {
     
     var currentNonce: String?
     
@@ -149,7 +152,7 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.layer.cornerRadius = 22.5
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(googlePressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(facebookPressed), for: .touchUpInside)
         return button
     }()
     
@@ -175,6 +178,8 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        GIDSignIn.sharedInstance().delegate = self
         
         // Functions to throw
         self.basicSetup()
@@ -329,11 +334,43 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
     }
     
     @objc func googlePressed() {
-        print("google pressed")
+        GIDSignIn.sharedInstance()?.presentingViewController = self
+        GIDSignIn.sharedInstance().signIn()
     }
     
     @objc func facebookPressed() {
-        print("facebook pressed")
+        let loginManager = LoginManager()
+        loginManager.logIn(permissions: [Permission.email, Permission.publicProfile], viewController: self) { (result) in
+            switch result {
+            case .success(granted: _, declined: _, token: _):
+                print("successfully logged into facebook")
+                self.signIntoFirebase()
+            case .failed(let err):
+                let alert = UIAlertController(title: "Error", message: err.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            case .cancelled:
+                print("cancelled")
+            }
+        }
+    }
+    
+    fileprivate func signIntoFirebase() {
+        MBProgressHUD.showAdded(to: view, animated: true)
+        guard let accessTokenString = AccessToken.current?.tokenString else { return }
+        let credential = FacebookAuthProvider.credential(withAccessToken: accessTokenString)
+        Auth.auth().signIn(with: credential) { (user, err) in
+            if let error = err {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+            let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+            UIApplication.shared.keyWindow?.rootViewController = vc
+        }
     }
     
     @objc func signUpPressed() {
@@ -475,6 +512,32 @@ class SignIn: UIViewController, ASAuthorizationControllerPresentationContextProv
         alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
         print("Sign in with Apple errored: \(errror)")
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+        MBProgressHUD.showAdded(to: self.view, animated: true)
+        if let error = error {
+            MBProgressHUD.hide(for: self.view, animated: true)
+            print("ERROR: \(error.localizedDescription)")
+            return
+        }
+        guard let authentication = user.authentication else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
+        Auth.auth().signInAndRetrieveData(with: credential) { (result, authError) in
+            if let error = authError {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                print("failed to sign in with firebase credential from google sign in")
+                let alert = UIAlertController(title: "Error", message: "Please try again, could not connect to Database", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                return
+            } else {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                UIApplication.shared.keyWindow?.rootViewController = vc
+            }
+        }
     }
 
 

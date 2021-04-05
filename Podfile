@@ -26,5 +26,10 @@ target 'HireMile' do
   pod 'PhoneNumberKit'
   pod 'FSCalendar'
   pod 'DatePickerDialog'
+  pod 'GoogleSignIn'
+  pod 'FacebookLogin'
+  pod 'FacebookCore'
+  pod 'JGProgressHUD'
+  pod 'SwiftyJSON'
 
 end
