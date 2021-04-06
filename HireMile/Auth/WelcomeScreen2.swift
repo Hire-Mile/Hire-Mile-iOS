@@ -7,14 +7,12 @@
 //
 
 import UIKit
-import Foundation
 import LocalAuthentication
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
-import FirebaseStorage
 
-class WelcomeScreen: UIViewController {
+class WelcomeScreen2: UIViewController {
     
     // MARK: - Variables
     
@@ -23,6 +21,26 @@ class WelcomeScreen: UIViewController {
     var error: NSError?
     
     // MARK: - Constants
+    
+    let headerImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "on-foto")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = UIView.ContentMode.scaleAspectFill
+        return imageView
+    }()
+    
+    let signInButton : UIButton = {
+        let button = UIButton(type: .system)
+        let prompt1 = NSMutableAttributedString(string: "Already have an account? ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.darkGray, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
+        let prompt2 = NSAttributedString(string: "Sign In", attributes: [NSAttributedString.Key.foregroundColor : UIColor.mainBlue, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
+        prompt1.append(prompt2)
+        button.backgroundColor = UIColor.clear
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setAttributedTitle(prompt1, for: .normal)
+        button.addTarget(self, action: #selector(signInButtonPressed), for: UIControl.Event.touchUpInside)
+        return button
+    }()
     
     let signUpButton : UIButton = {
         let button = UIButton(type: .system)
@@ -36,39 +54,15 @@ class WelcomeScreen: UIViewController {
         return button
     }()
     
-    let signInButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.white
-        button.setTitle("Sign In", for: .normal)
-        button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 18)
-        button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.layer.cornerRadius = 16
-        button.layer.borderColor = UIColor.mainBlue.cgColor
-        button.layer.borderWidth = 3
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(signInButtonPressed), for: UIControl.Event.touchUpInside)
-        return button
-    }()
-    
     let text : UILabel = {
         let label = UILabel()
-        let title = NSMutableAttributedString(string: "By continuing, you are agreeing to our", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14)])
-        let description = NSAttributedString(string: " Terms of Service & Privacy Policy", attributes: [NSAttributedString.Key.foregroundColor : UIColor.mainBlue, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 14)])
+        let title = NSMutableAttributedString(string: "Earn Money", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)])
+        let description = NSAttributedString(string: "\n\nSearch among the best workers near your neighborhood for any task or project that you need performed quickly and efficiently.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16)])
         title.append(description)
         label.attributedText = title
-        label.textAlignment = NSTextAlignment.center
         label.numberOfLines = 100
         label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    let titleLabel : UILabel = {
-        let label = UILabel()
-        label.text = "HireMile"
-        label.font = UIFont.boldSystemFont(ofSize: 60)
-        label.textColor = UIColor.mainBlue
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = NSTextAlignment.center
+        label.textColor = UIColor.black
         return label
     }()
     
@@ -76,8 +70,6 @@ class WelcomeScreen: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         view.backgroundColor = UIColor.white
 
@@ -88,8 +80,6 @@ class WelcomeScreen: UIViewController {
         super.viewWillAppear(animated)
         
         autoSignIn()
-        
-        constraints()
         
         navigationController?.navigationBar.isHidden = true
     }
@@ -107,18 +97,17 @@ class WelcomeScreen: UIViewController {
     }
     
     func constraints() {
-        
-        view.addSubview(text)
-        text.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        text.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -40).isActive = true
-        text.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 40).isActive = true
-        text.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -155).isActive = true
+        view.addSubview(headerImage)
+        headerImage.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        headerImage.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        headerImage.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        headerImage.heightAnchor.constraint(equalToConstant: 548).isActive = true
         
         view.addSubview(signInButton)
-        signInButton.bottomAnchor.constraint(equalTo: text.topAnchor, constant: -60).isActive = true
-        signInButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        signInButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        signInButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        signInButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
+        signInButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        signInButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        signInButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         view.addSubview(signUpButton)
         signUpButton.bottomAnchor.constraint(equalTo: signInButton.topAnchor, constant: -15).isActive = true
@@ -126,11 +115,11 @@ class WelcomeScreen: UIViewController {
         signUpButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         signUpButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        view.addSubview(titleLabel)
-        titleLabel.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        titleLabel.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo: signUpButton.topAnchor).isActive = true
+        view.addSubview(text)
+        text.topAnchor.constraint(equalTo: headerImage.bottomAnchor).isActive = true
+        text.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
+        text.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        text.bottomAnchor.constraint(equalTo: signUpButton.topAnchor, constant: -30).isActive = true
     }
     
     // MARK: - Objective-C Functions

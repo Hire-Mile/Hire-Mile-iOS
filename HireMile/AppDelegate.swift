@@ -8,8 +8,11 @@
 
 import UIKit
 import Firebase
+import FirebaseCore
 import GoogleSignIn
 import FBSDKCoreKit
+import FirebaseAuth
+import FirebaseDatabase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {

@@ -13,13 +13,14 @@
 		78008CD72569B8E4005E4A15 /* Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD62569B8E4005E4A15 /* Password.swift */; };
 		7801D9BC25D28AE400BB0B33 /* AddProfilePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7801D9BB25D28AE400BB0B33 /* AddProfilePhoto.swift */; };
 		7801D9BF25D296E100BB0B33 /* AllowLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7801D9BE25D296E100BB0B33 /* AllowLocation.swift */; };
+		7804EC90261BA24500F2C0D2 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7804EC8F261BA24500F2C0D2 /* WelcomeScreen.swift */; };
 		7805676C26148719006ADEA9 /* SparkExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676626148715006ADEA9 /* SparkExtensions.swift */; };
 		7805676D26148719006ADEA9 /* SparkModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676726148716006ADEA9 /* SparkModels.swift */; };
 		7805676E26148719006ADEA9 /* SparkKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676826148717006ADEA9 /* SparkKeys.swift */; };
 		7805676F26148719006ADEA9 /* SparkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676926148718006ADEA9 /* SparkService.swift */; };
 		7805677026148719006ADEA9 /* Spark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676A26148718006ADEA9 /* Spark.swift */; };
 		7805677126148719006ADEA9 /* SparkSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676B26148719006ADEA9 /* SparkSetup.swift */; };
-		780567DE261AEFA7006ADEA9 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780567DD261AEFA7006ADEA9 /* WelcomeScreen.swift */; };
+		780567DE261AEFA7006ADEA9 /* WelcomeScreen2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780567DD261AEFA7006ADEA9 /* WelcomeScreen2.swift */; };
 		780766BF260DBF4400962F4E /* TimePickerSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780766BE260DBF4400962F4E /* TimePickerSwift.swift */; };
 		780A7F622562D565009BD93A /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780A7F612562D565009BD93A /* Home.swift */; };
 		78147A7925EFB2CC00828998 /* NotificationObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78147A7825EFB2CC00828998 /* NotificationObject.swift */; };
@@ -111,13 +112,14 @@
 		78008CD62569B8E4005E4A15 /* Password.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Password.swift; sourceTree = "<group>"; };
 		7801D9BB25D28AE400BB0B33 /* AddProfilePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfilePhoto.swift; sourceTree = "<group>"; };
 		7801D9BE25D296E100BB0B33 /* AllowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllowLocation.swift; sourceTree = "<group>"; };
+		7804EC8F261BA24500F2C0D2 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
 		7805676626148715006ADEA9 /* SparkExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkExtensions.swift; sourceTree = "<group>"; };
 		7805676726148716006ADEA9 /* SparkModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkModels.swift; sourceTree = "<group>"; };
 		7805676826148717006ADEA9 /* SparkKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkKeys.swift; sourceTree = "<group>"; };
 		7805676926148718006ADEA9 /* SparkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkService.swift; sourceTree = "<group>"; };
 		7805676A26148718006ADEA9 /* Spark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spark.swift; sourceTree = "<group>"; };
 		7805676B26148719006ADEA9 /* SparkSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkSetup.swift; sourceTree = "<group>"; };
-		780567DD261AEFA7006ADEA9 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
+		780567DD261AEFA7006ADEA9 /* WelcomeScreen2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen2.swift; sourceTree = "<group>"; };
 		780766BE260DBF4400962F4E /* TimePickerSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerSwift.swift; sourceTree = "<group>"; };
 		780A7F612562D565009BD93A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		78147A7825EFB2CC00828998 /* NotificationObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationObject.swift; sourceTree = "<group>"; };
@@ -340,7 +342,8 @@
 		784646E425629A84000C5F26 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				780567DD261AEFA7006ADEA9 /* WelcomeScreen.swift */,
+				780567DD261AEFA7006ADEA9 /* WelcomeScreen2.swift */,
+				7804EC8F261BA24500F2C0D2 /* WelcomeScreen.swift */,
 				784646CA2561B841000C5F26 /* SignInController.swift */,
 				784646E525629A97000C5F26 /* SignUp.swift */,
 				784646E725629F94000C5F26 /* ForgotPassword.swift */,
@@ -665,12 +668,13 @@
 				78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */,
 				78008CD72569B8E4005E4A15 /* Password.swift in Sources */,
 				7805676E26148719006ADEA9 /* SparkKeys.swift in Sources */,
-				780567DE261AEFA7006ADEA9 /* WelcomeScreen.swift in Sources */,
+				780567DE261AEFA7006ADEA9 /* WelcomeScreen2.swift in Sources */,
 				787B018425685BD600BBC392 /* EditProfile.swift in Sources */,
 				78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */,
 				786A3323256596E700B58265 /* FilterLauncher.swift in Sources */,
 				78917537260112EB006FFF06 /* Biometrics.swift in Sources */,
 				78295B1B2599133C00004CE7 /* NewMessageController.swift in Sources */,
+				7804EC90261BA24500F2C0D2 /* WelcomeScreen.swift in Sources */,
 				787B018825685BE600BBC392 /* Email.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				78008CD22569B7DA005E4A15 /* ResetPassword.swift in Sources */,
@@ -883,7 +887,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
@@ -891,7 +895,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.99999555553;
+				MARKETING_VERSION = 1.999995555551;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;
@@ -906,14 +910,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = ZH735L9VC9;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.99999555553;
+				MARKETING_VERSION = 1.999995555551;
 				PRODUCT_BUNDLE_IDENTIFIER = "Jorge-Zapata.HireMile";
 				PRODUCT_NAME = Hiremile;
 				SWIFT_VERSION = 5.0;

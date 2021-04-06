@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
 import Firebase
 
 class SearchResults: UITableViewController {

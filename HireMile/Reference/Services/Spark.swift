@@ -11,6 +11,8 @@ import FirebaseAuth
 import JGProgressHUD
 import SwiftyJSON
 import FirebaseStorage
+import FirebaseAuth
+import FirebaseDatabase
 import FacebookCore
 import FacebookLogin
 
@@ -19,7 +21,7 @@ class Spark {
     // MARK: -
     // MARK: Start Firebase
     static func start() {
-        FirebaseApp.configure()
+//        FirebaseApp.configure()
     }
     
     // MARK: -
