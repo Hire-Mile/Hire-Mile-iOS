@@ -30,6 +30,15 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     var passingImage : UIImage?
     var openingFromNotification = false
     
+    let scrollView : UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.backgroundColor = UIColor.white
+        return scrollView
+    }()
+    
     private let refrshControl : UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.tintColor = UIColor.black
@@ -48,7 +57,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     let menuButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setImage(UIImage(named: "menu-light"), for: .normal)
+        button.setImage(UIImage(named: "menu-light"), for: .normal)
         button.backgroundColor = UIColor.clear
         button.addTarget(self, action: #selector(sideMenuTappped), for: .touchUpInside)
         return button
@@ -58,13 +67,15 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let view = UIView()
         view.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 25
+        view.layer.borderWidth = 1.5
+        view.layer.borderColor = UIColor(red: 236/255, green: 236/255, blue: 236/255, alpha: 1).cgColor
+        view.layer.cornerRadius = 10
         return view
     }()
     
     let searchImage : UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "magnifyingglass")
+        imageView.image = UIImage(named: "search")
         imageView.tintColor = UIColor.lightGray
         imageView.backgroundColor = .clear
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,7 +84,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     let searchLabel : UITextField = {
         let label = UITextField()
-        label.placeholder = "Search Services"
+        label.text = "Search Services"
         label.tintColor = UIColor.black
         label.textColor = UIColor.black
         label.textAlignment = NSTextAlignment.left
@@ -86,7 +97,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Browse by category"
-        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.black
         return label
@@ -106,8 +117,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     let mapButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "map-light"), for: .normal)
-        button.addTarget(self, action: #selector(mapButtonPressed), for: .touchUpInside)
+//        button.setImage(UIImage(named: "map-light"), for: .normal)
+//        button.addTarget(self, action: #selector(mapButtonPressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(profileImagePressed), for: .touchUpInside)
         button.imageView?.contentMode = .scaleAspectFill
         return button
     }()
@@ -128,6 +140,51 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         return imageView
     }()
     
+    let hireMileLog : UILabel = {
+        let label = UILabel()
+        label.text = "HireMile"
+        label.font = UIFont.boldSystemFont(ofSize: 22)
+        label.textAlignment = NSTextAlignment.center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.black
+        return label
+    }()
+    
+    let bigGreeenView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 10
+        view.clipsToBounds = true
+        view.backgroundColor = UIColor(red: 197/255, green: 248/255, blue: 214/255, alpha: 1)
+        return view
+    }()
+    
+    let happyImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "happy")!
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = UIView.ContentMode.scaleAspectFill
+        return imageView
+    }()
+    
+    let bannerTitleLarge : UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 3
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let bannerButtonMain : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Learn more", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor(red: 34/255, green: 34/255, blue: 34/255, alpha: 1)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(buttonLearnMoreTapped), for: UIControl.Event.touchUpInside)
+        return button
+    }()
+    
     var isGrid = true
     
     var categoryCollectionView : UICollectionView?
@@ -143,11 +200,11 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.addSubview(listTableView)
+//        self.view.addSubview(listTableView)
         self.listTableView.register(CategoryCell.self, forCellReuseIdentifier: "listCell")
         self.listTableView.delegate = self
         self.listTableView.dataSource = self
-        self.listTableView.frame = CGRect(x: 15, y: 290, width: self.view.frame.width - 30, height: self.view.frame.height - 400)
+//        self.listTableView.frame = CGRect(x: 15, y: 290, width: self.view.frame.width - 30, height: self.view.frame.height - 400)
         
         let pushManager = PushNotificationManager(userID: Auth.auth().currentUser!.uid)
         pushManager.registerForPushNotifications()
@@ -163,15 +220,14 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         myCollectionView?.showsVerticalScrollIndicator = false
         myCollectionView?.dataSource = self
         myCollectionView?.delegate = self
-//        myCollectionView?.backgroundColor = UIColor.red
-        view.addSubview(myCollectionView ?? UICollectionView())
+//        view.addSubview(myCollectionView ?? UICollectionView())
         myCollectionView?.refreshControl = refrshControl
         
         let layou2: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layou2.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layou2.scrollDirection = .horizontal
         
-        self.categoryCollectionView = UICollectionView(frame: CGRect(x: 20, y: 155, width: self.view.frame.width - 40, height: 115), collectionViewLayout: layou2)
+        self.categoryCollectionView = UICollectionView(frame: CGRect(x: 0, y: 195, width: self.view.frame.width - 40, height: 115), collectionViewLayout: layou2)
         self.categoryCollectionView!.translatesAutoresizingMaskIntoConstraints = false
         self.categoryCollectionView!.backgroundColor = UIColor.white
         self.categoryCollectionView!.alwaysBounceVertical = false
@@ -182,7 +238,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.categoryCollectionView!.delegate = self
         self.categoryCollectionView!.register(HomeCategoryCell.self, forCellWithReuseIdentifier: "CategoryCellID")
         self.categoryCollectionView!.register(HomeCategoryCell.self, forCellWithReuseIdentifier: "CategoryCellID")
-        view.addSubview(self.categoryCollectionView!)
+        self.scrollView.addSubview(self.categoryCollectionView!)
         
         // Functions to throw
         self.addSubviews()
@@ -229,67 +285,108 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func addSubviews() {
-        self.view.addSubview(menuButton)
-        self.view.addSubview(mapButton)
-        self.view.addSubview(searchView)
-        self.view.addSubview(searchImage)
-        self.view.addSubview(searchLabel)
-        self.view.addSubview(searchButton)
-        self.view.addSubview(categoriesLabel)
-        self.view.addSubview(styleSwitcher)
+        self.view.addSubview(scrollView)
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width - 40, height: 800)
+        self.scrollView.addSubview(menuButton)
+        self.scrollView.addSubview(mapButton)
+        self.scrollView.addSubview(hireMileLog)
+        self.scrollView.addSubview(searchView)
+        self.scrollView.addSubview(searchImage)
+        self.scrollView.addSubview(searchLabel)
+        self.scrollView.addSubview(searchButton)
+        self.scrollView.addSubview(categoriesLabel)
     }
     
     func addConstraints() {
         
-        self.menuButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50).isActive = true
+        let title1 = NSMutableAttributedString(string: "Earn money by", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)])
+        title1.append(NSAttributedString(string: "\nposting your skills", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 24)]))
+        
+        self.scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 15).isActive = true
+        self.scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
+        
+        self.menuButton.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 0).isActive = true
         self.menuButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.menuButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
         self.menuButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         
-        self.mapButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50).isActive = true
+        self.mapButton.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 0).isActive = true
         self.mapButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.mapButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
         self.mapButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         
-        self.searchView.leftAnchor.constraint(equalTo: self.menuButton.rightAnchor, constant: 12).isActive = true
-        self.searchView.centerYAnchor.constraint(equalTo: self.menuButton.centerYAnchor).isActive = true
-        self.searchView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        self.searchView.rightAnchor.constraint(equalTo: self.mapButton.leftAnchor, constant: -12).isActive = true
+        self.hireMileLog.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 0).isActive = true
+        self.hireMileLog.leftAnchor.constraint(equalTo: self.menuButton.rightAnchor).isActive = true
+        self.hireMileLog.rightAnchor.constraint(equalTo: self.mapButton.leftAnchor).isActive = true
+        self.hireMileLog.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-        self.searchImage.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        self.searchImage.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        self.searchImage.leftAnchor.constraint(equalTo: self.searchView.leftAnchor, constant: 20).isActive = true
+        self.searchView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.searchView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.searchView.topAnchor.constraint(equalTo: self.hireMileLog.bottomAnchor, constant: 30).isActive = true
+        self.searchView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+
+        self.searchImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        self.searchImage.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        self.searchImage.leftAnchor.constraint(equalTo: self.searchView.leftAnchor, constant: 16).isActive = true
         self.searchImage.centerYAnchor.constraint(equalTo: self.searchView.centerYAnchor).isActive = true
-        
+
         self.searchLabel.delegate = self
         self.searchLabel.leftAnchor.constraint(equalTo: self.searchImage.rightAnchor, constant: 10).isActive = true
         self.searchLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
         self.searchLabel.rightAnchor.constraint(equalTo: self.searchView.rightAnchor, constant: -20).isActive = true
         self.searchLabel.centerYAnchor.constraint(equalTo: self.searchView.centerYAnchor).isActive = true
-        
-        self.searchButton.topAnchor.constraint(equalTo: self.searchView.topAnchor, constant: 0).isActive = true
+
+        self.searchButton.topAnchor.constraint(equalTo: self.searchView.topAnchor).isActive = true
         self.searchButton.rightAnchor.constraint(equalTo: self.searchView.rightAnchor).isActive = true
         self.searchButton.leftAnchor.constraint(equalTo: self.searchView.leftAnchor).isActive = true
         self.searchButton.bottomAnchor.constraint(equalTo: self.searchView.bottomAnchor).isActive = true
         
-        self.categoriesLabel.topAnchor.constraint(equalTo: self.searchView.bottomAnchor, constant: 15).isActive = true
+        self.categoriesLabel.topAnchor.constraint(equalTo: self.searchView.bottomAnchor, constant: 28).isActive = true
         self.categoriesLabel.leftAnchor.constraint(equalTo: self.menuButton.leftAnchor).isActive = true
         self.categoriesLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         self.categoriesLabel.rightAnchor.constraint(equalTo: self.searchView.rightAnchor).isActive = true
         
-        self.styleSwitcher.topAnchor.constraint(equalTo: self.categoriesLabel.topAnchor).isActive = true
-        self.styleSwitcher.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-        self.styleSwitcher.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        self.styleSwitcher.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        self.scrollView.addSubview(bigGreeenView)
+        self.bigGreeenView.topAnchor.constraint(equalTo: categoriesLabel.bottomAnchor, constant: 160).isActive = true
+        self.bigGreeenView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
+        self.bigGreeenView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.bigGreeenView.heightAnchor.constraint(equalToConstant: 175).isActive = true
         
-        self.listTableView.showsHorizontalScrollIndicator = false
-        self.listTableView.showsVerticalScrollIndicator = false
+        self.scrollView.addSubview(happyImage)
+        self.happyImage.bottomAnchor.constraint(equalTo: self.bigGreeenView.bottomAnchor).isActive = true
+        self.happyImage.rightAnchor.constraint(equalTo: self.bigGreeenView.rightAnchor, constant: -5).isActive = true
+        self.happyImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        self.happyImage.widthAnchor.constraint(equalToConstant: 175).isActive = true
         
-        self.view.addSubview(self.myImageView)
-        self.myImageView.topAnchor.constraint(equalTo: self.menuButton.topAnchor).isActive = true
-        self.myImageView.leftAnchor.constraint(equalTo: self.menuButton.leftAnchor).isActive = true
-        self.myImageView.rightAnchor.constraint(equalTo: self.menuButton.rightAnchor).isActive = true
-        self.myImageView.bottomAnchor.constraint(equalTo: self.menuButton.bottomAnchor).isActive = true
+        self.bigGreeenView.addSubview(bannerTitleLarge)
+        self.bannerTitleLarge.attributedText = title1
+        self.bannerTitleLarge.topAnchor.constraint(equalTo: self.bigGreeenView.topAnchor, constant: 24).isActive = true
+        self.bannerTitleLarge.leftAnchor.constraint(equalTo: self.bigGreeenView.leftAnchor, constant: 24).isActive = true
+        self.bannerTitleLarge.rightAnchor.constraint(equalTo: self.happyImage.centerXAnchor).isActive = true
+        self.bannerTitleLarge.heightAnchor.constraint(equalToConstant: 75).isActive = true
+        
+        self.view.addSubview(bannerButtonMain)
+        self.bannerButtonMain.topAnchor.constraint(equalTo: bannerTitleLarge.bottomAnchor, constant: 5).isActive = true
+        self.bannerButtonMain.leftAnchor.constraint(equalTo: bannerTitleLarge.leftAnchor).isActive = true
+        self.bannerButtonMain.widthAnchor.constraint(equalToConstant: 105).isActive = true
+        self.bannerButtonMain.heightAnchor.constraint(equalToConstant: 40).isActive = true
+
+//
+//        self.styleSwitcher.topAnchor.constraint(equalTo: self.categoriesLabel.topAnchor).isActive = true
+//        self.styleSwitcher.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+//        self.styleSwitcher.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        self.styleSwitcher.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//
+//        self.listTableView.showsHorizontalScrollIndicator = false
+//        self.listTableView.showsVerticalScrollIndicator = false
+        
+        self.scrollView.addSubview(self.myImageView)
+        self.myImageView.topAnchor.constraint(equalTo: self.mapButton.topAnchor).isActive = true
+        self.myImageView.leftAnchor.constraint(equalTo: self.mapButton.leftAnchor).isActive = true
+        self.myImageView.rightAnchor.constraint(equalTo: self.mapButton.rightAnchor).isActive = true
+        self.myImageView.bottomAnchor.constraint(equalTo: self.mapButton.bottomAnchor).isActive = true
         
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (photoSnap) in
             if let photoUrl = photoSnap.value as? String {
@@ -508,6 +605,11 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
+    @objc func buttonLearnMoreTapped() {
+        let url = URL(string: "https://hiremile.com")!
+        UIApplication.shared.open(url)
+    }
+    
     @objc func timerFunction() {
         if GlobalVariables.presentToCat == true {
             
@@ -631,6 +733,11 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
+    @objc func profileImagePressed() {
+        let controller = MyProfile()
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
     @objc func handleReload() {
         self.messages = Array(self.messagesDictionary.values)
         self.messages.sort(by: { (message1, message2) -> Bool in
@@ -703,627 +810,3 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     }
 
 }
-
-class CategoryCell: UITableViewCell {
-    
-    var postId = ""
-
-    let titleImageView : CustomImageView = {
-        let imageView = CustomImageView()
-        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 15
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-
-    let infoView : UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.white
-        view.layer.cornerRadius = 15
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 30
-        view.layer.shadowOpacity = 0.2
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 15
-        return view
-    }()
-    
-    let priceTag : UILabel = {
-        let label = UILabel()
-        label.text = "Price"
-        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        label.textColor = UIColor.mainBlue
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        return label
-    }()
-
-    let titleLabel : UILabel = {
-        let label = UILabel()
-        label.text = "Title"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        label.textColor = UIColor.black
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        return label
-    }()
-
-    let desscription : UILabel = {
-        let label = UILabel()
-        label.text = "Description"
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = UIColor.darkGray
-        label.numberOfLines = 2
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        return label
-    }()
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
-        backgroundColor = UIColor.white
-        setup()
-    }
-
-    func setup() {
-        addSubview(titleImageView)
-        titleImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        titleImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15).isActive = true
-        titleImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        titleImageView.widthAnchor.constraint(equalToConstant: 135).isActive = true
-
-//        addSubview(infoView)
-//        infoView.topAnchor.constraint(equalTo: titleImageView.bottomAnchor, constant: -20).isActive = true
-//        infoView.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
-//        infoView.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
-//        infoView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
-
-        addSubview(titleLabel)
-        titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
-        titleLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        titleLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-        titleLabel.leftAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: 20).isActive = true
-        
-        addSubview(priceTag)
-        priceTag.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
-        priceTag.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-        priceTag.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        priceTag.leftAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: 20).isActive = true
-        
-        addSubview(desscription)
-        desscription.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0).isActive = true
-        desscription.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
-        desscription.bottomAnchor.constraint(equalTo: priceTag.topAnchor).isActive = true
-        desscription.leftAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: 20).isActive = true
-//
-//        addSubview(locationAndTime)
-//        locationAndTime.topAnchor.constraint(equalTo: titleImageView.topAnchor, constant: 10).isActive = true
-//        locationAndTime.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        locationAndTime.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
-//        locationAndTime.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-}
-
-class HomeCell: UICollectionViewCell {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
-    let firstServiceView : UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.white
-        view.layer.cornerRadius = 15
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowRadius = 7
-        view.layer.shadowOpacity = 0.1
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let firstServiceImage : CustomImageView = {
-        let imageView = CustomImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "working")
-        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        return imageView
-    }()
-    
-    let firstLocationLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 11, weight: .heavy)
-        label.textColor = UIColor.white
-        label.textAlignment = NSTextAlignment.left
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.text = "1 Mile Away"
-        return label
-    }()
-    
-    let firstTitle : UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 87/255, green: 87/255, blue: 87/255, alpha: 1)
-        label.font = UIFont.boldSystemFont(ofSize: 13)
-        label.text = "Title"
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = NSTextAlignment.left
-        return label
-    }()
-    
-    let firstPrice : UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
-        label.text = "Price"
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = NSTextAlignment.left
-        return label
-    }()
-    
-    let firstServiceButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        setup()
-    }
-    
-    func setup() {
-        
-        addSubview(firstServiceView)
-        firstServiceView.anchor(top: topAnchor, paddingTop: 0, bottom: bottomAnchor, paddingBottom: 0, left: leftAnchor, paddingLeft: 0, right: rightAnchor, paddingRight: 0, width: 0, height: 0)
-        
-        firstServiceView.addSubview(firstServiceImage)
-        firstServiceImage.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-        firstServiceImage.layer.cornerRadius = 15
-        firstServiceImage.clipsToBounds = true
-        firstServiceImage.anchor(top: firstServiceView.topAnchor, paddingTop: 0, bottom: firstServiceView.bottomAnchor, paddingBottom: -50, left: firstServiceView.leftAnchor, paddingLeft: 0, right: firstServiceView.rightAnchor, paddingRight: 0, width: 0, height: 0)
-        
-        firstServiceView.addSubview(firstLocationLabel)
-        firstLocationLabel.anchor(top: firstServiceView.topAnchor, paddingTop: 5, bottom: firstServiceView.bottomAnchor, paddingBottom: -125, left: firstServiceView.leftAnchor, paddingLeft: 6, right: firstServiceView.rightAnchor, paddingRight: 0, width: 0, height: 0)
-        
-        firstServiceView.addSubview(firstTitle)
-        firstTitle.anchor(top: firstServiceImage.bottomAnchor, paddingTop: 5, bottom: firstServiceView.bottomAnchor, paddingBottom: -25, left: firstServiceView.leftAnchor, paddingLeft: 6, right: firstServiceView.rightAnchor, paddingRight: 6, width: 0, height: 0)
-        
-        firstServiceView.addSubview(firstPrice)
-        firstPrice.anchor(top: firstTitle.bottomAnchor, paddingTop: 0, bottom: firstServiceView.bottomAnchor, paddingBottom: -7, left: firstServiceView.leftAnchor, paddingLeft: 6, right: firstServiceView.rightAnchor, paddingRight: 6, width: 0, height: 0)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-}
-
-class MenuListController: UITableViewController {
-    
-    let exitButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = UIColor.black
-        button.layer.cornerRadius = 22
-        button.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        return button
-    }()
-    
-    var allRatings = [Int]()
-    
-    var finalRating = 0
-    
-    var ratingNumber = 0
-    
-    var rating = 0
-    
-    var findingRating = true
-    
-    let items = ["My Jobs", "My Reviews", "Following", "Settings", " ", " ", "Sign Out"]
-    let images = ["myjob", "review", "follower", "setting", " ", " ", "logut"]
-        
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.navigationController?.isNavigationBarHidden = true
-        tableView.separatorColor = UIColor.clear
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.allowsSelection = true
-        tableView.register(SideMenuCellMain.self, forCellReuseIdentifier: "sideMenuCellNormal")
-        tableView.register(SideMenuCell.self, forCellReuseIdentifier: "sideMenuCellProfile")
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.tabBarController?.tabBar.isHidden = false
-        
-        self.tableView.reloadData()
-        
-        self.view.addSubview(exitButton)
-        self.exitButton.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 40).isActive = true
-        self.exitButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -24).isActive = true
-        self.exitButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        self.exitButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        } else {
-            return items.count
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "sideMenuCellProfile", for: indexPath) as! SideMenuCell
-            
-            // find image
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in
-                let profileImageString : String = (snapshot.value as? String)!
-                if profileImageString == "not-yet-selected" {
-                    cell.profileImage.image = UIImage(systemName: "person.circle.fill")
-                    cell.profileImage.tintColor = UIColor.lightGray
-                    cell.profileImage.contentMode = .scaleAspectFill
-                } else {
-                    cell.profileImage.loadImageUsingCacheWithUrlString(profileImageString)
-                    cell.profileImage.tintColor = UIColor.lightGray
-                    cell.profileImage.contentMode = .scaleAspectFill
-                }
-            }
-            
-            cell.exitButton.addTarget(self, action: #selector(self.dimissMenu), for: .touchUpInside)
-            
-            // find name
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-                if let userName : String = (snapshot.value as? String) {
-                    cell.nameLabel.text = userName
-                }
-            }
-            
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("username").observe(.value) { (snapshot) in
-                if let userName : String = (snapshot.value as? String) {
-                    cell.emailLabel.text = userName
-                }
-            }
-            
-            cell.ratingLabel.text = String(self.rating)
-            
-            if self.findingRating == true {
-                // find rating
-                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("number-of-ratings").observeSingleEvent(of: .value) { (ratingNum) in
-                    if let value = ratingNum.value as? NSNumber {
-                        let newNumber = Float(value)
-                        if newNumber == 0 {
-                            cell.ratingView.alpha = 0
-                        } else {
-                            self.getAllRatings()
-                        }
-                    }
-                }
-            }
-            
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "sideMenuCellNormal", for: indexPath) as! SideMenuCellMain
-            cell.textLabel?.textColor = UIColor.black
-            cell.profileImageView.image = UIImage(named: self.images[indexPath.row])
-            cell.favoriteButton.removeFromSuperview()
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.medium)
-            cell.textLabel?.text = items[indexPath.row]
-            
-            
-            if indexPath.row == 4 || indexPath.row == 5 {
-                cell.sideMenuArrow.removeFromSuperview()
-            }
-            
-            return cell
-        }
-    }
-    
-    func getAllRatings() {
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
-            if let value = snapshot.value as? [String : Any] {
-                let job = ReviewStructure()
-                job.ratingNumber = value["rating-number"] as? Int ?? 0
-                self.ratingNumber += 1
-                self.finalRating += job.ratingNumber!
-            }
-            
-            let finalNumber = self.finalRating / self.ratingNumber
-            
-            self.rating = finalNumber
-             
-            self.findingRating = false
-            self.tableView.reloadData()
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            print("profile")
-            self.navigationController?.pushViewController(MyProfile(), animated: true)
-        } else {
-            switch indexPath.row {
-            case 0:
-                print("my jobs")
-                self.navigationController?.pushViewController(MyJobs(), animated: true)
-            case 1:
-                print("4")
-                self.navigationController?.pushViewController(MyReviews(), animated: true)
-            case 2:
-                print("5")
-                self.navigationController?.pushViewController(Favorites(), animated: true)
-            case 3:
-                print("6")
-                self.navigationController?.pushViewController(Settings(), animated: true)
-            case 4:
-                self.signOut()
-            case 5:
-                self.signOut()
-            default:
-                self.signOut()
-            }
-        }
-    }
-    
-    func signOut() {
-        let alert = UIAlertController(title: "Are you sure you want to sign out?", message: "", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action) in
-            let firebaseAuth = Auth.auth()
-            do {
-                try firebaseAuth.signOut()
-            } catch let signOutError as NSError {
-                print("Error signing out: \(signOutError)")
-                let errorAlert = UIAlertController(title: "Error", message: signOutError.localizedDescription, preferredStyle: .alert)
-                errorAlert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-                self.present(errorAlert, animated: true, completion: nil)
-            }
-            let controller = WelcomeScreen()
-            controller.modalPresentationStyle = .fullScreen
-            self.present(controller, animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 160
-        } else {
-            return 65
-        }
-    }
-    
-    var sideMenu : SideMenuNavigationController?
-    
-    @objc func dimissMenu() {
-        print("dismissing")
-//        self.sideMenu!.dismiss(animated: true, completion: nil)
-    }
-    
-}
-
-class SideMenuCell : UITableViewCell {
-    
-    let profileImage : UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = UIColor.lightGray
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-    
-    let nameLabel : UILabel = {
-        let label = UILabel()
-        label.text = "Name"
-        label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.bold)
-        label.textColor = UIColor.black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        return label
-    }()
-    
-    let emailLabel : UILabel = {
-        let label = UILabel()
-        label.text = "Email"
-        label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = UIColor.darkGray
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        return label
-    }()
-    
-    let exitButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = UIColor.black
-        button.layer.cornerRadius = 22
-        button.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        return button
-    }()
-    
-    let ratingView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    let ratingIcon : UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "star.fill")
-        imageView.tintColor = UIColor.mainBlue
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-    
-    let ratingLabel : UILabel = {
-        let label = UILabel()
-        label.text = "4.5 "
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.heavy)
-        label.textColor = UIColor.black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
-        return label
-    }()
-    
-    @objc func dismissMenu() {
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        backgroundColor = .white
-        
-        addSubview(profileImage)
-        self.profileImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 30).isActive = true
-        self.profileImage.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20).isActive = true
-        self.profileImage.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        self.profileImage.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        self.profileImage.layer.cornerRadius = 30
-        
-        addSubview(nameLabel)
-        nameLabel.anchor(top: profileImage.topAnchor, paddingTop: 0, bottom: profileImage.bottomAnchor, paddingBottom: -30, left: profileImage.rightAnchor, paddingLeft: 20, right: rightAnchor, paddingRight: -10, width: 0, height: 0)
-        
-        addSubview(emailLabel)
-        emailLabel.anchor(top: nameLabel.bottomAnchor, paddingTop: 0, bottom: profileImage.bottomAnchor, paddingBottom: 0, left: profileImage.rightAnchor, paddingLeft: 20, right: rightAnchor, paddingRight: -10, width: 0, height: 0)
-
-//        addSubview(ratingView)
-//        ratingView.backgroundColor = .green
-//        ratingView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor).isActive = true
-//        ratingView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-//        ratingView.widthAnchor.constraint(equalToConstant: 200).isActive = true
-//        ratingView.heightAnchor.constraint(equalToConstant: 25).isActive = true
-//
-//        ratingView.addSubview(ratingLabel)
-//        ratingLabel.widthAnchor.constraint(equalToConstant: ratingLabel.intrinsicContentSize.width).isActive = true
-//        ratingLabel.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -13.5).isActive = true
-//        ratingLabel.centerYAnchor.constraint(equalTo: ratingView.centerYAnchor).isActive = true
-//
-//        ratingView.addSubview(ratingIcon)
-//        ratingIcon.topAnchor.constraint(equalTo: ratingView.topAnchor, constant: 3).isActive = true
-//        ratingIcon.bottomAnchor.constraint(equalTo: ratingView.bottomAnchor, constant: -3).isActive = true
-//        ratingIcon.leftAnchor.constraint(equalTo: ratingLabel.rightAnchor, constant: 0).isActive = true
-//        ratingIcon.widthAnchor.constraint(equalToConstant: 25).isActive = true
-        
-        selectionStyle = .none
-    }
-    
-}
-
-class SideMenuCellMain: UITableViewCell {
-    
-    var index : IndexPath?
-    
-    var delegate : FavoritesCellProtocol?
-    
-    let favoriteButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.white
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1).cgColor
-        button.setTitle("Following", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    let sideMenuArrow : UIImageView = {
-        let iv = UIImageView()
-        iv.image = UIImage(systemName: "chevron.right")
-        iv.tintColor = UIColor.lightGray
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-        
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        textLabel?.frame = CGRect(x: 75, y: self.contentView.frame.height / 3, width: textLabel!.frame.width, height: textLabel!.frame.height)
-    }
-    
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 22.5
-        imageView.layer.masksToBounds = true
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        
-        addSubview(profileImageView)
-        addSubview(sideMenuArrow)
-        contentView.addSubview(favoriteButton)
-    
-        textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        
-        self.selectionStyle = .none
-        
-        //ios 9 constraint anchors
-        //need x,y,width,height anchors
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
-        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        sideMenuArrow.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -30).isActive = true
-        sideMenuArrow.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        sideMenuArrow.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        sideMenuArrow.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        favoriteButton.addTarget(self, action: #selector(tapper), for: .touchUpInside)
-        favoriteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
-        favoriteButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        favoriteButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        favoriteButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc func tapper() {
-        delegate?.didSelectFavoriteButton(withIndex: (index?.row)!)
-    }
-}
-
