@@ -16,7 +16,7 @@ import MBProgressHUD
 
 class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
     
-    let imageArray = ["auto-detail", "barber", "Carpentry", "cleaning", "furniture", "hair-salon", "nail", "phone", "Towing", "other-white"]
+    let imageArray = ["auto-sq", "scissor-sq", "carperter-sq", "clean-sq", "moving-sq", "hair-sq", "NAIL", "phone-sq", "towing-sq", "other-sq"]
     let titles = ["Auto", "Barber", "Carpentry", "Cleaning", "Moving", "Salon", "Beauty", "Technology", "Towing", "Other"]
     
     let imagePicker = UIImagePickerController()
@@ -25,7 +25,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     var timer : Timer?
     var estimateWidth = 160.0
-    var cellMarginSize = 16.0
+    var cellMarginSize = 5
     var allJobs = [JobStructure]()
     var passingImage : UIImage?
     var openingFromNotification = false
@@ -86,7 +86,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let label = UITextField()
         label.text = "Search Services"
         label.tintColor = UIColor.black
-        label.textColor = UIColor.black
+        label.textColor = UIColor(red: 10/255, green: 10/255, blue: 10/255, alpha: 1)
         label.textAlignment = NSTextAlignment.left
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -97,7 +97,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Browse by category"
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textAlignment = NSTextAlignment.left
         label.textColor = UIColor.black
         return label
@@ -185,6 +185,14 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         return button
     }()
     
+    let divider : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(red: 112/255, green: 112/255, blue: 112/255, alpha: 1)
+        view.alpha = 0.1
+        return view
+    }()
+    
     var isGrid = true
     
     var categoryCollectionView : UICollectionView?
@@ -209,25 +217,11 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         let pushManager = PushNotificationManager(userID: Auth.auth().currentUser!.uid)
         pushManager.registerForPushNotifications()
         
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.itemSize = CGSize(width: 60, height: 60)
-        
-        myCollectionView = UICollectionView(frame: CGRect(x: 15, y: 290, width: self.view.frame.width - 30, height: self.view.frame.height - 400), collectionViewLayout: layout)
-        myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
-        myCollectionView?.backgroundColor = UIColor.white
-        myCollectionView?.showsHorizontalScrollIndicator = false
-        myCollectionView?.showsVerticalScrollIndicator = false
-        myCollectionView?.dataSource = self
-        myCollectionView?.delegate = self
-//        view.addSubview(myCollectionView ?? UICollectionView())
-        myCollectionView?.refreshControl = refrshControl
-        
         let layou2: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layou2.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layou2.scrollDirection = .horizontal
         
-        self.categoryCollectionView = UICollectionView(frame: CGRect(x: 0, y: 195, width: self.view.frame.width - 40, height: 115), collectionViewLayout: layou2)
+        self.categoryCollectionView = UICollectionView(frame: CGRect(x: 0, y: 215, width: self.view.frame.width - 40, height: 115), collectionViewLayout: layou2)
         self.categoryCollectionView!.translatesAutoresizingMaskIntoConstraints = false
         self.categoryCollectionView!.backgroundColor = UIColor.white
         self.categoryCollectionView!.alwaysBounceVertical = false
@@ -286,7 +280,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     func addSubviews() {
         self.view.addSubview(scrollView)
-        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width - 40, height: 800)
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width - 40, height: 1200)
         self.scrollView.addSubview(menuButton)
         self.scrollView.addSubview(mapButton)
         self.scrollView.addSubview(hireMileLog)
@@ -325,7 +319,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.searchView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
         self.searchView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
         self.searchView.topAnchor.constraint(equalTo: self.hireMileLog.bottomAnchor, constant: 30).isActive = true
-        self.searchView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        self.searchView.heightAnchor.constraint(equalToConstant: 52).isActive = true
 
         self.searchImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
         self.searchImage.heightAnchor.constraint(equalToConstant: 16).isActive = true
@@ -343,9 +337,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.searchButton.leftAnchor.constraint(equalTo: self.searchView.leftAnchor).isActive = true
         self.searchButton.bottomAnchor.constraint(equalTo: self.searchView.bottomAnchor).isActive = true
         
-        self.categoriesLabel.topAnchor.constraint(equalTo: self.searchView.bottomAnchor, constant: 28).isActive = true
+        self.categoriesLabel.topAnchor.constraint(equalTo: self.searchView.bottomAnchor, constant: 55).isActive = true
         self.categoriesLabel.leftAnchor.constraint(equalTo: self.menuButton.leftAnchor).isActive = true
-        self.categoriesLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        self.categoriesLabel.heightAnchor.constraint(equalToConstant: 26).isActive = true
         self.categoriesLabel.rightAnchor.constraint(equalTo: self.searchView.rightAnchor).isActive = true
         
         self.scrollView.addSubview(bigGreeenView)
@@ -372,6 +366,12 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.bannerButtonMain.leftAnchor.constraint(equalTo: bannerTitleLarge.leftAnchor).isActive = true
         self.bannerButtonMain.widthAnchor.constraint(equalToConstant: 105).isActive = true
         self.bannerButtonMain.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        self.scrollView.addSubview(divider)
+        self.divider.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        self.divider.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        self.divider.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        self.divider.topAnchor.constraint(equalTo: searchView.bottomAnchor, constant: 25).isActive = true
 
 //
 //        self.styleSwitcher.topAnchor.constraint(equalTo: self.categoriesLabel.topAnchor).isActive = true
@@ -393,6 +393,20 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
                 self.myImageView.loadImageUsingCacheWithUrlString(photoUrl)
             }
         }
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+        layout.itemSize = CGSize(width: (self.scrollView.contentSize.width / 2), height: 60)
+        
+        myCollectionView = UICollectionView(frame: CGRect(x: 0, y: 600, width: self.scrollView.contentSize.width, height: self.scrollView.contentSize.height - 600), collectionViewLayout: layout)
+        myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
+        myCollectionView?.backgroundColor = UIColor.white
+        myCollectionView?.showsHorizontalScrollIndicator = false
+        myCollectionView?.showsVerticalScrollIndicator = false
+        myCollectionView?.dataSource = self
+        myCollectionView?.delegate = self
+        scrollView.addSubview(myCollectionView ?? UICollectionView())
+        myCollectionView?.refreshControl = refrshControl
     }
     
     func basicSetup() {
@@ -445,7 +459,33 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.myCollectionView {
-            return self.allJobs.count
+            let count = self.allJobs.count
+            let height = (self.scrollView.contentSize.width / 2) - 10
+            
+            let contentSize = (count * Int(height)) - 200
+            scrollView.contentSize = CGSize(width: Int(self.view.frame.size.width - 40), height: contentSize)
+            
+//            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+//            layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+//            layout.itemSize = CGSize(width: (self.scrollView.contentSize.width / 2), height: 60)
+//
+//            myCollectionView = UICollectionView(frame: CGRect(x: 0, y: 600, width: self.scrollView.contentSize.width, height: self.scrollView.contentSize.height - 600), collectionViewLayout: layout)
+//            myCollectionView?.register(HomeCell.self, forCellWithReuseIdentifier: "MyCell")
+//            myCollectionView?.backgroundColor = UIColor.white
+//            myCollectionView?.showsHorizontalScrollIndicator = false
+//            myCollectionView?.showsVerticalScrollIndicator = false
+//            myCollectionView?.dataSource = self
+//            myCollectionView?.delegate = self
+//            scrollView.addSubview(myCollectionView ?? UICollectionView())
+//            myCollectionView?.refreshControl = refrshControl
+            
+            if count == 0 || count == nil {
+                print("nil count")
+            } else {
+                myCollectionView?.frame.size.height = scrollView.contentSize.height - 600
+            }
+            
+            return count
         } else {
             return self.titles.count
         }
@@ -503,10 +543,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == self.myCollectionView {
-            let width = self.calculateWidth()
-            return CGSize(width: width, height: width)
+            return CGSize(width: (self.scrollView.contentSize.width / 2) - 10, height: (self.scrollView.contentSize.width / 2) - 10)
         } else {
-            return CGSize(width: 90, height: 115)
+            return CGSize(width: 80, height: 115)
         }
     }
     
