@@ -640,6 +640,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
                                         "price" : Int(self.priceYourListing.text!),
                                         "type-of-price" : "\(typeOfPrice)",
                                         "lat" : Float(0),
+                                        "time" : String(Int(Date().timeIntervalSince1970)),
                                         "long" : Float(0),
                                         "author" : "\(Auth.auth().currentUser!.uid)",
                                         "image" : "\(metalImageUrl)"
