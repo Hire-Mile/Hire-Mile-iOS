@@ -13,6 +13,7 @@
 		78008CD72569B8E4005E4A15 /* Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD62569B8E4005E4A15 /* Password.swift */; };
 		7801D9BC25D28AE400BB0B33 /* AddProfilePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7801D9BB25D28AE400BB0B33 /* AddProfilePhoto.swift */; };
 		7801D9BF25D296E100BB0B33 /* AllowLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7801D9BE25D296E100BB0B33 /* AllowLocation.swift */; };
+		78032027261F46EC008343B8 /* HomeCategoryPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78032026261F46EC008343B8 /* HomeCategoryPreview.swift */; };
 		7804EC90261BA24500F2C0D2 /* WelcomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7804EC8F261BA24500F2C0D2 /* WelcomeScreen.swift */; };
 		7805676C26148719006ADEA9 /* SparkExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676626148715006ADEA9 /* SparkExtensions.swift */; };
 		7805676D26148719006ADEA9 /* SparkModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676726148716006ADEA9 /* SparkModels.swift */; };
@@ -113,6 +114,7 @@
 		78008CD62569B8E4005E4A15 /* Password.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Password.swift; sourceTree = "<group>"; };
 		7801D9BB25D28AE400BB0B33 /* AddProfilePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfilePhoto.swift; sourceTree = "<group>"; };
 		7801D9BE25D296E100BB0B33 /* AllowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllowLocation.swift; sourceTree = "<group>"; };
+		78032026261F46EC008343B8 /* HomeCategoryPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCategoryPreview.swift; sourceTree = "<group>"; };
 		7804EC8F261BA24500F2C0D2 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
 		7805676626148715006ADEA9 /* SparkExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkExtensions.swift; sourceTree = "<group>"; };
 		7805676726148716006ADEA9 /* SparkModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkModels.swift; sourceTree = "<group>"; };
@@ -232,6 +234,32 @@
 				F3765C6420C496AAA66CBF98 /* Pods-HireMile.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		78032023261F469A008343B8 /* Home Stuff */ = {
+			isa = PBXGroup;
+			children = (
+				780A7F612562D565009BD93A /* Home.swift */,
+				785698BC261D8A03005428CB /* Home2.swift */,
+				78032026261F46EC008343B8 /* HomeCategoryPreview.swift */,
+			);
+			path = "Home Stuff";
+			sourceTree = "<group>";
+		};
+		78032024261F46AA008343B8 /* Other Home Stuff */ = {
+			isa = PBXGroup;
+			children = (
+				78D5CA352565515E00BF59AB /* ViewPostController.swift */,
+				786A33202565931300B58265 /* CategoryPostController.swift */,
+				786A3322256596E700B58265 /* FilterLauncher.swift */,
+				78A98BFD261100B800E1A8D9 /* SearchController.swift */,
+				78A98C012611013000E1A8D9 /* SearchController2.swift */,
+				781F45E225C97555004F9C45 /* FeedbackLauncher.swift */,
+				781F45E525C975FD004F9C45 /* ProposalPopup.swift */,
+				781F45EE25CD82D4004F9C45 /* Map.swift */,
+				786C8E3C2611A2160051729D /* SearchResults.swift */,
+			);
+			path = "Other Home Stuff";
 			sourceTree = "<group>";
 		};
 		780567652614870D006ADEA9 /* Services */ = {
@@ -374,17 +402,8 @@
 			isa = PBXGroup;
 			children = (
 				782F7DE325932FEB0064100F /* ItemCell */,
-				780A7F612562D565009BD93A /* Home.swift */,
-				785698BC261D8A03005428CB /* Home2.swift */,
-				78D5CA352565515E00BF59AB /* ViewPostController.swift */,
-				786A33202565931300B58265 /* CategoryPostController.swift */,
-				786A3322256596E700B58265 /* FilterLauncher.swift */,
-				78A98BFD261100B800E1A8D9 /* SearchController.swift */,
-				78A98C012611013000E1A8D9 /* SearchController2.swift */,
-				781F45E225C97555004F9C45 /* FeedbackLauncher.swift */,
-				781F45E525C975FD004F9C45 /* ProposalPopup.swift */,
-				781F45EE25CD82D4004F9C45 /* Map.swift */,
-				786C8E3C2611A2160051729D /* SearchResults.swift */,
+				78032023261F469A008343B8 /* Home Stuff */,
+				78032024261F46AA008343B8 /* Other Home Stuff */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -725,6 +744,7 @@
 				7886ED92258127DD00260D2F /* PostStructure.swift in Sources */,
 				78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */,
 				78F8F85A25A482F30021FD60 /* ReviewObject.swift in Sources */,
+				78032027261F46EC008343B8 /* HomeCategoryPreview.swift in Sources */,
 				781F45EA25CACEEB004F9C45 /* FollowersController.swift in Sources */,
 				787B0181256838E400BBC392 /* Settings.swift in Sources */,
 				780766BF260DBF4400962F4E /* TimePickerSwift.swift in Sources */,

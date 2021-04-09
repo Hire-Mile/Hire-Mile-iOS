@@ -17,7 +17,7 @@ class HomeCategoryCell: UICollectionViewCell {
         label.numberOfLines = 2
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.boldSystemFont(ofSize: 12)
         return label
     }()
     
