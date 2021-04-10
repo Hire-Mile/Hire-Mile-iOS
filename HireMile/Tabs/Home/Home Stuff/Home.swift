@@ -508,7 +508,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     func addSubviews() {
         self.view.addSubview(scrollView)
-        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width - 40, height: 2000)
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width - 40, height: 900)
         self.scrollView.addSubview(menuButton)
         self.scrollView.addSubview(mapButton)
         self.scrollView.addSubview(hireMileLog)
@@ -635,7 +635,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layout.scrollDirection = .horizontal
         
-        self.collectView = UICollectionView(frame: CGRect(x: 0, y: titleLabel.frame.maxY + 15, width: self.view.frame.width - 40, height: 220), collectionViewLayout: layout)
+        self.collectView = UICollectionView(frame: CGRect(x: 0, y: 600, width: self.view.frame.width - 40, height: 220), collectionViewLayout: layout)
         self.collectView!.translatesAutoresizingMaskIntoConstraints = false
         self.collectView!.backgroundColor = UIColor.white
         self.collectView!.alwaysBounceVertical = false
@@ -646,95 +646,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.collectView!.delegate = self
         self.collectView!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell")
         self.collectView!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell")
-        self.scrollView.addSubview(self.collectView!)
-        
-//        self.scrollView.addSubview(self.titleLabel2)
-//        self.titleLabel2.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 265).isActive = true
-//        self.titleLabel2.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-//        self.titleLabel2.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-//        self.titleLabel2.heightAnchor.constraint(equalToConstant: 22).isActive = true
-//
-//        self.scrollView.addSubview(self.viewAllButtonCat2)
-//        self.viewAllButtonCat2.topAnchor.constraint(equalTo: self.titleLabel2.topAnchor).isActive = true
-//        self.viewAllButtonCat2.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-//        self.viewAllButtonCat2.widthAnchor.constraint(equalToConstant: 75).isActive = true
-//        self.viewAllButtonCat2.heightAnchor.constraint(equalToConstant: 22).isActive = true
-//
-//        let layout2: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-//        layout2.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//        layout2.scrollDirection = .horizontal
-//
-//        print(collectView!.frame.maxY)
-//        self.collectView2 = UICollectionView(frame: CGRect(x: 0, y: collectView!.frame.maxY + 60, width: self.view.frame.width - 40, height: 220), collectionViewLayout: layout2)
-//        self.collectView2!.translatesAutoresizingMaskIntoConstraints = false
-//        self.collectView2!.backgroundColor = UIColor.white
-//        self.collectView2!.alwaysBounceVertical = false
-//        self.collectView2!.alwaysBounceHorizontal = true
-//        self.collectView2!.dataSource = self
-//        self.collectView2!.showsHorizontalScrollIndicator = false
-//        self.collectView2!.showsVerticalScrollIndicator = false
-//        self.collectView2!.delegate = self
-//        self.collectView2!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell2")
-//        self.collectView2!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell2")
-//        self.scrollView.addSubview(self.collectView2!)
-//
-//        self.scrollView.addSubview(self.titleLabel3)
-//        self.titleLabel3.topAnchor.constraint(equalTo: self.titleLabel2.bottomAnchor, constant: 265).isActive = true
-//        self.titleLabel3.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-//        self.titleLabel3.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-//        self.titleLabel3.heightAnchor.constraint(equalToConstant: 22).isActive = true
-//
-//        self.scrollView.addSubview(self.viewAllButtonCat3)
-//        self.viewAllButtonCat3.topAnchor.constraint(equalTo: self.titleLabel3.topAnchor).isActive = true
-//        self.viewAllButtonCat3.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-//        self.viewAllButtonCat3.widthAnchor.constraint(equalToConstant: 75).isActive = true
-//        self.viewAllButtonCat3.heightAnchor.constraint(equalToConstant: 22).isActive = true
-//
-//        let layout3: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-//        layout3.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//        layout3.scrollDirection = .horizontal
-//
-//        self.collectView3 = UICollectionView(frame: CGRect(x: 0, y: collectView2!.frame.maxY + 280, width: self.view.frame.width - 40, height: 220), collectionViewLayout: layout3)
-//        self.collectView3!.translatesAutoresizingMaskIntoConstraints = false
-//        self.collectView3!.backgroundColor = UIColor.white
-//        self.collectView3!.alwaysBounceVertical = false
-//        self.collectView3!.alwaysBounceHorizontal = true
-//        self.collectView3!.dataSource = self
-//        self.collectView3!.showsHorizontalScrollIndicator = false
-//        self.collectView3!.showsVerticalScrollIndicator = false
-//        self.collectView3!.delegate = self
-//        self.collectView3!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell3")
-//        self.collectView3!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell3")
-//        self.scrollView.addSubview(self.collectView3!)
-//
-//        self.scrollView.addSubview(self.titleLabel4)
-//        self.titleLabel4.topAnchor.constraint(equalTo: self.titleLabel3.bottomAnchor, constant: 265).isActive = true
-//        self.titleLabel4.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-//        self.titleLabel4.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-//        self.titleLabel4.heightAnchor.constraint(equalToConstant: 22).isActive = true
-//
-//        self.scrollView.addSubview(self.viewAllButtonCat4)
-//        self.viewAllButtonCat4.topAnchor.constraint(equalTo: self.titleLabel4.topAnchor).isActive = true
-//        self.viewAllButtonCat4.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-//        self.viewAllButtonCat4.widthAnchor.constraint(equalToConstant: 75).isActive = true
-//        self.viewAllButtonCat4.heightAnchor.constraint(equalToConstant: 22).isActive = true
-//
-//        let layout4: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-//        layout4.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//        layout4.scrollDirection = .horizontal
-//
-//        self.collectView4 = UICollectionView(frame: CGRect(x: 0, y: collectView3!.frame.maxY + 280, width: self.view.frame.width - 40, height: 220), collectionViewLayout: layout4)
-//        self.collectView4!.translatesAutoresizingMaskIntoConstraints = false
-//        self.collectView4!.backgroundColor = UIColor.white
-//        self.collectView4!.alwaysBounceVertical = false
-//        self.collectView4!.alwaysBounceHorizontal = true
-//        self.collectView4!.dataSource = self
-//        self.collectView4!.showsHorizontalScrollIndicator = false
-//        self.collectView4!.showsVerticalScrollIndicator = false
-//        self.collectView4!.delegate = self
-//        self.collectView4!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell4")
-//        self.collectView4!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell4")
-//        self.scrollView.addSubview(self.collectView4!)
+        self.scrollView.addSubview(collectView!)
         
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (photoSnap) in
             if let photoUrl = photoSnap.value as? String {
@@ -765,8 +677,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
                 job.postId = value["postId"] as? String ?? "Error"
                 self.allJobs.append(job)
             }
-            self.allJobs.reverse()
-            self.myCollectionView?.reloadData()
+            self.collectView!.reloadData()
             MBProgressHUD.hide(for: self.view, animated: true)
         }
 
@@ -793,27 +704,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         if collectionView == self.myCollectionView {
             return self.allJobs.count
         } else if collectionView == self.collectView {
-            return 3
-        } else if collectionView == self.collectView2 {
-            return 3
-        } else if collectionView == self.collectView3 {
-            return 3
-        } else if collectionView == self.collectView4 {
-            return 3
-        } else if collectionView == self.collectView5 {
-            return 3
-        } else if collectionView == self.collectView6 {
-            return 3
-        } else if collectionView == self.collectView7 {
-            return 3
-        } else if collectionView == self.collectView8 {
-            return 3
-        } else if collectionView == self.collectView9 {
-            return 3
-        } else if collectionView == self.collectView10 {
-            return 3
-        } else if collectionView == self.collectView11 {
-            return 3
+            return self.allJobs.count
         } else {
             return self.titles.count
         }
@@ -838,38 +729,25 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             myCell.backgroundColor = UIColor.white
             return myCell
         } else if collectionView == self.collectView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView2 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell2", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView3 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell3", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView4 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell4", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView5 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell5", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView6 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell6", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView7 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell7", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView8 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell8", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView9 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell9", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView10 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell10", for: indexPath) as! HomeCategoryCellOther
-            return cell
-        } else if collectionView == self.collectView11 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell11", for: indexPath) as! HomeCategoryCellOther
-            return cell
+            let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectViewCell", for: indexPath) as! HomeCategoryCellOther
+            
+            myCell.backgroundColor = .green
+            
+            myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
+
+            if let urlAddress = self.allJobs[indexPath.row].imagePost {
+                let url = URL(string: urlAddress)
+                myCell.firstServiceImage.loadImage(from: url!)
+            }
+
+            myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
+            if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
+                myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!) / Hour"
+            } else {
+                myCell.firstPrice.text = "$\(self.allJobs[indexPath.row].price!)"
+            }
+            myCell.backgroundColor = UIColor.white
+            return myCell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCellID", for: indexPath) as! HomeCategoryCell
             cell.title.text = self.titles[indexPath.row]
@@ -891,27 +769,16 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
             self.navigationController?.pushViewController(ViewPostController(), animated: true)
         } else if collectionView == self.collectView {
-            
-        } else if collectionView == self.collectView2 {
-            
-        } else if collectionView == self.collectView3 {
-            
-        } else if collectionView == self.collectView4 {
-            
-        } else if collectionView == self.collectView5 {
-            
-        } else if collectionView == self.collectView6 {
-            
-        } else if collectionView == self.collectView7 {
-            
-        } else if collectionView == self.collectView8 {
-            
-        } else if collectionView == self.collectView9 {
-            
-        } else if collectionView == self.collectView10 {
-            
-        } else if collectionView == self.collectView11 {
-            
+            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+            GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
+            GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
+            GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
+            GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
+            GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
+            GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
+            GlobalVariables.postId = self.allJobs[indexPath.row].postId!
+            GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+            self.navigationController?.pushViewController(ViewPostController(), animated: true)
         } else {
             let controller = CategoryPostController()
             controller.category = self.titles[indexPath.row]
@@ -1288,9 +1155,12 @@ class HomeCategoryCellOther: UICollectionViewCell {
         firstTitle.leftAnchor.constraint(equalTo: firstServiceView.leftAnchor, constant: 12).isActive = true
         firstTitle.rightAnchor.constraint(equalTo: firstServiceView.rightAnchor, constant: -12).isActive = true
         firstTitle.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
+
         firstServiceView.addSubview(firstPrice)
-        firstPrice.anchor(top: firstTitle.bottomAnchor, paddingTop: 0, bottom: firstServiceView.bottomAnchor, paddingBottom: -12, left: firstServiceView.leftAnchor, paddingLeft: 12, right: firstServiceView.rightAnchor, paddingRight: 6, width: 0, height: 20)
+        firstPrice.topAnchor.constraint(equalTo: firstTitle.bottomAnchor).isActive = true
+        firstPrice.leftAnchor.constraint(equalTo: firstServiceView.leftAnchor, constant: 12).isActive = true
+        firstPrice.rightAnchor.constraint(equalTo: firstServiceView.rightAnchor, constant: -12).isActive = true
+        firstPrice.bottomAnchor.constraint(equalTo: firstServiceView.bottomAnchor, constant: -12).isActive = true
     }
     
     required init?(coder: NSCoder) {
