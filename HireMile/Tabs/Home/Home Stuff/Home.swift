@@ -1076,11 +1076,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
 
 class HomeCategoryCellOther: UICollectionViewCell {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-    
     let firstServiceView : UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -1131,6 +1126,11 @@ class HomeCategoryCellOther: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        setup()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setup()
     }
     
