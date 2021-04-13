@@ -28,14 +28,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         UINavigationBar.appearance().tintColor = UIColor.black
         
-        print("🚀 HIREMILE launched! 🚀")
+        print("🚀 HIREMILE LAUNCHED! 🚀")
         
-//        let firebaseAuth = Auth.auth()
+//        let auth = Auth.auth()
 //        do {
-//            try firebaseAuth.signOut()
+//            try auth.signOut()
 //        } catch let signOutError as NSError {
 //            print("Error signing out: \(signOutError)")
 //        }
+        
+        if UserDefaults.standard.bool(forKey: "v.1,4") != true {
+            print("not seen this")
+            let auth = Auth.auth()
+            do {
+                try auth.signOut()
+            } catch let signOutError as NSError {
+                print("Error signing out: \(signOutError)")
+            }
+            UserDefaults.standard.setValue(true, forKey: "v.1,4")
+        }
         
         UIApplication.shared.applicationIconBadgeNumber = 0
         

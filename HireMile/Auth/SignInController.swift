@@ -367,10 +367,56 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
                 self.present(alert, animated: true, completion: nil)
                 return
             }
-            let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
-            let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
-            UIApplication.shared.keyWindow?.rootViewController = vc
+            if Auth.auth().currentUser != nil {
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).observeSingleEvent(of: DataEventType.value) { (snapshot) in
+                    if snapshot.exists() {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                        let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                        UIApplication.shared.keyWindow?.rootViewController = vc
+                    } else {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        print("USER DOESN'T EXIST!")
+                        let alertController = UIAlertController(title: "We need your name!", message: "How should we refer to you?", preferredStyle: .alert)
+                        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                        let ok = UIAlertAction(title: "Next", style: .default) { (action: UIAlertAction) -> Void in
+                            let usersName = alertController.textFields![0].text!
+                            let infoToAdd : Dictionary<String, Any> = [
+                                                                        "name" : "\(usersName)",
+                                                                        "email" : "\(Auth.auth().currentUser!.email!)",
+                                                                        "profile-image" : "not-yet-selected",
+                                                                        "rating" : 100,
+            //                                                            "dob" : "Signed in with Apple - Unknown",
+            //                                                            "zipcode" : 0,
+                                                                        "services" : 0,
+                                                                        "number-of-ratings" : 0
+                                                                      ]
+                            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
+                            let userInformation : Dictionary<String, Any> = [
+                                "uid" : "\(Auth.auth().currentUser!.uid)"
+                            ]
+                            let postFeed = ["\(Auth.auth().currentUser!.uid)" : userInformation]
+                            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+                            self.successCompletion()
+                        }
+                        alertController.addTextField { (textField : UITextField) in
+                            textField.placeholder = "Name"
+                            textField.delegate = self
+                        }
+                        alertController.addAction(cancel)
+                        alertController.addAction(ok)
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                }
+            }
         }
+    }
+    
+    func successCompletion() {
+        MBProgressHUD.hide(for: self.view, animated: true)
+        let controller = AddProfilePhoto()
+        controller.modalPresentationStyle = .fullScreen
+        self.present(controller, animated: true, completion: nil)
     }
     
     @objc func signUpPressed() {
@@ -489,18 +535,57 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
             print("Up To Firebase Now")
             Auth.auth().signIn(with: credential) { (authResult, error) in
-                if error != nil {
-                    print(error!.localizedDescription)
+                if let error = error {
                     MBProgressHUD.hide(for: self.view, animated: true)
+                    print("failed to sign in with firebase credential from google sign in")
+                    let alert = UIAlertController(title: "Error", message: "Please try again, could not connect to Database", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
                     return
+                } else {
+                    if Auth.auth().currentUser != nil {
+                        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).observeSingleEvent(of: DataEventType.value) { (snapshot) in
+                            if snapshot.exists() {
+                                MBProgressHUD.hide(for: self.view, animated: true)
+                                let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                                let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                                UIApplication.shared.keyWindow?.rootViewController = vc
+                            } else {
+                                MBProgressHUD.hide(for: self.view, animated: true)
+                                print("USER DOESN'T EXIST!")
+                                let alertController = UIAlertController(title: "We need your name!", message: "How should we refer to you?", preferredStyle: .alert)
+                                let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                                let ok = UIAlertAction(title: "Next", style: .default) { (action: UIAlertAction) -> Void in
+                                    let usersName = alertController.textFields![0].text!
+                                    let infoToAdd : Dictionary<String, Any> = [
+                                                                                "name" : "\(usersName)",
+                                                                                "email" : "\(Auth.auth().currentUser!.email!)",
+                                                                                "profile-image" : "not-yet-selected",
+                                                                                "rating" : 100,
+                    //                                                            "dob" : "Signed in with Apple - Unknown",
+                    //                                                            "zipcode" : 0,
+                                                                                "services" : 0,
+                                                                                "number-of-ratings" : 0
+                                                                              ]
+                                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
+                                    let userInformation : Dictionary<String, Any> = [
+                                        "uid" : "\(Auth.auth().currentUser!.uid)"
+                                    ]
+                                    let postFeed = ["\(Auth.auth().currentUser!.uid)" : userInformation]
+                                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+                                    self.successCompletion()
+                                }
+                                alertController.addTextField { (textField : UITextField) in
+                                    textField.placeholder = "Name"
+                                    textField.delegate = self
+                                }
+                                alertController.addAction(cancel)
+                                alertController.addAction(ok)
+                                self.present(alertController, animated: true, completion: nil)
+                            }
+                        }
+                    }
                 }
-//                let controller = TabBarController()
-//                controller.modalPresentationStyle = .fullScreen
-//                self.present(controller, animated: true, completion: nil)
-                
-                let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
-                let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
-                UIApplication.shared.keyWindow?.rootViewController = vc
             }
         }
     }
@@ -532,10 +617,48 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
                 self.present(alert, animated: true, completion: nil)
                 return
             } else {
-                MBProgressHUD.hide(for: self.view, animated: true)
-                let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
-                let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
-                UIApplication.shared.keyWindow?.rootViewController = vc
+                if Auth.auth().currentUser != nil {
+                    Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).observeSingleEvent(of: DataEventType.value) { (snapshot) in
+                        if snapshot.exists() {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
+                            let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
+                            UIApplication.shared.keyWindow?.rootViewController = vc
+                        } else {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            print("USER DOESN'T EXIST!")
+                            let alertController = UIAlertController(title: "We need your name!", message: "How should we refer to you?", preferredStyle: .alert)
+                            let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                            let ok = UIAlertAction(title: "Next", style: .default) { (action: UIAlertAction) -> Void in
+                                let usersName = alertController.textFields![0].text!
+                                let infoToAdd : Dictionary<String, Any> = [
+                                                                            "name" : "\(usersName)",
+                                                                            "email" : "\(Auth.auth().currentUser!.email!)",
+                                                                            "profile-image" : "not-yet-selected",
+                                                                            "rating" : 100,
+                //                                                            "dob" : "Signed in with Apple - Unknown",
+                //                                                            "zipcode" : 0,
+                                                                            "services" : 0,
+                                                                            "number-of-ratings" : 0
+                                                                          ]
+                                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).updateChildValues(infoToAdd)
+                                let userInformation : Dictionary<String, Any> = [
+                                    "uid" : "\(Auth.auth().currentUser!.uid)"
+                                ]
+                                let postFeed = ["\(Auth.auth().currentUser!.uid)" : userInformation]
+                                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+                                self.successCompletion()
+                            }
+                            alertController.addTextField { (textField : UITextField) in
+                                textField.placeholder = "Name"
+                                textField.delegate = self
+                            }
+                            alertController.addAction(cancel)
+                            alertController.addAction(ok)
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                    }
+                }
             }
         }
     }

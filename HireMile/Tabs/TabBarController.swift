@@ -139,6 +139,8 @@ class TabBarController: UITabBarController, UINavigationControllerDelegate, UIIm
         chatController.tabBarItem.selectedImage = UIImage(named: "Message-active")
 
         viewControllers = [homeController, addController, chatController]
+        
+        tabBar.backgroundColor = .white
 
         // Do any additional setup after loading the view.
     }
