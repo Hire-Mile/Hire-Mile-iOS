@@ -29,7 +29,7 @@ class Post: UIViewController, UINavigationControllerDelegate, UIImagePickerContr
     
     let imagePicker = UIImagePickerController()
     
-    let imageArray = ["autodetail-blue", "barber-blue", "Carpentry-blue", "cleaning-blue", "furniture-blue", "hairsaloon-blue", "nails-blue", "phone-blue", "towing-blue", "other-blue"]
+    let imageArray = ["auto-sq", "scissor-sq", "carperter-sq", "clean-sq", "moving-sq", "hair-sq", "NAIL", "phone-sq", "towing-sq", "other-sq"]
     
     let titles = ["Auto", "Barber", "Carpentry", "Cleaning", "Moving", "Salon", "Beauty", "Technology", "Towing", "Other"]
     

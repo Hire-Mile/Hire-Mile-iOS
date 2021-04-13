@@ -112,6 +112,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         button.titleLabel?.textAlignment = NSTextAlignment.right
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.setTitleColor(UIColor.mainBlue, for: .normal)
+        button.addTarget(self, action: #selector(viewAllButtonPressed), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -814,6 +815,10 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
 //            self.menu?.dismiss(animated: true, completion: nil)
 //        }
         self.present(menu!, animated: true, completion: nil)
+    }
+    
+    @objc func viewAllButtonPressed() {
+        self.navigationController?.pushViewController(AllCategories(), animated: true)
     }
     
     @objc func servicePressed() {
