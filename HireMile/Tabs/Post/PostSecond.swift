@@ -1,5 +1,5 @@
 //
-//  Post.swift
+//  PostSecond.swift
 //  HireMile
 //
 //  Created by JJ Zapata on 4/15/21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PostSecond: UIViewController, UITextFieldDelegate {
     
     let pickerController = UIImagePickerController()
     
@@ -17,7 +17,7 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     let view1 : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.mainBlue
+        view.backgroundColor = UIColor(r: 230, g: 230, b: 230)
         view.layer.cornerRadius = 3
         return view
     }()
@@ -25,7 +25,7 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     let view2 : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(r: 230, g: 230, b: 230)
+        view.backgroundColor = UIColor.mainBlue
         view.layer.cornerRadius = 3
         return view
     }()
@@ -44,36 +44,6 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         return button
     }()
     
-    let photoImageView : UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = UIColor.white
-        imageView.clipsToBounds = true
-        imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.lightGray.cgColor
-        imageView.layer.cornerRadius = 15
-        imageView.contentMode = UIView.ContentMode.scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    let cameraImage : UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = UIView.ContentMode.scaleAspectFit
-        imageView.image = UIImage(named: "camera")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    let cameraLabel : UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor(red: 72/255, green: 173/255, blue: 242/255, alpha: 1)
-        label.text = "Add Photo"
-        return label
-    }()
-    
     let titleLabel : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -90,7 +60,7 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textAlignment = NSTextAlignment.center
         label.textColor = UIColor.black
-        label.text = "Post a Service"
+        label.text = "Details"
         return label
     }()
     
@@ -99,7 +69,7 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor.mainBlue
+        label.textColor = UIColor(r: 230, g: 230, b: 230)
         label.text = "1. Photos"
         return label
     }()
@@ -109,7 +79,7 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor(r: 230, g: 230, b: 230)
+        label.textColor = UIColor.mainBlue
         label.text = "2. Details"
         return label
     }()
@@ -144,6 +114,8 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         button.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
         return button
     }()
+    
+    var image : UIImage?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,42 +130,18 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         self.backButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         self.backButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         
-        self.view.addSubview(photoImageView)
-        self.photoImageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 170).isActive = true
-        self.photoImageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
-        self.photoImageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
-        self.photoImageView.heightAnchor.constraint(equalToConstant: 194).isActive = true
+//        self.view.addSubview(titleLabel)
+//        self.titleLabel.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: 42).isActive = true
+//        self.titleLabel.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
+//        self.titleLabel.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
+//        self.titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        self.view.addSubview(cameraImage)
-        self.cameraImage.widthAnchor.constraint(equalToConstant: 90).isActive = true
-        self.cameraImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        self.cameraImage.topAnchor.constraint(equalTo: photoImageView.topAnchor, constant: 42).isActive = true
-        self.cameraImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        self.view.addSubview(cameraLabel)
-        self.cameraLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        self.cameraLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        self.cameraLabel.topAnchor.constraint(equalTo: cameraImage.bottomAnchor, constant: 15).isActive = true
-        self.cameraLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        self.view.addSubview(titleLabel)
-        self.titleLabel.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: 42).isActive = true
-        self.titleLabel.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
-        self.titleLabel.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
-        self.titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        self.view.addSubview(emailTextField)
-        self.emailTextField.delegate = self
-        self.emailTextField.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 06).isActive = true
-        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        self.view.addSubview(button)
-        self.button.topAnchor.constraint(equalTo: self.photoImageView.topAnchor).isActive = true
-        self.button.leftAnchor.constraint(equalTo: self.photoImageView.leftAnchor).isActive = true
-        self.button.rightAnchor.constraint(equalTo: self.photoImageView.rightAnchor).isActive = true
-        self.button.bottomAnchor.constraint(equalTo: self.photoImageView.bottomAnchor).isActive = true
+//        self.view.addSubview(emailTextField)
+//        self.emailTextField.delegate = self
+//        self.emailTextField.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 06).isActive = true
+//        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+//        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+//        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.view.addSubview(loginButton)
         self.loginButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
@@ -260,16 +208,13 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     }
     
     @objc func loginPressed() {
-        if emailTextField.text != "" && photoImageView.image != nil {
-            self.navigationController?.pushViewController(PostSecond(), animated: true)
-            let controller = PostSecond()
-            controller.modalPresentationStyle = .fullScreen
-            self.present(controller, animated: true, completion: nil)
-        } else {
-            let alert = UIAlertController(title: "Error", message: "Select a photo and fill out the title field", preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+//        if emailTextField.text != "" && photoImageView.image != nil {
+//            print("success")
+//        } else {
+//            let alert = UIAlertController(title: "Error", message: "Select a photo and fill out the title field", preferredStyle: UIAlertController.Style.alert)
+//            alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -283,43 +228,8 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     
     private func presentPhotoPopup() {
         self.filterLauncher.showFilter()
-        self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
-        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
-    }
-    
-    @objc func stopJobButton() {
-        pickerController.delegate = self
-        pickerController.allowsEditing = true
-        pickerController.sourceType = .camera
-        self.present(pickerController, animated: true, completion: filterLauncher.handleDismiss)
-    }
-    
-    @objc func completeJobButton() {
-        pickerController.delegate = self
-        pickerController.allowsEditing = true
-        pickerController.sourceType = .photoLibrary
-        self.present(pickerController, animated: true, completion: filterLauncher.handleDismiss)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let cropped = info[.editedImage] as? UIImage {
-            photoImageView.image = cropped
-        } else if let original = info[.originalImage] as? UIImage {
-            photoImageView.image = original
-        }
-        sendToBack()
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func sendToBack() {
-        loginButton.setTitleColor(UIColor.white, for: .normal)
-        loginButton.backgroundColor = UIColor.mainBlue
-        self.view.sendSubviewToBack(self.cameraLabel)
-        self.view.sendSubviewToBack(self.cameraImage)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+//        self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
+//        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
     }
 
 }
