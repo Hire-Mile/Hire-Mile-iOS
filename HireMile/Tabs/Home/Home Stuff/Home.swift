@@ -705,6 +705,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         if collectionView == self.myCollectionView {
             return self.allJobs.count
         } else if collectionView == self.collectView {
+            allJobs.reverse()
             return self.allJobs.count
         } else {
             return self.titles.count
@@ -878,32 +879,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         if GlobalVariables.isGoingToPost == true {
-            print("postingggg")
-            let alert = UIAlertController(title: "Choose Your Source", message: "Where should you get your cover photo from?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) in
-                self.imagePicker.sourceType = .photoLibrary
-                self.imagePicker.allowsEditing = true
-                self.imagePicker.delegate = self
-                self.present(self.imagePicker, animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
-                let imagePicker = UIImagePickerController()
-                imagePicker.delegate = self
-                imagePicker.sourceType = .camera
-                imagePicker.allowsEditing = true
-                self.present(imagePicker, animated: true, completion: nil)
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            if let popoverController = alert.popoverPresentationController {
-              popoverController.sourceView = self.view
-              popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            }
-            self.present(alert, animated: true, completion: nil)
             GlobalVariables.isGoingToPost = false
-        }
-        
-        if self.passingImage != nil {
-            GlobalVariables.postImage = passingImage!
             let controller = Post()
             controller.modalPresentationStyle = .fullScreen
             self.present(controller, animated: true, completion: nil)

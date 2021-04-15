@@ -43,6 +43,8 @@
 		782F7DE025932FE80064100F /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782F7DDE25932FE80064100F /* ItemCell.swift */; };
 		782F7DE125932FE80064100F /* ItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 782F7DDF25932FE80064100F /* ItemCell.xib */; };
 		783015C62624278E0030BA9F /* AllCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783015C52624278E0030BA9F /* AllCategories.swift */; };
+		7830173F262812410030BA9F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7830173E262812410030BA9F /* Post.swift */; };
+		7830176C2628B1DF0030BA9F /* PostSecond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7830176B2628B1DE0030BA9F /* PostSecond.swift */; };
 		784646C72561B841000C5F26 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646C62561B841000C5F26 /* AppDelegate.swift */; };
 		784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646C82561B841000C5F26 /* SceneDelegate.swift */; };
 		784646CB2561B841000C5F26 /* SignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784646CA2561B841000C5F26 /* SignInController.swift */; };
@@ -96,7 +98,7 @@
 		78D5FB9A25C1FF9700E3504C /* OtherRatingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D5FB9925C1FF9700E3504C /* OtherRatingController.swift */; };
 		78D6F616259A11E600D2A0CE /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */; };
 		78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */; };
-		78D9FFC125B89E2B00F00EA1 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBF25B89E2A00F00EA1 /* Post.swift */; };
+		78D9FFC125B89E2B00F00EA1 /* Post2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFBF25B89E2A00F00EA1 /* Post2.swift */; };
 		78D9FFC525B8A23800F00EA1 /* FinishLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFC425B8A23800F00EA1 /* FinishLauncher.swift */; };
 		78D9FFC825BB148400F00EA1 /* EditPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFC725BB148400F00EA1 /* EditPost.swift */; };
 		78D9FFCB25BB150700F00EA1 /* EditPostLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D9FFCA25BB150700F00EA1 /* EditPostLauncher.swift */; };
@@ -145,6 +147,8 @@
 		782F7DDE25932FE80064100F /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		782F7DDF25932FE80064100F /* ItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ItemCell.xib; sourceTree = "<group>"; };
 		783015C52624278E0030BA9F /* AllCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllCategories.swift; sourceTree = "<group>"; };
+		7830173E262812410030BA9F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		7830176B2628B1DE0030BA9F /* PostSecond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSecond.swift; sourceTree = "<group>"; };
 		784646C32561B841000C5F26 /* Hiremile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hiremile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		784646C62561B841000C5F26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		784646C82561B841000C5F26 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -201,7 +205,7 @@
 		78D5FB9925C1FF9700E3504C /* OtherRatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherRatingController.swift; sourceTree = "<group>"; };
 		78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLauncher.swift; sourceTree = "<group>"; };
-		78D9FFBF25B89E2A00F00EA1 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		78D9FFBF25B89E2A00F00EA1 /* Post2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post2.swift; sourceTree = "<group>"; };
 		78D9FFC425B8A23800F00EA1 /* FinishLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishLauncher.swift; sourceTree = "<group>"; };
 		78D9FFC725BB148400F00EA1 /* EditPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPost.swift; sourceTree = "<group>"; };
 		78D9FFCA25BB150700F00EA1 /* EditPostLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPostLauncher.swift; sourceTree = "<group>"; };
@@ -510,9 +514,11 @@
 		78FE863D257D603D00E5D758 /* Post */ = {
 			isa = PBXGroup;
 			children = (
-				78D9FFBF25B89E2A00F00EA1 /* Post.swift */,
+				78D9FFBF25B89E2A00F00EA1 /* Post2.swift */,
 				78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */,
 				7870133F2579721A0019C24A /* Camera.swift */,
+				7830173E262812410030BA9F /* Post.swift */,
+				7830176B2628B1DE0030BA9F /* PostSecond.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -688,7 +694,7 @@
 				78D9FFC525B8A23800F00EA1 /* FinishLauncher.swift in Sources */,
 				78C9A84425C2D43B008056FC /* CustomImageView.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
-				78D9FFC125B89E2B00F00EA1 /* Post.swift in Sources */,
+				78D9FFC125B89E2B00F00EA1 /* Post2.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignInController.swift in Sources */,
 				78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */,
 				78008CD72569B8E4005E4A15 /* Password.swift in Sources */,
@@ -735,6 +741,7 @@
 				783015C62624278E0030BA9F /* AllCategories.swift in Sources */,
 				782634FC26131D9A00A958A9 /* ThirdPartyButton.swift in Sources */,
 				78D9FFCE25BDCABE00F00EA1 /* RatingController.swift in Sources */,
+				7830173F262812410030BA9F /* Post.swift in Sources */,
 				788A028E2583A19800C77434 /* ReviewStructure.swift in Sources */,
 				784C0E9125FD3E2B0075C6B5 /* WorkHourEditCell.swift in Sources */,
 				781F45EF25CD82D5004F9C45 /* Map.swift in Sources */,
@@ -757,6 +764,7 @@
 				78A98BFE261100B800E1A8D9 /* SearchController.swift in Sources */,
 				78B793C425703FBF00EFA7D1 /* Payment.swift in Sources */,
 				784646EE2562ADFC000C5F26 /* Chat.swift in Sources */,
+				7830176C2628B1DF0030BA9F /* PostSecond.swift in Sources */,
 				784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */,
 				78E02C3D25A1C01F00337370 /* PushNotificationManager.swift in Sources */,
 				78E02C4025A1C4BA00337370 /* PushNotificationSender.swift in Sources */,
