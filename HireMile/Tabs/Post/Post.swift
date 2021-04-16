@@ -10,9 +10,20 @@ import UIKit
 
 class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    static var homeRemove = false
+    
     let pickerController = UIImagePickerController()
     
     let filterLauncher = PostSourceLauncher()
+    
+    let scrollView : UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.backgroundColor = UIColor.white
+        return scrollView
+    }()
     
     let view1 : UIView = {
         let view = UIView()
@@ -158,74 +169,81 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         self.backButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
         self.backButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
         
-        self.view.addSubview(photoImageView)
-        self.photoImageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 170).isActive = true
-        self.photoImageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
-        self.photoImageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
-        self.photoImageView.heightAnchor.constraint(equalToConstant: 194).isActive = true
-        
-        self.view.addSubview(cameraImage)
-        self.cameraImage.widthAnchor.constraint(equalToConstant: 90).isActive = true
-        self.cameraImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        self.cameraImage.topAnchor.constraint(equalTo: photoImageView.topAnchor, constant: 42).isActive = true
-        self.cameraImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        self.view.addSubview(cameraLabel)
-        self.cameraLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        self.cameraLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        self.cameraLabel.topAnchor.constraint(equalTo: cameraImage.bottomAnchor, constant: 15).isActive = true
-        self.cameraLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        self.view.addSubview(titleLabel)
-        self.titleLabel.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: 42).isActive = true
-        self.titleLabel.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
-        self.titleLabel.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
-        self.titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        self.view.addSubview(emailTextField)
-        self.emailTextField.delegate = self
-        self.emailTextField.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 06).isActive = true
-        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
-        self.view.addSubview(button)
-        self.button.topAnchor.constraint(equalTo: self.photoImageView.topAnchor).isActive = true
-        self.button.leftAnchor.constraint(equalTo: self.photoImageView.leftAnchor).isActive = true
-        self.button.rightAnchor.constraint(equalTo: self.photoImageView.rightAnchor).isActive = true
-        self.button.bottomAnchor.constraint(equalTo: self.photoImageView.bottomAnchor).isActive = true
-        
-        self.view.addSubview(loginButton)
-        self.loginButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
-        self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.loginButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.loginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
-        
-        self.view.addSubview(view1)
-        self.view1.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 40).isActive = true
-        self.view1.rightAnchor.constraint(equalTo: view.centerXAnchor, constant: -15).isActive = true
-        self.view1.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        self.view1.heightAnchor.constraint(equalToConstant: 6).isActive = true
-        
-        self.view.addSubview(view2)
-        self.view2.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 40).isActive = true
-        self.view2.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 15).isActive = true
-        self.view2.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        self.view2.heightAnchor.constraint(equalToConstant: 6).isActive = true
-        
         self.view.addSubview(titleLabelView)
         self.titleLabelView.topAnchor.constraint(equalTo: backButton.topAnchor, constant: 10).isActive = true
         self.titleLabelView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         self.titleLabelView.widthAnchor.constraint(equalToConstant: 200).isActive = true
         self.titleLabelView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        self.view.addSubview(title1)
+        self.view.addSubview(scrollView)
+        self.scrollView.contentSize = CGSize(width: (self.view.frame.width / 2) - 60, height: 900)
+        self.scrollView.topAnchor.constraint(equalTo: titleLabelView.bottomAnchor, constant: 12).isActive = true
+        self.scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
+        
+        self.scrollView.addSubview(photoImageView)
+        self.photoImageView.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 150).isActive = true
+        self.photoImageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
+        self.photoImageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
+        self.photoImageView.heightAnchor.constraint(equalToConstant: 194).isActive = true
+        
+        self.scrollView.addSubview(cameraImage)
+        self.cameraImage.widthAnchor.constraint(equalToConstant: 90).isActive = true
+        self.cameraImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        self.cameraImage.topAnchor.constraint(equalTo: photoImageView.topAnchor, constant: 42).isActive = true
+        self.cameraImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        self.scrollView.addSubview(cameraLabel)
+        self.cameraLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        self.cameraLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        self.cameraLabel.topAnchor.constraint(equalTo: cameraImage.bottomAnchor, constant: 15).isActive = true
+        self.cameraLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        self.scrollView.addSubview(titleLabel)
+        self.titleLabel.topAnchor.constraint(equalTo: self.photoImageView.bottomAnchor, constant: 42).isActive = true
+        self.titleLabel.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
+        self.titleLabel.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
+        self.titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.scrollView.addSubview(emailTextField)
+        self.emailTextField.delegate = self
+        self.emailTextField.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 06).isActive = true
+        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        self.scrollView.addSubview(button)
+        self.button.topAnchor.constraint(equalTo: self.photoImageView.topAnchor).isActive = true
+        self.button.leftAnchor.constraint(equalTo: self.photoImageView.leftAnchor).isActive = true
+        self.button.rightAnchor.constraint(equalTo: self.photoImageView.rightAnchor).isActive = true
+        self.button.bottomAnchor.constraint(equalTo: self.photoImageView.bottomAnchor).isActive = true
+        
+        self.scrollView.addSubview(loginButton)
+        self.loginButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
+        self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.loginButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.loginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        
+        self.scrollView.addSubview(view1)
+        self.view1.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 40).isActive = true
+        self.view1.rightAnchor.constraint(equalTo: view.centerXAnchor, constant: -15).isActive = true
+        self.view1.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        self.view1.heightAnchor.constraint(equalToConstant: 6).isActive = true
+        
+        self.scrollView.addSubview(view2)
+        self.view2.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 40).isActive = true
+        self.view2.leftAnchor.constraint(equalTo: view.centerXAnchor, constant: 15).isActive = true
+        self.view2.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        self.view2.heightAnchor.constraint(equalToConstant: 6).isActive = true
+        
+        self.scrollView.addSubview(title1)
         self.title1.topAnchor.constraint(equalTo: view1.bottomAnchor, constant: 5).isActive = true
         self.title1.leftAnchor.constraint(equalTo: view1.leftAnchor).isActive = true
         self.title1.rightAnchor.constraint(equalTo: view1.rightAnchor).isActive = true
         self.title1.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        self.view.addSubview(title2)
+        self.scrollView.addSubview(title2)
         self.title2.topAnchor.constraint(equalTo: view2.bottomAnchor, constant: 5).isActive = true
         self.title2.leftAnchor.constraint(equalTo: view2.leftAnchor).isActive = true
         self.title2.rightAnchor.constraint(equalTo: view2.rightAnchor).isActive = true
@@ -236,6 +254,11 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if Post.homeRemove {
+            Post.homeRemove = false
+            self.dismiss(animated: true, completion: nil)
+        }
         
         navigationController?.navigationBar.isHidden = false
     }
@@ -263,6 +286,8 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         if emailTextField.text != "" && photoImageView.image != nil {
             self.navigationController?.pushViewController(PostSecond(), animated: true)
             let controller = PostSecond()
+            controller.image = self.photoImageView.image!
+            controller.titleOfPost = self.emailTextField.text!
             controller.modalPresentationStyle = .fullScreen
             self.present(controller, animated: true, completion: nil)
         } else {
@@ -314,8 +339,8 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     func sendToBack() {
         loginButton.setTitleColor(UIColor.white, for: .normal)
         loginButton.backgroundColor = UIColor.mainBlue
-        self.view.sendSubviewToBack(self.cameraLabel)
-        self.view.sendSubviewToBack(self.cameraImage)
+        self.scrollView.sendSubviewToBack(self.cameraLabel)
+        self.scrollView.sendSubviewToBack(self.cameraImage)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
