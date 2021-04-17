@@ -184,12 +184,25 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         return button
     }()
     
-    let describeYourListing : UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Describe Your Service (Max. 40 Characters)"
+    let downImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = UIColor.white
+        imageView.image = UIImage(systemName: "arrowtriangle.down.fill")
+        imageView.tintColor = UIColor.darkGray
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let describeYourListing : UITextView = {
+        let tf = UITextView()
+//        tf.placeholder = "Describe Your Service (Max. 40 Characters)"
         tf.tintColor = UIColor.mainBlue
         tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.borderStyle = .roundedRect
+//        tf.borderStyle = .roundedRect
+        tf.layer.borderWidth = 1
+        tf.layer.cornerRadius = 8
+        tf.font = UIFont.systemFont(ofSize: 17)
+        tf.layer.borderColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1).cgColor
         tf.textColor = UIColor.black
         tf.textAlignment = NSTextAlignment.left
         return tf
@@ -197,7 +210,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     
     let priceYourListing : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "0.00"
+        tf.placeholder = "$0.00"
         tf.tintColor = UIColor.mainBlue
         tf.font = UIFont.boldSystemFont(ofSize: 30)
         tf.translatesAutoresizingMaskIntoConstraints = false
@@ -226,8 +239,15 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         label.numberOfLines = 3
         label.textColor = UIColor.lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "40 letters left"
+//        label.text = "40 letters left"
         return label
+    }()
+    
+    let middleView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(red: 232/255, green: 232/255, blue: 232/255, alpha: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     var image : UIImage?
@@ -243,10 +263,10 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         
         setupLocationManager()
         
-        self.describeYourListing.delegate = self
+//        self.describeYourListing.delegate = self
         
-        self.titleYourListing.addTarget(self, action: #selector(self.titleChanged), for: UIControl.Event.editingChanged)
-        self.describeYourListing.addTarget(self, action: #selector(self.descrpitionChanged), for: UIControl.Event.editingChanged)
+//        self.titleYourListing.addTarget(self, action: #selector(self.titleChanged), for: UIControl.Event.editingChanged)
+//        self.describeYourListing.addTarget(self, action: #selector(self.descrpitionChanged), for: UIControl.Event.editingChanged)
         
         self.view.addSubview(backButton)
         self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
@@ -310,7 +330,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.categoryImage.bottomAnchor.constraint(equalTo: self.titleLabel12.bottomAnchor).isActive = true
         
         self.view.addSubview(titleLabel2)
-        self.titleLabel2.topAnchor.constraint(equalTo: self.titleLabel12.bottomAnchor, constant: 35).isActive = true
+        self.titleLabel2.topAnchor.constraint(equalTo: self.titleLabel12.bottomAnchor, constant: 55).isActive = true
         self.titleLabel2.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
         self.titleLabel2.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
         self.titleLabel2.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -319,13 +339,19 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.describeYourListing.leftAnchor.constraint(equalTo: self.scrollView.leftAnchor).isActive = true
         self.describeYourListing.rightAnchor.constraint(equalTo: self.scrollView.rightAnchor).isActive = true
         self.describeYourListing.topAnchor.constraint(equalTo: self.titleLabel2.bottomAnchor, constant: 12).isActive = true
-        self.describeYourListing.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.describeYourListing.heightAnchor.constraint(equalToConstant: 100).isActive = true
 
         self.view.addSubview(self.wordCountDescription)
         self.wordCountDescription.topAnchor.constraint(equalTo: self.describeYourListing.bottomAnchor, constant: 5).isActive = true
         self.wordCountDescription.leftAnchor.constraint(equalTo: self.scrollView.leftAnchor).isActive = true
         self.wordCountDescription.rightAnchor.constraint(equalTo: self.scrollView.rightAnchor).isActive = true
         self.wordCountDescription.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        
+        self.view.addSubview(downImage)
+        self.downImage.topAnchor.constraint(equalTo: titleLabel12.topAnchor).isActive = true
+        self.downImage.widthAnchor.constraint(equalToConstant: 15).isActive = true
+        self.downImage.heightAnchor.constraint(equalToConstant: 15).isActive = true
+        self.downImage.rightAnchor.constraint(equalTo: self.scrollView.rightAnchor).isActive = true
         
         self.view.addSubview(titleLabel3)
         self.titleLabel3.leftAnchor.constraint(equalTo: self.scrollView.leftAnchor).isActive = true
@@ -339,13 +365,6 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.titleYourListing.topAnchor.constraint(equalTo: self.titleLabel3.bottomAnchor, constant: 12).isActive = true
         self.titleYourListing.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
-        //        self.view.addSubview(emailTextField)
-        //        self.emailTextField.delegate = self
-        //        self.emailTextField.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 06).isActive = true
-        //        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        //        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        //        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        //
         self.scrollView.addSubview(loginButton)
         self.loginButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
         self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
@@ -353,6 +372,12 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.loginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
         self.loginButton.setTitleColor(UIColor.white, for: .normal)
         self.loginButton.backgroundColor = UIColor.mainBlue
+        
+        self.view.addSubview(middleView)
+        self.middleView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        self.middleView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
+        self.middleView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.middleView.bottomAnchor.constraint(equalTo: self.titleLabel2.topAnchor, constant: -25).isActive = true
 
         // Do any additional setup after loading the view.
     }
@@ -597,7 +622,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     
     let titleYourListing : UITextField = {
         let tf = UITextField()
-        tf.placeholder = "0.00"
+        tf.placeholder = "$0.00"
         tf.tintColor = UIColor.mainBlue
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.borderStyle = .roundedRect
