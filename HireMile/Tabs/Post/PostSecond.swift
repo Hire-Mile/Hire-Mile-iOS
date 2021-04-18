@@ -14,7 +14,7 @@ import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
 
-class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
+class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate, UITextViewDelegate {
     
     let pickerController = UIImagePickerController()
     
@@ -25,6 +25,13 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     let maxTitle : Int = 20
     
     let maxDesc : Int = 40
+    
+    let topView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     let scrollView : UIScrollView = {
         let scrollView = UIScrollView()
@@ -195,7 +202,8 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     
     let describeYourListing : UITextView = {
         let tf = UITextView()
-//        tf.placeholder = "Describe Your Service (Max. 40 Characters)"
+        tf.text = "Write Here.."
+        tf.textColor = UIColor.lightGray
         tf.tintColor = UIColor.mainBlue
         tf.translatesAutoresizingMaskIntoConstraints = false
 //        tf.borderStyle = .roundedRect
@@ -263,7 +271,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         
         setupLocationManager()
         
-//        self.describeYourListing.delegate = self
+        self.describeYourListing.delegate = self
         
 //        self.titleYourListing.addTarget(self, action: #selector(self.titleChanged), for: UIControl.Event.editingChanged)
 //        self.describeYourListing.addTarget(self, action: #selector(self.descrpitionChanged), for: UIControl.Event.editingChanged)
@@ -311,13 +319,13 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.title2.rightAnchor.constraint(equalTo: view2.rightAnchor).isActive = true
         self.title2.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        self.view.addSubview(titleLabel)
+        self.scrollView.addSubview(titleLabel)
         self.titleLabel.topAnchor.constraint(equalTo: self.title1.bottomAnchor, constant: 35).isActive = true
         self.titleLabel.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
         self.titleLabel.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
         self.titleLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        self.view.addSubview(titleLabel12)
+        self.scrollView.addSubview(titleLabel12)
         self.titleLabel12.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 5).isActive = true
         self.titleLabel12.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
         self.titleLabel12.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
@@ -347,7 +355,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.wordCountDescription.rightAnchor.constraint(equalTo: self.scrollView.rightAnchor).isActive = true
         self.wordCountDescription.heightAnchor.constraint(equalToConstant: 18).isActive = true
         
-        self.view.addSubview(downImage)
+        self.titleLabel12.addSubview(downImage)
         self.downImage.topAnchor.constraint(equalTo: titleLabel12.topAnchor).isActive = true
         self.downImage.widthAnchor.constraint(equalToConstant: 15).isActive = true
         self.downImage.heightAnchor.constraint(equalToConstant: 15).isActive = true
@@ -378,6 +386,14 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.middleView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.middleView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
         self.middleView.bottomAnchor.constraint(equalTo: self.titleLabel2.topAnchor, constant: -25).isActive = true
+        
+        self.view.addSubview(topView)
+        self.topView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        self.topView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        self.topView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        self.topView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        self.view.sendSubviewToBack(topView)
 
         // Do any additional setup after loading the view.
     }
@@ -728,6 +744,16 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     
     @objc func addCategory() {
         self.showView()
+    }
+    
+    // MARK: - UITextView Delegate Functions
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == "Write Here.." {
+            textView.text = ""
+            textView.font = UIFont.systemFont(ofSize: 17)
+            textView.textColor = UIColor.black
+        }
     }
 
 }

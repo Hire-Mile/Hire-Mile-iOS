@@ -186,12 +186,12 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         self.photoImageView.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 150).isActive = true
         self.photoImageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
         self.photoImageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
-        self.photoImageView.heightAnchor.constraint(equalToConstant: 194).isActive = true
+        self.photoImageView.heightAnchor.constraint(equalToConstant: 260).isActive = true
         
         self.scrollView.addSubview(cameraImage)
         self.cameraImage.widthAnchor.constraint(equalToConstant: 90).isActive = true
         self.cameraImage.heightAnchor.constraint(equalToConstant: 70).isActive = true
-        self.cameraImage.topAnchor.constraint(equalTo: photoImageView.topAnchor, constant: 42).isActive = true
+        self.cameraImage.topAnchor.constraint(equalTo: photoImageView.topAnchor, constant: 65).isActive = true
         self.cameraImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         self.scrollView.addSubview(cameraLabel)
@@ -248,6 +248,10 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         self.title2.leftAnchor.constraint(equalTo: view2.leftAnchor).isActive = true
         self.title2.rightAnchor.constraint(equalTo: view2.rightAnchor).isActive = true
         self.title2.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        self.scrollView.bringSubviewToFront(photoImageView)
+        self.scrollView.bringSubviewToFront(cameraImage)
+        self.scrollView.bringSubviewToFront(cameraLabel)
 
         // Do any additional setup after loading the view.
     }
