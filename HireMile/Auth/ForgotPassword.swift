@@ -20,16 +20,12 @@ class ForgotPassword: UIViewController {
         return label
     }()
     
-    let emailTextField : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Enter your email"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
+    let emailTextField : MainTextField = {
+        let textfield = MainTextField(placeholderString: "Enter your email")
+        textfield.autocapitalizationType = .none
         textfield.keyboardType = .emailAddress
+        textfield.autocorrectionType = UITextAutocorrectionType.no
         textfield.isSecureTextEntry = false
-        textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
     
@@ -94,7 +90,7 @@ class ForgotPassword: UIViewController {
         self.emailTextField.topAnchor.constraint(equalTo: self.welcomeLabel.bottomAnchor, constant: 25).isActive = true
         self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
         self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
-        self.emailTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         self.sendButton.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 30).isActive = true
         self.sendButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true

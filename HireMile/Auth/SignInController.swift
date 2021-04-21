@@ -69,18 +69,12 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         return textField
     }()
     
-    let passwordTextField : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Enter your password"
-        textfield.borderStyle = .roundedRect
-        textfield.autocapitalizationType = .none
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
-        textfield.keyboardType = .default
-        textfield.isSecureTextEntry = true
-        textfield.translatesAutoresizingMaskIntoConstraints = false
-        return textfield
+    let passwordTextField : MainTextField = {
+        let textField = MainTextField(placeholderString: "Enter your password")
+        textField.autocapitalizationType = .none
+        textField.keyboardType = .default
+        textField.isSecureTextEntry = true
+        return textField
     }()
     
     let forgotPasswordButton : UIButton = {
@@ -255,7 +249,7 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         self.passwordTextField.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 20).isActive = true
         self.passwordTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
         self.passwordTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
-        self.passwordTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        self.passwordTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.forgotPasswordButton.topAnchor.constraint(equalTo: self.passwordTextField.bottomAnchor, constant: 5).isActive = true
         self.forgotPasswordButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true

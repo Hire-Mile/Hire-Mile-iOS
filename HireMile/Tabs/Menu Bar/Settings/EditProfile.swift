@@ -906,10 +906,9 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         return label
     }()
     
-    let inputTextField : UITextField = {
-        let textfield = UITextField()
+    let inputTextField : MainTextField = {
+        let textfield = MainTextField(placeholderString: "")
         textfield.tintColor = UIColor.mainBlue
-        textfield.borderStyle = .roundedRect
         textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()

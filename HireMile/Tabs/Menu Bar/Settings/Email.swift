@@ -13,15 +13,8 @@ import MBProgressHUD
 
 class Email: UIViewController, UITextFieldDelegate {
 
-    let currentPassword : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "New email"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
-        textfield.isSecureTextEntry = false
-        textfield.translatesAutoresizingMaskIntoConstraints = false
+    let currentPassword : MainTextField = {
+        let textfield = MainTextField(placeholderString: "New email")
         return textfield
     }()
 
