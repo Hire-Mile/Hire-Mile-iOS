@@ -44,13 +44,8 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         return label
     }()
     
-    let nameTextField : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Enter your full name"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
+    let nameTextField : MainTextField = {
+        let textfield = MainTextField(placeholderString: "Enter your full name")
         textfield.keyboardType = .default
         textfield.autocapitalizationType = .words
         textfield.isSecureTextEntry = false
@@ -58,18 +53,12 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         return textfield
     }()
     
-    let emailTextField : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Enter your email"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
+    let emailTextField : MainTextField = {
+        let textfield = MainTextField(placeholderString: "Enter your email")
         textfield.autocapitalizationType = .none
         textfield.keyboardType = .emailAddress
         textfield.autocorrectionType = UITextAutocorrectionType.no
         textfield.isSecureTextEntry = false
-        textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
     
@@ -99,16 +88,10 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
 //        return textfield
 //    }()
     
-    let passwordTextField : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Enter your password"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
+    let passwordTextField : MainTextField = {
+        let textfield = MainTextField(placeholderString: "Enter your password")
         textfield.keyboardType = .default
         textfield.isSecureTextEntry = true
-        textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
     
@@ -267,12 +250,12 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         self.nameTextField.topAnchor.constraint(equalTo: self.welcomeLabel.bottomAnchor, constant: 25).isActive = true
         self.nameTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
         self.nameTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
-        self.nameTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        self.nameTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.emailTextField.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor, constant: 25).isActive = true
         self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
         self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
-        self.emailTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
 //        self.dateOfBirthTextField.setInputViewDatePickerForSignUp(target: self, selector: #selector(tapDone))
 //        self.dateOfBirthTextField.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 25).isActive = true
@@ -289,7 +272,7 @@ class SignUp: UIViewController, ASAuthorizationControllerPresentationContextProv
         self.passwordTextField.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 25).isActive = true
         self.passwordTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
         self.passwordTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
-        self.passwordTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        self.passwordTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         self.signUpButton.topAnchor.constraint(equalTo: self.passwordTextField.bottomAnchor, constant: 30).isActive = true
         self.signUpButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true

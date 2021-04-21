@@ -13,39 +13,18 @@ import FirebaseDatabase
 
 class ChangePassword: UIViewController, UITextFieldDelegate {
 
-    let currentPassword : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Current Password"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
-        textfield.isSecureTextEntry = false
-        textfield.translatesAutoresizingMaskIntoConstraints = false
+    let currentPassword : MainTextField = {
+        let textfield = MainTextField(placeholderString: "Current Password")
         return textfield
     }()
-
-    let newPassword : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "New Password"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
-        textfield.isSecureTextEntry = false
-        textfield.translatesAutoresizingMaskIntoConstraints = false
+    
+    let newPassword : MainTextField = {
+        let textfield = MainTextField(placeholderString: "New Password")
         return textfield
     }()
-
-    let confirmNewPassword : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Confirm New Password"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
-        textfield.isSecureTextEntry = false
-        textfield.translatesAutoresizingMaskIntoConstraints = false
+    
+    let confirmNewPassword : MainTextField = {
+        let textfield = MainTextField(placeholderString: "Confirm New Password")
         return textfield
     }()
 
