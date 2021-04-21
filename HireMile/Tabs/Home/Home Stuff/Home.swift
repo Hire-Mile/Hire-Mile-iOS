@@ -138,7 +138,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     let hireMileLog : UILabel = {
         let label = UILabel()
-        label.text = "HireMile"
+        label.text = "Hiremile"
         label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -879,11 +879,12 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         if GlobalVariables.isGoingToPost == true {
-            GlobalVariables.isGoingToPost = false
             let controller = Post()
             controller.modalPresentationStyle = .fullScreen
-            self.present(controller, animated: true, completion: nil)
-            self.passingImage = nil
+            self.present(controller, animated: true) {
+                GlobalVariables.isGoingToPost = false
+                self.passingImage = nil
+            }
         }
         
     }

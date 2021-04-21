@@ -90,7 +90,7 @@ class ResetPassword: UIViewController {
 
     func addConstraints() {
         self.bigView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
-        self.bigView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
+        self.bigView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -25).isActive = true
         self.bigView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
         self.bigView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         

@@ -131,21 +131,21 @@ class AddUsername: UIViewController, UITextFieldDelegate {
         self.currentPassword.delegate = self
         self.currentPassword.addTarget(self, action: #selector(self.textChanged), for: UIControl.Event.editingChanged)
         self.currentPassword.topAnchor.constraint(equalTo: self.profileImage.bottomAnchor, constant: 30).isActive = true
-        self.currentPassword.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.currentPassword.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.currentPassword.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.currentPassword.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.currentPassword.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.view.addSubview(self.label)
         self.label.isHidden = true
         self.label.topAnchor.constraint(equalTo: self.currentPassword.bottomAnchor, constant: 5).isActive = true
-        self.label.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.label.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.label.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.label.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.label.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
         self.button.isEnabled = false
         self.view.addSubview(self.button)
-        self.button.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.button.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.button.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.button.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
         

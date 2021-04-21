@@ -22,27 +22,13 @@ class FinishLauncher: NSObject {
         return view
     }()
     
-    let stopJob : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Cancel Service", for: .normal)
-        button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 25
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.white.cgColor
+    let stopJob : MainSecondaryButton = {
+        let button = MainSecondaryButton(title: "Cancel Service")
         return button
     }()
     
-    let completeJob : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Complete Service", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 25
+    let completeJob : MainButton = {
+        let button = MainButton(title: "Complete Service")
         return button
     }()
 
@@ -98,13 +84,13 @@ class FinishLauncher: NSObject {
         self.stopJob.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
         self.stopJob.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
         self.stopJob.bottomAnchor.constraint(equalTo: self.filterView.bottomAnchor, constant: -50).isActive = true
-        self.stopJob.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.stopJob.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         filterView.addSubview(completeJob)
         self.completeJob.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
         self.completeJob.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
         self.completeJob.bottomAnchor.constraint(equalTo: self.stopJob.topAnchor, constant: -15).isActive = true
-        self.completeJob.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.completeJob.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         filterView.addSubview(filterDescription)
         self.filterDescription.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 60).isActive = true

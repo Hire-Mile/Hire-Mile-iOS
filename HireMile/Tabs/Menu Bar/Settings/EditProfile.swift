@@ -914,38 +914,18 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         return textfield
     }()
     
-    let loginButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Done", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 22.5
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let loginButton : MainButton = {
+        let button = MainButton(title: "Done")
         return button
     }()
     
-    let saveButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Save", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 22.5
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let saveButton : MainButton = {
+        let button = MainButton(title: "Save")
         return button
     }()
     
-    let cancelButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Cancel", for: .normal)
-        button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.backgroundColor = UIColor.white
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.mainBlue.cgColor
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 22.5
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let cancelButton : MainSecondaryButton = {
+        let button = MainSecondaryButton(title: "Cancel")
         return button
     }()
     
@@ -1011,26 +991,26 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         scrollView.addSubview(basicLabel)
         basicLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 25).isActive = true
-        basicLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        basicLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         basicLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
         basicLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         scrollView.addSubview(basicView1)
         basicView1.topAnchor.constraint(equalTo: basicLabel.bottomAnchor, constant: 5).isActive = true
-        basicView1.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        basicView1.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        basicView1.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        basicView1.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         basicView1.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         basicView1.addSubview(previewLabel1)
         previewLabel1.topAnchor.constraint(equalTo: basicView1.topAnchor, constant: 2).isActive = true
-        previewLabel1.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        previewLabel1.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        previewLabel1.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        previewLabel1.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         previewLabel1.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         basicView1.addSubview(label1)
         label1.topAnchor.constraint(equalTo: previewLabel1.bottomAnchor).isActive = true
-        label1.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        label1.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        label1.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        label1.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         label1.bottomAnchor.constraint(equalTo: basicView1.bottomAnchor).isActive = true
         
         basicView1.addSubview(sideMenuArrow1)
@@ -1047,20 +1027,20 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         scrollView.addSubview(basicView2)
         basicView2.topAnchor.constraint(equalTo: basicView1.bottomAnchor, constant: 10).isActive = true
-        basicView2.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        basicView2.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        basicView2.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        basicView2.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         basicView2.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         basicView2.addSubview(previewLabel2)
         previewLabel2.topAnchor.constraint(equalTo: basicView2.topAnchor, constant: 2).isActive = true
-        previewLabel2.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        previewLabel2.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        previewLabel2.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        previewLabel2.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         previewLabel2.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         basicView2.addSubview(label2)
         label2.topAnchor.constraint(equalTo: previewLabel2.bottomAnchor).isActive = true
-        label2.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        label2.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        label2.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        label2.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         label2.bottomAnchor.constraint(equalTo: basicView2.bottomAnchor).isActive = true
         
         basicView2.addSubview(sideMenuArrow2)
@@ -1077,19 +1057,19 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         scrollView.addSubview(basicView3)
         basicView3.topAnchor.constraint(equalTo: basicView2.bottomAnchor, constant: 10).isActive = true
-        basicView3.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        basicView3.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        basicView3.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        basicView3.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         basicView3.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         basicView3.addSubview(previewLabel3)
         previewLabel3.topAnchor.constraint(equalTo: basicView3.topAnchor, constant: 2).isActive = true
-        previewLabel3.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        previewLabel3.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        previewLabel3.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        previewLabel3.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         previewLabel3.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         basicView3.addSubview(label3)
         label3.topAnchor.constraint(equalTo: previewLabel3.bottomAnchor).isActive = true
-        label3.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        label3.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         label3.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -50).isActive = true
         label3.bottomAnchor.constraint(equalTo: basicView3.bottomAnchor).isActive = true
         
@@ -1107,19 +1087,19 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         scrollView.addSubview(basicView4)
         basicView4.topAnchor.constraint(equalTo: basicView3.bottomAnchor, constant: 10).isActive = true
-        basicView4.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        basicView4.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        basicView4.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        basicView4.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         basicView4.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         basicView4.addSubview(previewLabel4)
         previewLabel4.topAnchor.constraint(equalTo: basicView4.topAnchor, constant: 2).isActive = true
-        previewLabel4.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        previewLabel4.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        previewLabel4.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        previewLabel4.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         previewLabel4.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         basicView4.addSubview(label4)
         label4.topAnchor.constraint(equalTo: previewLabel4.bottomAnchor).isActive = true
-        label4.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        label4.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         label4.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -50).isActive = true
         label4.bottomAnchor.constraint(equalTo: basicView4.bottomAnchor).isActive = true
         
@@ -1197,14 +1177,14 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         scrollView.addSubview(workLabel)
         workLabel.topAnchor.constraint(equalTo: basicView4.bottomAnchor, constant: 25).isActive = true
-        workLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        workLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         workLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
         workLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         scrollView.addSubview(workhours)
         workhours.topAnchor.constraint(equalTo: workLabel.bottomAnchor, constant: 5).isActive = true
-        workhours.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        workhours.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        workhours.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        workhours.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         workhours.heightAnchor.constraint(equalToConstant: 340).isActive = true
         
         workhours.addSubview(mondayView)
@@ -1461,14 +1441,14 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         scrollView.addSubview(socialLabel)
         socialLabel.topAnchor.constraint(equalTo: sundayView.bottomAnchor, constant: 25).isActive = true
-        socialLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
+        socialLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         socialLabel.widthAnchor.constraint(equalToConstant: 250).isActive = true
         socialLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         scrollView.addSubview(instagramView)
         instagramView.topAnchor.constraint(equalTo: socialLabel.bottomAnchor, constant: 20).isActive = true
-        instagramView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        instagramView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        instagramView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        instagramView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         instagramView.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         instagramView.addSubview(instagramTitleLabel)
@@ -1497,8 +1477,8 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         scrollView.addSubview(facebookView)
         facebookView.topAnchor.constraint(equalTo: instagramView.bottomAnchor).isActive = true
-        facebookView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        facebookView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        facebookView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        facebookView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         facebookView.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         facebookView.addSubview(facebookTitleLabel)
@@ -2182,15 +2162,15 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         
         filterView.addSubview(cancelButton)
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
-        cancelButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        cancelButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        cancelButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        cancelButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -44).isActive = true
         cancelButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         filterView.addSubview(saveButton)
         saveButton.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)
-        saveButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        saveButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        saveButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        saveButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         saveButton.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -28).isActive = true
         saveButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
@@ -2223,15 +2203,15 @@ class EditProfile: UIViewController, UITextFieldDelegate, UINavigationController
         filterView.addSubview(inputTextField)
         inputTextField.delegate = self
         inputTextField.topAnchor.constraint(equalTo: titleInputPopup.bottomAnchor, constant: 15).isActive = true
-        inputTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        inputTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        inputTextField.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        inputTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         inputTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         inputTextField.becomeFirstResponder()
 
         filterView.addSubview(loginButton)
         loginButton.topAnchor.constraint(equalTo: inputTextField.bottomAnchor, constant: 15).isActive = true
-        loginButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20).isActive = true
-        loginButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20).isActive = true
+        loginButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
+        loginButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         loginButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
     

@@ -38,7 +38,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
-        view.layer.cornerRadius = 25
+        view.layer.cornerRadius = 12
         return view
     }()
     

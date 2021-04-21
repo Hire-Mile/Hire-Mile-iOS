@@ -24,28 +24,14 @@ class WelcomeScreen: UIViewController {
     
     // MARK: - Constants
     
-    let signUpButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.mainBlue
-        button.setTitle("Create Account", for: .normal)
-        button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 18)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.layer.cornerRadius = 16
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let signUpButton : MainButton = {
+        let button = MainButton(title: "Create Account")
         button.addTarget(self, action: #selector(signUpButtonPressed), for: UIControl.Event.touchUpInside)
         return button
     }()
     
-    let signInButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.white
-        button.setTitle("Sign In", for: .normal)
-        button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 18)
-        button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.layer.cornerRadius = 16
-        button.layer.borderColor = UIColor.mainBlue.cgColor
-        button.layer.borderWidth = 3
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let signInButton : MainSecondaryButton = {
+        let button = MainSecondaryButton(title: "Sign In")
         button.addTarget(self, action: #selector(signInButtonPressed), for: UIControl.Event.touchUpInside)
         return button
     }()
@@ -64,7 +50,7 @@ class WelcomeScreen: UIViewController {
     
     let titleLabel : UILabel = {
         let label = UILabel()
-        label.text = "HireMile"
+        label.text = "Hiremile"
         label.font = UIFont.boldSystemFont(ofSize: 60)
         label.textColor = UIColor.mainBlue
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -76,8 +62,6 @@ class WelcomeScreen: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         view.backgroundColor = UIColor.white
 
@@ -118,13 +102,13 @@ class WelcomeScreen: UIViewController {
         signInButton.bottomAnchor.constraint(equalTo: text.topAnchor, constant: -60).isActive = true
         signInButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         signInButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        signInButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        signInButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         view.addSubview(signUpButton)
         signUpButton.bottomAnchor.constraint(equalTo: signInButton.topAnchor, constant: -15).isActive = true
         signUpButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
         signUpButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
-        signUpButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        signUpButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         view.addSubview(titleLabel)
         titleLabel.topAnchor.constraint(equalTo: view.topAnchor).isActive = true

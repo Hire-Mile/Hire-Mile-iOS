@@ -225,7 +225,7 @@ class FavoritesCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = CGRect(x: 75, y: self.contentView.frame.height / 3, width: textLabel!.frame.width, height: textLabel!.frame.height)
+        textLabel?.frame = CGRect(x: 85, y: self.contentView.frame.height / 3, width: textLabel!.frame.width, height: textLabel!.frame.height)
     }
     
     let profileImageView: UIImageView = {
@@ -257,18 +257,18 @@ class FavoritesCell: UITableViewCell {
         
         //ios 9 constraint anchors
         //need x,y,width,height anchors
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 25).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-        profileButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 25).isActive = true
         profileButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileButton.widthAnchor.constraint(equalToConstant: 48).isActive = true
         profileButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
         favoriteButton.addTarget(self, action: #selector(tapper), for: .touchUpInside)
-        favoriteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
+        favoriteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
         favoriteButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         favoriteButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         favoriteButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
