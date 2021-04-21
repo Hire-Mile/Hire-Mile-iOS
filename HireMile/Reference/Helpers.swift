@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UIColor {
-    static var mainBlue = UIColor(red: 76/255, green: 193/255, blue: 255/255, alpha: 1)
+    static var mainBlue = UIColor(red: 53/255, green: 167/255, blue: 245/255, alpha: 1)
     static var unselectedColor : UIColor = UIColor(red: 171/255, green: 169/255, blue: 169/255, alpha: 1)
     static var selectedColor : UIColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
     static var boldSelectedColor : UIColor = UIColor(red: 93/255, green: 93/255, blue: 93/255, alpha: 1)
@@ -438,3 +438,92 @@ extension UILabel {
 
 
 
+class MainButton : UIButton {
+
+    init(title buttonTitle: String) {
+        super.init(frame: .zero)
+        
+        titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        titleLabel?.textColor = UIColor.white
+        
+        layer.cornerRadius = 14
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        backgroundColor = UIColor.mainBlue
+        
+        setTitleColor(UIColor.lightGray, for: UIControl.State.highlighted)
+        setTitle(buttonTitle, for: UIControl.State.normal)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        fatalError("error fatal")
+    }
+
+}
+
+class MainSecondaryButton : UIButton {
+
+    init(title buttonTitle: String) {
+        super.init(frame: .zero)
+        
+        titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        titleLabel?.textColor = UIColor.mainBlue
+        
+        layer.cornerRadius = 14
+        
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        backgroundColor = UIColor.white
+
+        layer.borderColor = UIColor.mainBlue.cgColor
+        layer.borderWidth = 2
+        
+        setTitleColor(UIColor.lightGray, for: UIControl.State.highlighted)
+        setTitleColor(UIColor.mainBlue, for: UIControl.State.normal)
+        setTitle(buttonTitle, for: UIControl.State.normal)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        fatalError("error fatal")
+    }
+
+}
+
+class MainTextField : UITextField {
+
+    let insets : UIEdgeInsets
+
+    init(insets: UIEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12), placeholderString: String) {
+        self.insets = insets
+        super.init(frame: .zero)
+
+        let placeholderStringAttr = NSAttributedString(string: placeholderString, attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 179/255, green: 185/255, blue: 196/255, alpha: 1), NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16)])
+        attributedPlaceholder = placeholderStringAttr
+
+        tintColor = UIColor.mainBlue
+        
+        font = UIFont.systemFont(ofSize: 16)
+        
+        translatesAutoresizingMaskIntoConstraints = false
+
+        layer.cornerRadius = 14
+        layer.borderWidth = 2
+        layer.borderColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1).cgColor
+    }
+
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: insets)
+    }
+
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: insets)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not yet been implemented")
+    }
+
+}

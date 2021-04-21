@@ -98,14 +98,8 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
-    let applyButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("SEND FEEDBACK", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 25
+    let applyButton : MainButton = {
+        let button = MainButton(title: "Send Feedback")
         return button
     }()
     
@@ -208,7 +202,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         self.applyButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.applyButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
         self.applyButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50).isActive = true
-        self.applyButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.applyButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         self.applyButton.addTarget(self, action: #selector(applyButtonpressed), for: .touchUpInside)
 
         // Do any additional setup after loading the view.

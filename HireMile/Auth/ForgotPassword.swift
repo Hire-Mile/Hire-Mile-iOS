@@ -33,14 +33,8 @@ class ForgotPassword: UIViewController {
         return textfield
     }()
     
-    let sendButton : UIButton = {
-        let button = UIButton()
-        button.setTitle("Send Link", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 22.5
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let sendButton : MainButton = {
+        let button = MainButton(title: "Send Link")
         button.addTarget(self, action: #selector(linkSendPressed), for: .touchUpInside)
         return button
     }()
@@ -93,18 +87,18 @@ class ForgotPassword: UIViewController {
     
     func addConstraints() {
         self.welcomeLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 50).isActive = true
-        self.welcomeLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.welcomeLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 20).isActive = true
+        self.welcomeLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.welcomeLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 25).isActive = true
         self.welcomeLabel.heightAnchor.constraint(equalToConstant: 150).isActive = true
 
         self.emailTextField.topAnchor.constraint(equalTo: self.welcomeLabel.bottomAnchor, constant: 25).isActive = true
-        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.emailTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         self.sendButton.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 30).isActive = true
-        self.sendButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.sendButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.sendButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.sendButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.sendButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
     

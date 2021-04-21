@@ -38,16 +38,9 @@ class AllowLocation: UIViewController, CLLocationManagerDelegate, MKMapViewDeleg
         return view
     }()
     
-    let button : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Confirm Location", for: .normal)
-        button.layer.cornerRadius = 25
+    let button : MainButton = {
+        let button = MainButton(title: "Confirm Location")
         button.addTarget(self, action: #selector(nextPressed), for: .touchUpInside)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.isEnabled = true
-        button.backgroundColor = UIColor.mainBlue
-        button.setTitleColor(UIColor.white, for: .normal)
         return button
     }()
     
@@ -106,8 +99,8 @@ class AllowLocation: UIViewController, CLLocationManagerDelegate, MKMapViewDeleg
         
         self.bottomView.addSubview(self.button)
         self.button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
-        self.button.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 18).isActive = true
-        self.button.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -18).isActive = true
+        self.button.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.button.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         view.addSubview(backButtonView)

@@ -32,15 +32,9 @@ class AddProfilePhoto: UIViewController, UINavigationControllerDelegate, UIImage
         return imageView
     }()
     
-    let uploadPhotoButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Upload Photo", for: .normal)
-        button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.layer.cornerRadius = 20
+    let uploadPhotoButton : MainSecondaryButton = {
+        let button = MainSecondaryButton(title: "Upload Photo")
         button.addTarget(self, action: #selector(uploadPhoto), for: .touchUpInside)
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.mainBlue.cgColor
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -55,27 +49,15 @@ class AddProfilePhoto: UIViewController, UINavigationControllerDelegate, UIImage
         return label
     }()
     
-    let chooseLibrary : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Choose from Library", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.layer.cornerRadius = 25
+    let chooseLibrary : MainButton = {
+        let button = MainButton(title: "Choose from Library")
         button.addTarget(self, action: #selector(uploadPhoto), for: .touchUpInside)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    let takePhoto : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Take Photo", for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
-        button.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
-        button.layer.cornerRadius = 25
-        button.addTarget(self, action: #selector(uploadPhotoTakePhoto), for: .touchUpInside)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let takePhoto : MainSecondaryButton = {
+        let button = MainSecondaryButton(title: "Take Photo")
+        button.addTarget(self, action: #selector(uploadPhoto), for: .touchUpInside)
         return button
     }()
     
@@ -120,21 +102,21 @@ class AddProfilePhoto: UIViewController, UINavigationControllerDelegate, UIImage
         self.label.topAnchor.constraint(equalTo: self.profileImage.bottomAnchor, constant: 15).isActive = true
         
         self.view.addSubview(self.chooseLibrary)
-        self.chooseLibrary.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.chooseLibrary.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.chooseLibrary.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.chooseLibrary.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.chooseLibrary.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.chooseLibrary.topAnchor.constraint(equalTo: self.label.bottomAnchor, constant: 25).isActive = true
         
         self.view.addSubview(self.takePhoto)
-        self.takePhoto.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.takePhoto.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.takePhoto.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.takePhoto.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.takePhoto.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.takePhoto.topAnchor.constraint(equalTo: self.chooseLibrary.bottomAnchor, constant: 15).isActive = true
 
         self.button.isEnabled = false
         self.view.addSubview(self.button)
-        self.button.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.button.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.button.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.button.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.button.topAnchor.constraint(equalTo: self.takePhoto.bottomAnchor, constant: 25).isActive = true
 

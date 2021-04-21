@@ -17,28 +17,14 @@ class Biometrics: UIViewController {
         return view
     }()
     
-    let laterButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.white
-        button.setTitle("Later", for: .normal)
-        button.setTitleColor(UIColor.mainBlue, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.layer.cornerRadius = 24
-        button.layer.borderWidth = 3
-        button.layer.borderColor = UIColor.mainBlue.cgColor
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let laterButton : MainSecondaryButton = {
+        let button = MainSecondaryButton(title: "Later")
         button.addTarget(self, action: #selector(laterPressed), for: .touchUpInside)
         return button
     }()
     
-    let configureButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor.mainBlue
-        button.setTitle("Configure", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.layer.cornerRadius = 24
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let configureButton : MainButton = {
+        let button = MainButton(title: "Configure")
         button.addTarget(self, action: #selector(configurePressed), for: .touchUpInside)
         return button
     }()
@@ -101,13 +87,13 @@ class Biometrics: UIViewController {
         laterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
         laterButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         laterButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        laterButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        laterButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         view.addSubview(configureButton)
         configureButton.bottomAnchor.constraint(equalTo: laterButton.topAnchor, constant: -13).isActive = true
         configureButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 25).isActive = true
         configureButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -25).isActive = true
-        configureButton.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        configureButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         view.addSubview(informativeLabel)
         informativeLabel.bottomAnchor.constraint(equalTo: configureButton.topAnchor).isActive = true

@@ -40,6 +40,7 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         attributedText.append(NSAttributedString(string: "\nHiremile", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 40   )]))
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 8
+        label.isUserInteractionEnabled = false
         attributedText.addAttributes([NSAttributedString.Key.paragraphStyle: style], range: NSMakeRange(0, attributedText.length))
         label.attributedText = attributedText
         label.numberOfLines = 2
@@ -47,18 +48,25 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         return label
     }()
     
-    let emailTextField : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Enter your email"
-        textfield.borderStyle = .roundedRect
-        textfield.autocapitalizationType = .none
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
-        textfield.keyboardType = .emailAddress
-        textfield.isSecureTextEntry = false
-        textfield.translatesAutoresizingMaskIntoConstraints = false
-        return textfield
+//    let emailTextField : UITextField = {
+//        let textfield = UITextField()
+//        textfield.tintColor = UIColor.mainBlue
+//        textfield.placeholder = "Enter your email"
+//        textfield.borderStyle = .roundedRect
+//        textfield.autocapitalizationType = .none
+//        textfield.layer.cornerRadius = 15
+//        textfield.textColor = UIColor.black
+//        textfield.keyboardType = .emailAddress
+//        textfield.isSecureTextEntry = false
+//        textfield.translatesAutoresizingMaskIntoConstraints = false
+//        return textfield
+//    }()
+    
+    let emailTextField : MainTextField = {
+        let textField = MainTextField(placeholderString: "Enter your email")
+        textField.autocapitalizationType = .none
+        textField.keyboardType = .emailAddress
+        return textField
     }()
     
     let passwordTextField : UITextField = {
@@ -86,14 +94,8 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         return button
     }()
     
-    let loginButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Login", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 22.5
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let loginButton : MainButton = {
+        let button = MainButton(title: "Sign In")
         button.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
         return button
     }()
@@ -104,7 +106,6 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         view.backgroundColor = UIColor.lightGray
         return view
     }()
-    
     
     let orLabel : UILabel = {
         let label = UILabel()
@@ -117,40 +118,36 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         return label
     }()
     
-    let appleButton : ASAuthorizationAppleIDButton = {
-        let button = ASAuthorizationAppleIDButton()
+    let appleButton : MainButton = {
+        let button = MainButton(title: "Sign Up with Apple")
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = UIColor.black
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.cornerRadius = 22.5
         button.addTarget(self, action: #selector(applePressed), for: .touchUpInside)
         return button
     }()
     
-    let googleButton : UIButton = {
-        let button = UIButton(type: .system)
+    let googleButton : MainButton = {
+        let button = MainButton(title: "")
         let attributedTitle = NSMutableAttributedString(string: "Sign In with ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)])
-        attributedTitle.append(NSMutableAttributedString(string: "G", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
-        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
-        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 251/255, green: 188/255, blue: 5/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
-        attributedTitle.append(NSMutableAttributedString(string: "g", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
-        attributedTitle.append(NSMutableAttributedString(string: "l", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 51/255, green: 168/255, blue: 83/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
-        attributedTitle.append(NSMutableAttributedString(string: "e", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 18)]))
+        attributedTitle.append(NSMutableAttributedString(string: "G", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]))
+        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]))
+        attributedTitle.append(NSMutableAttributedString(string: "o", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 251/255, green: 188/255, blue: 5/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]))
+        attributedTitle.append(NSMutableAttributedString(string: "g", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 66/255, green: 133/255, blue: 244/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]))
+        attributedTitle.append(NSMutableAttributedString(string: "l", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 51/255, green: 168/255, blue: 83/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]))
+        attributedTitle.append(NSMutableAttributedString(string: "e", attributes: [NSAttributedString.Key.foregroundColor : UIColor(red: 226/255, green: 62/255, blue: 43/255, alpha: 1), NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 17)]))
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.layer.cornerRadius = 22.5
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(googlePressed), for: .touchUpInside)
         return button
     }()
     
-    let facebookButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Sign In with Facebook", for: .normal)
+    let facebookButton : MainButton = {
+        let button = MainButton(title: "Sign In with Facebook")
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = UIColor(red: 46/255, green: 78/255, blue: 167/255, alpha: 1)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.layer.cornerRadius = 22.5
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(facebookPressed), for: .touchUpInside)
         return button
@@ -204,7 +201,7 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
                                 } else {
                                     let ac = UIAlertController(title: "Authentication failed", message: "Sorry!", preferredStyle: .alert)
                                     ac.addAction(UIAlertAction(title: "OK", style: .default))
-                                    present(ac, animated: true)
+                                    self.present(ac, animated: true)
                                 }
                             }
                         }
@@ -246,33 +243,33 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         self.scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
         
         self.welcomeLabel.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 30).isActive = true
-        self.welcomeLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.welcomeLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 20).isActive = true
+        self.welcomeLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.welcomeLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.welcomeLabel.heightAnchor.constraint(equalToConstant: 150).isActive = true
         
         self.emailTextField.topAnchor.constraint(equalTo: self.welcomeLabel.bottomAnchor, constant: 25).isActive = true
-        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
-        self.emailTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
+        self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
+        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.passwordTextField.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 20).isActive = true
-        self.passwordTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.passwordTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.passwordTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.passwordTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.passwordTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.forgotPasswordButton.topAnchor.constraint(equalTo: self.passwordTextField.bottomAnchor, constant: 5).isActive = true
-        self.forgotPasswordButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.forgotPasswordButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.forgotPasswordButton.widthAnchor.constraint(equalToConstant: 130).isActive = true
         self.forgotPasswordButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.loginButton.topAnchor.constraint(equalTo: self.forgotPasswordButton.bottomAnchor, constant: 15).isActive = true
-        self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.loginButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.loginButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.loginButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.orLine.topAnchor.constraint(equalTo: self.loginButton.bottomAnchor, constant: 25).isActive = true
-        self.orLine.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
-        self.orLine.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        self.orLine.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.orLine.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.orLine.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         self.orLabel.topAnchor.constraint(equalTo: self.loginButton.bottomAnchor).isActive = true
@@ -281,23 +278,23 @@ class SignInController: UIViewController, ASAuthorizationControllerPresentationC
         self.orLabel.bottomAnchor.constraint(equalTo: appleButton.topAnchor).isActive = true
 
         self.appleButton.topAnchor.constraint(equalTo: self.orLine.bottomAnchor, constant: 25).isActive = true
-        self.appleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.appleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.appleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.appleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.appleButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         self.googleButton.topAnchor.constraint(equalTo: self.appleButton.bottomAnchor, constant: 20).isActive = true
-        self.googleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.googleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.googleButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.googleButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.googleButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         self.facebookButton.topAnchor.constraint(equalTo: self.googleButton.bottomAnchor, constant: 20).isActive = true
-        self.facebookButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.facebookButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.facebookButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.facebookButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.facebookButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         self.signUpButton.topAnchor.constraint(equalTo: self.facebookButton.bottomAnchor, constant: 30).isActive = true
-        self.signUpButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 20).isActive = true
-        self.signUpButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.signUpButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 25).isActive = true
+        self.signUpButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -25).isActive = true
         self.signUpButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         self.emailTextField.delegate = self

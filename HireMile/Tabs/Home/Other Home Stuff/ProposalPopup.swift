@@ -23,14 +23,8 @@ class ProposalPopup: NSObject {
         return view
     }()
 
-    let applyButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Okay", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 25
+    let applyButton : MainButton = {
+        let button = MainButton(title: "Okay")
         return button
     }()
 
@@ -65,7 +59,7 @@ class ProposalPopup: NSObject {
         self.applyButton.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
         self.applyButton.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
         self.applyButton.bottomAnchor.constraint(equalTo: self.filterView.bottomAnchor, constant: -50).isActive = true
-        self.applyButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.applyButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         filterView.addSubview(filterTitle)
         self.filterTitle.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
