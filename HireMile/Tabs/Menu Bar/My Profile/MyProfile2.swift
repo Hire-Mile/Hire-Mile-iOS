@@ -409,10 +409,11 @@ class MyProfile2: UIViewController, UITableViewDelegate, UITableViewDataSource, 
         backButton.bottomAnchor.constraint(equalTo: backButtonView.bottomAnchor).isActive = true
         
         mainView.addSubview(profileName)
+        profileName.backgroundColor = .red
         profileName.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: 32).isActive = true
         profileName.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
         profileName.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: 32).isActive = true
-        profileName.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        profileName.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         view.addSubview(editButtonView)
         editButtonView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true

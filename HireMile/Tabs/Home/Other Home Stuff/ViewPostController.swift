@@ -21,8 +21,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     var height : CGFloat = 0
     
-    let carousel : UIImageView = {
-        let carousel = UIImageView()
+    let carousel : CustomImageView = {
+        let carousel = CustomImageView()
         carousel.contentMode = .scaleAspectFill
         carousel.translatesAutoresizingMaskIntoConstraints = false
         return carousel
@@ -79,8 +79,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let profileImage : UIImageView = {
-        let imageView = UIImageView()
+    let profileImage : CustomImageView = {
+        let imageView = CustomImageView()
 //        imageView.image = UIImage(named: "woman-profile")
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.contentMode = .scaleAspectFill
@@ -174,24 +174,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         print(GlobalVariables.authorId)
         self.authorId = GlobalVariables.authorId
-        Database.database().reference().child("Users").child(GlobalVariables.authorId).child("profile-image").observe(.value) { (snapshot) in
-            if let profileImageUrl : String = (snapshot.value as? String) {
-                if profileImageUrl == "not-yet-selected" {
-                    self.profileImage.image = UIImage(systemName: "person.circle.fill")
-                    self.profileImage.tintColor = UIColor.lightGray
-                    self.profileImage.contentMode = .scaleAspectFill
-                } else {
-                    self.profileImage.loadImageUsingCacheWithUrlString(profileImageUrl)
-                }
-                GlobalVariables.postTitle = ""
-                GlobalVariables.postDescription = ""
-                GlobalVariables.postPrice = 0
-                GlobalVariables.authorId = ""
-                GlobalVariables.authorImageView = ""
-                GlobalVariables.postId = ""
-                GlobalVariables.userUID = ""
-            }
-        }
+        
         
         // Do any additional setup after loading the view.
     }
