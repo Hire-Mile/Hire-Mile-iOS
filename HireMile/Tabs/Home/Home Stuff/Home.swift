@@ -760,27 +760,39 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.myCollectionView {
+            let controller = ViewPostController()
             GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
             GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
             GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
             GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
             GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
             GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
-            GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
-            GlobalVariables.postId = self.allJobs[indexPath.row].postId!
-            GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
-            self.navigationController?.pushViewController(ViewPostController(), animated: true)
+            Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
+                if let profileImageUrl : String = (snapshot.value as? String) {
+                    controller.profileImage.loadImage(from: URL(string: profileImageUrl)!)
+                    GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
+                    GlobalVariables.postId = self.allJobs[indexPath.row].postId!
+                    GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
         } else if collectionView == self.collectView {
+            let controller = ViewPostController()
             GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
             GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
             GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
             GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
             GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
             GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
-            GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
-            GlobalVariables.postId = self.allJobs[indexPath.row].postId!
-            GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
-            self.navigationController?.pushViewController(ViewPostController(), animated: true)
+            Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
+                if let profileImageUrl : String = (snapshot.value as? String) {
+                    controller.profileImage.loadImage(from: URL(string: profileImageUrl)!)
+                    GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
+                    GlobalVariables.postId = self.allJobs[indexPath.row].postId!
+                    GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
         } else {
             let controller = CategoryPostController()
             controller.category = self.titles[indexPath.row]

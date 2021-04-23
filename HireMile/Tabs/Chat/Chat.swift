@@ -348,9 +348,9 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 cell.detailTextLabel?.text = body
             }
             if let timestamp = self.notifications[indexPath.row].date {
-                let formatter = DateFormatter()
-                formatter.dateStyle = .medium
-                cell.timeStamp.text = "\(formatter.string(from: Date(timeIntervalSince1970: Double(timestamp))))"
+                let date = Date(timeIntervalSince1970: Double(timestamp))
+                let string = date.toStringWithRelativeTime()
+                cell.timeStamp.text = string
             }
             if let image = self.notifications[indexPath.row].senderId {
                 Database.database().reference().child("Users").child(image).child("profile-image").observe(.value) { (snapshot) in
@@ -592,10 +592,9 @@ class MessagesCellCell: UITableViewCell {
             self.detailTextLabel?.text = message?.text
             
             if let seconds = message?.timestamp?.doubleValue {
-                let timeStampDate = Date(timeIntervalSince1970: seconds)
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                timeStamp.text = dateFormatter.string(from: timeStampDate)
+                let date = Date(timeIntervalSince1970: Double(seconds))
+                let string = date.toStringWithRelativeTime()
+                timeStamp.text = string
             }
             
             setupNameAndAvatoar()

@@ -467,10 +467,10 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         profileName.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         mainView.addSubview(username)
-        username.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 6.7).isActive = true
+        username.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 3).isActive = true
         username.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
         username.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -160).isActive = true
-        username.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        username.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         mainView.addSubview(statusButton)
         statusButton.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -32).isActive = true

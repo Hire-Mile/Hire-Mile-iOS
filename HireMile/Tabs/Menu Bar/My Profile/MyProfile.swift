@@ -103,7 +103,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         imageView.backgroundColor = .clear
         imageView.tintColor = UIColor.black
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "pencil")
+        imageView.image = UIImage(named: "edit-icon")
         return imageView
     }()
     
@@ -129,7 +129,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         imageView.backgroundColor = .clear
         imageView.tintColor = UIColor.black
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "square.and.arrow.up")
+        imageView.image = UIImage(named: "share-icon")
         return imageView
     }()
     
@@ -473,10 +473,10 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         profileName.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         mainView.addSubview(username)
-        username.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 6.7).isActive = true
+        username.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 3).isActive = true
         username.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
         username.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -160).isActive = true
-        username.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        username.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         view.addSubview(star1)
         star1.topAnchor.constraint(equalTo: self.username.bottomAnchor, constant: 6).isActive = true
@@ -622,7 +622,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         
         let btnProfile = UIButton(type: .system)
         btnProfile.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        btnProfile.setImage(UIImage(systemName: "pencil"), for: .normal)
+        btnProfile.setImage(UIImage(named: "edit-icon"), for: .normal)
         btnProfile.tintColor = UIColor.black
         btnProfile.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         btnProfile.addTarget(self, action: #selector(self.editPressed), for: .touchUpInside)
@@ -633,7 +633,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         let share = UIButton(type: .system)
         
         share.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-        share.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
+        share.setImage(UIImage(named: "share-icon"), for: .normal)
         share.tintColor = UIColor.black
         share.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         share.addTarget(self, action: #selector(self.uploadPressed), for: .touchUpInside)
