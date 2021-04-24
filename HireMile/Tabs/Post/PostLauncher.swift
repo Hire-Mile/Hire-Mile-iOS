@@ -23,14 +23,8 @@ class PostLauncher: NSObject {
         return view
     }()
 
-    let applyButton : UIButton = {
-        let button = UIButton()
-        button.setTitle("Okay", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = UIColor.mainBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 25
+    let applyButton : MainButton = {
+        let button = MainButton(title: "Okay")
         return button
     }()
 

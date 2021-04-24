@@ -138,7 +138,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
                 job.imagePost = value["image"] as? String ?? "Error"
                 job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                 job.postId = value["postId"] as? String ?? "Error"
-                
+                job.timeStamp = value["time"] as? Int ?? 0
                 if self.category == "Recent" {
                     print("trending")
                     self.allJobs.append(job)
@@ -148,7 +148,9 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
                     }
                 }
             }
-            self.allJobs.reverse()
+            let hello = self.allJobs.sorted(by: { $1.timeStamp! < $0.timeStamp! } )
+            self.allJobs.removeAll()
+            self.allJobs = hello
             self.tableView.reloadData()
             Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.hideRefrsh), userInfo: nil, repeats: false)
         }

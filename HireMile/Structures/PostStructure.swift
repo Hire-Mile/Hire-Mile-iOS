@@ -10,6 +10,7 @@ import UIKit
 
 class JobStructure: NSObject {
     
+    var timeStamp : Int?
     var authorName : String?
     var titleOfPost : String?
     var descriptionOfPost : String?
