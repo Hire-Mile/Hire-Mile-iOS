@@ -171,14 +171,8 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         return label
     }()
     
-    let loginButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Next", for: .normal)
-        button.setTitleColor(UIColor(r: 199, g: 199, b: 199), for: .normal)
-        button.backgroundColor = UIColor(r: 243, g: 243, b: 243)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.layer.cornerRadius = 15
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let loginButton : MainButton = {
+        let button = MainButton(title: "Post")
         button.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
         return button
     }()
@@ -289,7 +283,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.titleLabelView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         self.view.addSubview(scrollView)
-        self.scrollView.contentSize = CGSize(width: (self.view.frame.width / 2) - 60, height: 900)
+        self.scrollView.contentSize = CGSize(width: (self.view.frame.width / 2) - 60, height: 1000)
         self.scrollView.topAnchor.constraint(equalTo: titleLabelView.bottomAnchor, constant: 12).isActive = true
         self.scrollView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.scrollView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
@@ -368,16 +362,18 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.titleLabel3.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         self.view.addSubview(titleYourListing)
+        self.titleYourListing.delegate = self
+        titleYourListing.addTarget(self, action: #selector(textFieldDidBeginEditing(_:)), for: UIControl.Event.touchDown)
         self.titleYourListing.leftAnchor.constraint(equalTo: self.scrollView.leftAnchor).isActive = true
         self.titleYourListing.rightAnchor.constraint(equalTo: self.scrollView.rightAnchor).isActive = true
         self.titleYourListing.topAnchor.constraint(equalTo: self.titleLabel3.bottomAnchor, constant: 12).isActive = true
         self.titleYourListing.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         self.scrollView.addSubview(loginButton)
-        self.loginButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
+        self.loginButton.topAnchor.constraint(equalTo: self.titleYourListing.bottomAnchor, constant: 24).isActive = true
         self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.loginButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.loginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        self.loginButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         self.loginButton.setTitleColor(UIColor.white, for: .normal)
         self.loginButton.backgroundColor = UIColor.mainBlue
         
@@ -478,7 +474,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
                                 "price" : price,
                                 "type-of-price" : "\(typeOfPrice)",
                                 "lat" : Float(location.latitude),
-                                "time" : String(Int(Date().timeIntervalSince1970)),
+                                "time" : Int(Date().timeIntervalSince1970),
                                 "long" : Float(location.longitude),
                                 "author" : "\(Auth.auth().currentUser!.uid)",
                                 "image" : "\(metalImageUrl)"
@@ -593,11 +589,15 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        if textField == describeYourListing {
+            textField.resignFirstResponder()
+        }
         return (true)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let point = CGPoint(x: 0, y: 0)
+        scrollView.setContentOffset(point, animated: true)
         self.view.endEditing(true)
     }
     
@@ -636,13 +636,8 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         return button
     }()
     
-    let titleYourListing : UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "$0.00"
-        tf.tintColor = UIColor.mainBlue
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.borderStyle = .roundedRect
-        tf.textColor = UIColor.black
+    let titleYourListing : MainTextField = {
+        let tf = MainTextField(placeholderString: "$0.00")
         tf.keyboardType = .decimalPad
         tf.font = UIFont.boldSystemFont(ofSize: 30)
         tf.textAlignment = NSTextAlignment.center
@@ -743,6 +738,8 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     }
     
     @objc func addCategory() {
+        let point = CGPoint(x: 0, y: 0)
+        scrollView.setContentOffset(point, animated: true)
         self.showView()
     }
     
@@ -753,6 +750,13 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
             textView.text = ""
             textView.font = UIFont.systemFont(ofSize: 17)
             textView.textColor = UIColor.black
+        }
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == titleYourListing {
+            let point = CGPoint(x: 0, y: scrollView.contentSize.height - 850)
+            scrollView.setContentOffset(point, animated: true)
         }
     }
 

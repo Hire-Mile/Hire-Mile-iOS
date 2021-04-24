@@ -125,15 +125,9 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         return label
     }()
     
-    let emailTextField : UITextField = {
-        let textfield = UITextField()
-        textfield.tintColor = UIColor.mainBlue
-        textfield.placeholder = "Write here"
-        textfield.borderStyle = .roundedRect
-        textfield.layer.cornerRadius = 15
-        textfield.textColor = UIColor.black
+    let emailTextField : MainTextField = {
+        let textfield = MainTextField(placeholderString: "Write here")
         textfield.keyboardType = .default
-        textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
     
@@ -144,14 +138,8 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         return button
     }()
     
-    let loginButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Next", for: .normal)
-        button.setTitleColor(UIColor(r: 199, g: 199, b: 199), for: .normal)
-        button.backgroundColor = UIColor(r: 243, g: 243, b: 243)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.layer.cornerRadius = 15
-        button.translatesAutoresizingMaskIntoConstraints = false
+    let loginButton : MainButton = {
+        let button = MainButton(title: "Next")
         button.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
         return button
     }()
@@ -162,6 +150,9 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         navigationItem.title = "Post Service"
         
         view.backgroundColor = UIColor.white
+        
+        emailTextField.delegate = self
+        emailTextField.addTarget(self, action: #selector(textFieldDidBeginEditing(_:)), for: UIControl.Event.touchDown)
         
         self.view.addSubview(backButton)
         self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
@@ -211,7 +202,7 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         self.emailTextField.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 06).isActive = true
         self.emailTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.emailTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.emailTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.emailTextField.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.scrollView.addSubview(button)
         self.button.topAnchor.constraint(equalTo: self.photoImageView.topAnchor).isActive = true
@@ -220,10 +211,10 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
         self.button.bottomAnchor.constraint(equalTo: self.photoImageView.bottomAnchor).isActive = true
         
         self.scrollView.addSubview(loginButton)
-        self.loginButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -44).isActive = true
+        self.loginButton.topAnchor.constraint(equalTo: self.emailTextField.bottomAnchor, constant: 24).isActive = true
         self.loginButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.loginButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
-        self.loginButton.heightAnchor.constraint(equalToConstant: 55).isActive = true
+        self.loginButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.scrollView.addSubview(view1)
         self.view1.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 40).isActive = true
@@ -303,6 +294,8 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        let point = CGPoint(x: 0, y: 0)
+        scrollView.setContentOffset(point, animated: true)
         return (true)
     }
     
@@ -311,6 +304,9 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     }
     
     private func presentPhotoPopup() {
+        let point = CGPoint(x: 0, y: 0)
+        scrollView.setContentOffset(point, animated: true)
+        emailTextField.resignFirstResponder()
         self.filterLauncher.showFilter()
         self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
         self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
@@ -349,6 +345,11 @@ class Post: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelega
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        let point = CGPoint(x: 0, y: scrollView.contentSize.height - 650)
+        scrollView.setContentOffset(point, animated: true)
     }
 
 }

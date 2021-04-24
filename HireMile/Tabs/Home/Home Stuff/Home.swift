@@ -676,8 +676,12 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
                 job.imagePost = value["image"] as? String ?? "Error"
                 job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                 job.postId = value["postId"] as? String ?? "Error"
+                job.timeStamp = value["time"] as? Int ?? 0
                 self.allJobs.append(job)
             }
+            let hello = self.allJobs.sorted(by: { $1.timeStamp! > $0.timeStamp! } )
+            self.allJobs.removeAll()
+            self.allJobs = hello
             self.collectView!.reloadData()
             MBProgressHUD.hide(for: self.view, animated: true)
         }
@@ -862,7 +866,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     @objc func timerFunction() {
         if GlobalVariables.presentToCat == true {
-            
             GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
             GlobalVariables.postImageDownlodUrl = GlobalVariables.catId.imagePost!
             GlobalVariables.postTitle = GlobalVariables.catId.titleOfPost!
