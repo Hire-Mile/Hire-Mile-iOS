@@ -45,14 +45,14 @@ class TabBarController: UITabBarController, UINavigationControllerDelegate, UIIm
 //        chatController.tabBarItem.selectedImage = UIImage(named: "Message-active")
         
         let homeController = UINavigationController(rootViewController: Home())
-        homeController.tabBarItem.image = UIImage(named: "home-gray")
-        homeController.tabBarItem.selectedImage = UIImage(named: "home-blue")
+        homeController.tabBarItem.image = UIImage(named: "home-inactive1")
+        homeController.tabBarItem.selectedImage = UIImage(named: "home1")
 
         let addController = UINavigationController(rootViewController: Chat())
 
         let chatController = UINavigationController(rootViewController: Chat())
-        chatController.tabBarItem.image = UIImage(named: "chat-gray")
-        chatController.tabBarItem.selectedImage = UIImage(named: "chat-blue")
+        chatController.tabBarItem.image = UIImage(named: "message-inactive1")
+        chatController.tabBarItem.selectedImage = UIImage(named: "message1")
 
         viewControllers = [homeController, addController, chatController]
         

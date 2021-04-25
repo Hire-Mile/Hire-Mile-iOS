@@ -151,7 +151,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "exclamationmark.bubble"), landscapeImagePhone: UIImage(systemName: "exclamationmark.bubble"), style: .plain, target: self, action: #selector(pressed))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "report"), landscapeImagePhone: UIImage(named: "report"), style: .plain, target: self, action: #selector(pressed))
         
         // Functions to throw
         

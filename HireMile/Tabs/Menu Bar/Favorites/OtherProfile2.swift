@@ -304,7 +304,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         imageView.backgroundColor = .clear
         imageView.tintColor = UIColor.black
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "square.and.arrow.up")
+        imageView.image = UIImage(named: "share-icon")
         return imageView
     }()
     
@@ -330,7 +330,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         imageView.backgroundColor = .clear
         imageView.tintColor = UIColor.black
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "person.crop.circle.fill.badge.exclamationmark")
+        imageView.image = UIImage(named: "report")
         return imageView
     }()
     
