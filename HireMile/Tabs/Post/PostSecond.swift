@@ -448,7 +448,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
     
-    func continueWith(image: UIImage, title: String, category: String, description: String, price: Float) {
+    func continueWith(image: UIImage, title: String, category: String, description: String, price: Int) {
         // show loader
         MBProgressHUD.showAdded(to: self.view, animated: true)
         // image upload
@@ -471,7 +471,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
                                 "description" : "\(description)",
                                 "title" : "\(title)",
                                 "postId" : "\(key!)",
-                                "price" : price,
+                                "price" : Int(price),
                                 "type-of-price" : "\(typeOfPrice)",
                                 "lat" : Float(location.latitude),
                                 "time" : Int(Date().timeIntervalSince1970),
@@ -553,10 +553,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
                 if let category = titleLabel12.text, titleLabel12.text! != "Select Here" {
                     if let desc = describeYourListing.text {
                         if let price = titleYourListing.text {
-                            let secondPrice = Float(price)!
-                            print(secondPrice)
-                            print(category)
-                            self.continueWith(image: image, title: title, category: category, description: desc, price: secondPrice)
+                            self.continueWith(image: image, title: title, category: category, description: desc, price: Int(price)!)
                         } else {
                             let alert = UIAlertController(title: "Error", message: "Please set a price", preferredStyle: UIAlertController.Style.alert)
                             alert.addAction(UIAlertAction(title: "Okay", style: UIAlertAction.Style.default, handler: nil))
@@ -638,7 +635,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
     
     let titleYourListing : MainTextField = {
         let tf = MainTextField(placeholderString: "$0.00")
-        tf.keyboardType = .decimalPad
+        tf.keyboardType = .numberPad
         tf.font = UIFont.boldSystemFont(ofSize: 30)
         tf.textAlignment = NSTextAlignment.center
         return tf
