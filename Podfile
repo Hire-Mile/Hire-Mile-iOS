@@ -6,30 +6,55 @@ target 'HireMile' do
   use_frameworks!
 
   # Pods for HireMile
+
   pod 'SideMenu'
+  
   pod 'ZKCarousel'
+  
   pod 'Firebase/Analytics'
+  
   pod 'Firebase/Core'
+  
   pod 'Firebase/Auth'
+  
   pod 'Firebase/Messaging'
+  
   pod 'Firebase/Database'
+  
   pod 'Firebase/Storage'
+  
   pod 'SVProgressHUD'
+  
   pod 'MBProgressHUD'
+  
   pod 'NVActivityIndicatorView'
+  
   pod 'GoogleSignIn'
+  
   pod 'BulletinBoard'
+  
   pod 'STPopup'
+  
   pod 'Kingfisher'
+  
   pod 'ScrollableSegmentedControl'
+  
   pod 'Firebase/Crashlytics'
+  
   pod 'PhoneNumberKit'
+  
   pod 'FSCalendar'
+  
   pod 'DatePickerDialog'
+  
   pod 'GoogleSignIn'
+  
   pod 'FacebookLogin'
+  
   pod 'FacebookCore'
+  
   pod 'JGProgressHUD'
+  
   pod 'SwiftyJSON'
 
 end
