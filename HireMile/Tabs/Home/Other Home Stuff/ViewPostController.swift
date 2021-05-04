@@ -24,6 +24,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     let carousel : CustomImageView = {
         let carousel = CustomImageView()
         carousel.contentMode = .scaleAspectFill
+        carousel.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         carousel.translatesAutoresizingMaskIntoConstraints = false
         return carousel
     }()

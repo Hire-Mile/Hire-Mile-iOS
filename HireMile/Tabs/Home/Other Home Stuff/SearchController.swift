@@ -625,12 +625,12 @@ class SearchProfilkeCell: UITableViewCell {
         
         //ios 9 constraint anchors
         //need x,y,width,height anchors
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16).isActive = true
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        sideMenuArrow.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -30).isActive = true
+        sideMenuArrow.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0).isActive = true
         sideMenuArrow.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         sideMenuArrow.widthAnchor.constraint(equalToConstant: 20).isActive = true
         sideMenuArrow.heightAnchor.constraint(equalToConstant: 20).isActive = true
