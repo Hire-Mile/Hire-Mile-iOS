@@ -228,8 +228,8 @@ class FavoritesCell: UITableViewCell {
         textLabel?.frame = CGRect(x: 85, y: self.contentView.frame.height / 3, width: textLabel!.frame.width, height: textLabel!.frame.height)
     }
     
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
+    let profileImageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 22.5
         imageView.layer.masksToBounds = true

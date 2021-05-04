@@ -223,7 +223,9 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 notification.date = value["timestamp"] as? Int ?? 0
                 self.notifications.append(notification)
             }
-            self.notifications.reverse()
+            let hello = self.notifications.sorted(by: { $1.date! < $0.date! } )
+            self.notifications.removeAll()
+            self.notifications = hello
             self.tableView.reloadData()
         }
     }
@@ -355,7 +357,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if let image = self.notifications[indexPath.row].senderId {
                 Database.database().reference().child("Users").child(image).child("profile-image").observe(.value) { (snapshot) in
                     if let imageurl = snapshot.value as? String {
-                        cell.profileImageView.loadImageUsingCacheWithUrlString(imageurl)
+                        cell.profileImageView.loadImage(from: URL(string: imageurl)!)
                     }
                 }
             }
@@ -527,7 +529,7 @@ class NotificationCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: textLabel!.frame.size.width, height: textLabel!.frame.height)
+        textLabel?.frame = CGRect(x: 75, y: textLabel!.frame.origin.y, width: ((self.frame.width - 75) - 90), height: textLabel!.frame.height)
         detailTextLabel?.frame = CGRect(x: 75, y: detailTextLabel!.frame.origin.y + 2, width: ((self.frame.width - 75) - 30), height: detailTextLabel!.frame.height)
         selectionStyle = .none
         
@@ -537,11 +539,12 @@ class NotificationCell: UITableViewCell {
         self.detailTextLabel?.textColor = UIColor.darkGray
     }
     
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
+    let profileImageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 24
         imageView.layer.masksToBounds = true
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
@@ -615,7 +618,7 @@ class MessagesCellCell: UITableViewCell {
                     } else {
                         if let photoString = dictionary["profile-image"] as? String {
                             self.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-                            self.profileImageView.loadImageUsingCacheWithUrlString(photoString)
+                            self.profileImageView.loadImage(from: URL(string: photoString)!)
                         }
                     }
                 }
@@ -630,8 +633,8 @@ class MessagesCellCell: UITableViewCell {
         return button
     }()
     
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
+    let profileImageView: CustomImageView = {
+        let imageView = CustomImageView()
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 24

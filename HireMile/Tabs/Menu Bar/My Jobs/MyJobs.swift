@@ -894,8 +894,8 @@ class MyJobsCompletedgCell: UITableViewCell {
         return label
     }()
     
-    let postImageView : UIImageView = {
-        let imageView = UIImageView()
+    let postImageView : CustomImageView = {
+        let imageView = CustomImageView()
 //        imageView.image = UIImage(named: "working")
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true

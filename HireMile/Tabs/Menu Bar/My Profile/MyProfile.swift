@@ -17,8 +17,12 @@ protocol MyTableViewCellDelegate {
     func didTapDeleteButton(withIndex: Int)
 }
 
+protocol MyTableViewCellDelegate2 {
+    func didTapEditButton(withIndex: Int)
+    func didTapDeleteButton(withIndex: Int)
+}
+
 class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate, MyTableViewCellDelegate2 {
-    
     
     var indexPathrow = 0
     var indexTappeedd = 0
@@ -40,7 +44,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = UIColor.black
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -173,7 +177,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "icons8-star-100")
-        imageView.tintColor = UIColor.mainBlue
+        imageView.tintColor = UIColor.red
         return imageView
     }()
     
@@ -590,12 +594,14 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                             job.category = value["category"] as? String ?? "Error"
                             job.imagePost = value["image"] as? String ?? "Error"
                             job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                            job.timeStamp = value["time"] as? Int ?? 0
                             job.postId = value["postId"] as? String ?? "Error"
                             
                             if job.authorName == uid {
                                 self.myJobs.append(job)
                             }
                         }
+                        self.myJobs.sort(by: { $1.timeStamp! < $0.timeStamp! } )
                         self.tableView.reloadData()
                     }
                 }
@@ -971,6 +977,8 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                 Database.database().reference().child("Jobs").child(postId).child("image").observe(.value) { (snapshot) in
                     if let pictureString : String = (snapshot.value as? String) {
                         cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+                    } else {
+                        cell.postImageView.backgroundColor = UIColor.white
                     }
                 }
             }
@@ -984,7 +992,6 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                 Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
                     if let snapshot : String = (snapshot.value as? String) {
                         cell.textLabel?.text = snapshot
-//                        cell.delegate = self
                         cell.index = indexPath
                     }
                 }
@@ -996,7 +1003,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                         cell.profileImageView.tintColor = UIColor.lightGray
                         cell.profileImageView.contentMode = .scaleAspectFill
                     } else {
-                        cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+                        cell.profileImageView.loadImage(from: URL(string: snapshot)!)
                     }
                 }
                 
@@ -1095,7 +1102,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     @objc func deletePostPressed() {
         Database.database().reference().child("Jobs").child(self.myJobs[indexTappeedd].postId!).removeValue()
         self.filterLauncher.handleDismiss()
-        self.viewWillAppear(true)
+        self.viewDidLoad()
     }
     
     @objc func editPressed() {
@@ -1293,6 +1300,164 @@ class ProfileCell: UITableViewCell {
         titleJob.rightAnchor.constraint(equalTo: priceNumber.leftAnchor).isActive = true
         titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
         titleJob.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        informationView.addSubview(saleNumber)
+        saleNumber.topAnchor.constraint(equalTo: self.titleJob.bottomAnchor, constant: -5).isActive = true
+        saleNumber.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
+        saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
+        saleNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        contentView.addSubview(editButton)
+        editButton.layer.cornerRadius = 15
+        editButton.layer.masksToBounds = true
+        editButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+        editButton.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -15).isActive = true
+        editButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        editButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+
+        contentView.addSubview(deleteButton)
+        deleteButton.layer.cornerRadius = 15
+        deleteButton.layer.masksToBounds = true
+        deleteButton.topAnchor.constraint(equalTo: saleNumber.bottomAnchor, constant: 7).isActive = true
+        deleteButton.rightAnchor.constraint(equalTo: editButton.leftAnchor, constant: -15).isActive = true
+        deleteButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        deleteButton.widthAnchor.constraint(equalToConstant: 85).isActive = true
+        
+        editButton.addTarget(self, action: #selector(editPostPressed), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deletePostPressed), for: .touchUpInside)
+    }
+    
+    @objc func editPostPressed() {
+        delegate?.didTapEditButton(withIndex: (index?.row)!)
+    }
+    
+    @objc func deletePostPressed() {
+        delegate?.didTapDeleteButton(withIndex: (index?.row)!)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class ProfileCell2: UITableViewCell {
+    
+    var delegate : MyTableViewCellDelegate2?
+    
+    var postId = ""
+    
+    var index : IndexPath?
+    
+    let postImageView : UIImageView = {
+        let imageView = UIImageView()
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 15
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    let informationView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.white
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowRadius = 10
+        view.layer.cornerRadius = 15
+        return view
+    }()
+    
+    let titleJob : UILabel = {
+        let label = UILabel()
+        label.text = "Name"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.black
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.numberOfLines = 1
+        return label
+    }()
+    
+    let saleNumber : UILabel = {
+        let label = UILabel()
+        label.text = "Sales"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.darkGray
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.numberOfLines = 1
+        return label
+    }()
+    
+    let priceNumber : UILabel = {
+        let label = UILabel()
+        label.text = "Cost"
+        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.textColor = UIColor.black
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
+        return label
+    }()
+    
+    let editButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Edit", for: .normal)
+        button.setTitleColor(UIColor.mainBlue, for: .normal)
+        button.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        button.isUserInteractionEnabled = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.mainBlue.cgColor
+        return button
+    }()
+    
+    let deleteButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Delete", for: .normal)
+        button.setTitleColor(UIColor.mainBlue, for: .normal)
+        button.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        button.isUserInteractionEnabled = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.mainBlue.cgColor
+        return button
+    }()
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        self.selectionStyle = .none
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        isUserInteractionEnabled = true
+            
+        addSubview(informationView)
+        informationView.topAnchor.constraint(equalTo: self.topAnchor, constant: 25).isActive = true
+        informationView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
+        informationView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 25).isActive = true
+        informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -25).isActive = true
+        
+        informationView.addSubview(postImageView)
+        postImageView.topAnchor.constraint(equalTo: informationView.topAnchor, constant: -10).isActive = true
+        postImageView.leftAnchor.constraint(equalTo: informationView.leftAnchor, constant: -10).isActive = true
+        postImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        postImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        informationView.addSubview(priceNumber)
+        priceNumber.topAnchor.constraint(equalTo: informationView.topAnchor, constant: 10).isActive = true
+        priceNumber.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -10).isActive = true
+        priceNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        priceNumber.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        
+        informationView.addSubview(titleJob)
+        titleJob.topAnchor.constraint(equalTo: informationView.topAnchor, constant: 10).isActive = true
+        titleJob.rightAnchor.constraint(equalTo: priceNumber.leftAnchor).isActive = true
+        titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
+        titleJob.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
         informationView.addSubview(saleNumber)
         saleNumber.topAnchor.constraint(equalTo: self.titleJob.bottomAnchor, constant: -5).isActive = true

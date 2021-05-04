@@ -120,8 +120,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     let mapButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setImage(UIImage(named: "map-light"), for: .normal)
-//        button.addTarget(self, action: #selector(mapButtonPressed), for: .touchUpInside)
         button.addTarget(self, action: #selector(profileImagePressed), for: .touchUpInside)
         button.imageView?.contentMode = .scaleAspectFill
         return button
@@ -132,6 +130,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 24
         imageView.clipsToBounds = true
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.layer.masksToBounds = true
         return imageView
     }()
@@ -142,7 +141,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textAlignment = NSTextAlignment.center
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.black
+        label.textColor = UIColor.mainBlue
         return label
     }()
     
@@ -471,8 +470,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerFunction), userInfo: nil, repeats: true)
         
-        self.setupCategory()
-        
         // Do any additional setup after loading the view.
     }
     
@@ -487,7 +484,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         } else {
             print("no notifications")
         }
-        
         if GlobalVariables.finishedFeedback == true {
             GlobalVariables.finishedFeedback = false
             self.launcher.showFilter()
@@ -495,6 +491,8 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         
         // Functions to throw
         self.basicSetup()
+        
+        self.setupCategory()
         
         self.view = view
     }
