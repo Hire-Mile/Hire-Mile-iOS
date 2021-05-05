@@ -171,6 +171,16 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         return label
     }()
     
+    let categoryArrowImage : UIImageView = {
+        let button = UIImageView()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .clear
+        button.tintColor = UIColor.black
+        button.contentMode = UIView.ContentMode.scaleAspectFit
+        button.image = UIImage(systemName: "chevron.down")!
+        return button
+    }()
+    
     let loginButton : MainButton = {
         let button = MainButton(title: "Post")
         button.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
@@ -325,13 +335,19 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.titleLabel12.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
         self.titleLabel12.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        self.view.addSubview(categoryImage)
+        self.scrollView.addSubview(categoryArrowImage)
+        self.categoryArrowImage.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        self.categoryArrowImage.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        self.categoryArrowImage.centerYAnchor.constraint(equalTo: titleLabel12.topAnchor).isActive = true
+        self.categoryArrowImage.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
+        
+        self.scrollView.addSubview(categoryImage)
         self.categoryImage.topAnchor.constraint(equalTo: self.titleLabel.topAnchor).isActive = true
         self.categoryImage.leftAnchor.constraint(equalTo: self.titleLabel.leftAnchor).isActive = true
         self.categoryImage.rightAnchor.constraint(equalTo: self.titleLabel.rightAnchor).isActive = true
         self.categoryImage.bottomAnchor.constraint(equalTo: self.titleLabel12.bottomAnchor).isActive = true
         
-        self.view.addSubview(titleLabel2)
+        self.scrollView.addSubview(titleLabel2)
         self.titleLabel2.topAnchor.constraint(equalTo: self.titleLabel12.bottomAnchor, constant: 55).isActive = true
         self.titleLabel2.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 30).isActive = true
         self.titleLabel2.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor, constant: -30).isActive = true
@@ -377,7 +393,7 @@ class PostSecond: UIViewController, UITextFieldDelegate, UICollectionViewDelegat
         self.loginButton.setTitleColor(UIColor.white, for: .normal)
         self.loginButton.backgroundColor = UIColor.mainBlue
         
-        self.view.addSubview(middleView)
+        self.scrollView.addSubview(middleView)
         self.middleView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         self.middleView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.middleView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true

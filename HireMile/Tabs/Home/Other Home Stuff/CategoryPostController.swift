@@ -165,3 +165,113 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
     }
 
 }
+
+class CategoryCell: UITableViewCell {
+    
+    var postId = ""
+
+    let titleImageView : CustomImageView = {
+        let imageView = CustomImageView()
+        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 15
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    let infoView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.white
+        view.layer.cornerRadius = 15
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 30
+        view.layer.shadowOpacity = 0.2
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 15
+        return view
+    }()
+    
+    let priceTag : UILabel = {
+        let label = UILabel()
+        label.text = "Price"
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.textColor = UIColor.mainBlue
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        return label
+    }()
+
+    let titleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Title"
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.textColor = UIColor.black
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        return label
+    }()
+
+    let desscription : UILabel = {
+        let label = UILabel()
+        label.text = "Description"
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.darkGray
+        label.numberOfLines = 2
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
+        return label
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
+        backgroundColor = UIColor.white
+        setup()
+    }
+
+    func setup() {
+        addSubview(titleImageView)
+        titleImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        titleImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15).isActive = true
+        titleImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        titleImageView.widthAnchor.constraint(equalToConstant: 135).isActive = true
+
+//        addSubview(infoView)
+//        infoView.topAnchor.constraint(equalTo: titleImageView.bottomAnchor, constant: -20).isActive = true
+//        infoView.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
+//        infoView.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
+//        infoView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
+
+        addSubview(titleLabel)
+        titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 30).isActive = true
+        titleLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        titleLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+        titleLabel.leftAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: 20).isActive = true
+        
+        addSubview(priceTag)
+        priceTag.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
+        priceTag.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+        priceTag.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        priceTag.leftAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: 20).isActive = true
+        
+        addSubview(desscription)
+        desscription.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 0).isActive = true
+        desscription.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+        desscription.bottomAnchor.constraint(equalTo: priceTag.topAnchor).isActive = true
+        desscription.leftAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: 20).isActive = true
+//
+//        addSubview(locationAndTime)
+//        locationAndTime.topAnchor.constraint(equalTo: titleImageView.topAnchor, constant: 10).isActive = true
+//        locationAndTime.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        locationAndTime.rightAnchor.constraint(equalTo: titleImageView.rightAnchor, constant: -10).isActive = true
+//        locationAndTime.leftAnchor.constraint(equalTo: titleImageView.leftAnchor, constant: 10).isActive = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}

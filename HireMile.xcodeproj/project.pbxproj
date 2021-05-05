@@ -63,7 +63,6 @@
 		784C0E8725FB6F890075C6B5 /* MyProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784C0E8625FB6F890075C6B5 /* MyProfile.swift */; };
 		784C0E8E25FD25670075C6B5 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784C0E8D25FD25670075C6B5 /* CheckBox.swift */; };
 		784C0E9125FD3E2B0075C6B5 /* WorkHourEditCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784C0E9025FD3E2B0075C6B5 /* WorkHourEditCell.swift */; };
-		785698BD261D8A03005428CB /* Home2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785698BC261D8A03005428CB /* Home2.swift */; };
 		785D000E2609C8300060622A /* Booking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 785D000D2609C8300060622A /* Booking.swift */; };
 		786A33212565931300B58265 /* CategoryPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A33202565931300B58265 /* CategoryPostController.swift */; };
 		786A3323256596E700B58265 /* FilterLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786A3322256596E700B58265 /* FilterLauncher.swift */; };
@@ -168,7 +167,6 @@
 		784C0E8625FB6F890075C6B5 /* MyProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfile.swift; sourceTree = "<group>"; };
 		784C0E8D25FD25670075C6B5 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
 		784C0E9025FD3E2B0075C6B5 /* WorkHourEditCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkHourEditCell.swift; sourceTree = "<group>"; };
-		785698BC261D8A03005428CB /* Home2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home2.swift; sourceTree = "<group>"; };
 		785D000D2609C8300060622A /* Booking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Booking.swift; sourceTree = "<group>"; };
 		786A33202565931300B58265 /* CategoryPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryPostController.swift; sourceTree = "<group>"; };
 		786A3322256596E700B58265 /* FilterLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLauncher.swift; sourceTree = "<group>"; };
@@ -242,7 +240,6 @@
 			isa = PBXGroup;
 			children = (
 				780A7F612562D565009BD93A /* Home.swift */,
-				785698BC261D8A03005428CB /* Home2.swift */,
 				78032026261F46EC008343B8 /* HomeCategoryPreview.swift */,
 				783015C52624278E0030BA9F /* AllCategories.swift */,
 			);
@@ -712,7 +709,6 @@
 				78BFDBFD25B471E000A1D8B5 /* UserMessageStructure.swift in Sources */,
 				78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */,
 				78295B0A25990C1C00004CE7 /* Message.swift in Sources */,
-				785698BD261D8A03005428CB /* Home2.swift in Sources */,
 				784C0E5E25F92ABD0075C6B5 /* InfoPage.swift in Sources */,
 				781F45E325C97555004F9C45 /* FeedbackLauncher.swift in Sources */,
 				786C8E3D2611A2160051729D /* SearchResults.swift in Sources */,
