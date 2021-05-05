@@ -16,7 +16,11 @@ import FirebaseDatabase
 class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     let locationManager = CLLocationManager()
+    
     let regionInMeters: Double = 10000
+    
+    let urlLink = "https://firebasestorage.googleapis.com/v0/b/hiremile-aaacc.appspot.com/o/Grupo%202273%403x.png?alt=media&token=7d506e89-5755-4c4f-960a-bbbb025f3e5c"
+
     
     var postId = ""
     
@@ -368,6 +372,8 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
             centerViewOnUserLocation()
             locationManager.startUpdatingLocation()
             break
+        @unknown default:
+            fatalError()
         }
     }
     
@@ -385,26 +391,27 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        var annotationView = map.dequeueReusableAnnotationView(withIdentifier: "AnnotationView")
-        if annotationView == nil {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
-        }
-        annotationView?.layer.cornerRadius = 25
-        annotationView?.clipsToBounds = true
-        annotationView?.frame.size = CGSize(width: 50, height: 50)
-        annotationView?.image = UIImage(named: "profileIconAddPhoto")
-        annotationView?.frame.size = CGSize(width: 50, height: 50)
-        let strong = annotation.subtitle!
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (profileImageSnapshot) in
-            if let profileUrl = profileImageSnapshot.value as? String {
-                let data = NSData(contentsOf: URL(string: strong ?? profileUrl)!)
-                annotationView?.frame.size = CGSize(width: 50, height: 50)
-                annotationView?.image = UIImage(data: data! as Data)
-                annotationView?.frame.size = CGSize(width: 50, height: 50)
+        if (annotation is MKUserLocation) {
+            var annotationView = self.map.dequeueReusableAnnotationView(withIdentifier: "AnnotationView")
+            return annotationView
+        } else {
+            var annotationView = map.dequeueReusableAnnotationView(withIdentifier: "AnnotationView")
+            if annotationView == nil {
+                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
             }
+            annotationView?.layer.cornerRadius = 25
+            annotationView?.clipsToBounds = true
+            annotationView?.frame.size = CGSize(width: 50, height: 50)
+            annotationView?.image = UIImage(named: "profileIconAddPhoto")
+            annotationView?.frame.size = CGSize(width: 50, height: 50)
+            let strong = annotation.subtitle!
+            
+            let data = NSData(contentsOf: URL(string: (strong ?? urlLink))!)
+            annotationView?.frame.size = CGSize(width: 50, height: 50)
+            annotationView?.image = UIImage(data: data! as Data)
+            annotationView?.frame.size = CGSize(width: 50, height: 50)
+            return annotationView
         }
-        annotationView?.frame.size = CGSize(width: 50, height: 50)
-        return annotationView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
