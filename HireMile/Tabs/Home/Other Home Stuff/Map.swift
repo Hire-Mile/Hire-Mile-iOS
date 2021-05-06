@@ -161,9 +161,8 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     let centerButton : UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 25
+        button.backgroundColor = .clear
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.imageView?.contentMode = .center
         button.setImage(UIImage(named: "centerOnMap"), for: .normal)
         button.addTarget(self, action: #selector(centerViewOnUserLocation), for: .touchUpInside)
         return button
@@ -205,8 +204,8 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         self.view.addSubview(centerButton)
         self.centerButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -18).isActive = true
         self.centerButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -18).isActive = true
-        self.centerButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        self.centerButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.centerButton.widthAnchor.constraint(equalToConstant: 65).isActive = true
+        self.centerButton.heightAnchor.constraint(equalToConstant: 65).isActive = true
         
         self.view.addSubview(self.popUpView)
         self.popUpView.topAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
@@ -285,7 +284,7 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                 job.lat = value["lat"] as? Float ?? 0
                 job.long = value["long"] as? Float ?? 0
                 if job.lat != 0 || job.long != 0 {
-                    self.addAnnotation(withPostId: job.postId!, withImageUrl: job.imagePost!, latitude: job.lat!, longitude: job.long!)
+                    self.addAnnotation(withPostId: job.postId!, withTitle: job.titleOfPost!, withDesc: job.descriptionOfPost!, withImageUrl: job.imagePost!, latitude: job.lat!, longitude: job.long!)
                 } else {
                     print("no lcoatino")
                 }
@@ -377,12 +376,8 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         }
     }
     
-    func addAnnotation(withPostId postId: String, withImageUrl imageUrl: String, latitude: Float, longitude: Float) {
-        let annotation = MKPointAnnotation()
-        annotation.title = postId
-        annotation.subtitle = imageUrl
-        annotation.coordinate.latitude = CLLocationDegrees(latitude)
-        annotation.coordinate.longitude = CLLocationDegrees(longitude)
+    func addAnnotation(withPostId postId: String, withTitle title: String, withDesc desc: String, withImageUrl imageURL: String, latitude: Float, longitude: Float) {
+        let annotation = ImportantAnnotation(title: title, subtitle: desc, imageURL: imageURL, id: postId, coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)))
         self.map.addAnnotation(annotation)
     }
     
@@ -396,54 +391,45 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
             return annotationView
         } else {
             var annotationView = map.dequeueReusableAnnotationView(withIdentifier: "AnnotationView")
-            if annotationView == nil {
-                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "AnnotationView")
-            }
-            annotationView?.layer.cornerRadius = 25
-            annotationView?.clipsToBounds = true
-            annotationView?.frame.size = CGSize(width: 50, height: 50)
-            annotationView?.image = UIImage(named: "profileIconAddPhoto")
-            annotationView?.frame.size = CGSize(width: 50, height: 50)
-            let strong = annotation.subtitle!
-            
-            let data = NSData(contentsOf: URL(string: (strong ?? urlLink))!)
-            annotationView?.frame.size = CGSize(width: 50, height: 50)
-            annotationView?.image = UIImage(data: data! as Data)
-            annotationView?.frame.size = CGSize(width: 50, height: 50)
             return annotationView
         }
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if let postId = view.annotation?.title {
-            self.postId = postId!
-            Database.database().reference().child("Jobs").child(postId!).child("image").observe(.value) { (imageSnap) in
-                if let postImageUrl : String = (imageSnap.value as? String) {
-                    self.imageUrl = postImageUrl
-                    self.postImageView.kf.setImage(with: URL(string: postImageUrl)!)
-                    Database.database().reference().child("Jobs").child(postId!).child("title").observe(.value) { (titleSnap) in
-                        if let titleOfJob : String = (titleSnap.value as? String) {
-                            self.titleOfPost.text = titleOfJob
-                            self.postItlte = titleOfJob
-                            Database.database().reference().child("Jobs").child(postId!).child("price").observe(.value) { (priceSnap) in
-                                if let price = priceSnap.value as? NSNumber {
-                                    let priceInt = Int(price)
-                                    self.postPrice = priceInt
-                                    self.price.text = String("$\(priceInt)")
-                                    Database.database().reference().child("Jobs").child(postId!).child("author").observe(.value) { (authSnap) in
-                                        if let authString : String = (authSnap.value as? String) {
-                                            self.authorOfPost = authString
-                                            Database.database().reference().child("Users").child(authString).child("profile-image").observe(.value) { (authImage) in
-                                                if let authImageUrl : String = (authImage.value as? String) {
-                                                    self.postAuthorImageView.kf.setImage(with: URL(string: authImageUrl)!)
-                                                    Database.database().reference().child("Users").child(authString).child("name").observe(.value) { (authName) in
-                                                        if let authNameString : String = (authName.value as? String) {
-                                                            self.authorName.text = authNameString
-                                                            Database.database().reference().child("Jobs").child(postId!).child("description").observe(.value) { (descSnap) in
-                                                                if let postDesc : String = (descSnap.value as? String) {
-                                                                    self.postDesc = postDesc
-                                                                    DispatchQueue.main.asyncAfter(deadline: .now()) {
-                                                                        self.showPopup()
+        if view.annotation is MKUserLocation {
+            return
+        }
+        if let annotation = view.annotation as? ImportantAnnotation {
+            print(annotation.id!)
+            if let postId = annotation.id {
+                Database.database().reference().child("Jobs").child(postId).child("image").observe(.value) { (imageSnap) in
+                    if let postImageUrl : String = (imageSnap.value as? String) {
+                        self.imageUrl = postImageUrl
+                        self.postImageView.kf.setImage(with: URL(string: postImageUrl)!)
+                        Database.database().reference().child("Jobs").child(postId).child("title").observe(.value) { (titleSnap) in
+                            if let titleOfJob : String = (titleSnap.value as? String) {
+                                self.titleOfPost.text = titleOfJob
+                                self.postItlte = titleOfJob
+                                Database.database().reference().child("Jobs").child(postId).child("price").observe(.value) { (priceSnap) in
+                                    if let price = priceSnap.value as? NSNumber {
+                                        let priceInt = Int(price)
+                                        self.postPrice = priceInt
+                                        self.price.text = String("$\(priceInt)")
+                                        Database.database().reference().child("Jobs").child(postId).child("author").observe(.value) { (authSnap) in
+                                            if let authString : String = (authSnap.value as? String) {
+                                                self.authorOfPost = authString
+                                                Database.database().reference().child("Users").child(authString).child("profile-image").observe(.value) { (authImage) in
+                                                    if let authImageUrl : String = (authImage.value as? String) {
+                                                        self.postAuthorImageView.kf.setImage(with: URL(string: authImageUrl)!)
+                                                        Database.database().reference().child("Users").child(authString).child("name").observe(.value) { (authName) in
+                                                            if let authNameString : String = (authName.value as? String) {
+                                                                self.authorName.text = authNameString
+                                                                Database.database().reference().child("Jobs").child(postId).child("description").observe(.value) { (descSnap) in
+                                                                    if let postDesc : String = (descSnap.value as? String) {
+                                                                        self.postDesc = postDesc
+                                                                        DispatchQueue.main.asyncAfter(deadline: .now()) {
+                                                                            self.showPopup()
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -467,12 +453,18 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     func showPopup() {
-        UIView.animate(withDuration: 0.5) {
-            self.popUpView.frame.origin.y -= 280
+        if isPresenting {
+            dismissPopup()
+        } else {
+            isPresenting = true
+            UIView.animate(withDuration: 0.5) {
+                self.popUpView.frame.origin.y -= 280
+            }
         }
     }
     
     func dismissPopup() {
+        isPresenting = false
         UIView.animate(withDuration: 0.5) {
             self.popUpView.frame.origin.y += 280
         }
@@ -520,4 +512,22 @@ class ImageAnnotation : NSObject, MKAnnotation {
         self.image = nil
         self.colour = UIColor.white
     }
+}
+
+class ImportantAnnotation: NSObject, MKAnnotation {
+    
+    var title: String?
+    var subtitle: String?
+    var imageURL: String?
+    var id: String?
+    var coordinate: CLLocationCoordinate2D
+    
+    init(title: String, subtitle: String, imageURL: String, id: String, coordinate: CLLocationCoordinate2D) {
+        self.title = title
+        self.subtitle = subtitle
+        self.imageURL = imageURL
+        self.id = id
+        self.coordinate = coordinate
+    }
+    
 }
