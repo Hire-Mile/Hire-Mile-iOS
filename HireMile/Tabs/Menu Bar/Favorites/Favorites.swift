@@ -128,7 +128,7 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
                         cell.profileButton.addTarget(self, action: #selector(self.mapsHit), for: .touchUpInside)
                         cell.profileButton.tag = indexPath.row
                     } else {
-                        cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+                        cell.profileImageView.loadImage(from: URL(string: snapshot)!)
                         
                         cell.profileButton.addTarget(self, action: #selector(self.mapsHit), for: .touchUpInside)
                         cell.profileButton.tag = indexPath.row

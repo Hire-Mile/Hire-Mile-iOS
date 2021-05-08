@@ -20,6 +20,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
             navigationItem.title = category
         }
     }
+    
     var allJobs = [JobStructure]()
 
     private let refrshControl : UIRefreshControl = {
@@ -140,7 +141,6 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
                 job.postId = value["postId"] as? String ?? "Error"
                 job.timeStamp = value["time"] as? Int ?? 0
                 if self.category == "Recent" {
-                    print("trending")
                     self.allJobs.append(job)
                 } else {
                     if job.category == self.category {
