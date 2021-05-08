@@ -115,8 +115,9 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.insertSegment(withTitle: "Services", at: 0)
         segmentedControl.insertSegment(withTitle: "Reviews", at: 1)
-        segmentedControl.insertSegment(withTitle: "Followers", at: 2)
-        segmentedControl.insertSegment(withTitle: "Info", at: 3)
+        segmentedControl.insertSegment(withTitle: "Gallery", at: 2)
+        segmentedControl.insertSegment(withTitle: "Followers", at: 3)
+        segmentedControl.insertSegment(withTitle: "Info", at: 4)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.layer.masksToBounds = true
         segmentedControl.backgroundColor = UIColor.white

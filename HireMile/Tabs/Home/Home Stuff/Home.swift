@@ -766,6 +766,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == self.myCollectionView {
             let controller = ViewPostController()
+            controller.hidesBottomBarWhenPushed = true
             GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
             GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
             GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
@@ -783,6 +784,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             }
         } else if collectionView == self.collectView {
             let controller = ViewPostController()
+            controller.hidesBottomBarWhenPushed = true
             GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
             GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
             GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
@@ -800,6 +802,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             }
         } else {
             let controller = CategoryPostController()
+            controller.hidesBottomBarWhenPushed = true
             controller.category = self.titles[indexPath.row]
             self.navigationController?.pushViewController(controller, animated: true)
         }
@@ -857,6 +860,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     @objc func searchButtonPressed() {
         let controller = SearchController()
+        controller.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -1026,11 +1030,13 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     @objc func mapButtonPressed() {
         let controller = Map()
+        controller.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
     @objc func profileImagePressed() {
         let controller = MyProfile()
+        controller.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
@@ -1317,21 +1323,27 @@ class MenuListController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             print("profile")
-            self.navigationController?.pushViewController(MyProfile(), animated: true)
+            let controller = MyProfile()
+            controller.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(controller, animated: true)
         } else {
             switch indexPath.row {
             case 0:
-                print("my jobs")
-                self.navigationController?.pushViewController(MyJobs(), animated: true)
+                let controller = MyJobs()
+                controller.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(controller, animated: true)
             case 1:
-                print("4")
-                self.navigationController?.pushViewController(MyReviews(), animated: true)
+                let controller = MyReviews()
+                controller.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(controller, animated: true)
             case 2:
-                print("5")
-                self.navigationController?.pushViewController(Favorites(), animated: true)
+                let controller = Favorites()
+                controller.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(controller, animated: true)
             case 3:
-                print("6")
-                self.navigationController?.pushViewController(Settings(), animated: true)
+                let controller = Settings()
+                controller.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(controller, animated: true)
             case 4:
                 self.signOut()
             case 5:

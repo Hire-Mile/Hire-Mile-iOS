@@ -212,8 +212,9 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.insertSegment(withTitle: "Services", at: 0)
         segmentedControl.insertSegment(withTitle: "Reviews", at: 1)
-        segmentedControl.insertSegment(withTitle: "Followers", at: 2)
-        segmentedControl.insertSegment(withTitle: "Info", at: 3)
+        segmentedControl.insertSegment(withTitle: "Gallery", at: 2)
+        segmentedControl.insertSegment(withTitle: "Followers", at: 3)
+        segmentedControl.insertSegment(withTitle: "Info", at: 4)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.layer.masksToBounds = true
         segmentedControl.backgroundColor = UIColor.white
@@ -664,12 +665,17 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                 self.tableView.reloadData()
             }
         } else if segmentedControl.selectedSegmentIndex == 2 {
+            let gallery = Gallery()
+            gallery.userId = Auth.auth().currentUser!.uid
+            self.present(gallery, animated: true, completion: nil)
+            self.segmentedControl.selectedSegmentIndex = 0
+        } else if segmentedControl.selectedSegmentIndex == 3 {
             UIView.animate(withDuration: 0.5) {
                 self.tableView.alpha = 1
             } completion: { (complete) in
                 self.tableView.reloadData()
             }
-        } else if segmentedControl.selectedSegmentIndex == 3 {
+        } else {
             let infoPage = InfoPage()
             infoPage.rating = finalRating ?? 0
             infoPage.followers = self.followers.count
@@ -678,8 +684,6 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             infoPage.user = user
             self.present(infoPage, animated: true, completion: nil)
             self.segmentedControl.selectedSegmentIndex = 0
-        } else {
-            print("other")
         }
     }
     
@@ -797,16 +801,11 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             }
             return myJobs.count
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
-            return self.allRatings.count
+            return 0
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
-            return self.followers.count
+            return self.allRatings.count
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            if self.myJobs.count == 0 {
-                self.addEtraView()
-            } else {
-                self.removeEtraView()
-            }
-            return myJobs.count
+            return self.followers.count
         } else {
             if self.myJobs.count == 0 {
                 self.addEtraView()
@@ -986,6 +985,9 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             return cell
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "followres", for: indexPath) as! FavoritesCell
+            return cell
+        } else if self.segmentedControl.selectedSegmentIndex == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "followres", for: indexPath) as! FavoritesCell
             cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
             
             if let uid = self.followers[indexPath.row].uid {
@@ -1021,30 +1023,6 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                     cell.favoriteButton.setTitleColor(UIColor.white, for: .normal)
                 }
             }
-            return cell
-        } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! OtherProfileCell
-            cell.selectionStyle = .none
-            if let imagePost = self.myJobs[indexPath.row].imagePost {
-                cell.postImageView.loadImageUsingCacheWithUrlString(imagePost)
-            }
-            if let titleJob = self.myJobs[indexPath.row].titleOfPost {
-                cell.titleJob.text = titleJob
-            }
-            if let postId = self.myJobs[indexPath.row].postId {
-                cell.postId = postId
-            }
-            if let saleNumber = self.myJobs[indexPath.row].descriptionOfPost {
-                cell.saleNumber.text = saleNumber
-            }
-            if let typeOfPrice = self.myJobs[indexPath.row].typeOfPrice {
-                if self.myJobs[indexPath.row].typeOfPrice == "Hourly" {
-                    cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
-                } else {
-                    cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
-                }
-            }
-            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! OtherProfileCell
@@ -1090,12 +1068,10 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                 self.navigationController?.pushViewController(OtherProfile(), animated: true)
             }
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
+            print("selected")
+        } else if self.segmentedControl.selectedSegmentIndex == 3 {
             GlobalVariables.userUID = self.followers[indexPath.row].uid!
             self.navigationController?.pushViewController(OtherProfile(), animated: true)
-        } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            print("info tap")
-        } else {
-            print("other")
         }
     }
     
@@ -1135,9 +1111,9 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             return 135
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
-            return 80
+            return 175
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            return 150
+            return 80
         } else {
             return 150
         }
