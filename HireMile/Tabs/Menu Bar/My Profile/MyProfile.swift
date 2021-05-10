@@ -801,7 +801,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             }
             return myJobs.count
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
-            return 0
+            return allRatings.count
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
             return self.allRatings.count
         } else if self.segmentedControl.selectedSegmentIndex == 3 {

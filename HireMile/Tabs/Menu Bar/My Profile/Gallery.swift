@@ -8,8 +8,9 @@
 
 import UIKit
 import Firebase
+import MBProgressHUD
 
-class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     private let mainButton : MainButton = {
         let mainButton = MainButton(title: "Add Photos")
@@ -17,9 +18,14 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
         return mainButton
     }()
     
+    let pickerController = UIImagePickerController()
+    
+    let filterLauncher = PostSourceLauncher()
+    
     var userId : String? {
         didSet {
             print("set user id as: \(userId!)")
+            GlobalVariables.imageGalleryId = userId!
             if userId! == Auth.auth().currentUser!.uid {
                 addMainButton()
             }
@@ -28,6 +34,12 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     var images = [GalleryModel]()
+    
+    var blackBackground : UIView?
+    
+    var startingFrame : CGRect?
+    
+    var imageView : UIImageView?
     
     var collectionView : UICollectionView?
 
@@ -50,6 +62,8 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
         self.view.addSubview(self.collectionView!)
         
         view.backgroundColor = UIColor.white
+        
+        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(globalCheck), userInfo: nil, repeats: true)
 
         // Do any additional setup after loading the view.
     }
@@ -79,6 +93,54 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
         mainButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -25).isActive = true
     }
     
+    private func uploadImage(image: UIImage?) {
+        // show loading
+        MBProgressHUD.showAdded(to: view, animated: true)
+        // action
+        if let imageData = image?.jpegData(compressionQuality: 0.8) {
+            let root = Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("gallery")
+            let key = root.childByAutoId().key!
+            let storage = Storage.storage().reference().child("Users").child(Auth.auth().currentUser!.uid).child("gallery").child(key)
+            let metadata = StorageMetadata()
+            root.child(key)
+            metadata.contentType = "image/jpg"
+            storage.putData(imageData, metadata: metadata) { (storageMetadata, putError) in
+                if putError == nil && storageMetadata != nil {
+                    storage.downloadURL { (url, downloadError) in
+                        if let metalImageUrl = url?.absoluteString {
+                            let post = [
+                                "key" : key,
+                                "url" : metalImageUrl,
+                                "time" : Int(Date().timeIntervalSince1970)
+                            ] as [String : Any]
+                            let feed = [key : post]
+                            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("gallery").updateChildValues(feed) { setValueError, setValRef in
+                                if setValueError == nil {
+                                    // hide loading
+                                    MBProgressHUD.hide(for: self.view, animated: true)
+                                    // refresh view
+                                    if let id = self.userId {
+                                        self.userId = "\(id)"
+                                    }
+                                }
+                            }
+                        } else {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.simpleAlert(title: "Error", message: downloadError!.localizedDescription)
+                        }
+                    }
+                } else {
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    self.simpleAlert(title: "Error", message: putError!.localizedDescription)
+                }
+            }
+        } else {
+            // hide loading
+            MBProgressHUD.hide(for: view, animated: true)
+            simpleAlert(title: "Error", message: "Unable to cache image, please try again.")
+        }
+    }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -92,11 +154,18 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
         if let url = images[indexPath.row].url {
             cell.myImageView.loadImage(from: URL(string: url)!)
         }
+        cell.myImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("selected image: \(indexPath.item)")
+        let controller = ViewGalleryItemController()
+        let image = self.images[indexPath.row]
+        controller.url = image.url!
+        controller.author = userId!
+        controller.id = image.id!
+        self.present(controller, animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -104,8 +173,122 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
         return size
     }
     
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let edited = info[.editedImage] as? UIImage {
+            dismiss(animated: true) {
+                self.uploadImage(image: edited)
+            }
+        } else if let original = info[.originalImage] as? UIImage {
+            dismiss(animated: true) {
+                self.uploadImage(image: original)
+            }
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     @objc func addButtonPressed() {
-        print("[preseedd buton")
+        presentPhotoPopup()
+    }
+    
+    private func presentPhotoPopup() {
+        self.filterLauncher.showFilter()
+        self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
+        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
+    }
+    
+    @objc func stopJobButton() {
+        pickerController.delegate = self
+        pickerController.allowsEditing = true
+        pickerController.sourceType = .camera
+        self.present(pickerController, animated: true, completion: filterLauncher.handleDismiss)
+    }
+    
+    @objc func completeJobButton() {
+        pickerController.delegate = self
+        pickerController.allowsEditing = true
+        pickerController.sourceType = .photoLibrary
+        self.present(pickerController, animated: true, completion: filterLauncher.handleDismiss)
+    }
+    
+    @objc func handleImageTap(tapGesture: UITapGestureRecognizer) {
+        UIView.animate(withDuration: 1) {
+            self.view.layoutIfNeeded()
+        }
+        if let imageView = tapGesture.view as? UIImageView {
+            self.performZoomInForStartingImageView(startingImageView: imageView)
+        }
+    }
+    
+    func performZoomInForStartingImageView(startingImageView: UIImageView) {
+        
+        startingFrame = startingImageView.superview?.convert((startingImageView.frame), to: nil)
+        let zoomingImageView = UIImageView(frame: startingFrame!)
+        zoomingImageView.image = startingImageView.image
+        zoomingImageView.isUserInteractionEnabled = true
+        zoomingImageView.layer.cornerRadius = 16
+        zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
+        
+        let exitButton = UIButton(type: .system)
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        exitButton.backgroundColor = .clear
+        exitButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        exitButton.tintColor = UIColor.white
+        self.imageView = zoomingImageView
+        exitButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOutButton)))
+        
+        if let keyWindow = UIApplication.shared.keyWindow {
+            blackBackground = UIView(frame: keyWindow.frame)
+            self.blackBackground?.backgroundColor = .black
+            self.blackBackground?.alpha = 0
+            keyWindow.addSubview(blackBackground!)
+            keyWindow.addSubview(zoomingImageView)
+            
+            blackBackground?.addSubview(exitButton)
+            exitButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+            exitButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
+            exitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            exitButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+                let height = self.startingFrame!.height / self.startingFrame!.width * keyWindow.frame.width
+                zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+                zoomingImageView.center = keyWindow.center
+                self.blackBackground?.alpha = 1
+            }
+
+        }
+    }
+    
+    @objc func globalCheck() {
+        print("global variabling")
+        if GlobalVariables.imageGalleryId != "" {
+            print("global variabling2")
+            backend(withUid: GlobalVariables.imageGalleryId)
+        }
+    }
+    
+    @objc func handleZoomOut(tapGesture: UITapGestureRecognizer) {
+        if let zoomOutImageView = tapGesture.view {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+                zoomOutImageView.frame = self.startingFrame!
+                self.blackBackground?.alpha = 0
+            } completion: { (completed) in
+                zoomOutImageView.removeFromSuperview()
+            }
+        }
+    }
+    
+    @objc func handleZoomOutButton() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+            self.blackBackground?.alpha = 0
+            self.imageView?.alpha = 0
+        } completion: { (completed) in
+        }
     }
     
 }
@@ -115,9 +298,11 @@ class GalleryCell: UICollectionViewCell {
     let myImageView : CustomImageView = {
         let imageView = CustomImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .orange
+        imageView.backgroundColor = .unselectedColor
         imageView.layer.cornerRadius = 10
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        
         return imageView
     }()
     
