@@ -93,8 +93,6 @@ class TabBarController2: UITabBar {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-//        self.unselectedItemTintColor = UIColor.black
-        
         middleButton.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: 0)
     }
 

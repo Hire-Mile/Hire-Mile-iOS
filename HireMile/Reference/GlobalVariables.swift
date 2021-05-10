@@ -70,4 +70,6 @@ class GlobalVariables: NSObject {
     
     static var userPresentationId = ""
     
+    static var imageGalleryId = ""
+    
 }

@@ -654,12 +654,17 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.tableView.reloadData()
             }
         } else if segmentedControl.selectedSegmentIndex == 2 {
+            let gallery = Gallery()
+            gallery.userId = GlobalVariables.userUID
+            self.present(gallery, animated: true, completion: nil)
+            self.segmentedControl.selectedSegmentIndex = 0
+        } else if segmentedControl.selectedSegmentIndex == 3 {
             UIView.animate(withDuration: 0.5) {
                 self.tableView.alpha = 1
             } completion: { (complete) in
                 self.tableView.reloadData()
             }
-        } else if segmentedControl.selectedSegmentIndex == 3 {
+        } else {
             let infoPage = InfoPage()
             infoPage.rating = finalRating ?? 0
             infoPage.followers = self.followers.count
@@ -668,8 +673,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             infoPage.user = user
             self.present(infoPage, animated: true, completion: nil)
             self.segmentedControl.selectedSegmentIndex = 0
-        } else {
-            print("other")
         }
     }
     
@@ -850,37 +853,29 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.segmentedControl.selectedSegmentIndex == 0 {
             if self.myJobs.count == 0 {
-                print("no my jobs")
                 self.addEtraView(withImageName: "not-service", withTitle: "No Services")
             } else {
-                print("yes my jobs")
                 self.removeEtraView()
             }
             return myJobs.count
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             self.removeEtraView()
             if self.allRatings.count == 0 {
-                print("no my jobs")
                 self.addEtraView(withImageName: "no-review", withTitle: "No Reviews")
             } else {
-                print("yes my jobs")
                 self.removeEtraView()
             }
             return self.allRatings.count
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
             self.removeEtraView()
-            return self.followers.count
+            return 0
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
+            self.removeEtraView()
+            return self.followers.count
+        } else {
             self.removeEtraView()
             if self.myJobs.count == 0 {
                 self.addEtraView(withImageName: "not-service", withTitle: "No Information")
-            } else {
-                self.removeEtraView()
-            }
-            return myJobs.count
-        } else {
-            if self.myJobs.count == 0 {
-                self.addEtraView(withImageName: "not-service", withTitle: "No Services")
             } else {
                 self.removeEtraView()
             }
@@ -1048,13 +1043,15 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             return cell
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "followres", for: indexPath) as! FavoritesCell
+            return cell
+        } else if self.segmentedControl.selectedSegmentIndex == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "followres", for: indexPath) as! FavoritesCell
             cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
             
             if let uid = self.followers[indexPath.row].uid {
                 Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
                     if let snapshot : String = (snapshot.value as? String) {
                         cell.textLabel?.text = snapshot
-//                        cell.delegate = self
                         cell.index = indexPath
                     }
                 }
@@ -1066,7 +1063,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                         cell.profileImageView.tintColor = UIColor.lightGray
                         cell.profileImageView.contentMode = .scaleAspectFill
                     } else {
-                        cell.profileImageView.loadImageUsingCacheWithUrlString(snapshot)
+                        cell.profileImageView.loadImage(from: URL(string: snapshot)!)
                     }
                 }
                 
@@ -1084,30 +1081,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                     cell.favoriteButton.setTitleColor(UIColor.white, for: .normal)
                 }
             }
-            return cell
-        } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! OtherProfileCell
-            cell.selectionStyle = .none
-            if let imagePost = self.myJobs[indexPath.row].imagePost {
-                cell.postImageView.loadImageUsingCacheWithUrlString(imagePost)
-            }
-            if let titleJob = self.myJobs[indexPath.row].titleOfPost {
-                cell.titleJob.text = titleJob
-            }
-            if let postId = self.myJobs[indexPath.row].postId {
-                cell.postId = postId
-            }
-            if let saleNumber = self.myJobs[indexPath.row].descriptionOfPost {
-                cell.saleNumber.text = saleNumber
-            }
-            if let typeOfPrice = self.myJobs[indexPath.row].typeOfPrice {
-                if self.myJobs[indexPath.row].typeOfPrice == "Hourly" {
-                    cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
-                } else {
-                    cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
-                }
-            }
-            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! OtherProfileCell
@@ -1153,9 +1126,9 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.navigationController?.pushViewController(OtherProfile(), animated: true)
             }
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
+        } else if self.segmentedControl.selectedSegmentIndex == 3 {
             GlobalVariables.userUID = self.followers[indexPath.row].uid!
             self.navigationController?.pushViewController(OtherProfile(), animated: true)
-        } else if self.segmentedControl.selectedSegmentIndex == 3 {
             print("info tap")
         } else {
             print("other")
@@ -1164,13 +1137,13 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            return 150
+            return 175
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             return 135
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
-            return 80
+            return 175
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            return 150
+            return 80
         } else {
             return 150
         }

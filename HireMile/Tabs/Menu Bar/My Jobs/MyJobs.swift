@@ -673,7 +673,7 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
 class MyJobsRunningCell: UITableViewCell {
     
-    var profileStyle = ""
+    var profileStyle = "" 
             
     override func layoutSubviews() {
         super.layoutSubviews()
