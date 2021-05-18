@@ -88,15 +88,9 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         return view
     }()
     
-    let applyButton : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("View Post", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
+    let applyButton : MainButton = {
+        let button = MainButton(title: "View Post")
         button.addTarget(self, action: #selector(viewPostSelected), for: .touchUpInside)
-        button.backgroundColor = UIColor.mainBlue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.layer.cornerRadius = 30
         return button
     }()
     
@@ -217,7 +211,7 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         self.applyButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
         self.applyButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -30).isActive = true
         self.applyButton.bottomAnchor.constraint(equalTo: self.popUpView.safeAreaLayoutGuide.bottomAnchor, constant: -30).isActive = true
-        self.applyButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        self.applyButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
         
         self.popUpView.addSubview(self.postImageView)
         self.postImageView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 30).isActive = true
@@ -298,16 +292,32 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         super.viewWillAppear(animated)
         
         self.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        self.tabBarController?.tabBar.isHidden = false
+
+        self.navigationController?.navigationBar.isHidden = false
     }
     
+    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: string)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+    
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
+    
     @objc func viewPostSelected() {
-        print("selected view post for: \(self.postId)")
         GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.imageUrl)
         GlobalVariables.postImageDownlodUrl = self.imageUrl
         GlobalVariables.postTitle = self.postItlte
@@ -317,7 +327,17 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         GlobalVariables.authorId = self.authorOfPost
         GlobalVariables.postId = self.postId
         GlobalVariables.type = "Total"
-        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+        let controller = ViewPostController()
+        Database.database().reference().child("Users").child(authorOfPost).child("profile-image").observe(.value) { (snapshot) in
+            if let profileImageUrl : String = (snapshot.value as? String) {
+                self.loadImage(string: profileImageUrl, indexPath: 0) { [weak self] (image) in
+                    guard let self = self, let image = image else { return }
+                    controller.profileImage.image = image
+                    controller.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
+        }
     }
     
     @objc func backButtonPressed() {
@@ -402,6 +422,7 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         if let annotation = view.annotation as? ImportantAnnotation {
             print(annotation.id!)
             if let postId = annotation.id {
+                self.postId = postId
                 Database.database().reference().child("Jobs").child(postId).child("image").observe(.value) { (imageSnap) in
                     if let postImageUrl : String = (imageSnap.value as? String) {
                         self.imageUrl = postImageUrl
@@ -417,6 +438,7 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                                         self.price.text = String("$\(priceInt)")
                                         Database.database().reference().child("Jobs").child(postId).child("author").observe(.value) { (authSnap) in
                                             if let authString : String = (authSnap.value as? String) {
+                                                print("THE AUTH STIRNG IS: \(authString)")
                                                 self.authorOfPost = authString
                                                 Database.database().reference().child("Users").child(authString).child("profile-image").observe(.value) { (authImage) in
                                                     if let authImageUrl : String = (authImage.value as? String) {

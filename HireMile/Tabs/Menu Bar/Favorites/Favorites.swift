@@ -98,6 +98,22 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.favorites.count
     }
+    
+    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: string)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+    
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favoritesCellID", for: indexPath) as! FavoritesCell
@@ -128,7 +144,16 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
                         cell.profileButton.addTarget(self, action: #selector(self.mapsHit), for: .touchUpInside)
                         cell.profileButton.tag = indexPath.row
                     } else {
-                        cell.profileImageView.loadImage(from: URL(string: snapshot)!)
+                        let itemNumber = NSNumber(value: indexPath.row)
+                        if let cachedImage = self.cache.object(forKey: itemNumber) {
+                            cell.profileImageView.image = cachedImage
+                        } else {
+                            self.loadImage(string: snapshot, indexPath: Int(indexPath.row)) { [weak self] (image) in
+                                guard let self = self, let image = image else { return }
+                                cell.profileImageView.image = image
+                                self.cache.setObject(image, forKey: itemNumber)
+                            }
+                        }
                         
                         cell.profileButton.addTarget(self, action: #selector(self.mapsHit), for: .touchUpInside)
                         cell.profileButton.tag = indexPath.row
@@ -225,7 +250,11 @@ class FavoritesCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = CGRect(x: 85, y: self.contentView.frame.height / 3, width: textLabel!.frame.width, height: textLabel!.frame.height)
+        textLabel?.frame = CGRect(x: 85, y: self.contentView.frame.height / 3, width: 200, height: textLabel!.frame.height)
+//        textLabel?.backgroundColor = UIColor.mainBlue
+        
+//        bringSubviewToFront()
+//        bringSubviewToFront(favoriteButton)
     }
     
     let profileImageView: CustomImageView = {
