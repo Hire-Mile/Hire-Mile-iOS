@@ -1,19 +1,28 @@
 //
-//  OtherProfile2.swift
+//  Profile.swift
 //  HireMile
 //
-//  Created by JJ Zapata on 3/10/21.
+//  Created by JJ Zapata on 5/18/21.
 //  Copyright © 2021 Jorge Zapata. All rights reserved.
 //
 
 import UIKit
 import Firebase
-import Foundation
-import FirebaseDatabase
-import FirebaseAuth
 import ScrollableSegmentedControl
 
-class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol MyTableViewCellDelegate {
+    func didTapEditButton(withIndex: Int)
+    func didTapDeleteButton(withIndex: Int)
+}
+
+protocol MyTableViewCellDelegate2 {
+    func didTapEditButton(withIndex: Int)
+    func didTapDeleteButton(withIndex: Int)
+}
+
+class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate, MyTableViewCellDelegate2 {
+    
+    var tblHeight : NSLayoutConstraint?
     
     private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
             utilityQueue.async {
@@ -31,28 +40,138 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     private let cache = NSCache<NSNumber, UIImage>()
     private let utilityQueue = DispatchQueue.global(qos: .utility)
     
+    var indexPathrow = 0
+    var indexTappeedd = 0
     var allJobs = [JobStructure]()
     var myJobs = [JobStructure]()
-//    var favorites = [UserStructure]()
-    var favorites = [String]()
-    var userUid = GlobalVariables.userUID
-    var isFollowing : Bool?
     var finalRating = 0
     var ratingNumber = 0
     var findingRating = true
     var hires = 0
-    var iamfollowedby = 0
     var totalusers = [UserStructure]()
+    var iamfollowedby = 0
     var finalNumber = 0
     var followers = [UserStructure]()
+    var favorites = [String]()
     var allRatings = [ReviewStructure]()
-
+    
+    let filterLauncher = DeleteLauncher()
+    
+    let contentView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .orange
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let scrollView : UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.backgroundColor = .red
+        return scrollView
+    }()
+    
+    let tableView : UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor.white
+        return tableView
+    }()
+    
     let profileImageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    let mainView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 30
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let backButtonView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 21
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let backButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+        button.backgroundColor = .clear
+        return button
+    }()
+    
+    let backButtonImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        imageView.tintColor = UIColor.black
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(systemName: "chevron.backward")
+        return imageView
+    }()
+    
+    let editButtonView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 21
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let editButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editPressed), for: .touchUpInside)
+        button.backgroundColor = .clear
+        return button
+    }()
+    
+    let editButtonImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        imageView.tintColor = UIColor.black
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "edit-icon")
+        return imageView
+    }()
+    
+    let shareButtonView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 21
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    let shareButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(uploadPressed), for: .touchUpInside)
+        button.backgroundColor = .clear
+        return button
+    }()
+    
+    let shareButtonImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .clear
+        imageView.tintColor = UIColor.black
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "share-icon")
         return imageView
     }()
     
@@ -71,7 +190,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         label.text = "@username"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: 15)
         label.numberOfLines = 1
         return label
     }()
@@ -96,7 +215,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "icons8-star-100")
-        imageView.tintColor = UIColor.mainBlue
+        imageView.tintColor = UIColor.red
         return imageView
     }()
     
@@ -257,100 +376,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         return label
     }()
     
-    let tableView : UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.separatorStyle = .none
-        return tableView
-    }()
-    
-    let mainView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 30
-        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-        view.backgroundColor = .white
-        return view
-    }()
-    
-    let backButtonView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 21
-        view.backgroundColor = .white
-        return view
-    }()
-    
-    let backButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
-        button.backgroundColor = .clear
-        return button
-    }()
-    
-    let backButtonImage : UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .clear
-        imageView.tintColor = UIColor.black
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "chevron.backward")
-        return imageView
-    }()
-    
-    let shareButtonView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 21
-        view.backgroundColor = .white
-        return view
-    }()
-    
-    let shareButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(uploadPressed), for: .touchUpInside)
-        button.backgroundColor = .clear
-        return button
-    }()
-    
-    let shareButtonImage : UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .clear
-        imageView.tintColor = UIColor.black
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "share-icon")
-        return imageView
-    }()
-    
-    let blockButtonView : UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 21
-        view.backgroundColor = .white
-        return view
-    }()
-    
-    let blockButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(blockUser), for: .touchUpInside)
-        button.backgroundColor = .clear
-        return button
-    }()
-    
-    let blockButtonImage : UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .clear
-        imageView.tintColor = UIColor.black
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "report")
-        return imageView
-    }()
-    
     let bottomBar1 : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -370,18 +395,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.mainBlue
         return view
-    }()
-    
-    let statusButton : UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.mainBlue
-        button.setTitle("Follow", for: .normal)
-        button.layer.cornerRadius = 22
-        button.addTarget(self, action: #selector(followingPressed), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
-        return button
     }()
     
     let ratingsButton : UIButton = {
@@ -420,42 +433,35 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.updateFollowingButton(isFollowing: false)
+        view.addSubview(scrollView)
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        scrollView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        scrollView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
-        self.allJobs.removeAll()
-        self.myJobs.removeAll()
-        Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
-            if let value = snapshot.value as? [String : Any] {
-                let job = JobStructure()
-                job.authorName = value["author"] as? String ?? "Error"
-                job.titleOfPost = value["title"] as? String ?? "Error"
-                job.descriptionOfPost = value["description"] as? String ?? "Error"
-                job.price = value["price"] as? Int ?? 0
-                job.category = value["category"] as? String ?? "Error"
-                job.imagePost = value["image"] as? String ?? "Error"
-                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
-                job.timeStamp = value["time"] as? Int ?? 0
-                job.postId = value["postId"] as? String ?? "Error"
-                
-                if job.authorName ==  GlobalVariables.userUID {
-                    print("my name")
-                    self.myJobs.append(job)
-                }
-            }
-            self.myJobs.sort(by: { $1.timeStamp! > $0.timeStamp! } )
-            self.secondTitleLabel.text = String(self.myJobs.count)
-            self.tableView.reloadData()
-        }
+        scrollView.addSubview(contentView)
+        contentView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        contentView.leftAnchor.constraint(equalTo: scrollView.leftAnchor).isActive = true
+        contentView.rightAnchor.constraint(equalTo: scrollView.rightAnchor).isActive = true
+        contentView.heightAnchor.constraint(equalToConstant: 400).isActive = true
         
-        view.addSubview(profileImageView)
+        scrollView.addSubview(tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -5).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 10).isActive = true
+        
+        contentView.addSubview(profileImageView)
         profileImageView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
         profileImageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
         profileImageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 270).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 250).isActive = true
         
         view.backgroundColor = UIColor.white
         
-        view.addSubview(mainView)
+        contentView.addSubview(mainView)
         mainView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         mainView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         mainView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
@@ -479,44 +485,26 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         backButton.rightAnchor.constraint(equalTo: backButtonView.rightAnchor).isActive = true
         backButton.bottomAnchor.constraint(equalTo: backButtonView.bottomAnchor).isActive = true
         
-        mainView.addSubview(profileName)
-        profileName.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: 32).isActive = true
-        profileName.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
-        profileName.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -160).isActive = true
-        profileName.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        view.addSubview(editButtonView)
+        editButtonView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
+        editButtonView.heightAnchor.constraint(equalToConstant: 42).isActive = true
+        editButtonView.widthAnchor.constraint(equalToConstant: 42).isActive = true
+        editButtonView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         
-        mainView.addSubview(username)
-        username.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 3).isActive = true
-        username.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
-        username.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -160).isActive = true
-        username.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        editButtonView.addSubview(editButtonImage)
+        editButtonImage.centerXAnchor.constraint(equalTo: self.editButtonView.centerXAnchor).isActive = true
+        editButtonImage.centerYAnchor.constraint(equalTo: self.editButtonView.centerYAnchor).isActive = true
+        editButtonImage.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        editButtonImage.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        mainView.addSubview(statusButton)
-        statusButton.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -32).isActive = true
-        statusButton.widthAnchor.constraint(equalToConstant: 120).isActive = true
-        statusButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        statusButton.centerYAnchor.constraint(equalTo: self.profileName.centerYAnchor).isActive = true
-        
-        view.addSubview(blockButtonView)
-        blockButtonView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16).isActive = true
-        blockButtonView.heightAnchor.constraint(equalToConstant: 42).isActive = true
-        blockButtonView.widthAnchor.constraint(equalToConstant: 42).isActive = true
-        blockButtonView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
-
-        blockButtonView.addSubview(blockButtonImage)
-        blockButtonImage.centerXAnchor.constraint(equalTo: self.blockButtonView.centerXAnchor).isActive = true
-        blockButtonImage.centerYAnchor.constraint(equalTo: self.blockButtonView.centerYAnchor).isActive = true
-        blockButtonImage.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        blockButtonImage.heightAnchor.constraint(equalToConstant: 20).isActive = true
-
-        blockButtonView.addSubview(blockButton)
-        blockButton.topAnchor.constraint(equalTo: blockButtonView.topAnchor).isActive = true
-        blockButton.leftAnchor.constraint(equalTo: blockButtonView.leftAnchor).isActive = true
-        blockButton.rightAnchor.constraint(equalTo: blockButtonView.rightAnchor).isActive = true
-        blockButton.bottomAnchor.constraint(equalTo: blockButtonView.bottomAnchor).isActive = true
+        editButtonView.addSubview(editButton)
+        editButton.topAnchor.constraint(equalTo: editButtonView.topAnchor).isActive = true
+        editButton.leftAnchor.constraint(equalTo: editButtonView.leftAnchor).isActive = true
+        editButton.rightAnchor.constraint(equalTo: editButtonView.rightAnchor).isActive = true
+        editButton.bottomAnchor.constraint(equalTo: editButtonView.bottomAnchor).isActive = true
         
         view.addSubview(shareButtonView)
-        shareButtonView.rightAnchor.constraint(equalTo: self.blockButtonView.leftAnchor, constant: -16).isActive = true
+        shareButtonView.rightAnchor.constraint(equalTo: self.editButtonView.leftAnchor, constant: -16).isActive = true
         shareButtonView.heightAnchor.constraint(equalToConstant: 42).isActive = true
         shareButtonView.widthAnchor.constraint(equalToConstant: 42).isActive = true
         shareButtonView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
@@ -533,59 +521,59 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         shareButton.rightAnchor.constraint(equalTo: shareButtonView.rightAnchor).isActive = true
         shareButton.bottomAnchor.constraint(equalTo: shareButtonView.bottomAnchor).isActive = true
         
-        view.addSubview(star1)
+        mainView.addSubview(profileName)
+        profileName.topAnchor.constraint(equalTo: self.mainView.topAnchor, constant: 32).isActive = true
+        profileName.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
+        profileName.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -160).isActive = true
+        profileName.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        mainView.addSubview(username)
+        username.topAnchor.constraint(equalTo: self.profileName.bottomAnchor, constant: 3).isActive = true
+        username.leftAnchor.constraint(equalTo: self.mainView.leftAnchor, constant: 32).isActive = true
+        username.rightAnchor.constraint(equalTo: self.mainView.rightAnchor, constant: -160).isActive = true
+        username.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        mainView.addSubview(star1)
         star1.topAnchor.constraint(equalTo: self.username.bottomAnchor, constant: 6).isActive = true
         star1.leftAnchor.constraint(equalTo: self.username.leftAnchor).isActive = true
         star1.widthAnchor.constraint(equalToConstant: 25).isActive = true
         star1.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        view.addSubview(star2)
+        mainView.addSubview(star2)
         star2.topAnchor.constraint(equalTo: self.username.bottomAnchor, constant: 6).isActive = true
         star2.leftAnchor.constraint(equalTo: self.star1.rightAnchor, constant: 5).isActive = true
         star2.widthAnchor.constraint(equalToConstant: 25).isActive = true
         star2.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        view.addSubview(star3)
+        mainView.addSubview(star3)
         star3.topAnchor.constraint(equalTo: self.username.bottomAnchor, constant: 6).isActive = true
         star3.leftAnchor.constraint(equalTo: self.star2.rightAnchor, constant: 5).isActive = true
         star3.widthAnchor.constraint(equalToConstant: 25).isActive = true
         star3.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        view.addSubview(star4)
+        mainView.addSubview(star4)
         star4.topAnchor.constraint(equalTo: self.username.bottomAnchor, constant: 6).isActive = true
         star4.leftAnchor.constraint(equalTo: self.star3.rightAnchor, constant: 5).isActive = true
         star4.widthAnchor.constraint(equalToConstant: 25).isActive = true
         star4.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        view.addSubview(star5)
+        mainView.addSubview(star5)
         star5.topAnchor.constraint(equalTo: self.username.bottomAnchor, constant: 6).isActive = true
         star5.leftAnchor.constraint(equalTo: self.star4.rightAnchor, constant: 5).isActive = true
         star5.widthAnchor.constraint(equalToConstant: 25).isActive = true
         star5.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        view.addSubview(ratingLabel)
+        mainView.addSubview(ratingLabel)
         ratingLabel.topAnchor.constraint(equalTo: self.username.bottomAnchor, constant: 6).isActive = true
         ratingLabel.leftAnchor.constraint(equalTo: self.star5.rightAnchor, constant: 5).isActive = true
         ratingLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -24).isActive = true
         ratingLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
         
-        self.view.addSubview(segmentedControl)
-        self.segmentedControl.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 15).isActive = true
-        self.segmentedControl.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
-        self.segmentedControl.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
-        self.segmentedControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        self.view.addSubview(self.noServiceImage)
-        self.noServiceImage.topAnchor.constraint(equalTo: self.segmentedControl.bottomAnchor, constant: 20).isActive = true
-        self.noServiceImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.noServiceImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        self.noServiceImage.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        self.view.addSubview(self.noServiceLabel)
-        self.noServiceLabel.topAnchor.constraint(equalTo: self.noServiceImage.bottomAnchor, constant: 10).isActive = true
-        self.noServiceLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        self.noServiceLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-        self.noServiceLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        view.addSubview(segmentedControl)
+        segmentedControl.topAnchor.constraint(equalTo: ratingLabel.bottomAnchor, constant: 15).isActive = true
+        segmentedControl.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -24).isActive = true
+        segmentedControl.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 24).isActive = true
+        segmentedControl.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         mainView.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: self.segmentedControl.bottomAnchor, constant: 10).isActive = true
@@ -593,11 +581,30 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -5).isActive = true
         tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 10).isActive = true
         
+        // profile image view
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in
+            if let profileImageString : String = (snapshot.value as? String) {
+                if profileImageString == "not-yet-selected" {
+                    self.profileImageView.tintColor = UIColor.lightGray
+                    self.profileImageView.tintColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+                    self.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    self.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    self.profileImageView.tintColor = UIColor.lightGray
+                    self.profileImageView.contentMode = .scaleAspectFill
+                }
+            } else {
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.tintColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+                self.profileImageView.contentMode = .scaleAspectFill
+            }
+        }
+        
         view.backgroundColor = UIColor.white
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(OtherProfileCell.self, forCellReuseIdentifier: "profileCell")
+        tableView.register(ProfileCell2.self, forCellReuseIdentifier: "profileCell")
         tableView.register(MyJobsCompletedgCell.self, forCellReuseIdentifier: "otherProfileCell")
         tableView.register(FavoritesCell.self, forCellReuseIdentifier: "followres")
         
@@ -605,7 +612,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.tableView.showsVerticalScrollIndicator = false
         
         // image
-        let uid = GlobalVariables.userUID
+        let uid = Auth.auth().currentUser!.uid
         
         Database.database().reference().child("Users").child(uid).child("username").observe(.value) { (usernameSnap) in
             if let userame = usernameSnap.value as? String {
@@ -638,12 +645,14 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                             job.category = value["category"] as? String ?? "Error"
                             job.imagePost = value["image"] as? String ?? "Error"
                             job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                            job.timeStamp = value["time"] as? Int ?? 0
                             job.postId = value["postId"] as? String ?? "Error"
                             
                             if job.authorName == uid {
                                 self.myJobs.append(job)
                             }
                         }
+                        self.myJobs.sort(by: { $1.timeStamp! < $0.timeStamp! } )
                         self.tableView.reloadData()
                     }
                 }
@@ -656,56 +665,93 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         // Do any additional setup after loading the view.
     }
     
-    @objc func segmentedControlValueChanged(_ semder: UISegmentedControl) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.view.backgroundColor = UIColor.white
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationController?.isNavigationBarHidden = true
+        self.navigationController?.navigationBar.topItem?.title = " "
+        self.navigationController?.navigationBar.tintColor = UIColor.black
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        navigationItem.backButtonTitle = " "
+        
+        let btnProfile = UIButton(type: .system)
+        btnProfile.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        btnProfile.setImage(UIImage(named: "edit-icon"), for: .normal)
+        btnProfile.tintColor = UIColor.black
+        btnProfile.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        btnProfile.addTarget(self, action: #selector(self.editPressed), for: .touchUpInside)
+        btnProfile.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+        btnProfile.layer.cornerRadius = 25
+        btnProfile.layer.masksToBounds = true
+        
+        let share = UIButton(type: .system)
+        
+        share.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+        share.setImage(UIImage(named: "share-icon"), for: .normal)
+        share.tintColor = UIColor.black
+        share.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        share.addTarget(self, action: #selector(self.uploadPressed), for: .touchUpInside)
+        share.backgroundColor = UIColor(red: 243/255, green: 243/255, blue: 243/255, alpha: 1)
+        share.layer.cornerRadius = 25
+        share.layer.masksToBounds = true
+        
+        self.navigationItem.rightBarButtonItems = [UIBarButtonItem(customView: btnProfile), UIBarButtonItem(customView: share)]
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            UIView.animate(withDuration: 0.5) {
-                self.tableView.alpha = 1
-            } completion: { (complete) in
-                self.tableView.reloadData()
+            if self.myJobs.count == 0 {
+                self.addEtraView()
+            } else {
+                self.removeEtraView()
             }
-        } else if segmentedControl.selectedSegmentIndex == 1 {
-            UIView.animate(withDuration: 0.5) {
-                self.tableView.alpha = 1
-            } completion: { (complete) in
-                self.tableView.reloadData()
-            }
-        } else if segmentedControl.selectedSegmentIndex == 2 {
-            let gallery = Gallery()
-            gallery.userId = GlobalVariables.userUID
-            self.present(gallery, animated: true, completion: nil)
-            self.segmentedControl.selectedSegmentIndex = 0
-        } else if segmentedControl.selectedSegmentIndex == 3 {
-            UIView.animate(withDuration: 0.5) {
-                self.tableView.alpha = 1
-            } completion: { (complete) in
-                self.tableView.reloadData()
-            }
+            return myJobs.count
+        } else if self.segmentedControl.selectedSegmentIndex == 1 {
+            return allRatings.count
+        } else if self.segmentedControl.selectedSegmentIndex == 2 {
+            return self.allRatings.count
+        } else if self.segmentedControl.selectedSegmentIndex == 3 {
+            return self.followers.count
         } else {
-            let infoPage = InfoPage()
-            infoPage.rating = finalRating ?? 0
-            infoPage.followers = self.followers.count
-            let user = UserStructure()
-            user.uid = GlobalVariables.userUID
-            infoPage.user = user
-            self.present(infoPage, animated: true, completion: nil)
-            self.segmentedControl.selectedSegmentIndex = 0
+            if self.myJobs.count == 0 {
+                self.addEtraView()
+            } else {
+                self.removeEtraView()
+            }
+            return myJobs.count
         }
     }
     
-    @objc func setFollowPeople() {
-        print("followers:")
-        self.fourthImportantView.addSubview(followersButton)
-        self.followersButton.topAnchor.constraint(equalTo: self.fourthImportantView.topAnchor).isActive = true
-        self.followersButton.leftAnchor.constraint(equalTo: self.fourthImportantView.leftAnchor).isActive = true
-        self.followersButton.rightAnchor.constraint(equalTo: self.fourthImportantView.rightAnchor).isActive = true
-        self.followersButton.bottomAnchor.constraint(equalTo: self.fourthImportantView.bottomAnchor).isActive = true
-        self.fourthTitleLabel.text = "\(self.iamfollowedby)"
+    func addEtraView() {
+        self.view.addSubview(self.noServiceImage)
+        self.noServiceImage.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: 20).isActive = true
+        self.noServiceImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        self.noServiceImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        self.noServiceImage.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        self.view.addSubview(self.noServiceLabel)
+        self.noServiceLabel.topAnchor.constraint(equalTo: self.noServiceImage.bottomAnchor, constant: 10).isActive = true
+        self.noServiceLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        self.noServiceLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        self.noServiceLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        self.noServiceImage.alpha = 1
+        self.noServiceLabel.alpha = 1
+    }
+    
+    func removeEtraView() {
+        self.noServiceImage.alpha = 0
+        self.noServiceLabel.alpha = 0
     }
     
     func getAllRatings() {
-        print("get all ratings for")
-        print(GlobalVariables.userUID)
-        Database.database().reference().child("Users").child(GlobalVariables.userUID).child("ratings").observe(.childAdded) { (snapshot) in
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = ReviewStructure()
                 job.ratingNumber = value["rating-number"] as? Int ?? 0
@@ -781,7 +827,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                         let favorite = UserStructure()
                         favorite.uid = favoritesSnap.key
                         print("\(snapshot.key) is following \(favorite.uid)")
-                        if favorite.uid == GlobalVariables.userUID {
+                        if favorite.uid == Auth.auth().currentUser!.uid {
                             print("i am followed by \(snapshot.key)")
                             self.iamfollowedby += 1
                             let follower = UserStructure()
@@ -795,156 +841,49 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.setFollowPeople), userInfo: nil, repeats: false)
     }
     
-    @objc func followersButtonPressed() {
-        print("followed pressed")
-        let controller = FollowersController()
-        controller.followers = self.followers
-        self.present(controller, animated: true, completion: nil)
+    func didTapEditButton(withIndex index: Int) {
+        let url = URL(string: self.myJobs[index].imagePost!)
+        GlobalVariables.imagePost.kf.setImage(with: url)
+        GlobalVariables.postImageDownlodUrl = self.myJobs[indexPathrow].imagePost!
+        GlobalVariables.postTitle = self.myJobs[indexPathrow].titleOfPost!
+        GlobalVariables.postDescription = self.myJobs[indexPathrow].descriptionOfPost!
+        GlobalVariables.postPrice = self.myJobs[indexPathrow].price!
+        GlobalVariables.authorId = self.myJobs[indexPathrow].authorName!
+        GlobalVariables.postId = self.myJobs[indexPathrow].postId!
+        GlobalVariables.type = self.myJobs[indexPathrow].typeOfPrice!
+        self.navigationController?.pushViewController(EditPost(), animated: true)
     }
     
-    @objc func uploadPressed() {
-        let text = "Hire or get work on the fastest and easiest platform"
-        let url : NSURL = NSURL(string: "https://www.hiremile.com")!
-        let vc = UIActivityViewController(activityItems: [text, url], applicationActivities: [])
-        if let popoverController = vc.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = self.view.bounds
-        }
-        self.present(vc, animated: true, completion: nil)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.view.backgroundColor = UIColor.white
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationController?.isNavigationBarHidden = true
-        self.navigationController?.navigationBar.topItem?.title = " "
-        navigationItem.backButtonTitle = " "
-        self.navigationController?.navigationBar.tintColor = UIColor.black
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
-        // get array
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
-            if let value = listOfuserFavorite.value as? [String : Any] {
-                let user = UserStructure()
-                user.uid = value["uid"] as? String ?? "Error"
-                if user.uid! == GlobalVariables.userUID {
-                    self.updateFollowingButton(isFollowing: true)
-                    return
-                }
-            }
-        }
-    }
-    
-    func updateFollowingButton(isFollowing: Bool) {
-        switch isFollowing {
-        case true:
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-                self.statusButton.backgroundColor = UIColor.mainBlue
-                self.statusButton.setTitle("Following", for: .normal)
-                self.statusButton.setTitleColor(UIColor.white, for: .normal)
-                self.isFollowing = true
-            } completion: { (completion) in
-                print("updated button")
-            }
-        case false:
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-                self.statusButton.backgroundColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 0.35)
-                self.statusButton.setTitle("Follow", for: .normal)
-                self.statusButton.setTitleColor(UIColor.mainBlue, for: .normal)
-                self.isFollowing = false
-            } completion: { (completion) in
-                print("updated button")
-            }
-        default:
-            print("following user error")
-        }
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.segmentedControl.selectedSegmentIndex == 0 {
-            if self.myJobs.count == 0 {
-                self.noServiceImage.image = UIImage(named: "not-service")!
-                self.noServiceLabel.text = "No Services"
-                self.addEtraView()
-            } else {
-                self.removeEtraView()
-            }
-            return myJobs.count
-        } else if self.segmentedControl.selectedSegmentIndex == 1 {
-            if self.allRatings.count == 0 {
-                self.noServiceImage.image = UIImage(named: "no-review")!
-                self.noServiceLabel.text = "No Reviews"
-                self.addEtraView()
-            } else {
-                self.removeEtraView()
-            }
-            return allRatings.count
-        } else if self.segmentedControl.selectedSegmentIndex == 2 {
-            return self.allRatings.count
-        } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            if self.followers.count == 0 {
-                self.noServiceImage.image = UIImage(named: "no-service")!
-                self.noServiceLabel.text = "No Followers"
-                self.addEtraView()
-            } else {
-                self.removeEtraView()
-            }
-            return self.followers.count
-        } else {
-            if self.myJobs.count == 0 {
-                self.addEtraView()
-            } else {
-                self.removeEtraView()
-            }
-            return myJobs.count
-        }
-    }
-    
-    private func estimateFrameForText(text: String) -> CGRect {
-        let size = CGSize(width: 200, height: 1000)
-        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)], context: nil)
+    func didTapDeleteButton(withIndex index: Int) {
+        print("hello, \(index)")
+        self.indexTappeedd = index
+        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.deletePostPressed), for: .touchUpInside)
+        self.filterLauncher.showFilter()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! OtherProfileCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell2
+            
             cell.selectionStyle = .none
-            cell.backgroundColor = .white
-            let itemNumber = NSNumber(value: indexPath.row)
-            if let cachedImage = self.cache.object(forKey: itemNumber) {
-                cell.postImageView.image = cachedImage
+            cell.delegate = self
+            cell.index = indexPath
+            
+            let url = URL(string: self.myJobs[indexPath.row].imagePost!)
+            cell.postImageView.kf.setImage(with: url)
+            
+            cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
+            
+            cell.postId = self.myJobs[indexPath.row].postId!
+            
+            cell.saleNumber.text = self.myJobs[indexPath.row].descriptionOfPost!
+            
+            if self.myJobs[indexPath.row].typeOfPrice == "Hourly" {
+                cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
             } else {
-                print("cschlecht")
-                self.loadImage(string: self.myJobs[indexPath.row].imagePost!, indexPath: Int(indexPath.row)) { [weak self] (image) in
-                    guard let self = self, let image = image else { return }
-                    cell.postImageView.image = image
-                    self.cache.setObject(image, forKey: itemNumber)
-                }
-            }
-            if let titleJob = self.myJobs[indexPath.row].titleOfPost {
-                cell.titleJob.text = titleJob
-            }
-            if let postId = self.myJobs[indexPath.row].postId {
-                cell.postId = postId
-            }
-            if let saleNumber = self.myJobs[indexPath.row].descriptionOfPost {
-                cell.saleNumber.text = saleNumber
-            }
-            if let typeOfPrice = self.myJobs[indexPath.row].typeOfPrice {
-                if typeOfPrice == "Hourly" {
-                    cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
-                } else {
-                    cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
-                    let rect = estimateFrameForText(text: String(self.myJobs[indexPath.row].price!)).width
-                    cell.priceNumber.widthAnchor.constraint(equalToConstant: rect + 30).isActive = true
-                }
+                cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
+                let rect = estimateFrameForText(text: String(self.myJobs[indexPath.row].price!)).width
+                cell.priceNumber.widthAnchor.constraint(equalToConstant: rect + 30).isActive = true
             }
             
             return cell
@@ -1054,6 +993,8 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 Database.database().reference().child("Jobs").child(postId).child("image").observe(.value) { (snapshot) in
                     if let pictureString : String = (snapshot.value as? String) {
                         cell.postImageView.loadImageUsingCacheWithUrlString(pictureString)
+                    } else {
+                        cell.postImageView.backgroundColor = UIColor.white
                     }
                 }
             }
@@ -1130,7 +1071,6 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.segmentedControl.selectedSegmentIndex == 0 {
             let controller = ViewPostController()
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
             GlobalVariables.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
             GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
             GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
@@ -1153,12 +1093,10 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.navigationController?.pushViewController(OtherProfile(), animated: true)
             }
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
+            print("selected")
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
             GlobalVariables.userUID = self.followers[indexPath.row].uid!
             self.navigationController?.pushViewController(OtherProfile(), animated: true)
-            print("info tap")
-        } else {
-            print("other")
         }
     }
     
@@ -1176,184 +1114,109 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    @objc func followingPressed() {
-        if self.isFollowing == true {
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(GlobalVariables.userUID).removeValue()
-            self.updateFollowingButton(isFollowing: false)
-        } else {
-            self.updateFollowingButton(isFollowing: true)
-            let userInformation : Dictionary<String, Any> = [
-                "uid" : "\(GlobalVariables.userUID)"
-            ]
-            let postFeed = ["\(GlobalVariables.userUID)" : userInformation]
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
-            Database.database().reference().child("Users").child(self.userUid).child("fcmToken").observe(.value) { (snapshot) in
-                let token : String = (snapshot.value as? String)!
-                let sender = PushNotificationSender()
-                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-                    let userName : String = (snapshot.value as? String)!
-                    sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.userUid)
-                }
-            }
+    func estimateFrameForText(text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.medium)], context: nil)
+    }
+    
+    @objc func editPressed() {
+        self.navigationController?.pushViewController(EditProfile(), animated: true)
+    }
+    
+    @objc func uploadPressed() {
+        let text = "Hire or get work on the fastest and easiest platform"
+        let url : NSURL = NSURL(string: "https://www.hiremile.com")!
+        let vc = UIActivityViewController(activityItems: [text, url], applicationActivities: [])
+        if let popoverController = vc.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = self.view.bounds
         }
+        self.present(vc, animated: true, completion: nil)
     }
     
     @objc func backButtonPressed() {
         self.navigationController?.popViewController(animated: true)
     }
     
-    @objc func blockUser() {
-        let alert = UIAlertController(title: "Are you sure you want to block this user?", message: "", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Yes, Block User", style: .default, handler: { (action) in
-            let block = UIAlertController(title: "User blocked", message: "", preferredStyle: .alert)
-            block.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
-                self.navigationController?.popViewController(animated: true)
-                self.navigationController?.popViewController(animated: true)
-            }))
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(GlobalVariables.userUID).removeValue()
-            self.updateFollowingButton(isFollowing: false)
-            self.present(block, animated: true, completion: nil)
-        }))
-        if let popoverController = alert.popoverPresentationController {
-          popoverController.sourceView = self.view
-          popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-        }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
     @objc func ratingsButtonPressed() {
         if self.ratingNumber != 0 {
             let controller = RatingsController()
             controller.allRatings = self.allRatings
+//            controller.user = Auth.auth().currentUser!.uid
             controller.finalRating = self.finalNumber
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     
-    func addEtraView() {
-        self.view.addSubview(self.noServiceImage)
-        self.noServiceImage.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: 50).isActive = true
-        self.noServiceImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.noServiceImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        self.noServiceImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        self.view.addSubview(self.noServiceLabel)
-        self.noServiceLabel.topAnchor.constraint(equalTo: self.noServiceImage.bottomAnchor, constant: 25).isActive = true
-        self.noServiceLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        self.noServiceLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-        self.noServiceLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        
-        self.noServiceImage.alpha = 1
-        self.noServiceLabel.alpha = 1
+    @objc func followersButtonPressed() {
+        print("followed pressed")
+        let controller = FollowersController()
+        controller.followers = self.followers
+        self.present(controller, animated: true, completion: nil)
     }
     
-    func removeEtraView() {
-        self.noServiceImage.alpha = 0
-        self.noServiceLabel.alpha = 0
+    @objc func segmentedControlValueChanged(_ semder: UISegmentedControl) {
+        if self.segmentedControl.selectedSegmentIndex == 0 {
+            UIView.animate(withDuration: 0.5) {
+                self.tableView.alpha = 1
+            } completion: { (complete) in
+                self.tableView.reloadData()
+            }
+        } else if segmentedControl.selectedSegmentIndex == 1 {
+            UIView.animate(withDuration: 0.5) {
+                self.tableView.alpha = 1
+            } completion: { (complete) in
+                self.tableView.reloadData()
+            }
+        } else if segmentedControl.selectedSegmentIndex == 2 {
+            let gallery = Gallery()
+            gallery.userId = Auth.auth().currentUser!.uid
+            self.present(gallery, animated: true, completion: nil)
+            self.segmentedControl.selectedSegmentIndex = 0
+        } else if segmentedControl.selectedSegmentIndex == 3 {
+            UIView.animate(withDuration: 0.5) {
+                self.tableView.alpha = 1
+            } completion: { (complete) in
+                self.tableView.reloadData()
+            }
+        } else {
+            let infoPage = InfoPage()
+            infoPage.rating = finalRating ?? 0
+            infoPage.followers = self.followers.count
+            let user = UserStructure()
+            user.uid = Auth.auth().currentUser!.uid
+            infoPage.user = user
+            self.present(infoPage, animated: true, completion: nil)
+            self.segmentedControl.selectedSegmentIndex = 0
+        }
     }
+    
+    @objc func setFollowPeople() {
+        print("followers:")
+        self.fourthImportantView.addSubview(followersButton)
+        self.followersButton.topAnchor.constraint(equalTo: self.fourthImportantView.topAnchor).isActive = true
+        self.followersButton.leftAnchor.constraint(equalTo: self.fourthImportantView.leftAnchor).isActive = true
+        self.followersButton.rightAnchor.constraint(equalTo: self.fourthImportantView.rightAnchor).isActive = true
+        self.followersButton.bottomAnchor.constraint(equalTo: self.fourthImportantView.bottomAnchor).isActive = true
+        self.fourthTitleLabel.text = "\(self.iamfollowedby)"
+    }
+    
+    @objc func deletePostPressed() {
+        Database.database().reference().child("Jobs").child(self.myJobs[indexTappeedd].postId!).removeValue()
+        self.filterLauncher.handleDismiss()
+        self.viewDidLoad()
+    }
+    
 
-}
+    /*
+    // MARK: - Navigation
 
-class OtherProfileCell: UITableViewCell {
-    
-    var postId = ""
-    
-    let postImageView : UIImageView = {
-        let imageView = UIImageView()
-        imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 15
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
-    let informationView : UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.white
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.1
-        view.layer.shadowRadius = 10
-        view.layer.cornerRadius = 15
-        return view
-    }()
-    
-    let titleJob : UILabel = {
-        let label = UILabel()
-        label.text = "Name"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.black
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.numberOfLines = 1
-        return label
-    }()
-    
-    let saleNumber : UILabel = {
-        let label = UILabel()
-        label.text = "Sales"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = UIColor.darkGray
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.numberOfLines = 2
-        return label
-    }()
-    
-    let priceNumber : UILabel = {
-        let label = UILabel()
-        label.text = "Cost"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        label.textColor = UIColor.black
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .right
-        return label
-    }()
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        self.selectionStyle = .none
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
     }
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        isUserInteractionEnabled = true
-            
-        addSubview(informationView)
-        informationView.topAnchor.constraint(equalTo: self.topAnchor, constant: 25).isActive = true
-        informationView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
-        informationView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 25).isActive = true
-        informationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -25).isActive = true
-        
-        informationView.addSubview(postImageView)
-        postImageView.topAnchor.constraint(equalTo: informationView.topAnchor, constant: -10).isActive = true
-        postImageView.leftAnchor.constraint(equalTo: informationView.leftAnchor, constant: -10).isActive = true
-        postImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        postImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
-        informationView.addSubview(priceNumber)
-        priceNumber.topAnchor.constraint(equalTo: informationView.topAnchor, constant: 10).isActive = true
-        priceNumber.rightAnchor.constraint(equalTo: informationView.rightAnchor, constant: -10).isActive = true
-        priceNumber.heightAnchor.constraint(equalToConstant: 25).isActive = true
-        priceNumber.widthAnchor.constraint(equalToConstant: 60).isActive = true
-        
-        informationView.addSubview(titleJob)
-        titleJob.topAnchor.constraint(equalTo: self.informationView.topAnchor, constant: 10).isActive = true
-        titleJob.rightAnchor.constraint(equalTo: priceNumber.leftAnchor).isActive = true
-        titleJob.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
-        titleJob.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        informationView.addSubview(saleNumber)
-        saleNumber.topAnchor.constraint(equalTo: self.titleJob.bottomAnchor, constant: -5).isActive = true
-        saleNumber.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -25).isActive = true
-        saleNumber.leftAnchor.constraint(equalTo: self.postImageView.rightAnchor, constant: 25).isActive = true
-        saleNumber.heightAnchor.constraint(equalToConstant: 45).isActive = true
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    */
+
 }

@@ -17,6 +17,7 @@ import MBProgressHUD
 class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate {
     
     let imageArray = ["auto-sq", "scissor-sq", "carperter-sq", "clean-sq", "moving-sq", "hair-sq", "NAIL", "phone-sq", "towing-sq", "other-sq"]
+    
     let titles = ["Auto", "Barber", "Carpentry", "Cleaning", "Moving", "Salon", "Beauty", "Technology", "Towing", "Other"]
     
     let imagePicker = UIImagePickerController()
@@ -24,10 +25,15 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     let launcher = FeedbackLauncher()
     
     var timer : Timer?
+    
     var estimateWidth = 160.0
+    
     var cellMarginSize = 5
+    
     var allJobs = [JobStructure]()
+    
     var passingImage : UIImage?
+    
     var openingFromNotification = false
     
     let scrollView : UIScrollView = {
@@ -476,6 +482,16 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (photoSnap) in
+            if let photoUrl = photoSnap.value as? String {
+                self.scrollView.bringSubviewToFront(self.myImageView)
+                self.loadImage(string: photoUrl, indexPath: 0) { [weak self] (image) in
+                    guard let self = self, let image = image else { return }
+                    self.myImageView.image = image
+                }
+            }
+        }
+        
         self.observeMessages()
         
         if self.openingFromNotification == true {
@@ -646,15 +662,6 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         self.collectView!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell")
         self.collectView!.register(HomeCategoryCellOther.self, forCellWithReuseIdentifier: "collectViewCell")
         self.scrollView.addSubview(collectView!)
-        
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (photoSnap) in
-            if let photoUrl = photoSnap.value as? String {
-                self.scrollView.bringSubviewToFront(self.myImageView)
-                self.myImageView.loadImageUsingCacheWithUrlString(photoUrl)
-            }
-        }
-        
-//        scrollView.sendSubviewToBack(viewAllButton)
     }
     
     func basicSetup() {
@@ -717,14 +724,38 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     
+    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: string)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+    
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.myCollectionView {
             let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
             myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
             
-            if let urlAddress = self.allJobs[indexPath.row].imagePost {
-                let url = URL(string: urlAddress)
-                myCell.firstServiceImage.loadImage(from: url!)
+            let itemNumber = NSNumber(value: indexPath.row)
+            if let cachedImage = self.cache.object(forKey: itemNumber) {
+                print("gut")
+                myCell.firstServiceImage.image = cachedImage
+            } else {
+                print("cschlecht")
+                self.loadImage(string: self.allJobs[indexPath.row].imagePost!, indexPath: Int(indexPath.row)) { [weak self] (image) in
+                    guard let self = self, let image = image else { return }
+                    myCell.firstServiceImage.image = image
+                    self.cache.setObject(image, forKey: itemNumber)
+                }
             }
             
             myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
@@ -776,6 +807,10 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let profileImageUrl : String = (snapshot.value as? String) {
                     controller.profileImage.loadImage(from: URL(string: profileImageUrl)!)
+                    self.loadImage(string: profileImageUrl, indexPath: 0) { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        controller.profileImage.image = image
+                    }
                     GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
                     GlobalVariables.postId = self.allJobs[indexPath.row].postId!
                     GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
@@ -793,7 +828,10 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
             Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let profileImageUrl : String = (snapshot.value as? String) {
-                    controller.profileImage.loadImage(from: URL(string: profileImageUrl)!)
+                    self.loadImage(string: profileImageUrl, indexPath: 0) { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        controller.profileImage.image = image
+                    }
                     GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
                     GlobalVariables.postId = self.allJobs[indexPath.row].postId!
                     GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
@@ -1036,6 +1074,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     @objc func profileImagePressed() {
         let controller = MyProfile()
+//        let controller = Profile()
         controller.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(controller, animated: true)
     }

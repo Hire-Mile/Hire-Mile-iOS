@@ -12,17 +12,23 @@ import FirebaseAuth
 import FirebaseDatabase
 import ScrollableSegmentedControl
 
-protocol MyTableViewCellDelegate {
-    func didTapEditButton(withIndex: Int)
-    func didTapDeleteButton(withIndex: Int)
-}
-
-protocol MyTableViewCellDelegate2 {
-    func didTapEditButton(withIndex: Int)
-    func didTapDeleteButton(withIndex: Int)
-}
-
 class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate, MyTableViewCellDelegate2 {
+    
+    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: string)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+    
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
     
     var indexPathrow = 0
     var indexTappeedd = 0
@@ -386,7 +392,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     let noServiceImage : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.image = UIImage(named: "not-service")
+        imageView.image = UIImage(named: "not-service")
         return imageView
     }()
     
@@ -394,9 +400,9 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 20)
-//        label.text = "No Services"
+        label.text = "No Services"
         label.textAlignment = NSTextAlignment.center
-        label.textColor = UIColor.black
+        label.textColor = UIColor(red: 179/255, green: 185/255, blue: 196/255, alpha: 1)
         return label
     }()
 
@@ -795,16 +801,32 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.segmentedControl.selectedSegmentIndex == 0 {
             if self.myJobs.count == 0 {
+                self.noServiceImage.image = UIImage(named: "not-service")!
+                self.noServiceLabel.text = "No Services"
                 self.addEtraView()
             } else {
                 self.removeEtraView()
             }
             return myJobs.count
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
+            if self.allRatings.count == 0 {
+                self.noServiceImage.image = UIImage(named: "no-review")!
+                self.noServiceLabel.text = "No Reviews"
+                self.addEtraView()
+            } else {
+                self.removeEtraView()
+            }
             return allRatings.count
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
             return self.allRatings.count
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
+            if self.followers.count == 0 {
+                self.noServiceImage.image = UIImage(named: "no-service")!
+                self.noServiceLabel.text = "No Followers"
+                self.addEtraView()
+            } else {
+                self.removeEtraView()
+            }
             return self.followers.count
         } else {
             if self.myJobs.count == 0 {
@@ -818,13 +840,13 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     
     func addEtraView() {
         self.view.addSubview(self.noServiceImage)
-        self.noServiceImage.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: 20).isActive = true
+        self.noServiceImage.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: 50).isActive = true
         self.noServiceImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        self.noServiceImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        self.noServiceImage.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        self.noServiceImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        self.noServiceImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
         
         self.view.addSubview(self.noServiceLabel)
-        self.noServiceLabel.topAnchor.constraint(equalTo: self.noServiceImage.bottomAnchor, constant: 10).isActive = true
+        self.noServiceLabel.topAnchor.constraint(equalTo: self.noServiceImage.bottomAnchor, constant: 25).isActive = true
         self.noServiceLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         self.noServiceLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         self.noServiceLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
@@ -1053,7 +1075,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+            let controller = ViewPostController()
             GlobalVariables.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
             GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
             GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
@@ -1061,7 +1083,15 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             GlobalVariables.authorId = self.myJobs[indexPath.row].authorName!
             GlobalVariables.postId = self.myJobs[indexPath.row].postId!
             GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
-            self.navigationController?.pushViewController(ViewPostController(), animated: true)
+            Database.database().reference().child("Users").child(self.myJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
+                if let name : String = (snapshot.value as? String) {
+                    self.loadImage(string: name, indexPath: 0) { [weak self] (image) in
+                        guard let self = self, let image = image else { return }
+                        controller.profileImage.image = image
+                    }
+                }
+            }
+            self.navigationController?.pushViewController(controller, animated: true)
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             if let uid = self.allRatings[indexPath.row].userUid {
                 GlobalVariables.userUID = uid

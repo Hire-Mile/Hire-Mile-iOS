@@ -14,6 +14,22 @@ import FirebaseDatabase
 
 class ViewPostController: UIViewController, UITextFieldDelegate {
     
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
+    
+    private func loadImage(indexPath: Int, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: GlobalVariables.postImageDownlodUrl)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+    
     var postId = ""
     var authorId = ""
     
@@ -21,8 +37,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     
     var height : CGFloat = 0
     
-    let carousel : CustomImageView = {
-        let carousel = CustomImageView()
+    let carousel : UIImageView = {
+        let carousel = UIImageView()
         carousel.contentMode = .scaleAspectFill
         carousel.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         carousel.translatesAutoresizingMaskIntoConstraints = false
@@ -156,9 +172,13 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         // Functions to throw
         
-        let url = URL(string: GlobalVariables.postImageDownlodUrl)
-        self.carousel.kf.setImage(with: url)
-        GlobalVariables.postImageDownlodUrl = ""
+//        let url = URL(string: GlobalVariables.postImageDownlodUrl)
+//        self.carousel.kf.setImage(with: url)
+//        GlobalVariables.postImageDownlodUrl = ""
+        self.loadImage(indexPath: 0) { [weak self] (image) in
+            guard let self = self, let image = image else { return }
+            self.carousel.image = image
+        }
         self.titleLabel.text = GlobalVariables.postTitle
         self.descriptionLabel.text = GlobalVariables.postDescription
         self.height = self.estimateFrameForText(text: self.descriptionLabel.text!).height

@@ -16,6 +16,22 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let cashInAlert = CashInAlert()
     
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
+    
+    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: string)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+    
     let titles = ["Style", "Style"]
     let descriptions = ["Message", "Message"]
     var tTimer : Timer?
@@ -354,10 +370,22 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 let string = date.toStringWithRelativeTime()
                 cell.timeStamp.text = string
             }
+            let itemNumber = NSNumber(value: indexPath.row)
             if let image = self.notifications[indexPath.row].senderId {
+                
                 Database.database().reference().child("Users").child(image).child("profile-image").observe(.value) { (snapshot) in
                     if let imageurl = snapshot.value as? String {
-                        cell.profileImageView.loadImage(from: URL(string: imageurl)!)
+                        if let cachedImage = self.cache.object(forKey: itemNumber) {
+                            print("gut")
+                            cell.profileImageView.image = cachedImage
+                        } else {
+                            print("cschlecht")
+                            self.loadImage(string: imageurl, indexPath: Int(indexPath.row)) { [weak self] (image) in
+                                guard let self = self, let image = image else { return }
+                                cell.profileImageView.image = image
+                                self.cache.setObject(image, forKey: itemNumber)
+                            }
+                        }
                     }
                 }
             }
@@ -583,6 +611,9 @@ class NotificationCell: UITableViewCell {
 
 class MessagesCellCell: UITableViewCell {
     
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
+    
     var message : Message? {
         didSet {
             self.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
@@ -618,13 +649,29 @@ class MessagesCellCell: UITableViewCell {
                     } else {
                         if let photoString = dictionary["profile-image"] as? String {
                             self.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-                            self.profileImageView.loadImage(from: URL(string: photoString)!)
+                            self.loadImageith(string: photoString) { [weak self] (image) in
+                                guard let self = self, let image = image else { return }
+                                self.profileImageView.image = image
+                            }
                         }
                     }
                 }
             }
         }
     }
+    
+    private func loadImageith(string: String, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: string)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
     
     let profileButton : UIButton = {
         let button = UIButton()

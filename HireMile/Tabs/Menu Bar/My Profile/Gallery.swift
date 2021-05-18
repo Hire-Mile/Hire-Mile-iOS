@@ -12,6 +12,22 @@ import MBProgressHUD
 
 class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
+            utilityQueue.async {
+                let url = URL(string: string)!
+                
+                guard let data = try? Data(contentsOf: url) else { return }
+                let image = UIImage(data: data)
+                
+                DispatchQueue.main.async {
+                    completion(image)
+                }
+            }
+        }
+    
+    private let cache = NSCache<NSNumber, UIImage>()
+    private let utilityQueue = DispatchQueue.global(qos: .utility)
+    
     private let mainButton : MainButton = {
         let mainButton = MainButton(title: "Add Photos")
         mainButton.addTarget(self, action: #selector(addButtonPressed), for: UIControl.Event.touchUpInside)
@@ -42,6 +58,23 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
     var imageView : UIImageView?
     
     var collectionView : UICollectionView?
+    
+    let noServiceImage : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "succes-fed-cam")
+        return imageView
+    }()
+    
+    let noServiceLabel : UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.text = "Gallery Empty"
+        label.textAlignment = NSTextAlignment.center
+        label.textColor = UIColor(red: 179/255, green: 185/255, blue: 196/255, alpha: 1)
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,14 +179,30 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if images.count == 0 {
+            addEtraView()
+        } else {
+            removeEtraView()
+        }
         return images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "galeryCellID", for: indexPath) as! GalleryCell
-        if let url = images[indexPath.row].url {
-            cell.myImageView.loadImage(from: URL(string: url)!)
+        
+        let itemNumber = NSNumber(value: indexPath.row)
+        if let cachedImage = self.cache.object(forKey: itemNumber) {
+            print("gut")
+            cell.myImageView.image = cachedImage
+        } else {
+            print("cschlecht")
+            self.loadImage(string: self.images[indexPath.row].url!, indexPath: Int(indexPath.row)) { [weak self] (image) in
+                guard let self = self, let image = image else { return }
+                cell.myImageView.image = image
+                self.cache.setObject(image, forKey: itemNumber)
+            }
         }
+        
         cell.myImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
         return cell
     }
@@ -224,6 +273,28 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
         }
     }
     
+    func addEtraView() {
+        self.view.addSubview(self.noServiceImage)
+        self.noServiceImage.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -200).isActive = true
+        self.noServiceImage.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        self.noServiceImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        self.noServiceImage.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        self.view.addSubview(self.noServiceLabel)
+        self.noServiceLabel.topAnchor.constraint(equalTo: self.noServiceImage.bottomAnchor, constant: 25).isActive = true
+        self.noServiceLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        self.noServiceLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        self.noServiceLabel.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        
+        self.noServiceImage.alpha = 1
+        self.noServiceLabel.alpha = 1
+    }
+    
+    func removeEtraView() {
+        self.noServiceImage.alpha = 0
+        self.noServiceLabel.alpha = 0
+    }
+    
     func performZoomInForStartingImageView(startingImageView: UIImageView) {
         
         startingFrame = startingImageView.superview?.convert((startingImageView.frame), to: nil)
@@ -265,11 +336,11 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
     }
     
     @objc func globalCheck() {
-        print("global variabling")
-        if GlobalVariables.imageGalleryId != "" {
-            print("global variabling2")
-            backend(withUid: GlobalVariables.imageGalleryId)
-        }
+//        print("global variabling")
+//        if GlobalVariables.imageGalleryId != "" {
+//            print("global variabling2")
+//            backend(withUid: GlobalVariables.imageGalleryId)
+//        }
     }
     
     @objc func handleZoomOut(tapGesture: UITapGestureRecognizer) {
