@@ -747,10 +747,8 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             
             let itemNumber = NSNumber(value: indexPath.row)
             if let cachedImage = self.cache.object(forKey: itemNumber) {
-                print("gut")
                 myCell.firstServiceImage.image = cachedImage
             } else {
-                print("cschlecht")
                 self.loadImage(string: self.allJobs[indexPath.row].imagePost!, indexPath: Int(indexPath.row)) { [weak self] (image) in
                     guard let self = self, let image = image else { return }
                     myCell.firstServiceImage.image = image
@@ -903,7 +901,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     @objc func buttonLearnMoreTapped() {
-        let url = URL(string: "https://hiremile.com")!
+        let url = URL(string: "https://hiremileapp.netlify.app/")!
         UIApplication.shared.open(url)
     }
     
