@@ -936,7 +936,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     let myView : UIView = {
         let myView = UIView()
         myView.translatesAutoresizingMaskIntoConstraints = false
-        myView.backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        myView.backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
         return myView
     }()
     
@@ -944,7 +944,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         let jobTitle = UILabel()
         jobTitle.text = "Service Title"
         jobTitle.textColor = UIColor.black
-        jobTitle.font = UIFont.boldSystemFont(ofSize: 24)
+        jobTitle.font = UIFont.boldSystemFont(ofSize: 20)
         jobTitle.translatesAutoresizingMaskIntoConstraints = false
         jobTitle.textAlignment = NSTextAlignment.center
         return jobTitle
@@ -960,7 +960,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         myView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         
         let infoView = UIView()
-        infoView.backgroundColor = UIColor.white
+        infoView.backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1)
         infoView.layer.cornerRadius = 20
         infoView.translatesAutoresizingMaskIntoConstraints = false
         myView.addSubview(infoView)
@@ -976,25 +976,25 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         postImageView.layer.masksToBounds = true
         postImageView.translatesAutoresizingMaskIntoConstraints = false
         myView.addSubview(postImageView)
-        postImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        postImageView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        postImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        postImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
         postImageView.centerYAnchor.constraint(equalTo: infoView.topAnchor, constant: 35).isActive = true
         postImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
         infoView.addSubview(jobTitle)
-        jobTitle.topAnchor.constraint(equalTo: postImageView.bottomAnchor).isActive = true
+        jobTitle.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 23).isActive = true
         jobTitle.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 0).isActive = true
         jobTitle.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: 0).isActive = true
-        jobTitle.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        jobTitle.heightAnchor.constraint(equalToConstant: 25).isActive = true
 
         let priceTitle = UILabel()
         priceTitle.text = "Price"
         priceTitle.textColor = UIColor.black
-        priceTitle.font = UIFont.boldSystemFont(ofSize: 22)
+        priceTitle.font = UIFont.systemFont(ofSize: 25)
         priceTitle.translatesAutoresizingMaskIntoConstraints = false
         priceTitle.textAlignment = NSTextAlignment.center
         infoView.addSubview(priceTitle)
-        priceTitle.topAnchor.constraint(equalTo: jobTitle.bottomAnchor, constant: -5).isActive = true
+        priceTitle.topAnchor.constraint(equalTo: jobTitle.bottomAnchor, constant: 4).isActive = true
         priceTitle.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 0).isActive = true
         priceTitle.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: 0).isActive = true
         priceTitle.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -1003,13 +1003,14 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         messageDescription.translatesAutoresizingMaskIntoConstraints = false
         messageDescription.text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
         messageDescription.numberOfLines = 6
+        messageDescription.font = UIFont.systemFont(ofSize: 14)
         messageDescription.textColor = UIColor.darkGray
         messageDescription.textAlignment = NSTextAlignment.center
         infoView.addSubview(messageDescription)
         messageDescription.topAnchor.constraint(equalTo: priceTitle.bottomAnchor, constant: 15).isActive = true
         messageDescription.rightAnchor.constraint(equalTo: infoView.rightAnchor, constant: -15).isActive = true
         messageDescription.leftAnchor.constraint(equalTo: infoView.leftAnchor, constant: 15).isActive = true
-        messageDescription.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -120).isActive = true
+        messageDescription.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -150).isActive = true
 
         let buttonView = UIView()
         buttonView.translatesAutoresizingMaskIntoConstraints = false
@@ -1020,13 +1021,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         buttonView.bottomAnchor.constraint(equalTo: infoView.bottomAnchor, constant: -15).isActive = true
 
         let declineButton = UIButton(type: .system)
-        declineButton.setTitle("DECLINE", for: .normal)
-        declineButton.setTitleColor(UIColor.darkGray, for: .normal)
-        declineButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        declineButton.setTitle("Decline", for: .normal)
+        declineButton.setTitleColor(UIColor.mainBlue, for: .normal)
+        declineButton.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         declineButton.addTarget(self, action: #selector(decline), for: .touchUpInside)
-        declineButton.layer.cornerRadius = 25
-        declineButton.layer.borderWidth = 2
-        declineButton.layer.borderColor = UIColor.darkGray.cgColor
         declineButton.translatesAutoresizingMaskIntoConstraints = false
         infoView.addSubview(declineButton)
         declineButton.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 10).isActive = true
@@ -1034,13 +1032,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         declineButton.widthAnchor.constraint(equalToConstant: self.view.frame.width / 3).isActive = true
         declineButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
-        let acceptButton = UIButton(type: .system)
-        acceptButton.setTitle("ACCEPT", for: .normal)
+        let acceptButton = MainButton(title: "Accept")
         acceptButton.setTitleColor(UIColor.white, for: .normal)
-        acceptButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        acceptButton.backgroundColor = UIColor.mainBlue
+        acceptButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         acceptButton.addTarget(self, action: #selector(accept), for: .touchUpInside)
-        acceptButton.layer.cornerRadius = 25
         acceptButton.translatesAutoresizingMaskIntoConstraints = false
         infoView.addSubview(acceptButton)
         acceptButton.topAnchor.constraint(equalTo: buttonView.topAnchor, constant: 10).isActive = true
