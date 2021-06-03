@@ -56,5 +56,7 @@ target 'HireMile' do
   pod 'JGProgressHUD'
   
   pod 'SwiftyJSON'
+  
+  pod 'SDWebImage'
 
 end
