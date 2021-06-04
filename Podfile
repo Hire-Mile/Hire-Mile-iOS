@@ -23,11 +23,7 @@ target 'HireMile' do
   
   pod 'Firebase/Storage'
   
-  pod 'SVProgressHUD'
-  
   pod 'MBProgressHUD'
-  
-  pod 'NVActivityIndicatorView'
   
   pod 'GoogleSignIn'
   

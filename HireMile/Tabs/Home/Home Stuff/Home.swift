@@ -827,6 +827,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         menu = SideMenuNavigationController(rootViewController: MenuListController())
         menu?.leftSide = true
         menu?.menuWidth = self.view.frame.width - 50
+        menu?.dismissOnPush = false
         SideMenuManager.default.leftMenuNavigationController = menu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
     }
@@ -1325,27 +1326,32 @@ class MenuListController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             print("profile")
+            dismiss(animated: true, completion: nil)
             let controller = MyProfile()
             controller.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(controller, animated: true)
+            self.navigationController?.pushViewController(controller, animated: false)
         } else {
             switch indexPath.row {
             case 0:
+                dismiss(animated: true, completion: nil)
                 let controller = MyJobs()
                 controller.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(controller, animated: true)
+                self.navigationController?.pushViewController(controller, animated: false)
             case 1:
+                dismiss(animated: true, completion: nil)
                 let controller = MyReviews()
                 controller.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(controller, animated: true)
+                self.navigationController?.pushViewController(controller, animated: false)
             case 2:
+                dismiss(animated: true, completion: nil)
                 let controller = Favorites()
                 controller.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(controller, animated: true)
+                self.navigationController?.pushViewController(controller, animated: false)
             case 3:
+                dismiss(animated: true, completion: nil)
                 let controller = Settings()
                 controller.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(controller, animated: true)
+                self.navigationController?.pushViewController(controller, animated: false)
             case 4:
                 self.signOut()
             case 5:

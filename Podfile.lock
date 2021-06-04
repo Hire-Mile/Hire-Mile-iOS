@@ -138,9 +138,6 @@ PODS:
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
   - JGProgressHUD (2.2)
-  - Kingfisher (5.15.8):
-    - Kingfisher/Core (= 5.15.8)
-  - Kingfisher/Core (5.15.8)
   - leveldb-library (1.22)
   - MBProgressHUD (1.2.0)
   - nanopb (1.30905.0):
@@ -148,9 +145,6 @@ PODS:
     - nanopb/encode (= 1.30905.0)
   - nanopb/decode (1.30905.0)
   - nanopb/encode (1.30905.0)
-  - NVActivityIndicatorView (5.0.1):
-    - NVActivityIndicatorView/Base (= 5.0.1)
-  - NVActivityIndicatorView/Base (5.0.1)
   - PhoneNumberKit (3.3.3):
     - PhoneNumberKit/PhoneNumberKitCore (= 3.3.3)
     - PhoneNumberKit/UIKit (= 3.3.3)
@@ -160,9 +154,11 @@ PODS:
   - PromisesObjC (1.2.10)
   - Protobuf (3.14.0)
   - ScrollableSegmentedControl (1.5.0)
+  - SDWebImage (5.11.0):
+    - SDWebImage/Core (= 5.11.0)
+  - SDWebImage/Core (5.11.0)
   - SideMenu (6.5.0)
   - STPopup (1.8.7)
-  - SVProgressHUD (2.2.5)
   - SwiftyJSON (5.0.0)
   - ZKCarousel (1.1.0)
 
@@ -181,14 +177,12 @@ DEPENDENCIES:
   - FSCalendar
   - GoogleSignIn
   - JGProgressHUD
-  - Kingfisher
   - MBProgressHUD
-  - NVActivityIndicatorView
   - PhoneNumberKit
   - ScrollableSegmentedControl
+  - SDWebImage
   - SideMenu
   - STPopup
-  - SVProgressHUD
   - SwiftyJSON
   - ZKCarousel
 
@@ -220,18 +214,16 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - JGProgressHUD
-    - Kingfisher
     - leveldb-library
     - MBProgressHUD
     - nanopb
-    - NVActivityIndicatorView
     - PhoneNumberKit
     - PromisesObjC
     - Protobuf
     - ScrollableSegmentedControl
+    - SDWebImage
     - SideMenu
     - STPopup
-    - SVProgressHUD
     - SwiftyJSON
     - ZKCarousel
 
@@ -262,21 +254,19 @@ SPEC CHECKSUMS:
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   JGProgressHUD: d83d7a981b85d11205e19ff8ad5bb9c40571c847
-  Kingfisher: a3c03d702433fa6cfedabb2bddbe076fb8f2e902
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
-  NVActivityIndicatorView: 738e843cb8924e9e4fc3e559d0728031624bf860
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
   Protobuf: 0cde852566359049847168e51bd1c690e0f70056
   ScrollableSegmentedControl: 2e64bbe8968a7fcd8aae5014434481464fcdfe60
+  SDWebImage: 7acbb57630ac7db4a495547fb73916ff3e432f6b
   SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
   STPopup: a9045557bc48a0df51fbb7bf0544447c5fe84d34
-  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: e6af11aedd9b6c738a9d53a2fb3637e0b2c4f8bd
+PODFILE CHECKSUM: fd264ea8df86113752641ea043b3cea61ac470da
 
 COCOAPODS: 1.10.1
