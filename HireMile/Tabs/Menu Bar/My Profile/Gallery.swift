@@ -12,22 +12,6 @@ import MBProgressHUD
 
 class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
-    
     private let mainButton : MainButton = {
         let mainButton = MainButton(title: "Add Photos")
         mainButton.addTarget(self, action: #selector(addButtonPressed), for: UIControl.Event.touchUpInside)
@@ -189,20 +173,7 @@ class Gallery: UIViewController, UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "galeryCellID", for: indexPath) as! GalleryCell
-        
-        let itemNumber = NSNumber(value: indexPath.row)
-        if let cachedImage = self.cache.object(forKey: itemNumber) {
-            print("gut")
-            cell.myImageView.image = cachedImage
-        } else {
-            print("cschlecht")
-            self.loadImage(string: self.images[indexPath.row].url!, indexPath: Int(indexPath.row)) { [weak self] (image) in
-                guard let self = self, let image = image else { return }
-                cell.myImageView.image = image
-                self.cache.setObject(image, forKey: itemNumber)
-            }
-        }
-        
+        cell.myImageView.sd_setImage(with: URL(string: self.images[indexPath.row].url!), placeholderImage: nil, options: .retryFailed, completed: nil)
         cell.myImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
         return cell
     }

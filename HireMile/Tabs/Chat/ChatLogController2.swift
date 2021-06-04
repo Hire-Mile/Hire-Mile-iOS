@@ -9,7 +9,6 @@
 import UIKit
 import MapKit
 import Firebase
-import Kingfisher
 import FirebaseAuth
 import AVFoundation
 import MBProgressHUD

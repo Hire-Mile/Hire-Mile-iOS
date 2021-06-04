@@ -8,13 +8,13 @@
 
 import UIKit
 import Firebase
-
+import SDWebImage
 class ViewGalleryItemController: UIViewController {
     
     var url : String? {
         didSet {
             if let url = url {
-                imageView.loadImage(from: URL(string: url)!)
+                imageView.sd_setImage(with: URL(string: url)!, completed: nil)
             }
         }
     }

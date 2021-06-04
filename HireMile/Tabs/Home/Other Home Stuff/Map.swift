@@ -12,7 +12,7 @@ import Firebase
 import FirebaseAuth
 import MBProgressHUD
 import FirebaseDatabase
-
+import SDWebImage
 class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     let locationManager = CLLocationManager()
@@ -301,22 +301,6 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         self.navigationController?.navigationBar.isHidden = false
     }
     
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
-    
     @objc func viewPostSelected() {
         GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.imageUrl)
         GlobalVariables.postImageDownlodUrl = self.imageUrl
@@ -330,8 +314,8 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         let controller = ViewPostController()
         Database.database().reference().child("Users").child(authorOfPost).child("profile-image").observe(.value) { (snapshot) in
             if let profileImageUrl : String = (snapshot.value as? String) {
-                self.loadImage(string: profileImageUrl, indexPath: 0) { [weak self] (image) in
-                    guard let self = self, let image = image else { return }
+                controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)) { image, _, _, _ in
+                    guard let image = image else { return }
                     controller.profileImage.image = image
                     controller.hidesBottomBarWhenPushed = true
                     self.navigationController?.pushViewController(controller, animated: true)
@@ -426,7 +410,7 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                 Database.database().reference().child("Jobs").child(postId).child("image").observe(.value) { (imageSnap) in
                     if let postImageUrl : String = (imageSnap.value as? String) {
                         self.imageUrl = postImageUrl
-                        self.postImageView.kf.setImage(with: URL(string: postImageUrl)!)
+                        self.postImageView.sd_setImage(with: URL(string: postImageUrl)!, completed: nil)
                         Database.database().reference().child("Jobs").child(postId).child("title").observe(.value) { (titleSnap) in
                             if let titleOfJob : String = (titleSnap.value as? String) {
                                 self.titleOfPost.text = titleOfJob
@@ -442,7 +426,7 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                                                 self.authorOfPost = authString
                                                 Database.database().reference().child("Users").child(authString).child("profile-image").observe(.value) { (authImage) in
                                                     if let authImageUrl : String = (authImage.value as? String) {
-                                                        self.postAuthorImageView.kf.setImage(with: URL(string: authImageUrl)!)
+                                                        self.postAuthorImageView.sd_setImage(with: URL(string: authImageUrl)!, completed: nil)
                                                         Database.database().reference().child("Users").child(authString).child("name").observe(.value) { (authName) in
                                                             if let authNameString : String = (authName.value as? String) {
                                                                 self.authorName.text = authNameString

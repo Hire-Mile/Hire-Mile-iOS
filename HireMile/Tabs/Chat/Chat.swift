@@ -11,26 +11,10 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import ScrollableSegmentedControl
-
+import SDWebImage
 class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let cashInAlert = CashInAlert()
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
-    
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
     
     let titles = ["Style", "Style"]
     let descriptions = ["Message", "Message"]
@@ -375,17 +359,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 
                 Database.database().reference().child("Users").child(image).child("profile-image").observe(.value) { (snapshot) in
                     if let imageurl = snapshot.value as? String {
-                        if let cachedImage = self.cache.object(forKey: itemNumber) {
-                            print("gut")
-                            cell.profileImageView.image = cachedImage
-                        } else {
-                            print("cschlecht")
-                            self.loadImage(string: imageurl, indexPath: Int(indexPath.row)) { [weak self] (image) in
-                                guard let self = self, let image = image else { return }
-                                cell.profileImageView.image = image
-                                self.cache.setObject(image, forKey: itemNumber)
-                            }
-                        }
+                        cell.profileImageView.sd_setImage(with: URL(string: imageurl), placeholderImage: nil, options: .retryFailed, completed: nil)
                     }
                 }
             }
@@ -649,29 +623,13 @@ class MessagesCellCell: UITableViewCell {
                     } else {
                         if let photoString = dictionary["profile-image"] as? String {
                             self.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-                            self.loadImageith(string: photoString) { [weak self] (image) in
-                                guard let self = self, let image = image else { return }
-                                self.profileImageView.image = image
-                            }
+                            self.profileImageView.sd_setImage(with: URL(string: photoString), completed: nil)
                         }
                     }
                 }
             }
         }
     }
-    
-    private func loadImageith(string: String, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
     
     let profileButton : UIButton = {
         let button = UIButton()

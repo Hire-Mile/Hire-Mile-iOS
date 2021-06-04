@@ -35,7 +35,6 @@ target 'HireMile' do
   
   pod 'STPopup'
   
-  pod 'Kingfisher'
   
   pod 'ScrollableSegmentedControl'
   

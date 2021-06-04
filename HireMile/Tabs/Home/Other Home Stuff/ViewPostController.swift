@@ -11,24 +11,9 @@ import Firebase
 import ZKCarousel
 import FirebaseAuth
 import FirebaseDatabase
+import SDWebImage
 
 class ViewPostController: UIViewController, UITextFieldDelegate {
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
-    
-    private func loadImage(indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: GlobalVariables.postImageDownlodUrl)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
     
     var postId = ""
     var authorId = ""
@@ -175,10 +160,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
 //        let url = URL(string: GlobalVariables.postImageDownlodUrl)
 //        self.carousel.kf.setImage(with: url)
 //        GlobalVariables.postImageDownlodUrl = ""
-        self.loadImage(indexPath: 0) { [weak self] (image) in
-            guard let self = self, let image = image else { return }
-            self.carousel.image = image
-        }
+        self.carousel.sd_setImage(with: URL(string: GlobalVariables.postImageDownlodUrl)!, completed: nil)
         self.titleLabel.text = GlobalVariables.postTitle
         self.descriptionLabel.text = GlobalVariables.postDescription
         self.height = self.estimateFrameForText(text: self.descriptionLabel.text!).height

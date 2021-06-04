@@ -9,10 +9,10 @@
 import UIKit
 import SideMenu
 import Firebase
-import Kingfisher
 import FirebaseAuth
 import FirebaseDatabase
 import MBProgressHUD
+import SDWebImage
 
 class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate {
     
@@ -485,10 +485,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (photoSnap) in
             if let photoUrl = photoSnap.value as? String {
                 self.scrollView.bringSubviewToFront(self.myImageView)
-                self.loadImage(string: photoUrl, indexPath: 0) { [weak self] (image) in
-                    guard let self = self, let image = image else { return }
-                    self.myImageView.image = image
-                }
+                self.myImageView.sd_setImage(with: URL(string: photoUrl), completed: nil)
             }
         }
         
@@ -724,37 +721,12 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == self.myCollectionView {
             let myCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MyCell", for: indexPath) as! HomeCell
             myCell.firstServiceButton.addTarget(self, action: #selector(servicePressed), for: .touchUpInside)
             
-            let itemNumber = NSNumber(value: indexPath.row)
-            if let cachedImage = self.cache.object(forKey: itemNumber) {
-                myCell.firstServiceImage.image = cachedImage
-            } else {
-                self.loadImage(string: self.allJobs[indexPath.row].imagePost!, indexPath: Int(indexPath.row)) { [weak self] (image) in
-                    guard let self = self, let image = image else { return }
-                    myCell.firstServiceImage.image = image
-                    self.cache.setObject(image, forKey: itemNumber)
-                }
-            }
+            myCell.firstServiceImage.sd_setImage(with: URL(string: self.allJobs[indexPath.row].imagePost!), placeholderImage: nil, options: .retryFailed, completed: nil)
             
             myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
             if self.allJobs[indexPath.row].typeOfPrice == "Hourly" {
@@ -773,7 +745,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
 
             if let urlAddress = self.allJobs[indexPath.row].imagePost {
                 let url = URL(string: urlAddress)
-                myCell.firstServiceImage.loadImage(from: url!)
+                myCell.firstServiceImage.sd_setImage(with: url, completed: nil)
             }
 
             myCell.firstTitle.text = self.allJobs[indexPath.row].titleOfPost!
@@ -804,11 +776,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
             Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let profileImageUrl : String = (snapshot.value as? String) {
-                    controller.profileImage.loadImage(from: URL(string: profileImageUrl)!)
-                    self.loadImage(string: profileImageUrl, indexPath: 0) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        controller.profileImage.image = image
-                    }
+                    controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)!, completed: nil)
                     GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
                     GlobalVariables.postId = self.allJobs[indexPath.row].postId!
                     GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
@@ -826,10 +794,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
             GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
             Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let profileImageUrl : String = (snapshot.value as? String) {
-                    self.loadImage(string: profileImageUrl, indexPath: 0) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        controller.profileImage.image = image
-                    }
+                    controller.profileImage.sd_setImage(with: URL(string: profileImageUrl), completed: nil)
                     GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
                     GlobalVariables.postId = self.allJobs[indexPath.row].postId!
                     GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!

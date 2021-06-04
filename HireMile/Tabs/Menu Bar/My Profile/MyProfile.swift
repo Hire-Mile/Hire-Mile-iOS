@@ -11,24 +11,8 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 import ScrollableSegmentedControl
-
+import SDWebImage
 class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate, MyTableViewCellDelegate2 {
-    
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
     
     var indexPathrow = 0
     var indexTappeedd = 0
@@ -875,7 +859,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             cell.index = indexPath
             
             let url = URL(string: self.myJobs[indexPath.row].imagePost!)
-            cell.postImageView.kf.setImage(with: url)
+            cell.postImageView.sd_setImage(with: url, completed: nil)
             
             cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
             
@@ -1027,7 +1011,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
                         cell.profileImageView.tintColor = UIColor.lightGray
                         cell.profileImageView.contentMode = .scaleAspectFill
                     } else {
-                        cell.profileImageView.loadImage(from: URL(string: snapshot)!)
+                        cell.profileImageView.sd_setImage(with: URL(string: snapshot), placeholderImage: nil, options: .retryFailed, completed: nil)
                     }
                 }
                 
@@ -1085,10 +1069,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
             GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
             Database.database().reference().child("Users").child(self.myJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let name : String = (snapshot.value as? String) {
-                    self.loadImage(string: name, indexPath: 0) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        controller.profileImage.image = image
-                    }
+                    controller.profileImage.sd_setImage(with: URL(string: name), completed: nil)
                 }
             }
             self.navigationController?.pushViewController(controller, animated: true)
@@ -1117,7 +1098,7 @@ class MyProfile: UIViewController, UITableViewDelegate, UITableViewDataSource, M
     
     func didTapEditButton(withIndex index: Int) {
         let url = URL(string: self.myJobs[index].imagePost!)
-        GlobalVariables.imagePost.kf.setImage(with: url)
+        GlobalVariables.imagePost.sd_setImage(with: url, completed: nil)
         GlobalVariables.postImageDownlodUrl = self.myJobs[indexPathrow].imagePost!
         GlobalVariables.postTitle = self.myJobs[indexPathrow].titleOfPost!
         GlobalVariables.postDescription = self.myJobs[indexPathrow].descriptionOfPost!

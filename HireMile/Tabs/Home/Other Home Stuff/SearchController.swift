@@ -12,6 +12,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseDatabase
 import ScrollableSegmentedControl
+import SDWebImage
 
 class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -383,7 +384,8 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
             if self.isSearching {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Saefls", for: indexPath) as! SearchProfilkeCell
                 cell.labelName.text = self.userres[indexPath.row].name ?? "Deleted User"
-                cell.profileImageView.loadImage(from: URL(string: self.userres[indexPath.row].userimage ?? "error")!)
+                
+                cell.profileImageView.sd_setImage(with: URL(string: self.userres[indexPath.row].userimage ?? "error")!, placeholderImage: nil, options: .retryFailed, completed: nil)
                 cell.labelInfo.text = self.userres[indexPath.row].email ?? "Hiremile User"
                 
                 var numberOfPosts = 0
@@ -403,7 +405,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Saefls", for: indexPath) as! SearchProfilkeCell
                 cell.labelName.text = self.allUsers[indexPath.row].name ?? "Deleted User"
                 cell.labelInfo.text = self.allUsers[indexPath.row].email ?? "Hiremile User"
-                cell.profileImageView.loadImage(from: URL(string: self.allUsers[indexPath.row].userimage ?? "error")!)
+                cell.profileImageView.sd_setImage(with: URL(string: self.allUsers[indexPath.row].userimage ?? "error")!, placeholderImage: nil, options: .retryFailed, completed: nil)
                 
                 var numberOfPosts = 0
                 Database.database().reference().child("Jobs").observe(.childAdded, with: { (jobSnap) in
