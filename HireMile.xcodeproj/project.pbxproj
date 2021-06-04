@@ -111,6 +111,10 @@
 		78E02C4025A1C4BA00337370 /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E02C3F25A1C4BA00337370 /* PushNotificationSender.swift */; };
 		78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8F85425A33BE80021FD60 /* FeedbackController.swift */; };
 		78F8F85A25A482F30021FD60 /* ReviewObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8F85925A482F30021FD60 /* ReviewObject.swift */; };
+		AE669267266A5D5300A23EE0 /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE669265266A5D5300A23EE0 /* ProfileTableViewCell.swift */; };
+		AE669268266A5D5300A23EE0 /* ProfileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE669266266A5D5300A23EE0 /* ProfileTableViewCell.xib */; };
+		AE66926B266A64F100A23EE0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE66926A266A64F100A23EE0 /* UIView.swift */; };
+		AE66926D266A66D600A23EE0 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE66926C266A66D600A23EE0 /* NSObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -222,6 +226,10 @@
 		78F8F85925A482F30021FD60 /* ReviewObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewObject.swift; sourceTree = "<group>"; };
 		A17E2DBFD7B47B668A9B7953 /* Pods_HireMile.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HireMile.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9B2D249F428626F2B6339E7 /* Pods-HireMile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.debug.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.debug.xcconfig"; sourceTree = "<group>"; };
+		AE669265266A5D5300A23EE0 /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		AE669266266A5D5300A23EE0 /* ProfileTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileTableViewCell.xib; sourceTree = "<group>"; };
+		AE66926A266A64F100A23EE0 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		AE66926C266A66D600A23EE0 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		F3765C6420C496AAA66CBF98 /* Pods-HireMile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.release.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -312,6 +320,7 @@
 		78277F802576C06A00B8C7BD /* My Profile */ = {
 			isa = PBXGroup;
 			children = (
+				AE669264266A5C7100A23EE0 /* Cell */,
 				784C0E8625FB6F890075C6B5 /* MyProfile.swift */,
 				78767E0E25BEF7CF00CBF2B8 /* DeleteLauncher.swift */,
 				78D9FFC725BB148400F00EA1 /* EditPost.swift */,
@@ -356,6 +365,7 @@
 		784646C52561B841000C5F26 /* HireMile */ = {
 			isa = PBXGroup;
 			children = (
+				AE669269266A649300A23EE0 /* Extension */,
 				784646E325629499000C5F26 /* Hiremile.entitlements */,
 				784646C62561B841000C5F26 /* AppDelegate.swift */,
 				784646C82561B841000C5F26 /* SceneDelegate.swift */,
@@ -537,6 +547,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		AE669264266A5C7100A23EE0 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				AE669265266A5D5300A23EE0 /* ProfileTableViewCell.swift */,
+				AE669266266A5D5300A23EE0 /* ProfileTableViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		AE669269266A649300A23EE0 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				AE66926A266A64F100A23EE0 /* UIView.swift */,
+				AE66926C266A66D600A23EE0 /* NSObject.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -604,6 +632,7 @@
 				78295ACD2597CBAE00004CE7 /* TabStoryboard.storyboard in Resources */,
 				784646D02561B842000C5F26 /* Assets.xcassets in Resources */,
 				788D44FE257FDA79002AF9CB /* GoogleService-Info.plist in Resources */,
+				AE669268266A5D5300A23EE0 /* ProfileTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,6 +725,7 @@
 				78C0B8BB25878C45002866A9 /* JobStructure.swift in Sources */,
 				78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */,
 				78D9FFC525B8A23800F00EA1 /* FinishLauncher.swift in Sources */,
+				AE669267266A5D5300A23EE0 /* ProfileTableViewCell.swift in Sources */,
 				783056ED2654110A00484E73 /* Profile.swift in Sources */,
 				78C9A84425C2D43B008056FC /* CustomImageView.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
@@ -712,6 +742,7 @@
 				78295B1B2599133C00004CE7 /* NewMessageController.swift in Sources */,
 				7804EC90261BA24500F2C0D2 /* WelcomeScreen.swift in Sources */,
 				787B018825685BE600BBC392 /* Email.swift in Sources */,
+				AE66926B266A64F100A23EE0 /* UIView.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				78008CD22569B7DA005E4A15 /* ResetPassword.swift in Sources */,
 				7805676F26148719006ADEA9 /* SparkService.swift in Sources */,
@@ -779,6 +810,7 @@
 				784C0E8725FB6F890075C6B5 /* MyProfile.swift in Sources */,
 				784646DF2561C854000C5F26 /* PageCell.swift in Sources */,
 				785D000E2609C8300060622A /* Booking.swift in Sources */,
+				AE66926D266A66D600A23EE0 /* NSObject.swift in Sources */,
 				78767E1225BF1A6D00CBF2B8 /* CategoryCell.swift in Sources */,
 				784646DD2561C5A7000C5F26 /* SwipingController.swift in Sources */,
 				782F7DB12590E0560064100F /* HomeCatObject.swift in Sources */,

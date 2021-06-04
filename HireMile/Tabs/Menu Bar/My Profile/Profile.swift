@@ -15,12 +15,7 @@ protocol MyTableViewCellDelegate {
     func didTapDeleteButton(withIndex: Int)
 }
 
-protocol MyTableViewCellDelegate2 {
-    func didTapEditButton(withIndex: Int)
-    func didTapDeleteButton(withIndex: Int)
-}
-
-class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate, MyTableViewCellDelegate2 {
+class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var tblHeight : NSLayoutConstraint?
     
@@ -588,7 +583,7 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ProfileCell2.self, forCellReuseIdentifier: "profileCell")
+        tableView.register(UINib(nibName: ProfileTableViewCell.className, bundle: nil), forCellReuseIdentifier: ProfileTableViewCell.className)
         tableView.register(MyJobsCompletedgCell.self, forCellReuseIdentifier: "otherProfileCell")
         tableView.register(FavoritesCell.self, forCellReuseIdentifier: "followres")
         
@@ -825,8 +820,8 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
         Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.setFollowPeople), userInfo: nil, repeats: false)
     }
     
-    func didTapEditButton(withIndex index: Int) {
-        let url = URL(string: self.myJobs[index].imagePost!)
+    @objc func didTapEditButton(sender: UIButton) {
+        let url = URL(string: self.myJobs[sender.tag].imagePost!)
         GlobalVariables.imagePost.sd_setImage(with: url, completed: nil)
         GlobalVariables.postImageDownlodUrl = self.myJobs[indexPathrow].imagePost!
         GlobalVariables.postTitle = self.myJobs[indexPathrow].titleOfPost!
@@ -838,37 +833,36 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
         self.navigationController?.pushViewController(EditPost(), animated: true)
     }
     
-    func didTapDeleteButton(withIndex index: Int) {
-        print("hello, \(index)")
-        self.indexTappeedd = index
+    @objc func didTapDeleteButton(sender: UIButton) {
+        self.indexTappeedd = sender.tag
         self.filterLauncher.stopJob.addTarget(self, action: #selector(self.deletePostPressed), for: .touchUpInside)
         self.filterLauncher.showFilter()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell2
+            let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.className, for: indexPath) as! ProfileTableViewCell
             
             cell.selectionStyle = .none
-            cell.delegate = self
-            cell.index = indexPath
-            
             let url = URL(string: self.myJobs[indexPath.row].imagePost!)
-            cell.postImageView.sd_setImage(with: url, completed: nil)
+            cell.profileImageView.sd_setImage(with: url, completed: nil)
+            cell.titleLabel.text = self.myJobs[indexPath.row].titleOfPost!
             
-            cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
+            //cell.postId = self.myJobs[indexPath.row].postId!
             
-            cell.postId = self.myJobs[indexPath.row].postId!
-            
-            cell.saleNumber.text = self.myJobs[indexPath.row].descriptionOfPost!
+            cell.descriptionLabel.text = self.myJobs[indexPath.row].descriptionOfPost!
             
             if self.myJobs[indexPath.row].typeOfPrice == "Hourly" {
-                cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
+                cell.priceLabel.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
             } else {
-                cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
+                cell.priceLabel.text = "$\(self.myJobs[indexPath.row].price!)"
                 let rect = estimateFrameForText(text: String(self.myJobs[indexPath.row].price!)).width
-                cell.priceNumber.widthAnchor.constraint(equalToConstant: rect + 30).isActive = true
+                cell.priceLabel.widthAnchor.constraint(equalToConstant: rect + 30).isActive = true
             }
+            cell.editButton.tag = indexPath.row
+            cell.deleteButton.tag = indexPath.row
+            cell.editButton.addTarget(self, action: #selector(didTapEditButton(sender:)), for: .touchUpInside)
+            cell.deleteButton.addTarget(self, action: #selector(didTapDeleteButton(sender:)), for: .touchUpInside)
             
             return cell
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
@@ -1080,20 +1074,38 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
             self.navigationController?.pushViewController(OtherProfile(), animated: true)
         }
     }
+
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.segmentedControl.selectedSegmentIndex == 0 {
-            return 175
-        } else if self.segmentedControl.selectedSegmentIndex == 1 {
-            return 135
-        } else if self.segmentedControl.selectedSegmentIndex == 2 {
-            return 175
-        } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            return 80
-        } else {
-            return 150
+        switch self.segmentedControl.selectedSegmentIndex {
+            case 0:
+                return UITableView.automaticDimension
+            case 1:
+                return 135
+            case 2:
+                return 175
+            case 3:
+                return 80
+            default:
+                return 150
         }
     }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch self.segmentedControl.selectedSegmentIndex {
+            case 0:
+                return 175
+            case 1:
+                return 135
+            case 2:
+                return 175
+            case 3:
+                return 80
+            default:
+                return 150
+        }
+    }
+    
     
     func estimateFrameForText(text: String) -> CGRect {
         let size = CGSize(width: 200, height: 1000)
