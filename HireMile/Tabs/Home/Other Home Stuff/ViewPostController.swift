@@ -323,8 +323,10 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         // send uid
         Database.database().reference().child("Jobs").child(postId).child("author").observe(.value) { (snapshot) in
             if let profileUID : String = (snapshot.value as? String) {
-                GlobalVariables.userUID = profileUID
-                self.navigationController?.pushViewController(OtherProfile(), animated: true)
+                if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                    profileVC.userUID = profileUID
+                    self.navigationController?.pushViewController(profileVC,  animated: true)
+                }
             }
         }
         // following

@@ -887,8 +887,10 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         if GlobalVariables.presentToUserProfile == true {
-            GlobalVariables.userUID = GlobalVariables.userPresentationId
-            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                profileVC.userUID = GlobalVariables.userPresentationId
+                self.navigationController?.pushViewController(profileVC,  animated: true)
+            }
             GlobalVariables.presentToUserProfile = false
         }
         

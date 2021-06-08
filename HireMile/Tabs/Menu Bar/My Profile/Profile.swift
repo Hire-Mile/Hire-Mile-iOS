@@ -1064,14 +1064,18 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(controller, animated: true)
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             if let uid = self.allRatings[indexPath.row].userUid {
-                GlobalVariables.userUID = uid
-                self.navigationController?.pushViewController(OtherProfile(), animated: true)
+                if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                    profileVC.userUID = uid
+                    self.navigationController?.pushViewController(profileVC,  animated: true)
+                }
             }
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
             print("selected")
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            GlobalVariables.userUID = self.followers[indexPath.row].uid!
-            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                profileVC.userUID = self.followers[indexPath.row].uid!
+                self.navigationController?.pushViewController(profileVC,  animated: true)
+            }
         }
     }
 

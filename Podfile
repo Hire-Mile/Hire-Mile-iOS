@@ -31,7 +31,6 @@ target 'HireMile' do
   
   pod 'STPopup'
   
-  
   pod 'ScrollableSegmentedControl'
   
   pod 'Firebase/Crashlytics'
@@ -53,5 +52,7 @@ target 'HireMile' do
   pod 'SwiftyJSON'
   
   pod 'SDWebImage'
+  
+  pod 'Cosmos'
 
 end

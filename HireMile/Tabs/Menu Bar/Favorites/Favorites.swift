@@ -163,9 +163,10 @@ class Favorites: UITableViewController, FavoritesCellProtocol {
         let index = sender.tag
         Database.database().reference().child("Users").child(self.favorites[index].uid!).observe(.value) { (snapshot) in
             let profileUID : String = (snapshot.key as? String)!
-            print(profileUID)
-            GlobalVariables.userUID = profileUID
-            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                profileVC.userUID = profileUID
+                self.navigationController?.pushViewController(profileVC,  animated: true)
+            }
         }
     }
     

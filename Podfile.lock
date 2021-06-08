@@ -5,6 +5,7 @@ PODS:
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
   - BulletinBoard (4.1.2)
+  - Cosmos (23.0.0)
   - DatePickerDialog (4.0)
   - FacebookCore (0.9.0):
     - FBSDKCoreKit (~> 5.0)
@@ -164,6 +165,7 @@ PODS:
 
 DEPENDENCIES:
   - BulletinBoard
+  - Cosmos
   - DatePickerDialog
   - FacebookCore
   - FacebookLogin
@@ -190,6 +192,7 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - BulletinBoard
+    - Cosmos
     - DatePickerDialog
     - FacebookCore
     - FacebookLogin
@@ -230,6 +233,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   BulletinBoard: 1c0cb191b6c6245d08f51bd2445f1e36414ec0ed
+  Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
   DatePickerDialog: ccff2f91ff7a018057a4d72fa5ad6de49c8cb0cd
   FacebookCore: ba86524b66cfa86d0f8e65d08faa8504a9f732dd
   FacebookLogin: 6cee9fd6e1fe976fe8f7eec199e27b28b14f5d63
@@ -267,6 +271,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: fd264ea8df86113752641ea043b3cea61ac470da
+PODFILE CHECKSUM: 7407db3c337d1f98862cff69814f0153655a7b38
 
 COCOAPODS: 1.10.1

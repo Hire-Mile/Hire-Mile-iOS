@@ -89,9 +89,10 @@ class FollowersController: UITableViewController, FavoritesCellProtocol {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let profileUID : String = self.followers[indexPath.row].uid {
-            GlobalVariables.userUID = profileUID
-            let controller = OtherProfile()
-            self.present(controller, animated: true, completion: nil)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                profileVC.userUID = profileUID
+                self.present(profileVC, animated: true, completion: nil)
+            }
         }
     }
     

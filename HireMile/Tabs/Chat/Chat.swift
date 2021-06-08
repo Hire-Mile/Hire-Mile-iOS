@@ -377,9 +377,10 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let index = sender.tag
         Database.database().reference().child("Users").child(self.messages[index].chatPartnerId()!).observe(.value) { (snapshot) in
             let profileUID : String = (snapshot.key as? String)!
-            print(profileUID)
-            GlobalVariables.userUID = profileUID
-            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                profileVC.userUID = profileUID
+                self.navigationController?.pushViewController(profileVC,  animated: true)
+            }
         }
     }
     
@@ -415,8 +416,10 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
             
         } else if segmentedControl.selectedSegmentIndex == 1 {
             if let user = self.notifications[indexPath.row].senderId {
-                GlobalVariables.userUID = user
-                self.navigationController?.pushViewController(OtherProfile(), animated: true)
+                if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                    profileVC.userUID = user
+                    self.navigationController?.pushViewController(profileVC,  animated: true)
+                }
             }
         } else {
             //
