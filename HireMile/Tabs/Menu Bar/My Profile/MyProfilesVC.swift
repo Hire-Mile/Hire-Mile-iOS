@@ -1,8 +1,8 @@
 //
-//  UserProfileViewController.swift
+//  MyProfilesVC.swift
 //  HireMile
 //
-//  Created by jaydeep vadalia on 06/06/21.
+//  Created by mac on 09/06/21.
 //  Copyright © 2021 Jorge Zapata. All rights reserved.
 //
 
@@ -14,8 +14,8 @@ import FirebaseAuth
 import SDWebImage
 import Cosmos
 
-class UserProfileViewController: UIViewController {
-    
+class MyProfilesVC: UIViewController {
+
     @IBOutlet weak var profileName: UILabel!
     @IBOutlet weak var statusFollowButton: UIButton!
     @IBOutlet weak var tblProfile: UITableView!
@@ -30,27 +30,32 @@ class UserProfileViewController: UIViewController {
     
     @IBOutlet weak var profileRating: CosmosView!
     
-    let arrMenu = ["Services","Reviews","Gallery","Followers","Info"]
-    var selectIndex = 0
-    
+    var indexPathrow = 0
+    var indexTappeedd = 0
     var allJobs = [JobStructure]()
     var myJobs = [JobStructure]()
-    var favorites = [String]()
-    var isFollowing : Bool?
     var finalRating = 0
     var ratingNumber = 0
     var findingRating = true
     var hires = 0
-    var iamfollowedby = 0
     var totalusers = [UserStructure]()
+    var iamfollowedby = 0
     var finalNumber = 0
     var followers = [UserStructure]()
+    var favorites = [String]()
     var allRatings = [ReviewStructure]()
     
+    let filterLauncher = DeleteLauncher()
+    
+    var isFollowing : Bool?
     var userUID = ""
+    
+    let arrMenu = ["Services","Reviews","Gallery","Followers","Info"]
+    var selectIndex = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         self.view.backgroundColor = .white
         self.navigationController?.isNavigationBarHidden = true
         
@@ -65,55 +70,41 @@ class UserProfileViewController: UIViewController {
         colMenu.setCollectionViewLayout(layout, animated: true)
         UISetUp()
         tblProfile.register(FavoritesCell.self, forCellReuseIdentifier: "followres")
+        
+        // Do any additional setup after loading the view.
     }
     
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = true
         // get array
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").observe(.childAdded) { (listOfuserFavorite) in
-            if let value = listOfuserFavorite.value as? [String : Any] {
-                let user = UserStructure()
-                user.uid = value["uid"] as? String ?? "Error"
-                if user.uid! == self.userUID {
-                    self.updateFollowingButton(isFollowing: true)
-                    return
-                }
-            }
-        }
     }
+
     
     func UISetUp()  {
-        self.updateFollowingButton(isFollowing: false)
-        
+    
         self.allJobs.removeAll()
         self.myJobs.removeAll()
-        Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
-            if let value = snapshot.value as? [String : Any] {
-                let job = JobStructure()
-                job.authorName = value["author"] as? String ?? "Error"
-                job.titleOfPost = value["title"] as? String ?? "Error"
-                job.descriptionOfPost = value["description"] as? String ?? "Error"
-                job.price = value["price"] as? Int ?? 0
-                job.category = value["category"] as? String ?? "Error"
-                job.imagePost = value["image"] as? String ?? "Error"
-                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
-                job.timeStamp = value["time"] as? Int ?? 0
-                job.postId = value["postId"] as? String ?? "Error"
-                
-                if job.authorName ==  self.userUID {
-                    print("my name")
-                    self.myJobs.append(job)
-                }
-            }
-            self.myJobs.sort(by: { $1.timeStamp! > $0.timeStamp! } )
-            self.tblProfile.reloadData()
-        }
-        view.backgroundColor = UIColor.white
         
-        // image
-        let uid = self.userUID
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("profile-image").observe(.value) { (snapshot) in
+            if let profileImageString : String = (snapshot.value as? String) {
+                if profileImageString == "not-yet-selected" {
+                    self.profileImageView.tintColor = UIColor.lightGray
+                    self.profileImageView.tintColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+                    self.profileImageView.contentMode = .scaleAspectFill
+                } else {
+                    self.profileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    self.profileImageView.tintColor = UIColor.lightGray
+                    self.profileImageView.contentMode = .scaleAspectFill
+                }
+            } else {
+                self.profileImageView.tintColor = UIColor.lightGray
+                self.profileImageView.tintColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+                self.profileImageView.contentMode = .scaleAspectFill
+            }
+        }
+        
+        let uid = Auth.auth().currentUser!.uid
         
         Database.database().reference().child("Users").child(uid).child("username").observe(.value) { (usernameSnap) in
             if let userame = usernameSnap.value as? String {
@@ -128,7 +119,7 @@ class UserProfileViewController: UIViewController {
                     self.profileImageView.tintColor = UIColor.lightGray
                     self.profileImageView.contentMode = .scaleAspectFill
                 } else {
-                    self.profileImageView.sd_setImage(with: URL(string: urlImage), placeholderImage: nil, options: .retryFailed, completed: nil)
+                    self.profileImageView.loadImageUsingCacheWithUrlString(urlImage)
                 }
                 // name
                 Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
@@ -146,12 +137,14 @@ class UserProfileViewController: UIViewController {
                             job.category = value["category"] as? String ?? "Error"
                             job.imagePost = value["image"] as? String ?? "Error"
                             job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                            job.timeStamp = value["time"] as? Int ?? 0
                             job.postId = value["postId"] as? String ?? "Error"
                             
                             if job.authorName == uid {
                                 self.myJobs.append(job)
                             }
                         }
+                        self.myJobs.sort(by: { $1.timeStamp! < $0.timeStamp! } )
                         self.tblProfile.reloadData()
                     }
                 }
@@ -173,7 +166,8 @@ class UserProfileViewController: UIViewController {
                     if let _ = favoritesSnap.value as? [String : Any] {
                         let favorite = UserStructure()
                         favorite.uid = favoritesSnap.key
-                        if favorite.uid == self.userUID {
+                        print("\(snapshot.key) is following \(favorite.uid)")
+                        if favorite.uid == Auth.auth().currentUser!.uid {
                             print("i am followed by \(snapshot.key)")
                             self.iamfollowedby += 1
                             let follower = UserStructure()
@@ -186,70 +180,28 @@ class UserProfileViewController: UIViewController {
         }
     }
     
-    func getAllRatings() {
-        Database.database().reference().child("Users").child(self.userUID).child("ratings").observe(.childAdded) { (snapshot) in
-            if let value = snapshot.value as? [String : Any] {
-                let job = ReviewStructure()
-                job.ratingNumber = value["rating-number"] as? Int ?? 0
-                job.userUid = value["user-id"] as? String ?? "Error"
-                job.postId = value["post-id"] as? String ?? "Error"
-                job.descriptionOfRating = value["description"] as? String ?? "Error"
-                self.ratingNumber += 1
-                self.finalRating += job.ratingNumber!
-                self.allRatings.append(job)
-            }
-            let finalNumber = self.finalRating / self.ratingNumber
-            self.finalNumber = finalNumber
-            
-            self.ratingLabel.text = "\(String(finalNumber))"
-            self.profileRating.rating = Double(finalNumber)
-        }
-    }
-    
-     func followingPressed() {
-        if self.isFollowing == true {
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(self.userUID).removeValue()
-            self.updateFollowingButton(isFollowing: false)
-        } else {
-            self.updateFollowingButton(isFollowing: true)
-            let userInformation : Dictionary<String, Any> = [
-                "uid" : "\(self.userUID)"
-            ]
-            let postFeed = ["\(self.userUID)" : userInformation]
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
-            Database.database().reference().child("Users").child(self.userUID).child("fcmToken").observe(.value) { (snapshot) in
-                let token : String = (snapshot.value as? String)!
-                let sender = PushNotificationSender()
-                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-                    let userName : String = (snapshot.value as? String)!
-                    sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.userUID)
-                }
-            }
-        }
-    }
-    
-    func updateFollowingButton(isFollowing: Bool) {
-        switch isFollowing {
-        case true:
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-                self.statusFollowButton.backgroundColor = UIColor.mainBlue
-                self.statusFollowButton.setTitle("FOLLOWING", for: .normal)
-                self.statusFollowButton.setTitleColor(UIColor.white, for: .normal)
-                self.isFollowing = true
-            } completion: { (completion) in
-                print("updated button")
-            }
-        case false:
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-                self.statusFollowButton.backgroundColor = UIColor(red: 209/255, green: 209/255, blue: 209/255, alpha: 0.35)
-                self.statusFollowButton.setTitle("FOLLOW", for: .normal)
-                self.statusFollowButton.setTitleColor(UIColor.mainBlue, for: .normal)
-                self.isFollowing = false
-            } completion: { (completion) in
-                print("updated button")
-            }
-        }
-    }
+ func getAllRatings() {
+     Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").observe(.childAdded) { (snapshot) in
+         if let value = snapshot.value as? [String : Any] {
+             let job = ReviewStructure()
+             job.ratingNumber = value["rating-number"] as? Int ?? 0
+             job.userUid = value["user-id"] as? String ?? "Error"
+             job.postId = value["post-id"] as? String ?? "Error"
+             job.descriptionOfRating = value["description"] as? String ?? "Error"
+             self.ratingNumber += 1
+             self.finalRating += job.ratingNumber!
+             self.allRatings.append(job)
+         }
+         
+         print(self.ratingNumber)
+      //   self.thirdTitleLabel.text = String(self.ratingNumber)
+         print("updating rating label")
+         let finalNumber = self.finalRating / self.ratingNumber
+         self.finalNumber = finalNumber
+         self.ratingLabel.text = "\(String(finalNumber))"
+        self.profileRating.rating = Double(finalNumber)
+     }
+ }
     
     @objc func uploadPressed() {
         let text = "Hire or get work on the fastest and easiest platform"
@@ -262,25 +214,11 @@ class UserProfileViewController: UIViewController {
         self.present(vc, animated: true, completion: nil)
     }
     
-    @objc func blockUser() {
-        let alert = UIAlertController(title: "Are you sure you want to block this user?", message: "", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Yes, Block User", style: .default, handler: { (action) in
-            let block = UIAlertController(title: "User blocked", message: "", preferredStyle: .alert)
-            block.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
-                self.navigationController?.popViewController(animated: true)
-                self.navigationController?.popViewController(animated: true)
-            }))
-            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(self.userUID).removeValue()
-            self.updateFollowingButton(isFollowing: false)
-            self.present(block, animated: true, completion: nil)
-        }))
-        if let popoverController = alert.popoverPresentationController {
-          popoverController.sourceView = self.view
-          popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-        }
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+    @objc func editPressed() {
+        self.navigationController?.pushViewController(EditProfile(), animated: true)
     }
+    
+
     
     // MARK: Button Action
     
@@ -289,19 +227,42 @@ class UserProfileViewController: UIViewController {
     }
     
     @IBAction func btnBlockUser(_ sender: UIButton) {
-        blockUser()
+        editPressed()
     }
     
     @IBAction func btnUploadPressed(_ sender: UIButton) {
         uploadPressed()
     }
     
-    @IBAction func btnFollowClick(_ sender: UIButton) {
-        followingPressed()
+    
+    @objc func didTapEditButton(sender: UIButton) {
+        let url = URL(string: self.myJobs[sender.tag].imagePost!)
+        GlobalVariables.imagePost.sd_setImage(with: url, completed: nil)
+        GlobalVariables.postImageDownlodUrl = self.myJobs[indexPathrow].imagePost!
+        GlobalVariables.postTitle = self.myJobs[indexPathrow].titleOfPost!
+        GlobalVariables.postDescription = self.myJobs[indexPathrow].descriptionOfPost!
+        GlobalVariables.postPrice = self.myJobs[indexPathrow].price!
+        GlobalVariables.authorId = self.myJobs[indexPathrow].authorName!
+        GlobalVariables.postId = self.myJobs[indexPathrow].postId!
+        GlobalVariables.type = self.myJobs[indexPathrow].typeOfPrice!
+        self.navigationController?.pushViewController(EditPost(), animated: true)
     }
+    @objc func didTapDeleteButton(sender: UIButton) {
+        self.indexTappeedd = sender.tag
+        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.deletePostPressed), for: .touchUpInside)
+        self.filterLauncher.showFilter()
+    }
+    
+    @objc func deletePostPressed() {
+        Database.database().reference().child("Jobs").child(self.myJobs[indexTappeedd].postId!).removeValue()
+        self.filterLauncher.handleDismiss()
+        self.viewDidLoad()
+    }
+    
 }
 
-extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource {
+
+extension MyProfilesVC : UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch selectIndex {
         case 0 :
@@ -344,7 +305,7 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
         
         switch selectIndex {
         case 0 :
-            let cell = tableView.dequeueReusableCell(withIdentifier: ProfileServiceTableViewCell.className, for: indexPath) as! ProfileServiceTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: MyProfileReviewTableViewCell.className, for: indexPath) as! MyProfileReviewTableViewCell
             cell.selectionStyle = .none
             cell.backgroundColor = .white
             cell.profileImageView.sd_setImage(with: URL(string: self.myJobs[indexPath.row].imagePost!), placeholderImage: nil, options: .retryFailed, completed: nil)
@@ -362,6 +323,13 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
 
                 }
             }
+            
+            cell.editButton.tag = indexPath.row
+            cell.deleteButton.tag = indexPath.row
+            cell.editButton.addTarget(self, action: #selector(didTapEditButton(sender:)), for: .touchUpInside)
+            
+            cell.deleteButton.addTarget(self, action: #selector(didTapDeleteButton(sender:)), for: .touchUpInside)
+            
             
             return cell
         case 1 :
@@ -394,7 +362,20 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
                     }
                 }
             }
-
+            
+    /*        if let timestamp = self.allRatings[indexPath.row].timestamp {
+                if timestamp == 0 {
+                    cell.date.isHidden = true
+                } else {
+                    let formatter = DateFormatter()
+                    formatter.dateStyle = .medium
+                    cell.date.text = "\(formatter.string(from: Date(timeIntervalSince1970: Double(timestamp))))"
+                    cell.date.isHidden = false
+                }
+            } else {
+                cell.date.isHidden = true
+            }
+*/
             if let rating = self.allRatings[indexPath.row].ratingNumber {
                 if rating == 100 {
                     cell.ratingView.rating = 0.0
@@ -480,7 +461,6 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
         switch selectIndex {
         case 0 :
             let controller = ViewPostController()
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
             GlobalVariables.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
             GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
             GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
@@ -552,7 +532,7 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
     }
 }
 
-extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+extension MyProfilesVC : UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrMenu.count
     }
@@ -584,6 +564,7 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectIndex = indexPath.item
+        debugPrint(selectIndex)
         colMenu.reloadData()
         
         
@@ -602,7 +583,7 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
             }
         case 2 :
             let gallery = Gallery()
-            gallery.userId = self.userUID
+            gallery.userId = Auth.auth().currentUser!.uid
             self.present(gallery, animated: true, completion: nil)
             selectIndex = 0
             UIView.animate(withDuration: 0.5) {
@@ -621,7 +602,7 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
             infoPage.rating = finalRating ?? 0
             infoPage.followers = self.followers.count
             let user = UserStructure()
-            user.uid = self.userUID
+            user.uid = Auth.auth().currentUser!.uid
             infoPage.user = user
             self.present(infoPage, animated: true, completion: nil)
             selectIndex = 0
@@ -641,7 +622,26 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
     
 }
 
-class MenuCell: UICollectionViewCell {
+class MyProfileReviewTableViewCell: UITableViewCell {
+    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var profileImageView1: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-}
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var ratingView: CosmosView!
+    
+    @IBOutlet weak var editButton: UIButton!
+    
+    @IBOutlet weak var deleteButton: UIButton!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
 
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}

@@ -1039,10 +1039,10 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     @objc func profileImagePressed() {
-        let controller = MyProfile()
-//        let controller = Profile()
-        controller.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(controller, animated: true)
+        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: MyProfilesVC.className) as? MyProfilesVC {
+            profileVC.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(profileVC,  animated: true)
+        }
     }
     
     @objc func handleReload() {
@@ -1055,7 +1055,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         })
         //this will crash because of background thread, so lets call this on dispatch_async main thread
         DispatchQueue.main.async(execute: {
-            print("reload")
+        
             self.reloadData()
         })
     }
@@ -1329,9 +1329,10 @@ class MenuListController: UITableViewController {
         if indexPath.section == 0 {
             print("profile")
             dismiss(animated: true, completion: nil)
-            let controller = MyProfile()
-            controller.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(controller, animated: false)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: MyProfilesVC.className) as? MyProfilesVC {
+                profileVC.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(profileVC,  animated: true)
+            }
         } else {
             switch indexPath.row {
             case 0:

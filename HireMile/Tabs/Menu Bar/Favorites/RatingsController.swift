@@ -200,15 +200,15 @@ class RatingsController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         if let timestamp = self.allRatings[indexPath.row].timestamp {
             if timestamp == 0 {
-                cell.date.isHidden = true
+                cell.dateLabel.isHidden = true
             } else {
                 let formatter = DateFormatter()
                 formatter.dateStyle = .medium
-                cell.date.text = "\(formatter.string(from: Date(timeIntervalSince1970: Double(timestamp))))"
-                cell.date.isHidden = false
+                cell.dateLabel.text = "\(formatter.string(from: Date(timeIntervalSince1970: Double(timestamp))))"
+                cell.dateLabel.isHidden = false
             }
         } else {
-            cell.date.isHidden = true
+            cell.dateLabel.isHidden = true
         }
 
         let num = 20
