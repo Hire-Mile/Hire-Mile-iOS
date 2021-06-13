@@ -55,7 +55,7 @@ class UserProfileViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = true
         
         let w = 414 / 4
-        let cellSize = CGSize(width: w - 30 , height:30)
+        let cellSize = CGSize(width: 75 , height:30)
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal //.horizontal vertical
         layout.itemSize = cellSize
@@ -573,6 +573,7 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MenuCell", for: indexPath) as! MenuCell
         cell.titleLabel.text = arrMenu[indexPath.item]
+        cell.titleLabel.font = UIFont.systemFont(ofSize: 14)
         
         DispatchQueue.main.async(execute: {() -> Void in
             let border = CALayer()
@@ -582,7 +583,6 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
             if self.selectIndex == indexPath.item {
                 border.borderColor = UIColor.black.cgColor
                 cell.titleLabel.textColor = UIColor.black
-                
             }else{
                 border.borderColor = UIColor.white.cgColor
                 cell.layer.borderColor = UIColor.white.cgColor

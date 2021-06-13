@@ -35,13 +35,13 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MY JOB" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Xf-bD-h3F">
-                                <rect key="frame" x="125" y="10" width="68.5" height="21.5"/>
+                                <rect key="frame" x="125" y="12" width="68.5" height="21.5"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$150" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E7h-Ix-jX1">
-                                <rect key="frame" x="229" y="10" width="41" height="19.5"/>
+                                <rect key="frame" x="229" y="12" width="41" height="19.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="41" id="qsf-pM-BWj"/>
                                 </constraints>
@@ -50,13 +50,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j2W-AY-HE5">
-                                <rect key="frame" x="125" y="36.5" width="145" height="14.5"/>
+                                <rect key="frame" x="125" y="43.5" width="145" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="sjn-aM-5lo">
-                                <rect key="frame" x="125" y="61" width="185" height="59"/>
+                                <rect key="frame" x="125" y="68" width="185" height="52"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oe3-1s-Osr">
                                         <rect key="frame" x="0.0" y="0.0" width="85" height="30"/>
@@ -117,15 +117,15 @@
                             <constraint firstItem="sjn-aM-5lo" firstAttribute="leading" secondItem="9qe-2Y-8SR" secondAttribute="trailing" constant="15" id="JXd-ZT-pOv"/>
                             <constraint firstItem="E7h-Ix-jX1" firstAttribute="leading" secondItem="8Xf-bD-h3F" secondAttribute="trailing" priority="250" constant="10" id="PLs-Ma-vAc"/>
                             <constraint firstItem="9qe-2Y-8SR" firstAttribute="top" secondItem="2gl-Lo-2xq" secondAttribute="top" constant="10" id="Pql-nv-gjj"/>
-                            <constraint firstItem="j2W-AY-HE5" firstAttribute="top" secondItem="8Xf-bD-h3F" secondAttribute="bottom" constant="5" id="RBD-NK-UP6"/>
+                            <constraint firstItem="j2W-AY-HE5" firstAttribute="top" secondItem="8Xf-bD-h3F" secondAttribute="bottom" constant="10" id="RBD-NK-UP6"/>
                             <constraint firstItem="8Xf-bD-h3F" firstAttribute="leading" secondItem="9qe-2Y-8SR" secondAttribute="trailing" constant="15" id="Rlz-TC-VMi"/>
                             <constraint firstAttribute="bottom" secondItem="sjn-aM-5lo" secondAttribute="bottom" constant="30" id="Yb0-2L-QJx"/>
                             <constraint firstItem="9qe-2Y-8SR" firstAttribute="leading" secondItem="2gl-Lo-2xq" secondAttribute="leading" constant="10" id="YyB-lz-FVx"/>
                             <constraint firstAttribute="trailing" secondItem="j2W-AY-HE5" secondAttribute="trailing" constant="10" id="bip-jp-BbO"/>
-                            <constraint firstItem="E7h-Ix-jX1" firstAttribute="top" secondItem="2gl-Lo-2xq" secondAttribute="top" constant="10" id="dxf-ci-bja"/>
+                            <constraint firstItem="E7h-Ix-jX1" firstAttribute="top" secondItem="2gl-Lo-2xq" secondAttribute="top" constant="12" id="dxf-ci-bja"/>
                             <constraint firstItem="j2W-AY-HE5" firstAttribute="leading" secondItem="9qe-2Y-8SR" secondAttribute="trailing" constant="15" id="ehA-jr-d2z"/>
                             <constraint firstAttribute="trailing" secondItem="E7h-Ix-jX1" secondAttribute="trailing" constant="10" id="jPe-Hn-JHT"/>
-                            <constraint firstItem="8Xf-bD-h3F" firstAttribute="top" secondItem="2gl-Lo-2xq" secondAttribute="top" constant="10" id="wWB-h5-sY2"/>
+                            <constraint firstItem="8Xf-bD-h3F" firstAttribute="top" secondItem="2gl-Lo-2xq" secondAttribute="top" constant="12" id="wWB-h5-sY2"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
