@@ -287,8 +287,10 @@ class RatingsController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let uid = self.allRatings[indexPath.row].userUid {
-            GlobalVariables.userUID = uid
-            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                profileVC.userUID = uid
+                self.navigationController?.pushViewController(profileVC,  animated: true)
+            }
         }
     }
     

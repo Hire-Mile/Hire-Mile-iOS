@@ -10,24 +10,9 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseAnalytics
+import SDWebImage
 
 class CategoryPostController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
 
     let filterLauncher = FilterLauncher()
     
@@ -111,18 +96,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath) as! CategoryCell
         
-        let itemNumber = NSNumber(value: indexPath.row)
-        if let cachedImage = self.cache.object(forKey: itemNumber) {
-            print("gut")
-            cell.titleImageView.image = cachedImage
-        } else {
-            print("cschlecht")
-            self.loadImage(string: self.allJobs[indexPath.row].imagePost!, indexPath: Int(indexPath.row)) { [weak self] (image) in
-                guard let self = self, let image = image else { return }
-                cell.titleImageView.image = image
-                self.cache.setObject(image, forKey: itemNumber)
-            }
-        }
+        cell.titleImageView.sd_setImage(with: URL(string: self.allJobs[indexPath.row].imagePost!), placeholderImage: nil, options: .retryFailed, completed: nil)
         
         cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
         cell.desscription.text = self.allJobs[indexPath.row].descriptionOfPost!
@@ -146,11 +120,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
         GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
         Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
             if let profileImageUrl : String = (snapshot.value as? String) {
-                controller.profileImage.loadImage(from: URL(string: profileImageUrl)!)
-                self.loadImage(string: profileImageUrl, indexPath: 0) { [weak self] (image) in
-                    guard let self = self, let image = image else { return }
-                    controller.profileImage.image = image
-                }
+                controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)!, completed: nil)
                 GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
                 GlobalVariables.postId = self.allJobs[indexPath.row].postId!
                 GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!

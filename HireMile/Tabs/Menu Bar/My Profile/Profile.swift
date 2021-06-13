@@ -9,36 +9,15 @@
 import UIKit
 import Firebase
 import ScrollableSegmentedControl
-
+import SDWebImage
 protocol MyTableViewCellDelegate {
     func didTapEditButton(withIndex: Int)
     func didTapDeleteButton(withIndex: Int)
 }
 
-protocol MyTableViewCellDelegate2 {
-    func didTapEditButton(withIndex: Int)
-    func didTapDeleteButton(withIndex: Int)
-}
-
-class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyTableViewCellDelegate, MyTableViewCellDelegate2 {
+class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var tblHeight : NSLayoutConstraint?
-    
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
     
     var indexPathrow = 0
     var indexTappeedd = 0
@@ -604,7 +583,7 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ProfileCell2.self, forCellReuseIdentifier: "profileCell")
+        tableView.register(UINib(nibName: ProfileTableViewCell.className, bundle: nil), forCellReuseIdentifier: ProfileTableViewCell.className)
         tableView.register(MyJobsCompletedgCell.self, forCellReuseIdentifier: "otherProfileCell")
         tableView.register(FavoritesCell.self, forCellReuseIdentifier: "followres")
         
@@ -841,9 +820,9 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
         Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(self.setFollowPeople), userInfo: nil, repeats: false)
     }
     
-    func didTapEditButton(withIndex index: Int) {
-        let url = URL(string: self.myJobs[index].imagePost!)
-        GlobalVariables.imagePost.kf.setImage(with: url)
+    @objc func didTapEditButton(sender: UIButton) {
+        let url = URL(string: self.myJobs[sender.tag].imagePost!)
+        GlobalVariables.imagePost.sd_setImage(with: url, completed: nil)
         GlobalVariables.postImageDownlodUrl = self.myJobs[indexPathrow].imagePost!
         GlobalVariables.postTitle = self.myJobs[indexPathrow].titleOfPost!
         GlobalVariables.postDescription = self.myJobs[indexPathrow].descriptionOfPost!
@@ -854,37 +833,36 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
         self.navigationController?.pushViewController(EditPost(), animated: true)
     }
     
-    func didTapDeleteButton(withIndex index: Int) {
-        print("hello, \(index)")
-        self.indexTappeedd = index
+    @objc func didTapDeleteButton(sender: UIButton) {
+        self.indexTappeedd = sender.tag
         self.filterLauncher.stopJob.addTarget(self, action: #selector(self.deletePostPressed), for: .touchUpInside)
         self.filterLauncher.showFilter()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! ProfileCell2
+            let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.className, for: indexPath) as! ProfileTableViewCell
             
             cell.selectionStyle = .none
-            cell.delegate = self
-            cell.index = indexPath
-            
             let url = URL(string: self.myJobs[indexPath.row].imagePost!)
-            cell.postImageView.kf.setImage(with: url)
+            cell.profileImageView.sd_setImage(with: url, completed: nil)
+            cell.titleLabel.text = self.myJobs[indexPath.row].titleOfPost!
             
-            cell.titleJob.text = self.myJobs[indexPath.row].titleOfPost!
+            //cell.postId = self.myJobs[indexPath.row].postId!
             
-            cell.postId = self.myJobs[indexPath.row].postId!
-            
-            cell.saleNumber.text = self.myJobs[indexPath.row].descriptionOfPost!
+            cell.descriptionLabel.text = self.myJobs[indexPath.row].descriptionOfPost!
             
             if self.myJobs[indexPath.row].typeOfPrice == "Hourly" {
-                cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
+                cell.priceLabel.text = "$\(self.myJobs[indexPath.row].price!) / Hour"
             } else {
-                cell.priceNumber.text = "$\(self.myJobs[indexPath.row].price!)"
+                cell.priceLabel.text = "$\(self.myJobs[indexPath.row].price!)"
                 let rect = estimateFrameForText(text: String(self.myJobs[indexPath.row].price!)).width
-                cell.priceNumber.widthAnchor.constraint(equalToConstant: rect + 30).isActive = true
+                cell.priceLabel.widthAnchor.constraint(equalToConstant: rect + 30).isActive = true
             }
+            cell.editButton.tag = indexPath.row
+            cell.deleteButton.tag = indexPath.row
+            cell.editButton.addTarget(self, action: #selector(didTapEditButton(sender:)), for: .touchUpInside)
+            cell.deleteButton.addTarget(self, action: #selector(didTapDeleteButton(sender:)), for: .touchUpInside)
             
             return cell
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
@@ -1022,7 +1000,7 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
                         cell.profileImageView.tintColor = UIColor.lightGray
                         cell.profileImageView.contentMode = .scaleAspectFill
                     } else {
-                        cell.profileImageView.loadImage(from: URL(string: snapshot)!)
+                        cell.profileImageView.sd_setImage(with: URL(string: snapshot)!, placeholderImage: nil, options: .retryFailed, completed: nil)
                     }
                 }
                 
@@ -1080,39 +1058,58 @@ class Profile: UIViewController, UITableViewDelegate, UITableViewDataSource, MyT
             GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
             Database.database().reference().child("Users").child(self.myJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let name : String = (snapshot.value as? String) {
-                    self.loadImage(string: name, indexPath: 0) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        controller.profileImage.image = image
-                    }
+                    controller.profileImage.sd_setImage(with: URL(string: name), completed: nil)
                 }
             }
             self.navigationController?.pushViewController(controller, animated: true)
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             if let uid = self.allRatings[indexPath.row].userUid {
-                GlobalVariables.userUID = uid
-                self.navigationController?.pushViewController(OtherProfile(), animated: true)
+                if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                    profileVC.userUID = uid
+                    self.navigationController?.pushViewController(profileVC,  animated: true)
+                }
             }
         } else if self.segmentedControl.selectedSegmentIndex == 2 {
             print("selected")
         } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            GlobalVariables.userUID = self.followers[indexPath.row].uid!
-            self.navigationController?.pushViewController(OtherProfile(), animated: true)
+            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                profileVC.userUID = self.followers[indexPath.row].uid!
+                self.navigationController?.pushViewController(profileVC,  animated: true)
+            }
+        }
+    }
+
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch self.segmentedControl.selectedSegmentIndex {
+            case 0:
+                return UITableView.automaticDimension
+            case 1:
+                return 135
+            case 2:
+                return 175
+            case 3:
+                return 80
+            default:
+                return 150
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.segmentedControl.selectedSegmentIndex == 0 {
-            return 175
-        } else if self.segmentedControl.selectedSegmentIndex == 1 {
-            return 135
-        } else if self.segmentedControl.selectedSegmentIndex == 2 {
-            return 175
-        } else if self.segmentedControl.selectedSegmentIndex == 3 {
-            return 80
-        } else {
-            return 150
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch self.segmentedControl.selectedSegmentIndex {
+            case 0:
+                return 175
+            case 1:
+                return 135
+            case 2:
+                return 175
+            case 3:
+                return 80
+            default:
+                return 150
         }
     }
+    
     
     func estimateFrameForText(text: String) -> CGRect {
         let size = CGSize(width: 200, height: 1000)

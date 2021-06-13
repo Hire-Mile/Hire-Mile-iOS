@@ -12,25 +12,9 @@ import Foundation
 import FirebaseDatabase
 import FirebaseAuth
 import ScrollableSegmentedControl
+import SDWebImage
 
 class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
-    
     var allJobs = [JobStructure]()
     var myJobs = [JobStructure]()
 //    var favorites = [UserStructure]()
@@ -917,17 +901,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueReusableCell(withIdentifier: "profileCell", for: indexPath) as! OtherProfileCell
             cell.selectionStyle = .none
             cell.backgroundColor = .white
-            let itemNumber = NSNumber(value: indexPath.row)
-            if let cachedImage = self.cache.object(forKey: itemNumber) {
-                cell.postImageView.image = cachedImage
-            } else {
-                print("cschlecht")
-                self.loadImage(string: self.myJobs[indexPath.row].imagePost!, indexPath: Int(indexPath.row)) { [weak self] (image) in
-                    guard let self = self, let image = image else { return }
-                    cell.postImageView.image = image
-                    self.cache.setObject(image, forKey: itemNumber)
-                }
-            }
+            cell.postImageView.sd_setImage(with: URL(string: self.myJobs[indexPath.row].imagePost!), placeholderImage: nil, options: .retryFailed, completed: nil)
             if let titleJob = self.myJobs[indexPath.row].titleOfPost {
                 cell.titleJob.text = titleJob
             }
@@ -1081,7 +1055,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                         cell.profileImageView.tintColor = UIColor.lightGray
                         cell.profileImageView.contentMode = .scaleAspectFill
                     } else {
-                        cell.profileImageView.loadImage(from: URL(string: snapshot)!)
+                        cell.profileImageView.sd_setImage(with: URL(string: snapshot)!, placeholderImage: nil, options: .retryFailed, completed: nil)
                     }
                 }
                 
@@ -1140,10 +1114,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
             GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
             Database.database().reference().child("Users").child(self.myJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let name : String = (snapshot.value as? String) {
-                    self.loadImage(string: name, indexPath: 0) { [weak self] (image) in
-                        guard let self = self, let image = image else { return }
-                        controller.profileImage.image = image
-                    }
+                    controller.profileImage.sd_setImage(with: URL(string: name), completed: nil)
                 }
             }
             self.navigationController?.pushViewController(controller, animated: true)

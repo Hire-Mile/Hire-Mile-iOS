@@ -248,7 +248,7 @@ class EditPost: UIViewController, UITextFieldDelegate {
         self.applyButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
         self.applyButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        self.backgroundImage.kf.setImage(with: URL(string: GlobalVariables.postImageDownlodUrl))
+        self.backgroundImage.sd_setImage(with: URL(string: GlobalVariables.postImageDownlodUrl), completed: nil)
         self.titleYourListing.text = GlobalVariables.postTitle
         self.describeYourListing.text = GlobalVariables.postDescription
         self.priceYourListing.text = String(GlobalVariables.postPrice)

@@ -23,19 +23,13 @@ target 'HireMile' do
   
   pod 'Firebase/Storage'
   
-  pod 'SVProgressHUD'
-  
   pod 'MBProgressHUD'
-  
-  pod 'NVActivityIndicatorView'
   
   pod 'GoogleSignIn'
   
   pod 'BulletinBoard'
   
   pod 'STPopup'
-  
-  pod 'Kingfisher'
   
   pod 'ScrollableSegmentedControl'
   
@@ -56,5 +50,9 @@ target 'HireMile' do
   pod 'JGProgressHUD'
   
   pod 'SwiftyJSON'
+  
+  pod 'SDWebImage'
+  
+  pod 'Cosmos'
 
 end

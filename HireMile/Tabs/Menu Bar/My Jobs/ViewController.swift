@@ -356,8 +356,10 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if let authorId = self.running[indexPath.row].authorUid {
                 Database.database().reference().child("Users").child(authorId).observe(.value) { (snapshot) in
                     if let profileUID : String = (snapshot.key as? String) {
-                        GlobalVariables.userUID = profileUID
-                        self.navigationController?.pushViewController(OtherProfile(), animated: true)
+                        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                            profileVC.userUID = profileUID
+                            self.navigationController?.pushViewController(profileVC,  animated: true)
+                        }
                     }
                 }
             }
@@ -365,9 +367,10 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if let authorId = self.completed[indexPath.row].authorUid {
                 Database.database().reference().child("Users").child(authorId).observe(.value) { (snapshot) in
                     if let profileUID : String = (snapshot.key as? String) {
-                        GlobalVariables.userUID = profileUID
-                        
-                        self.navigationController?.pushViewController(OtherProfile(), animated: true)
+                        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                            profileVC.userUID = profileUID
+                            self.navigationController?.pushViewController(profileVC,  animated: true)
+                        }
                     }
                 }
             }
@@ -375,8 +378,10 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
             if let authorId = self.canceled[indexPath.row].authorUid {
                 Database.database().reference().child("Users").child(authorId).observe(.value) { (snapshot) in
                     if let profileUID : String = (snapshot.key as? String) {
-                        GlobalVariables.userUID = profileUID
-                        self.navigationController?.pushViewController(OtherProfile(), animated: true)
+                        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+                            profileVC.userUID = profileUID
+                            self.navigationController?.pushViewController(profileVC,  animated: true)
+                        }
                     }
                 }
             }
@@ -384,22 +389,6 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
             print("other")
         }
     }
-    
-    private func loadImage(string: String, indexPath: Int, completion: @escaping (UIImage?) -> ()) {
-            utilityQueue.async {
-                let url = URL(string: string)!
-                
-                guard let data = try? Data(contentsOf: url) else { return }
-                let image = UIImage(data: data)
-                
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            }
-        }
-    
-    private let cache = NSCache<NSNumber, UIImage>()
-    private let utilityQueue = DispatchQueue.global(qos: .utility)
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if segmentedControl.selectedSegmentIndex == 0 {

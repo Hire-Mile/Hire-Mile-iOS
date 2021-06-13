@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import Firebase
+import SDWebImage
 
 class SearchResults: UITableViewController {
 
@@ -70,7 +71,7 @@ class SearchResults: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reusableCellString") as! CategoryCell
-        cell.titleImageView.loadImage(from: URL(string: self.allJobs[indexPath.row].imagePost!)!)
+        cell.titleImageView.sd_setImage(with: URL(string: self.allJobs[indexPath.row].imagePost!), placeholderImage: nil, options: .retryFailed, completed: nil)
         cell.titleLabel.text = self.allJobs[indexPath.row].titleOfPost!
         cell.postId = self.allJobs[indexPath.row].postId!
         cell.desscription.text = self.allJobs[indexPath.row].descriptionOfPost!
