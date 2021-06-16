@@ -141,6 +141,7 @@ PODS:
   - JGProgressHUD (2.2)
   - leveldb-library (1.22)
   - MBProgressHUD (1.2.0)
+  - MXParallaxHeader (1.1.0)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
@@ -180,6 +181,7 @@ DEPENDENCIES:
   - GoogleSignIn
   - JGProgressHUD
   - MBProgressHUD
+  - MXParallaxHeader
   - PhoneNumberKit
   - ScrollableSegmentedControl
   - SDWebImage
@@ -219,6 +221,7 @@ SPEC REPOS:
     - JGProgressHUD
     - leveldb-library
     - MBProgressHUD
+    - MXParallaxHeader
     - nanopb
     - PhoneNumberKit
     - PromisesObjC
@@ -260,6 +263,7 @@ SPEC CHECKSUMS:
   JGProgressHUD: d83d7a981b85d11205e19ff8ad5bb9c40571c847
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  MXParallaxHeader: de3c867e10ba46e8f6e20c8ee1f2a910372b3b94
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
   PromisesObjC: b14b1c6b68e306650688599de8a45e49fae81151
@@ -271,6 +275,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: 7407db3c337d1f98862cff69814f0153655a7b38
+PODFILE CHECKSUM: 474b06c0bbdbecdb908a3436c69c4b2f31ac3609
 
 COCOAPODS: 1.10.1

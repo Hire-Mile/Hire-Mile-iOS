@@ -13,9 +13,10 @@ import FirebaseDatabase
 import FirebaseAuth
 import SDWebImage
 import Cosmos
-
+import MXParallaxHeader
 class MyProfilesVC: UIViewController {
 
+    @IBOutlet var headerView: UIView!
     @IBOutlet weak var profileName: UILabel!
     @IBOutlet weak var statusFollowButton: UIButton!
     @IBOutlet weak var tblProfile: UITableView!
@@ -72,12 +73,21 @@ class MyProfilesVC: UIViewController {
         tblProfile.register(FavoritesCell.self, forCellReuseIdentifier: "followres")
         
         // Do any additional setup after loading the view.
+        
+        tblProfile.parallaxHeader.view = headerView // You can set the parallax header view from the floating view
+        tblProfile.parallaxHeader.height = 475
+        tblProfile.parallaxHeader.mode = .fill
+        tblProfile.parallaxHeader.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.isNavigationBarHidden = true
         // get array
+    }
+    
+    override func viewDidLayoutSubviews() {
+        headerView.widthAnchor.constraint(equalToConstant: self.view.frame.width).isActive = true
     }
 
     
@@ -262,7 +272,11 @@ class MyProfilesVC: UIViewController {
 }
 
 
-extension MyProfilesVC : UITableViewDelegate,UITableViewDataSource {
+extension MyProfilesVC : UITableViewDelegate,UITableViewDataSource, MXParallaxHeaderDelegate {
+    func parallaxHeaderDidScroll(_ parallaxHeader: MXParallaxHeader) {
+        NSLog("progress %f", parallaxHeader.progress)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch selectIndex {
         case 0 :
@@ -543,7 +557,7 @@ extension MyProfilesVC : UICollectionViewDelegate,UICollectionViewDataSource,UIC
         
         DispatchQueue.main.async(execute: {() -> Void in
             let border = CALayer()
-            border.frame = CGRect(x: 15, y: cell.frame.size.height - 2, width: cell.frame.size.width - 30, height: cell.frame.size.height)
+            border.frame = CGRect(x: 5, y: cell.frame.size.height - 2, width: 64, height: cell.frame.size.height)
             border.borderWidth = 2
             cell.layer.masksToBounds = true
             if self.selectIndex == indexPath.item {
