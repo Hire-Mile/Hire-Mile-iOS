@@ -57,7 +57,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         label.font = UIFont.boldSystemFont(ofSize: 23)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
-        label.numberOfLines = 1
+        label.numberOfLines = 3
         label.textAlignment = .left
         return label
     }()
@@ -249,7 +249,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.titleLabel.topAnchor.constraint(equalTo: self.informationView.topAnchor, constant: 15).isActive = true
         self.titleLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 15).isActive = true
         self.titleLabel.rightAnchor.constraint(equalTo: self.informationView.rightAnchor, constant: -75).isActive = true
-        self.titleLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        self.titleLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
         
         self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: -5).isActive = true
         self.descriptionLabel.leftAnchor.constraint(equalTo: self.informationView.leftAnchor, constant: 15).isActive = true
