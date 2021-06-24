@@ -14,5 +14,6 @@ class UserStructure: NSObject {
     var profileImageView : String?
     var username : String?
     var notification : String?
+    var isFollow: Bool = false
 
 }

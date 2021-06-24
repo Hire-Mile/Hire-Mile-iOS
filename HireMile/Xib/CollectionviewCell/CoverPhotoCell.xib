@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CoverPhotoCell" id="xON-Mx-kFL" customClass="CoverPhotoCell" customModule="Hiremile" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qZo-fi-Rom">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="haircut" translatesAutoresizingMaskIntoConstraints="NO" id="PbO-3R-iN9">
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="PbO-3R-iN9" firstAttribute="leading" secondItem="qZo-fi-Rom" secondAttribute="leading" id="1n3-9L-df1"/>
+                            <constraint firstItem="PbO-3R-iN9" firstAttribute="top" secondItem="qZo-fi-Rom" secondAttribute="top" id="LxL-KN-YiQ"/>
+                            <constraint firstAttribute="trailing" secondItem="PbO-3R-iN9" secondAttribute="trailing" id="Pfv-er-B8G"/>
+                            <constraint firstAttribute="bottom" secondItem="PbO-3R-iN9" secondAttribute="bottom" id="vHD-w0-gYA"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="10"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="vl0-xO-hkv"/>
+            <constraints>
+                <constraint firstItem="qZo-fi-Rom" firstAttribute="leading" secondItem="xON-Mx-kFL" secondAttribute="leading" id="Ml8-sp-Tn4"/>
+                <constraint firstAttribute="trailing" secondItem="qZo-fi-Rom" secondAttribute="trailing" id="dyt-2s-2pB"/>
+                <constraint firstAttribute="bottom" secondItem="qZo-fi-Rom" secondAttribute="bottom" id="hhI-uZ-2Oo"/>
+                <constraint firstItem="qZo-fi-Rom" firstAttribute="top" secondItem="xON-Mx-kFL" secondAttribute="top" id="rh6-fn-OLm"/>
+            </constraints>
+            <connections>
+                <outlet property="imgCoverPhoto" destination="PbO-3R-iN9" id="eqz-Ex-Yey"/>
+                <outlet property="vWMain" destination="qZo-fi-Rom" id="xMK-a4-h84"/>
+            </connections>
+            <point key="canvasLocation" x="78" y="30"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="haircut" width="626" height="416"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

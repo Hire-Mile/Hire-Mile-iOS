@@ -13,6 +13,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import MBProgressHUD
 import SDWebImage
+import CoreLocation
 
 class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate {
     
@@ -35,6 +36,8 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     var passingImage : UIImage?
     
     var openingFromNotification = false
+    
+    let locationManager = CLLocationManager()
     
     let scrollView : UIScrollView = {
         let scrollView = UIScrollView()
@@ -448,7 +451,7 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        checkLocationAuthorization()
         let pushManager = PushNotificationManager(userID: Auth.auth().currentUser!.uid)
         pushManager.registerForPushNotifications()
         
@@ -768,36 +771,36 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         if collectionView == self.myCollectionView {
             let controller = ViewPostController()
             controller.hidesBottomBarWhenPushed = true
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
-            GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
-            GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
-            GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
-            GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
-            GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
+            controller.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+            controller.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
+            controller.postTitle = self.allJobs[indexPath.row].titleOfPost!
+            controller.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
+            controller.postPrice = self.allJobs[indexPath.row].price!
+            controller.userUID = self.allJobs[indexPath.row].authorName!
             Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let profileImageUrl : String = (snapshot.value as? String) {
                     controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)!, completed: nil)
-                    GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
-                    GlobalVariables.postId = self.allJobs[indexPath.row].postId!
-                    GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+                    controller.authorId = self.allJobs[indexPath.row].authorName!
+                    controller.postId = self.allJobs[indexPath.row].postId!
+                    controller.type = self.allJobs[indexPath.row].typeOfPrice!
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }
         } else if collectionView == self.collectView {
             let controller = ViewPostController()
             controller.hidesBottomBarWhenPushed = true
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
-            GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
-            GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
-            GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
-            GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
-            GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
+            controller.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+            controller.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
+            controller.postTitle = self.allJobs[indexPath.row].titleOfPost!
+            controller.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
+            controller.postPrice = self.allJobs[indexPath.row].price!
+            controller.userUID = self.allJobs[indexPath.row].authorName!
             Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let profileImageUrl : String = (snapshot.value as? String) {
                     controller.profileImage.sd_setImage(with: URL(string: profileImageUrl), completed: nil)
-                    GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
-                    GlobalVariables.postId = self.allJobs[indexPath.row].postId!
-                    GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+                    controller.authorId = self.allJobs[indexPath.row].authorName!
+                    controller.postId = self.allJobs[indexPath.row].postId!
+                    controller.type = self.allJobs[indexPath.row].typeOfPrice!
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }
@@ -873,15 +876,16 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     
     @objc func timerFunction() {
         if GlobalVariables.presentToCat == true {
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
-            GlobalVariables.postImageDownlodUrl = GlobalVariables.catId.imagePost!
-            GlobalVariables.postTitle = GlobalVariables.catId.titleOfPost!
-            GlobalVariables.postDescription = GlobalVariables.catId.descriptionOfPost!
-            GlobalVariables.postPrice = GlobalVariables.catId.price!
-            GlobalVariables.authorId = GlobalVariables.catId.authorName!
-            GlobalVariables.postId = GlobalVariables.catId.postId!
-            GlobalVariables.type = GlobalVariables.catId.typeOfPrice!
-            self.navigationController?.pushViewController(ViewPostController(), animated: true)
+            let controller = ViewPostController()
+            controller.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
+            controller.postImageDownlodUrl = GlobalVariables.catId.imagePost!
+            controller.postTitle = GlobalVariables.catId.titleOfPost!
+            controller.postDescription = GlobalVariables.catId.descriptionOfPost!
+            controller.postPrice = GlobalVariables.catId.price!
+            controller.authorId = GlobalVariables.catId.authorName!
+            controller.postId = GlobalVariables.catId.postId!
+            controller.type = GlobalVariables.catId.typeOfPrice!
+            self.navigationController?.pushViewController(controller, animated: true)
             GlobalVariables.presentToCat = false
             GlobalVariables.catId = JobStructure()
         }
@@ -903,11 +907,11 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         if GlobalVariables.isGoingToPost == true {
-            let controller = Post()
-            controller.modalPresentationStyle = .fullScreen
-            self.present(controller, animated: true) {
+            if let editVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: CreatePosts.className) as? CreatePosts {
+                editVC.hidesBottomBarWhenPushed = true
                 GlobalVariables.isGoingToPost = false
                 self.passingImage = nil
+                self.navigationController?.pushViewController(editVC,  animated: true)
             }
         }
         
@@ -1078,6 +1082,31 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
                     }
                 }
             }
+        }
+    }
+    
+    func checkLocationAuthorization() {
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedWhenInUse:
+           
+            break
+        case .denied:
+            // Show alert instructing them how to turn on permissions
+            let alert = UIAlertController(title: "Cannot find location", message: "Please go to Settings and allow location to view this screen!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            break
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted:
+            // Show an alert letting them know what's up
+            let alert = UIAlertController(title: "Cannot find location", message: "Your location is marked as 'restricted'", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            break
+        case .authorizedAlways:
+            
+            break
         }
     }
 }

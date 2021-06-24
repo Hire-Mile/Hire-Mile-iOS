@@ -21,4 +21,22 @@ class CommonUtils {
         }
         return nil
     }
+    
+    static func getRecentServices() -> [String] {
+        if let recent = UserDefaults.standard.array(forKey: "recent") as? [String] {
+            return recent
+        }
+        return [String]()
+    }
+    
+    static func setRecentServices(str: String) {
+        var recent = getRecentServices()
+        if !recent.contains(str) {
+            recent.append(str)
+            if(recent.count > 5) {
+                recent.removeFirst()
+            }
+            UserDefaults.standard.set(recent, forKey: "recent")
+        }
+    }
 }

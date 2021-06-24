@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Bold.ttf">
+            <string>Lato-Bold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CategoryVC" customModule="Hiremile" customModuleProvider="target">
+            <connections>
+                <outlet property="colCategory" destination="cdO-yN-ufp" id="6or-vd-yWZ"/>
+                <outlet property="containerView" destination="kbl-ko-n7n" id="BdE-zS-dno"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kbl-ko-n7n">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                    <subviews>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H8Z-UP-dco">
+                            <rect key="frame" x="0.0" y="150" width="414" height="732"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vzj-jn-cdA">
+                                    <rect key="frame" x="0.0" y="5" width="414" height="50"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ssm-JG-LzY">
+                                            <rect key="frame" x="136" y="13" width="142" height="24"/>
+                                            <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="20"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F3r-4w-mwL">
+                                            <rect key="frame" x="354" y="5" width="50" height="40"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="50" id="gX7-Ax-GfK"/>
+                                                <constraint firstAttribute="height" constant="40" id="qv8-Ci-N1c"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="15"/>
+                                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                            <state key="normal" image="multiply" catalog="system">
+                                                <color key="titleColor" name="mainBlue"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                    <real key="value" value="20"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="btnClose:" destination="-1" eventType="touchUpInside" id="El0-yz-ByB"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="Ssm-JG-LzY" firstAttribute="centerY" secondItem="Vzj-jn-cdA" secondAttribute="centerY" id="35T-pW-8b5"/>
+                                        <constraint firstItem="Ssm-JG-LzY" firstAttribute="centerX" secondItem="Vzj-jn-cdA" secondAttribute="centerX" id="IkJ-ps-M9l"/>
+                                        <constraint firstAttribute="height" constant="50" id="oIf-fi-DX3"/>
+                                        <constraint firstItem="F3r-4w-mwL" firstAttribute="centerY" secondItem="Vzj-jn-cdA" secondAttribute="centerY" id="ojF-Jd-Er3"/>
+                                        <constraint firstAttribute="trailing" secondItem="F3r-4w-mwL" secondAttribute="trailing" constant="10" id="rpY-WG-cWq"/>
+                                    </constraints>
+                                </view>
+                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="cdO-yN-ufp">
+                                    <rect key="frame" x="0.0" y="75" width="414" height="637"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="yGF-la-68F">
+                                        <size key="itemSize" width="128" height="128"/>
+                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    </collectionViewFlowLayout>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-1" id="VOV-9P-IGZ"/>
+                                        <outlet property="delegate" destination="-1" id="RPi-Gh-nIo"/>
+                                    </connections>
+                                </collectionView>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="Vzj-jn-cdA" firstAttribute="leading" secondItem="H8Z-UP-dco" secondAttribute="leading" id="91C-p1-XOM"/>
+                                <constraint firstItem="cdO-yN-ufp" firstAttribute="top" secondItem="Vzj-jn-cdA" secondAttribute="bottom" constant="20" id="V3n-Re-ULo"/>
+                                <constraint firstAttribute="trailing" secondItem="cdO-yN-ufp" secondAttribute="trailing" id="ZFc-eA-rCs"/>
+                                <constraint firstAttribute="trailing" secondItem="Vzj-jn-cdA" secondAttribute="trailing" id="Zp3-kv-Ecn"/>
+                                <constraint firstItem="Vzj-jn-cdA" firstAttribute="top" secondItem="H8Z-UP-dco" secondAttribute="top" constant="5" id="ht9-JZ-aX3"/>
+                                <constraint firstItem="cdO-yN-ufp" firstAttribute="leading" secondItem="H8Z-UP-dco" secondAttribute="leading" id="qo1-BB-X39"/>
+                                <constraint firstAttribute="bottom" secondItem="cdO-yN-ufp" secondAttribute="bottom" constant="20" id="ya4-sP-ILe"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="20"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="H8Z-UP-dco" firstAttribute="leading" secondItem="kbl-ko-n7n" secondAttribute="leading" id="5Cr-Qw-xFb"/>
+                        <constraint firstAttribute="trailing" secondItem="H8Z-UP-dco" secondAttribute="trailing" id="Cts-Zp-1IL"/>
+                        <constraint firstItem="H8Z-UP-dco" firstAttribute="top" secondItem="kbl-ko-n7n" secondAttribute="top" constant="150" id="mm5-Ds-z5M"/>
+                        <constraint firstAttribute="bottom" secondItem="H8Z-UP-dco" secondAttribute="bottom" constant="-20" id="sAf-mq-c8A"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kbl-ko-n7n" secondAttribute="trailing" id="1sq-fQ-S6G"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="kbl-ko-n7n" secondAttribute="bottom" id="A1i-Dl-Rcr"/>
+                <constraint firstItem="kbl-ko-n7n" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Ogg-5P-rpj"/>
+                <constraint firstItem="kbl-ko-n7n" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="WjP-eV-cXA"/>
+            </constraints>
+            <point key="canvasLocation" x="91" y="44"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="multiply" catalog="system" width="128" height="111"/>
+        <namedColor name="mainBlue">
+            <color red="0.20800000429153442" green="0.65499997138977051" blue="0.96100002527236938" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -302,16 +302,17 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     }
     
     @objc func viewPostSelected() {
-        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.imageUrl)
-        GlobalVariables.postImageDownlodUrl = self.imageUrl
-        GlobalVariables.postTitle = self.postItlte
-        GlobalVariables.postDescription = self.postDesc
-        GlobalVariables.postPrice = self.postPrice
-        GlobalVariables.userUID = self.authorOfPost
-        GlobalVariables.authorId = self.authorOfPost
-        GlobalVariables.postId = self.postId
-        GlobalVariables.type = "Total"
         let controller = ViewPostController()
+        controller.postImage2.loadImageUsingCacheWithUrlString(self.imageUrl)
+        controller.postImageDownlodUrl = self.imageUrl
+        controller.postTitle = self.postItlte
+        controller.postDescription = self.postDesc
+        controller.postPrice = self.postPrice
+        controller.userUID = self.authorOfPost
+        controller.authorId = self.authorOfPost
+        controller.postId = self.postId
+        controller.type = "Total"
+        
         Database.database().reference().child("Users").child(authorOfPost).child("profile-image").observe(.value) { (snapshot) in
             if let profileImageUrl : String = (snapshot.value as? String) {
                 controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)) { image, _, _, _ in

@@ -112,18 +112,18 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let controller = ViewPostController()
         controller.hidesBottomBarWhenPushed = true
-        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
-        GlobalVariables.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
-        GlobalVariables.postTitle = self.allJobs[indexPath.row].titleOfPost!
-        GlobalVariables.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
-        GlobalVariables.postPrice = self.allJobs[indexPath.row].price!
-        GlobalVariables.userUID = self.allJobs[indexPath.row].authorName!
+        controller.postImage2.loadImageUsingCacheWithUrlString(self.allJobs[indexPath.row].imagePost!)
+        controller.postImageDownlodUrl = self.allJobs[indexPath.row].imagePost!
+        controller.postTitle = self.allJobs[indexPath.row].titleOfPost!
+        controller.postDescription = self.allJobs[indexPath.row].descriptionOfPost!
+        controller.postPrice = self.allJobs[indexPath.row].price!
+        controller.userUID = self.allJobs[indexPath.row].authorName!
         Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
             if let profileImageUrl : String = (snapshot.value as? String) {
                 controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)!, completed: nil)
-                GlobalVariables.authorId = self.allJobs[indexPath.row].authorName!
-                GlobalVariables.postId = self.allJobs[indexPath.row].postId!
-                GlobalVariables.type = self.allJobs[indexPath.row].typeOfPrice!
+                controller.authorId = self.allJobs[indexPath.row].authorName!
+                controller.postId = self.allJobs[indexPath.row].postId!
+                controller.type = self.allJobs[indexPath.row].typeOfPrice!
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }

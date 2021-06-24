@@ -254,7 +254,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(named: "whiteback"), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
-        
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.backButtonTitle = " "
         
         self.tabBarController?.tabBar.isHidden = true
@@ -417,11 +417,37 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             cell.textView.isHidden = true
         }
         
+        let btn_left=UIButton(frame: CGRect(x: 8, y: cell.frame.height - 51, width: 32, height: 32))
+        btn_left.isUserInteractionEnabled = true
+        btn_left.addTarget(self, action: #selector(btnleftClick), for: .touchUpInside)
+        cell.addSubview(btn_left)
+        
+        let btn_right=UIButton(frame: CGRect(x: cell.frame.width - 40, y: cell.frame.height - 51, width: 32, height: 32))
+        btn_right.isUserInteractionEnabled = true
+        btn_right.addTarget(self, action: #selector(btnrightClick), for: .touchUpInside)
+        cell.addSubview(btn_right)
+        
         cell.messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
         
         cell.delegate = self
         
         return cell
+    }
+    
+    @objc func btnrightClick(_ sender: UIButton) {
+        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: MyProfilesVC.className) as? MyProfilesVC {
+            profileVC.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(profileVC,  animated: true)
+        }
+        print("right")
+    }
+    
+    @objc func btnleftClick(_ sender: UIButton) {
+        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
+            profileVC.userUID = user!.id!
+            self.navigationController?.pushViewController(profileVC,  animated: true)
+        }
+        print("left")
     }
     
     private func setupCell(cell: ChatMessageCell, message: Message) {

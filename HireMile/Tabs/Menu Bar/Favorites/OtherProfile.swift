@@ -1104,20 +1104,24 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.segmentedControl.selectedSegmentIndex == 0 {
             let controller = ViewPostController()
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
-            GlobalVariables.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
-            GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
-            GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
-            GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
-            GlobalVariables.authorId = self.myJobs[indexPath.row].authorName!
-            GlobalVariables.postId = self.myJobs[indexPath.row].postId!
-            GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
-            Database.database().reference().child("Users").child(self.myJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
-                if let name : String = (snapshot.value as? String) {
-                    controller.profileImage.sd_setImage(with: URL(string: name), completed: nil)
+            controller.hidesBottomBarWhenPushed = true
+            controller.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+            controller.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
+            controller.postTitle = self.myJobs[indexPath.row].titleOfPost!
+            controller.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
+            controller.postPrice = self.myJobs[indexPath.row].price!
+            controller.userUID = self.myJobs[indexPath.row].authorName!
+            controller.postId = self.myJobs[indexPath.row].postId!
+            controller.type = self.myJobs[indexPath.row].typeOfPrice!
+            Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
+                if let profileImageUrl : String = (snapshot.value as? String) {
+                    controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)!, completed: nil)
+                    controller.authorId = self.allJobs[indexPath.row].authorName!
+                    controller.postId = self.allJobs[indexPath.row].postId!
+                    controller.type = self.allJobs[indexPath.row].typeOfPrice!
+                    self.navigationController?.pushViewController(controller, animated: true)
                 }
             }
-            self.navigationController?.pushViewController(controller, animated: true)
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             if let uid = self.allRatings[indexPath.row].userUid {
                 GlobalVariables.userUID = uid

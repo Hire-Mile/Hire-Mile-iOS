@@ -12,10 +12,18 @@ class ProfileReviewTableViewCell: UITableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var profileImageView1: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    
+    
+    
+    
+    @IBOutlet weak var postProfileView: UIImageView!
+    @IBOutlet weak var userProfileView: UIImageView!
+    @IBOutlet weak var postTitleLabel: UILabel!
+    @IBOutlet weak var ratingView: CosmosView!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var ratingView: CosmosView!
-    
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

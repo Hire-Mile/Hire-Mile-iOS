@@ -57,7 +57,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     }()
     
     let tableView : UITableView = {
-        let tableview = UITableView()
+        let tableview = UITableView(frame: CGRect.zero, style: .grouped)
         tableview.translatesAutoresizingMaskIntoConstraints = false
         tableview.separatorStyle = .none
         tableview.backgroundColor = UIColor.white
@@ -130,6 +130,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         
         self.tableView.register(SearchCellKeyword.self, forCellReuseIdentifier: "SearcListCell")
         self.tableView.register(SearchProfilkeCell.self, forCellReuseIdentifier: "Saefls")
+        self.tableView.register(UINib(nibName: RecentServiceTableViewCell.className, bundle: nil), forCellReuseIdentifier: RecentServiceTableViewCell.className)
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
@@ -289,10 +290,33 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
+    func search(serviceName: String) {
+        debugPrint(serviceName)
+        let databaseRef = Database.database().reference().child("Jobs")
+        let query = databaseRef.queryOrdered(byChild: "title").queryStarting(atValue: serviceName, childKey: "title").queryEnding(atValue: serviceName + "\u{f8ff}", childKey: "title").queryLimited(toFirst: 50)
+        query.observeSingleEvent(of: .value) { (snapshot) in
+            guard snapshot.exists() != false else { return }
+            debugPrint(snapshot)
+            if let value = snapshot.value as? [String : AnyObject] {
+                var searchedArray = [String]()
+                for each in value {
+                      let title = each.value["title"] as! String
+                      print(title)
+                    searchedArray.append(title)
+                 }
+                self.justRes = [String]()
+                self.justRes.append(contentsOf: searchedArray)
+                self.isSearching = true
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
     @objc func textFieldChange() {
         
         if self.mode == "services" {
-            self.justRes = self.keywords.filter({$0.lowercased().prefix(self.searchTextField.text!.lowercased().count).contains(self.searchTextField.text!.lowercased())})
+            search(serviceName: self.searchTextField.text!)
+            //self.justRes = self.keywords.filter({$0.lowercased().prefix(self.searchTextField.text!.lowercased().count).contains(self.searchTextField.text!.lowercased())})
         } else if self.mode == "workers" {
             print("worker filter")
             self.userres = self.allUsers.filter({$0.username!.lowercased().prefix(self.searchTextField.text!.lowercased().count).contains(self.searchTextField.text!.lowercased())})
@@ -304,7 +328,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         self.tableView.reloadData()
         
         if self.searchTextField.text == "" {
-            self.isSearching = false
+            self.isSearching = true
             self.tableView.reloadData()
         }
     }
@@ -320,11 +344,17 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        if self.mode == "services" {
+            return 2
+        }
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.mode == "services" {
+            if(section == 1) {
+                return CommonUtils.getRecentServices().count
+            }
             if self.isSearching {
                 self.resultsLabel.text = "Results (\(self.justRes.count))"
                 return self.justRes.count
@@ -349,6 +379,13 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if self.mode == "services" {
+            if(indexPath.section == 1) {
+                let cell = tableView.dequeueReusableCell(withIdentifier: RecentServiceTableViewCell.className, for: indexPath) as! RecentServiceTableViewCell
+                let recent = CommonUtils.getRecentServices()[indexPath.row]
+                cell.selectionStyle = .none
+                cell.recentLabel.text = recent
+                return cell
+            }
             if self.isSearching {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "SearcListCell", for: indexPath) as! SearchCellKeyword
 //                cell.titleImageView.loadImage(from: URL(string: self.justRes[indexPath.row].imagePost!)!)
@@ -426,15 +463,24 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.mode == "services" {
+            if indexPath.section == 1 {
+                let controller = SearchResults()
+                controller.modalPresentationStyle = .fullScreen
+                controller.keyword = CommonUtils.getRecentServices()[indexPath.row]
+                self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+                return
+            }
             if self.isSearching {
                 let controller = SearchResults()
                 controller.modalPresentationStyle = .fullScreen
                 controller.keyword = self.justRes[indexPath.row]
+                CommonUtils.setRecentServices(str: self.justRes[indexPath.row])
                 self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
             } else {
                 let controller = SearchResults()
                 controller.modalPresentationStyle = .fullScreen
                 controller.keyword = self.keywords[indexPath.row]
+                CommonUtils.setRecentServices(str: self.keywords[indexPath.row])
                 self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
             }
         } else {
@@ -458,6 +504,34 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         }
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if self.mode == "services" {
+            if section == 1 {
+                let view = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 50))
+                let label = UILabel(frame: CGRect(x: 20, y: 0, width: view.frame.width-30, height: 50))
+                label.text = "Recent Searches"
+                view.addSubview(label)
+                view.backgroundColor = .clear
+                return view
+            }
+        }
+        return nil
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if self.mode == "services" {
+            if section == 1 {
+                return 50
+            }
+        }
+        return 0
+    }
+    
     @objc func xmarktouched () {
         navigationController?.popViewController(animated: true)
     }
@@ -468,6 +542,15 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         self.bottomTableViewConstraint?.isActive = true
         textField.resignFirstResponder()
         self.view.frame.origin.y = 0
+        if self.mode == "services" {
+            if searchTextField.text != "" {
+                let controller = SearchResults()
+                controller.modalPresentationStyle = .fullScreen
+                controller.keyword = searchTextField.text
+                CommonUtils.setRecentServices(str: searchTextField.text ?? "")
+                self.present(UINavigationController(rootViewController: controller), animated: true, completion: nil)
+            }
+        }
         return (true)
     }
     

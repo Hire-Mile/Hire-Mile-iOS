@@ -15,12 +15,22 @@ import SDWebImage
 
 class ViewPostController: UIViewController, UITextFieldDelegate {
     
-    var postId = ""
-    var authorId = ""
     
     let launcher = ProposalPopup()
-    
     var height : CGFloat = 0
+    var collectView : UICollectionView?
+    var pagecon : UIPageControl?
+    var arrayOfStrImages = [String]()
+    
+    var postImage2 = UIImageView()
+    var postImageDownlodUrl = ""
+    var postTitle = ""
+    var postDescription = ""
+    var postPrice = 0
+    var userUID = ""
+    var postId = ""
+    var authorId = ""
+    var type = ""
     
     let carousel : UIImageView = {
         let carousel = UIImageView()
@@ -160,25 +170,25 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
 //        let url = URL(string: GlobalVariables.postImageDownlodUrl)
 //        self.carousel.kf.setImage(with: url)
 //        GlobalVariables.postImageDownlodUrl = ""
-        self.carousel.sd_setImage(with: URL(string: GlobalVariables.postImageDownlodUrl)!, completed: nil)
-        self.titleLabel.text = GlobalVariables.postTitle
-        self.descriptionLabel.text = GlobalVariables.postDescription
+        self.carousel.sd_setImage(with: URL(string: postImageDownlodUrl), completed: nil)
+        
+        self.titleLabel.text = postTitle
+        self.descriptionLabel.text = postDescription
         self.height = self.estimateFrameForText(text: self.descriptionLabel.text!).height
         self.addSubviews()
         self.addConstraints()
-        if GlobalVariables.type == "Hourly" {
-            self.priceLabel.text = "$\(GlobalVariables.postPrice) / Hour"
+        self.addColletionView()
+        if type == "Hourly" {
+            self.priceLabel.text = "$\(postPrice) / Hour"
         } else {
-            self.priceLabel.text = "$\(GlobalVariables.postPrice)"
+            self.priceLabel.text = "$\(postPrice)"
         }
-        self.postId = GlobalVariables.postId
-        
-        self.authorId = GlobalVariables.authorId
-        
-        print(GlobalVariables.authorId)
-        self.authorId = GlobalVariables.authorId
-        
-        
+       
+        /* self.postId = postId
+         self.authorId = authorId
+         print(authorId)
+        self.authorId = authorId
+        */
         // Do any additional setup after loading the view.
     }
     
@@ -204,6 +214,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     }
     
     func addSubviews() {
+              
         self.view.addSubview(self.carousel)
         self.view.addSubview(self.informationView)
         self.informationView.addSubview(self.titleLabel)
@@ -213,6 +224,8 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(self.largeView)
         self.largeView.addSubview(self.seeAllButton)
         self.largeView.addSubview(self.textField)
+        
+      
     }
     
     func addConstraints() {
@@ -270,6 +283,47 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         
         heightConstraint.isActive = false
         bottomConstraint.isActive = true
+        
+    }
+    
+    func addColletionView()  {
+      
+        print(self.carousel.frame.size.height)
+
+        let array = postImageDownlodUrl.components(separatedBy: ",")
+        arrayOfStrImages = array
+        
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.scrollDirection = .horizontal
+    //    let vwWidth = (self.view.frame.width)
+     //   layout.itemSize = CGSize(width: vwWidth, height: 250)
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+       
+        
+        self.collectView = UICollectionView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 240), collectionViewLayout: layout)
+        self.collectView!.translatesAutoresizingMaskIntoConstraints = false
+        self.collectView!.backgroundColor = UIColor.white
+        self.collectView!.alwaysBounceVertical = false
+        self.collectView!.alwaysBounceHorizontal = true
+        self.collectView!.dataSource = self
+        self.collectView!.showsHorizontalScrollIndicator = false
+        self.collectView!.showsVerticalScrollIndicator = false
+        self.collectView!.delegate = self
+        self.collectView!.isPagingEnabled = true
+        self.collectView!.register(UINib(nibName: "CoverPhotoCell", bundle: nil), forCellWithReuseIdentifier: "CoverPhotoCell")
+        self.view.addSubview(collectView!)
+
+        self.collectView!.reloadData()
+        
+        self.pagecon = UIPageControl(frame: CGRect(x: 0, y: 220, width: self.view.frame.width , height: 10))
+        pagecon!.numberOfPages = arrayOfStrImages.count
+        pagecon!.currentPage = 0
+        pagecon!.pageIndicatorTintColor = UIColor.darkGray
+        pagecon!.currentPageIndicatorTintColor = UIColor.white
+        self.view.addSubview(self.pagecon!)
+        self.carousel.isHidden = true
     }
     
     private func estimateFrameForText(text: String) -> CGRect {
@@ -421,3 +475,43 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
     }
 
 }
+extension ViewPostController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate  {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return arrayOfStrImages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CoverPhotoCell", for: indexPath) as! CoverPhotoCell
+        cell.vWMain.layer.cornerRadius = 0.0
+        cell.imgCoverPhoto.layer.cornerRadius = 0.0
+        cell.imgCoverPhoto.sd_setImage(with: URL(string: arrayOfStrImages[indexPath.item]), completed: nil)
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+       
+        return CGSize(width: self.view.frame.size.width , height: 240)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    //MARK: ====: UIScrollView Delegate :====
+        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            let count = scrollView.contentOffset.x / scrollView.frame.size.width
+            self.pagecon!.currentPage = Int(count)
+        }
+    
+}
+

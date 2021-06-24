@@ -25,9 +25,8 @@ class UserProfileViewController: UIViewController {
     @IBOutlet weak var noServiceImage: UIImageView!
     @IBOutlet weak var noServiceLabel: UILabel!
     @IBOutlet weak var noServiceView: UIView!
-    
+    @IBOutlet weak var followerCount: UILabel!
     @IBOutlet weak var ratingLabel: UILabel!
-    
     @IBOutlet weak var profileRating: CosmosView!
     
     let arrMenu = ["Services","Reviews","Gallery","Followers","Info"]
@@ -179,6 +178,8 @@ class UserProfileViewController: UIViewController {
                             let follower = UserStructure()
                             follower.uid = snapshot.key
                             self.followers.append(follower)
+                            self.followerCount.text = "\(self.followers.count) Follower"
+                            self.followerCount.isHidden = true
                         }
                     }
                 }
@@ -299,6 +300,37 @@ class UserProfileViewController: UIViewController {
     @IBAction func btnFollowClick(_ sender: UIButton) {
         followingPressed()
     }
+    
+    @IBAction func btnFollowUserClick(_ sender: UIButton) {
+        let follower = self.followers[sender.tag]
+        guard let uid = follower.uid else {
+            return
+        }
+        let userInformation : Dictionary<String, Any> = [
+            "uid" : "\(uid)"
+        ]
+        let postFeed = ["\(uid)" : userInformation]
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").updateChildValues(postFeed)
+        Database.database().reference().child("Users").child(uid).child("fcmToken").observe(.value) { (snapshot) in
+            let token : String = (snapshot.value as? String)!
+            let sender = PushNotificationSender()
+            Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
+                let userName : String = (snapshot.value as? String)!
+                sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(userName) started following you!", page: true, senderId: Auth.auth().currentUser!.uid, recipient: uid)
+            }
+            self.tblProfile.reloadData()
+        }
+    }
+    
+    @IBAction func btnUnFollowUserClick(_ sender: UIButton) {
+        let follower = self.followers[sender.tag]
+        guard let uid = follower.uid else {
+            return
+        }
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(uid).removeValue()
+        self.followers[sender.tag].isFollow = false
+        self.tblProfile.reloadData()
+    }
 }
 
 extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource {
@@ -371,26 +403,26 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
             if let uid = self.allRatings[indexPath.row].userUid {
                 Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
                     if let nameString : String = (snapshot.value as? String) {
-                        cell.titleLabel.text! = nameString
+                        cell.usernameLabel.text! = nameString
                     } else {
-                        cell.titleLabel.text! = "Unknown"
+                        cell.usernameLabel.text! = "Unknown"
                     }
                 }
                 Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
                     if let profileImageString : String = (snapshot.value as? String) {
                         if profileImageString == "not-yet-selected" {
-                            cell.profileImageView1.image = UIImage(systemName: "person.circle.fill")
-                            cell.profileImageView1.tintColor = UIColor.lightGray
-                            cell.profileImageView1.contentMode = .scaleAspectFill
+                            cell.userProfileView.image = UIImage(systemName: "person.circle.fill")
+                            cell.userProfileView.tintColor = UIColor.lightGray
+                            cell.userProfileView.contentMode = .scaleAspectFill
                         } else {
-                            cell.profileImageView1.loadImageUsingCacheWithUrlString(profileImageString)
-                            cell.profileImageView1.tintColor = UIColor.lightGray
-                            cell.profileImageView1.contentMode = .scaleAspectFill
+                            cell.userProfileView.loadImageUsingCacheWithUrlString(profileImageString)
+                            cell.userProfileView.tintColor = UIColor.lightGray
+                            cell.userProfileView.contentMode = .scaleAspectFill
                         }
                     } else {
-                        cell.profileImageView1.image = UIImage(systemName: "person.circle.fill")
-                        cell.profileImageView1.tintColor = UIColor.lightGray
-                        cell.profileImageView1.contentMode = .scaleAspectFill
+                        cell.userProfileView.image = UIImage(systemName: "person.circle.fill")
+                        cell.userProfileView.tintColor = UIColor.lightGray
+                        cell.userProfileView.contentMode = .scaleAspectFill
                     }
                 }
             }
@@ -406,11 +438,24 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
             if let description = self.allRatings[indexPath.row].descriptionOfRating {
                 cell.descriptionLabel.text! = description
             }
-
+            
             if let postId = self.allRatings[indexPath.row].postId {
-                Database.database().reference().child("Jobs").child(postId).child("image").observe(.value) { (snapshot) in
-                    if let pictureString : String = (snapshot.value as? String) {
-                        cell.profileImageView.sd_setImage(with: URL(string: pictureString), placeholderImage: nil, options: .retryFailed, completed: nil)
+                Database.database().reference().child("Jobs").child(postId).observe(.value) { snapshot in
+                    if let pictureString : String = (snapshot.childSnapshot(forPath: "image").value as? String) {
+                        cell.postProfileView.sd_setImage(with: URL(string: pictureString), placeholderImage: nil, options: .retryFailed, completed: nil)
+                    }
+                    if let titleString : String = (snapshot.childSnapshot(forPath: "title").value as? String) {
+                        cell.postTitleLabel.text = titleString
+                    }
+                    if let priceString : Int = (snapshot.childSnapshot(forPath: "price").value as? Int) {
+                        cell.priceLabel.text = "$\(priceString)"
+                    }
+                    if let timestamp : Int = (snapshot.childSnapshot(forPath: "time").value as? Int) {
+                        if timestamp > 0 {
+                            let doubleTimeStamp = Double(timestamp)
+                            let date = doubleTimeStamp.getDateStringFromUnixTime(dateStyle: .medium, timeStyle: .none)
+                            cell.dateLabel.text = date
+                        }
                     }
                 }
             }
@@ -424,7 +469,6 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: ProfileFollowersTableViewCell.className, for: indexPath) as! ProfileFollowersTableViewCell
             cell.selectionStyle = .none
             cell.profileImageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-            debugPrint(self.followers)
             if let uid = self.followers[indexPath.row].uid {
                 Database.database().reference().child("Users").child(uid).child("name").observe(.value) { (snapshot) in
                     if let snapshot : String = (snapshot.value as? String) {
@@ -433,14 +477,48 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
                     }
                 }
                 
+                Database.database().reference().child("Users").child(uid).child("username").observe(.value) { (snapshot) in
+                    if let snapshot : String = (snapshot.value as? String) {
+                        cell.useremailLabel.text = "@"+snapshot
+                        //cell.index = indexPath
+                    }
+                }
+                
                 Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
                     let snapshot : String = (snapshot.value as? String)!
+                    
                     if snapshot == "not-yet-selected" {
                         cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
                         cell.profileImageView.tintColor = UIColor.lightGray
                         cell.profileImageView.contentMode = .scaleAspectFill
                     } else {
                         cell.profileImageView.sd_setImage(with: URL(string: snapshot)!, placeholderImage: nil, options: .retryFailed, completed: nil)
+                    }
+                }
+                if self.followers[indexPath.row].isFollow {
+                    cell.btnFollow.isHidden = true
+                    cell.btnDelete.isHidden = false
+                } else {
+                    cell.btnFollow.isHidden = false
+                    cell.btnDelete.isHidden = true
+                }
+                cell.btnDelete.tag = indexPath.row
+                cell.btnFollow.tag = indexPath.row
+                cell.btnFollow.addTarget(self, action: #selector(self.btnFollowUserClick(_:)), for: .touchUpInside)
+                cell.btnDelete.addTarget(self, action: #selector(self.btnUnFollowUserClick(_:)), for: .touchUpInside)
+                Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("favorites").child(uid).observe(.value) { (listOfuserFavorite) in
+                    if let value = listOfuserFavorite.value as? [String : Any] {
+                        let user = UserStructure()
+                        user.uid = value["uid"] as? String ?? "Error"
+                        if user.uid! == uid {
+                            self.followers[indexPath.row].isFollow = true
+                            cell.btnFollow.isHidden = true
+                            cell.btnDelete.isHidden = false
+                        } else {
+                            self.followers[indexPath.row].isFollow = false
+                            cell.btnFollow.isHidden = false
+                            cell.btnDelete.isHidden = true
+                        }
                     }
                 }
             }
@@ -480,14 +558,14 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
         switch selectIndex {
         case 0 :
             let controller = ViewPostController()
-            GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
-            GlobalVariables.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
-            GlobalVariables.postTitle = self.myJobs[indexPath.row].titleOfPost!
-            GlobalVariables.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
-            GlobalVariables.postPrice = self.myJobs[indexPath.row].price!
-            GlobalVariables.authorId = self.myJobs[indexPath.row].authorName!
-            GlobalVariables.postId = self.myJobs[indexPath.row].postId!
-            GlobalVariables.type = self.myJobs[indexPath.row].typeOfPrice!
+            controller.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
+            controller.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
+            controller.postTitle = self.myJobs[indexPath.row].titleOfPost!
+            controller.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
+            controller.postPrice = self.myJobs[indexPath.row].price!
+            controller.authorId = self.myJobs[indexPath.row].authorName!
+            controller.postId = self.myJobs[indexPath.row].postId!
+            controller.type = self.myJobs[indexPath.row].typeOfPrice!
             Database.database().reference().child("Users").child(self.myJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let name : String = (snapshot.value as? String) {
                     controller.profileImage.sd_setImage(with: URL(string: name), completed: nil)
@@ -526,7 +604,7 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
         case 2 :
             return 175
         case 3 :
-            return 90
+            return 70
         case 4 :
             return 150
         default:
@@ -543,7 +621,7 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
         case 2 :
             return 175
         case 3 :
-            return 90
+            return 70
         case 4 :
             return 150
         default:
@@ -586,7 +664,7 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
         selectIndex = indexPath.item
         colMenu.reloadData()
         
-        
+        self.followerCount.isHidden = true
         switch selectIndex {
         case 0 :
             UIView.animate(withDuration: 0.5) {
@@ -611,6 +689,7 @@ extension UserProfileViewController : UICollectionViewDelegate,UICollectionViewD
                 self.tblProfile.reloadData()
             }
         case 3 :
+            self.followerCount.isHidden = false
             UIView.animate(withDuration: 0.5) {
                 self.tblProfile.alpha = 1
             } completion: { (complete) in

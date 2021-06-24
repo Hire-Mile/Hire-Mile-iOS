@@ -1,24 +1,24 @@
 //
-//  ProfileFollowersTableViewCell.swift
+//  MyProfileFollowersTableViewCell.swift
 //  HireMile
 //
-//  Created by jaydeep vadalia on 06/06/21.
+//  Created by jaydeep vadalia on 18/06/21.
 //  Copyright © 2021 Jorge Zapata. All rights reserved.
 //
 
 import UIKit
 
-class ProfileFollowersTableViewCell: UITableViewCell {
-
+class MyProfileFollowersTableViewCell: UITableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var useremailLabel: UILabel!
-    
-    @IBOutlet weak var btnDelete: UIButton!
-    @IBOutlet weak var btnFollow: UIButton!
+    @IBOutlet weak var followButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
+
+    
+
 }

@@ -88,17 +88,18 @@ class SearchResults: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let controller = ViewPostController()
         GlobalVariables.catId = self.allJobs[indexPath.row]
         
-        GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
-        GlobalVariables.postImageDownlodUrl = GlobalVariables.catId.imagePost!
-        GlobalVariables.postTitle = GlobalVariables.catId.titleOfPost!
-        GlobalVariables.postDescription = GlobalVariables.catId.descriptionOfPost!
-        GlobalVariables.postPrice = GlobalVariables.catId.price!
-        GlobalVariables.authorId = GlobalVariables.catId.authorName!
-        GlobalVariables.postId = GlobalVariables.catId.postId!
-        GlobalVariables.type = GlobalVariables.catId.typeOfPrice!
-        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+        controller.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
+        controller.postImageDownlodUrl = GlobalVariables.catId.imagePost!
+        controller.postTitle = GlobalVariables.catId.titleOfPost!
+        controller.postDescription = GlobalVariables.catId.descriptionOfPost!
+        controller.postPrice = GlobalVariables.catId.price!
+        controller.authorId = GlobalVariables.catId.authorName!
+        controller.postId = GlobalVariables.catId.postId!
+        controller.type = GlobalVariables.catId.typeOfPrice!
+        self.navigationController?.pushViewController(controller, animated: true)
         GlobalVariables.presentToCat = false
         GlobalVariables.catId = JobStructure()
     }

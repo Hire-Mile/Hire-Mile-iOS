@@ -197,24 +197,25 @@ class MyReviews: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let postController = ViewPostController()
         Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("image").observeSingleEvent(of: .value, with: { (snapshot) in
             if let imageUrl : String = (snapshot.value as? String) {
-                GlobalVariables.postImage2.loadImageUsingCacheWithUrlString(imageUrl)
-                GlobalVariables.postImageDownlodUrl = imageUrl
+                postController.postImage2.loadImageUsingCacheWithUrlString(imageUrl)
+                postController.postImageDownlodUrl = imageUrl
                 Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("title").observe(.value) { (titoe) in
                     if let titleOf : String = (titoe.value as? String) {
-                        GlobalVariables.postTitle = titleOf
+                        postController.postTitle = titleOf
                         Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("description").observe(.value) { (dsce) in
                             if let descriptionOf : String = (dsce.value as? String) {
-                                GlobalVariables.postDescription = descriptionOf
+                                postController.postDescription = descriptionOf
                                 Database.database().reference().child("Jobs").child(self.ratings[indexPath.row].postId!).child("price").observe(.value) { (prices) in
                                     if let priceOf : Int = (prices.value as? Int) {
-                                        GlobalVariables.postPrice = priceOf
-                                        GlobalVariables.userUID = self.ratings[indexPath.row].userUid!
-                                        GlobalVariables.authorId = self.ratings[indexPath.row].userUid!
-                                        GlobalVariables.postId = self.ratings[indexPath.row].postId!
-                                        GlobalVariables.type = "total"
-                                        self.navigationController?.pushViewController(ViewPostController(), animated: true)
+                                        postController.postPrice = priceOf
+                                        postController.userUID = self.ratings[indexPath.row].userUid!
+                                        postController.authorId = self.ratings[indexPath.row].userUid!
+                                        postController.postId = self.ratings[indexPath.row].postId!
+                                        postController.type = "total"
+                                        self.navigationController?.pushViewController(postController, animated: true)
                                     }else {
                                         print("price")
                                     }
