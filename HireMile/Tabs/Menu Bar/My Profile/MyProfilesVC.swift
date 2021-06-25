@@ -419,6 +419,8 @@ extension MyProfilesVC : UITableViewDelegate,UITableViewDataSource {
                     }
                     if let titleString : String = (snapshot.childSnapshot(forPath: "title").value as? String) {
                         cell.postTitleLabel.text = titleString
+                    } else {
+                        cell.postTitleLabel.text = "Deleted Jobs"
                     }
                     if let priceString : Int = (snapshot.childSnapshot(forPath: "price").value as? Int) {
                         cell.priceLabel.text = "$\(priceString)"

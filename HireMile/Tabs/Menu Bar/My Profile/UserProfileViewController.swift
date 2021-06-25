@@ -106,7 +106,7 @@ class UserProfileViewController: UIViewController {
                     self.myJobs.append(job)
                 }
             }
-            self.myJobs.sort(by: { $1.timeStamp! > $0.timeStamp! } )
+            //self.myJobs.sort(by: { $1.timeStamp! > $0.timeStamp! } )
             self.tblProfile.reloadData()
         }
         view.backgroundColor = UIColor.white
@@ -446,6 +446,8 @@ extension UserProfileViewController : UITableViewDelegate,UITableViewDataSource 
                     }
                     if let titleString : String = (snapshot.childSnapshot(forPath: "title").value as? String) {
                         cell.postTitleLabel.text = titleString
+                    } else {
+                        cell.postTitleLabel.text = "Deleted Jobs"
                     }
                     if let priceString : Int = (snapshot.childSnapshot(forPath: "price").value as? Int) {
                         cell.priceLabel.text = "$\(priceString)"
