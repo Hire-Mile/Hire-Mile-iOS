@@ -138,6 +138,7 @@ PODS:
   - GTMSessionFetcher/Core (1.4.0)
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
+  - IQKeyboardManager (6.5.6)
   - JGProgressHUD (2.2)
   - leveldb-library (1.22)
   - MBProgressHUD (1.2.0)
@@ -178,6 +179,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - FSCalendar
   - GoogleSignIn
+  - IQKeyboardManager
   - JGProgressHUD
   - MBProgressHUD
   - PhoneNumberKit
@@ -216,6 +218,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
+    - IQKeyboardManager
     - JGProgressHUD
     - leveldb-library
     - MBProgressHUD
@@ -257,6 +260,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  IQKeyboardManager: 2a6e97afdafc7becf0cb17a9a8d795e3a980717f
   JGProgressHUD: d83d7a981b85d11205e19ff8ad5bb9c40571c847
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
@@ -271,6 +275,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: 7407db3c337d1f98862cff69814f0153655a7b38
+PODFILE CHECKSUM: 6cadf66115413485e1c09763924ff030a0136f61
 
 COCOAPODS: 1.10.1

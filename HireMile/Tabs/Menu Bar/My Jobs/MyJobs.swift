@@ -566,12 +566,16 @@ class MyJobs: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 Database.database().reference().child("Jobs").child(jobKey).child("title").observe(.value) { (snapshot) in
                     if let pictureString : String = (snapshot.value as? String) {
                         cell.postTitleLabel.text = pictureString
+                    } else {
+                        cell.postTitleLabel.text = "Deleted Post"
                     }
                 }
                 
                 Database.database().reference().child("Jobs").child(jobKey).child("price").observe(.value) { (snapshot) in
                     if let pictureString : Int = (snapshot.value as? Int) {
                         cell.priceLabel.text = "$\(pictureString)"
+                    } else {
+                        cell.priceLabel.text = ""
                     }
                 }
             }
@@ -955,7 +959,7 @@ class MyJobsCompletedgCell: UITableViewCell {
     
     let userNameLabel : UILabel = {
         let label = UILabel()
-        label.text = "Name"
+        label.text = ""
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.black
@@ -1082,6 +1086,12 @@ class MyJobsCompletedgCell: UITableViewCell {
         profileImageView.topAnchor.constraint(equalTo: reviewLabel.bottomAnchor, constant: 14).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 30).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        addSubview(userNameLabel)
+        userNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        userNameLabel.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
+        userNameLabel.leftAnchor.constraint(equalTo: profileImageView.rightAnchor, constant: 14).isActive = true
+        userNameLabel.rightAnchor.constraint(equalTo: priceLabel.rightAnchor).isActive = true
         
         addSubview(star1)
         star1.topAnchor.constraint(equalTo: self.postTitleLabel.bottomAnchor, constant: 5).isActive = true

@@ -54,5 +54,7 @@ target 'HireMile' do
   pod 'SDWebImage'
   
   pod 'Cosmos'
+  
+  pod 'IQKeyboardManager'
 
 end

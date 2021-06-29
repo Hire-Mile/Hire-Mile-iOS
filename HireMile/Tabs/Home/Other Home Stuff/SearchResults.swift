@@ -91,7 +91,7 @@ class SearchResults: UITableViewController {
         let controller = ViewPostController()
         GlobalVariables.catId = self.allJobs[indexPath.row]
         
-        controller.postImage2.loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
+        controller.postImage2.sd_setImage(with: URL(string: GlobalVariables.catId.imagePost!), completed: nil)//loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
         controller.postImageDownlodUrl = GlobalVariables.catId.imagePost!
         controller.postTitle = GlobalVariables.catId.titleOfPost!
         controller.postDescription = GlobalVariables.catId.descriptionOfPost!

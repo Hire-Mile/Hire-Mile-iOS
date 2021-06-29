@@ -911,7 +911,9 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
                 editVC.hidesBottomBarWhenPushed = true
                 GlobalVariables.isGoingToPost = false
                 self.passingImage = nil
-                self.navigationController?.pushViewController(editVC,  animated: true)
+                if let navVC = self.tabBarController?.selectedViewController as? UINavigationController {
+                    navVC.pushViewController(editVC, animated: true)
+                }
             }
         }
         

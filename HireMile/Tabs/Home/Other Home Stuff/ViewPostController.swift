@@ -211,6 +211,11 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
                 self.navigationItem.title = name
             }
         }
+        Database.database().reference().child("Users").child(self.authorId).child("profile-image").observe(.value) { (snapshot) in
+            if let url : String = (snapshot.value as? String) {
+                self.profileImage.sd_setImage(with: URL(string: url), completed: nil)
+            }
+        }
     }
     
     func addSubviews() {

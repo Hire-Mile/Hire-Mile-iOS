@@ -13,6 +13,7 @@ import GoogleSignIn
 import FBSDKCoreKit
 import FirebaseAuth
 import FirebaseDatabase
+import IQKeyboardManager
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -27,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         
         UINavigationBar.appearance().tintColor = UIColor.black
+        
+        IQKeyboardManager.shared().isEnabled = true
         
         print("🚀 HIREMILE LAUNCHED! 🚀")
         

@@ -48,6 +48,7 @@ class CreatePosts: UIViewController ,UITextViewDelegate,CLLocationManagerDelegat
     }
     
     func UISetUp()  {
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         setupLocationManager()
         self.colCoverPhoto.register(UINib(nibName: "CoverPhotoCell", bundle: nil), forCellWithReuseIdentifier: "CoverPhotoCell")
 
