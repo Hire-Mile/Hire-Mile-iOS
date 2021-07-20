@@ -194,6 +194,8 @@ class MyProfilesVC: UIViewController {
              job.userUid = value["user-id"] as? String ?? "Error"
              job.postId = value["post-id"] as? String ?? "Error"
              job.descriptionOfRating = value["description"] as? String ?? "Error"
+             job.timestamp = value["timestamp"] as? Int ?? 0
+             job.price = value["price"] as? String ?? ""
              self.ratingNumber += 1
              self.finalRating += job.ratingNumber!
              self.allRatings.append(job)
@@ -323,6 +325,13 @@ extension MyProfilesVC : UITableViewDelegate,UITableViewDataSource {
         case 2 :
             return 0
         case 3 :
+            if self.followers.count == 0 {
+                self.noServiceImage.image = UIImage(named: "not-service")!
+                self.noServiceLabel.text = "No Services"
+                self.noServiceView.isHidden = false
+            } else {
+                self.noServiceView.isHidden = true
+            }
             return followers.count
         case 4 :
             if self.myJobs.count == 0 {
@@ -416,14 +425,30 @@ extension MyProfilesVC : UITableViewDelegate,UITableViewDataSource {
                 Database.database().reference().child("Jobs").child(postId).observe(.value) { snapshot in
                     if let pictureString : String = (snapshot.childSnapshot(forPath: "image").value as? String) {
                         cell.postProfileView.sd_setImage(with: URL(string: pictureString), placeholderImage: nil, options: .retryFailed, completed: nil)
+                    } else  {
+                        cell.postProfileView.image = UIImage(named: "ProfileIcon")
                     }
                     if let titleString : String = (snapshot.childSnapshot(forPath: "title").value as? String) {
                         cell.postTitleLabel.text = titleString
                     } else {
-                        cell.postTitleLabel.text = "Deleted Jobs"
+                        if let description = self.allRatings[indexPath.row].descriptionOfRating {
+                            cell.postTitleLabel.text! = description
+                            cell.descriptionLabel.text = ""
+                        }
                     }
                     if let priceString : Int = (snapshot.childSnapshot(forPath: "price").value as? Int) {
                         cell.priceLabel.text = "$\(priceString)"
+                    } else {
+                        if let priceStrin = self.allRatings[indexPath.row].price {
+                            cell.priceLabel.text = "\(priceStrin)"
+                        }
+                    }
+                    if let timestampRating : Int = self.allRatings[indexPath.row].timestamp {
+                        if timestampRating > 0 {
+                            let doubleTimeStamp = Double(timestampRating)
+                            let date = doubleTimeStamp.getDateStringFromUnixTime(dateStyle: .medium, timeStyle: .none)
+                            cell.dateLabel.text = date
+                        }
                     }
                     if let timestamp : Int = (snapshot.childSnapshot(forPath: "time").value as? Int) {
                         if timestamp > 0 {

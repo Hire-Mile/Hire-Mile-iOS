@@ -41,6 +41,8 @@
 	<string>525344475123469</string>
 	<key>FacebookDisplayName</key>
 	<string>Hire-Mile</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

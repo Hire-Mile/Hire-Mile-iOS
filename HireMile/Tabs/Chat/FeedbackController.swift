@@ -105,6 +105,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
     
     var rating = 0
     var numberToUpload = 0
+    var price = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,6 +113,14 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
         print("HELOOO")
         print(GlobalVariables.jobRefId)
         print("HELOOO")
+        
+        if GlobalVariables.jobId != nil &&  GlobalVariables.jobId != "" {
+            Database.database().reference().child("Jobs").child(GlobalVariables.jobId).observe(.value) { snapshot in
+                if let priceString : Int = (snapshot.childSnapshot(forPath: "price").value as? Int) {
+                    self.price = "$\(priceString)"
+                }
+            }
+        }
         
         view.backgroundColor = UIColor.white
         
@@ -319,6 +328,7 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
 //            "post-id" : GlobalVariables.jobRefId,
             "timestamp" : timestamp,
             "description" : self.tf.text!,
+            "price": price
         ] as [String : Any]
         let key = Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("ratings").childByAutoId().key
         let postFeed = ["\(key!)" : values]

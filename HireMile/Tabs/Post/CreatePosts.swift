@@ -15,7 +15,7 @@ import FirebaseStorage
 import MBProgressHUD
 import CoreLocation
 
-class CreatePosts: UIViewController ,UITextViewDelegate,CLLocationManagerDelegate{
+class CreatePosts: UIViewController ,UITextViewDelegate {
 
     @IBOutlet weak var imgCoverPhoto: UIImageView!
     @IBOutlet weak var txtTitle: UITextField!
@@ -44,6 +44,8 @@ class CreatePosts: UIViewController ,UITextViewDelegate,CLLocationManagerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         UISetUp()
+        locationManager.delegate = self
+        locationManager.startUpdatingLocation()
         // Do any additional setup after loading the view.
     }
     
@@ -342,6 +344,12 @@ class CreatePosts: UIViewController ,UITextViewDelegate,CLLocationManagerDelegat
         }
         self.present(alertVC, animated: true, completion: nil)
         
+    }
+}
+
+extension CreatePosts: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.locationManager.stopUpdatingLocation()
     }
 }
 
