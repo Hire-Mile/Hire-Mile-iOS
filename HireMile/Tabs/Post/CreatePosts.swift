@@ -323,7 +323,7 @@ class CreatePosts: UIViewController ,UITextViewDelegate {
         if self.arrayOfImages.count <= 4 {
             let alertVC = ChooseYourSourceVC.init(nibName: "ChooseYourSourceVC", bundle: nil)
             alertVC.modalPresentationStyle = .custom
-            alertVC.imgName = {(img) -> Void in
+            alertVC.imgName = {(infp,img) -> Void in
                 self.imgCoverPhoto.image = img
                 self.arrayOfImages.append(img)
                 self.colCoverPhoto.reloadData()

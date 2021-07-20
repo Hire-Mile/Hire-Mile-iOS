@@ -13,6 +13,8 @@ class ChatMessageCell: UICollectionViewCell {
     
     var chatLogController : ChatLogController2?
     
+    var chatLogControllerVC : ChatVC?
+    
     var delegate: UserCellDelegate?
     
     var index : IndexPath?

@@ -250,7 +250,7 @@ class EditPostsVC: UIViewController,UITextViewDelegate {
         if self.arrayOfImages.count <= 4 && self.arrayOfStrImages.count <= 4 {
             let alertVC = ChooseYourSourceVC.init(nibName: "ChooseYourSourceVC", bundle: nil)
             alertVC.modalPresentationStyle = .custom
-            alertVC.imgName = {(img) -> Void in
+            alertVC.imgName = {(ifo,img) -> Void in
                 self.imgCoverPhoto.image = img
                 //self.arrayOfImages.append(img)
                 MBProgressHUD.showAdded(to: self.view, animated: true)

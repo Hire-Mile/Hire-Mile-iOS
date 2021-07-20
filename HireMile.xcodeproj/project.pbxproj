@@ -7,6 +7,69 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040499E2269AD4C20079D8D4 /* AddCardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040499E1269AD4C20079D8D4 /* AddCardVC.swift */; };
+		040CECC9269B2195008F07BC /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 040CECC8269B2195008F07BC /* Menu.storyboard */; };
+		040CECCC269B2469008F07BC /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040CECCB269B2469008F07BC /* MenuVC.swift */; };
+		041B77B12699552D00697A9C /* colDateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041B77AF2699552D00697A9C /* colDateCell.swift */; };
+		041B77B22699552D00697A9C /* colDateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 041B77B02699552D00697A9C /* colDateCell.xib */; };
+		0451DD1F269A9D14005B8BFD /* PaymentSuccessfulVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0451DD1E269A9D14005B8BFD /* PaymentSuccessfulVC.swift */; };
+		0452B26226999E9E006F9A5E /* MYScheduleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452B26126999E9E006F9A5E /* MYScheduleVC.swift */; };
+		0452B26626999F2B006F9A5E /* MyScheduleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452B26426999F2B006F9A5E /* MyScheduleCell.swift */; };
+		0452B26726999F2B006F9A5E /* MyScheduleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0452B26526999F2B006F9A5E /* MyScheduleCell.xib */; };
+		0452B2692699D1E3006F9A5E /* Schedule.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0452B2682699D1E2006F9A5E /* Schedule.storyboard */; };
+		0452B26B2699D1FB006F9A5E /* Appointment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0452B26A2699D1FB006F9A5E /* Appointment.storyboard */; };
+		0452B26D2699D25E006F9A5E /* Payment.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0452B26C2699D25E006F9A5E /* Payment.storyboard */; };
+		045A80C02699EF130098BC95 /* PaymentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045A80BF2699EF130098BC95 /* PaymentVC.swift */; };
+		0466435A26975DB5007B3460 /* BookAppointmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0466435926975DB5007B3460 /* BookAppointmentVC.swift */; };
+		0466435D269763B2007B3460 /* colTimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0466435B269763B2007B3460 /* colTimeCell.swift */; };
+		0466435E269763B2007B3460 /* colTimeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0466435C269763B2007B3460 /* colTimeCell.xib */; };
+		0467D0B7269AB5CE003B9A24 /* AddpaymentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0467D0B6269AB5CE003B9A24 /* AddpaymentVC.swift */; };
+		0470E0FF2699DD5700B094DB /* colPaymentCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0470E0FD2699DD5700B094DB /* colPaymentCardCell.swift */; };
+		0470E1002699DD5700B094DB /* colPaymentCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0470E0FE2699DD5700B094DB /* colPaymentCardCell.xib */; };
+		047A6499269AF15900461329 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 047A6498269AF15900461329 /* Home.storyboard */; };
+		047A649B269AFD4200461329 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047A649A269AFD4200461329 /* HomeVC.swift */; };
+		047A649E269B0B6600461329 /* colServicesorWorkersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047A649C269B0B6600461329 /* colServicesorWorkersCell.swift */; };
+		047A649F269B0B6600461329 /* colServicesorWorkersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047A649D269B0B6600461329 /* colServicesorWorkersCell.xib */; };
+		0482E9A9269AA60C008FD06F /* RattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0482E9A8269AA60C008FD06F /* RattingVC.swift */; };
+		04A0F114269C713C0004CE87 /* AcceptPayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A0F112269C713C0004CE87 /* AcceptPayCell.swift */; };
+		04A0F115269C713C0004CE87 /* AcceptPayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A0F113269C713C0004CE87 /* AcceptPayCell.xib */; };
+		04A0F117269C8D910004CE87 /* Tabbar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04A0F116269C8D910004CE87 /* Tabbar.storyboard */; };
+		04AF8B2B269C5AD600B41537 /* ChatRightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF8B29269C5AD600B41537 /* ChatRightCell.swift */; };
+		04AF8B2C269C5AD600B41537 /* ChatRightCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04AF8B2A269C5AD600B41537 /* ChatRightCell.xib */; };
+		04AF8B31269C65CC00B41537 /* ChatLeftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF8B2F269C65CC00B41537 /* ChatLeftCell.swift */; };
+		04AF8B32269C65CC00B41537 /* ChatLeftCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04AF8B30269C65CC00B41537 /* ChatLeftCell.xib */; };
+		04F23EEF269BE99D007C2D90 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F23EEE269BE99D007C2D90 /* Chat.storyboard */; };
+		04F23EF3269BEA61007C2D90 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F23EF2269BEA61007C2D90 /* ChatVC.swift */; };
+		04F79719269972FC00044938 /* CVCalendarViewAppearanceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F796FA269972CF00044938 /* CVCalendarViewAppearanceDelegate.swift */; };
+		04F7971A269972FC00044938 /* CVCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F796FB269972D100044938 /* CVCalendarView.swift */; };
+		04F7971B269972FC00044938 /* CVCalendarMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F796FC269972D200044938 /* CVCalendarMenuView.swift */; };
+		04F7971C269972FC00044938 /* CVScrollDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F796FD269972D400044938 /* CVScrollDirection.swift */; };
+		04F7971D269972FC00044938 /* CVCalendarMonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F796FE269972D500044938 /* CVCalendarMonthView.swift */; };
+		04F7971E269972FC00044938 /* CVCalendarContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F796FF269972D700044938 /* CVCalendarContentViewController.swift */; };
+		04F7971F269972FC00044938 /* CVAuxiliaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79700269972D800044938 /* CVAuxiliaryView.swift */; };
+		04F79720269972FC00044938 /* CVRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79701269972DA00044938 /* CVRange.swift */; };
+		04F79721269972FC00044938 /* CVCalendarViewAnimatorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79702269972DB00044938 /* CVCalendarViewAnimatorDelegate.swift */; };
+		04F79722269972FC00044938 /* CVCalendarDayViewControlCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79703269972DD00044938 /* CVCalendarDayViewControlCoordinator.swift */; };
+		04F79723269972FC00044938 /* CVWeekdaySymbolType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79704269972DE00044938 /* CVWeekdaySymbolType.swift */; };
+		04F79724269972FC00044938 /* CVCalendarWeekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79705269972E000044938 /* CVCalendarWeekday.swift */; };
+		04F79725269972FC00044938 /* CVShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79706269972E100044938 /* CVShape.swift */; };
+		04F79726269972FC00044938 /* CVCalendarViewAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79707269972E300044938 /* CVCalendarViewAnimator.swift */; };
+		04F79727269972FC00044938 /* CVCalendarMonthContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79708269972E400044938 /* CVCalendarMonthContentViewController.swift */; };
+		04F79728269972FC00044938 /* CVCalendarDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79709269972E600044938 /* CVCalendarDayView.swift */; };
+		04F79729269972FC00044938 /* CVDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F7970A269972E700044938 /* CVDate.swift */; };
+		04F7972A269972FC00044938 /* CVCalendarTouchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F7970B269972E900044938 /* CVCalendarTouchController.swift */; };
+		04F7972B269972FC00044938 /* CVCalendarWeekContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F7970C269972EA00044938 /* CVCalendarWeekContentViewController.swift */; };
+		04F7972C269972FC00044938 /* CVCalendarViewPresentationMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F7970D269972EC00044938 /* CVCalendarViewPresentationMode.swift */; };
+		04F7972D269972FC00044938 /* CVCalendarContentPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F7970F269972EF00044938 /* CVCalendarContentPresentationCoordinator.swift */; };
+		04F7972E269972FC00044938 /* CVStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79710269972F000044938 /* CVStatus.swift */; };
+		04F7972F269972FC00044938 /* CVSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79711269972F200044938 /* CVSet.swift */; };
+		04F79730269972FC00044938 /* CVCalendarWeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79712269972F300044938 /* CVCalendarWeekView.swift */; };
+		04F79731269972FC00044938 /* CVPresent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79713269972F500044938 /* CVPresent.swift */; };
+		04F79732269972FC00044938 /* CVCalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79714269972F600044938 /* CVCalendarManager.swift */; };
+		04F79733269972FC00044938 /* CVCalendarMenuViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79715269972F800044938 /* CVCalendarMenuViewDelegate.swift */; };
+		04F79734269972FC00044938 /* CVCalendarViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79716269972F900044938 /* CVCalendarViewDelegate.swift */; };
+		04F79735269972FC00044938 /* CVCalendarViewAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79717269972FB00044938 /* CVCalendarViewAppearance.swift */; };
+		04F79736269972FC00044938 /* CVSelectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F79718269972FC00044938 /* CVSelectionType.swift */; };
 		74A8C31132ABCD5900CB8CC9 /* Pods_HireMile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A17E2DBFD7B47B668A9B7953 /* Pods_HireMile.framework */; };
 		78008CD22569B7DA005E4A15 /* ResetPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD02569B7DA005E4A15 /* ResetPassword.swift */; };
 		78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78008CD12569B7DA005E4A15 /* ChangePassword.swift */; };
@@ -138,26 +201,91 @@
 		AEA5FF2D266CB901003CA733 /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5FF2C266CB901003CA733 /* CommonUtils.swift */; };
 		AEA5FF2F266CB93F003CA733 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5FF2E266CB93F003CA733 /* Constant.swift */; };
 		AEC0ADB3268204DB00C49C68 /* CreatePosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC0ADB2268204DB00C49C68 /* CreatePosts.swift */; };
+		AED4A55026A5BCFA00934B34 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AED4A54F26A5BCF900934B34 /* Gilroy-Bold.ttf */; };
 		AED50E2F2679E8DE00BA72E6 /* EditPostsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED50E2E2679E8DE00BA72E6 /* EditPostsVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		040499E1269AD4C20079D8D4 /* AddCardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCardVC.swift; sourceTree = "<group>"; };
+		040CECC8269B2195008F07BC /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
+		040CECCB269B2469008F07BC /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		041B77AF2699552D00697A9C /* colDateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = colDateCell.swift; sourceTree = "<group>"; };
+		041B77B02699552D00697A9C /* colDateCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = colDateCell.xib; sourceTree = "<group>"; };
+		0451DD1E269A9D14005B8BFD /* PaymentSuccessfulVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessfulVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		0452B26126999E9E006F9A5E /* MYScheduleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MYScheduleVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		0452B26426999F2B006F9A5E /* MyScheduleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyScheduleCell.swift; sourceTree = "<group>"; };
+		0452B26526999F2B006F9A5E /* MyScheduleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyScheduleCell.xib; sourceTree = "<group>"; };
+		0452B2682699D1E2006F9A5E /* Schedule.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Schedule.storyboard; sourceTree = "<group>"; };
+		0452B26A2699D1FB006F9A5E /* Appointment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Appointment.storyboard; sourceTree = "<group>"; };
+		0452B26C2699D25E006F9A5E /* Payment.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Payment.storyboard; sourceTree = "<group>"; };
+		045A80BF2699EF130098BC95 /* PaymentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		0466435926975DB5007B3460 /* BookAppointmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookAppointmentVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		0466435B269763B2007B3460 /* colTimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = colTimeCell.swift; sourceTree = "<group>"; };
+		0466435C269763B2007B3460 /* colTimeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = colTimeCell.xib; sourceTree = "<group>"; };
+		0467D0B6269AB5CE003B9A24 /* AddpaymentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddpaymentVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		0470E0FD2699DD5700B094DB /* colPaymentCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = colPaymentCardCell.swift; sourceTree = "<group>"; };
+		0470E0FE2699DD5700B094DB /* colPaymentCardCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = colPaymentCardCell.xib; sourceTree = "<group>"; };
+		047A6498269AF15900461329 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
+		047A649A269AFD4200461329 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		047A649C269B0B6600461329 /* colServicesorWorkersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = colServicesorWorkersCell.swift; sourceTree = "<group>"; };
+		047A649D269B0B6600461329 /* colServicesorWorkersCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = colServicesorWorkersCell.xib; sourceTree = "<group>"; };
+		0482E9A8269AA60C008FD06F /* RattingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RattingVC.swift; sourceTree = "<group>"; };
+		04A0F112269C713C0004CE87 /* AcceptPayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptPayCell.swift; sourceTree = "<group>"; };
+		04A0F113269C713C0004CE87 /* AcceptPayCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AcceptPayCell.xib; sourceTree = "<group>"; };
+		04A0F116269C8D910004CE87 /* Tabbar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Tabbar.storyboard; sourceTree = "<group>"; };
+		04AF8B29269C5AD600B41537 /* ChatRightCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRightCell.swift; sourceTree = "<group>"; };
+		04AF8B2A269C5AD600B41537 /* ChatRightCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatRightCell.xib; sourceTree = "<group>"; };
+		04AF8B2F269C65CC00B41537 /* ChatLeftCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLeftCell.swift; sourceTree = "<group>"; };
+		04AF8B30269C65CC00B41537 /* ChatLeftCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatLeftCell.xib; sourceTree = "<group>"; };
+		04F23EEE269BE99D007C2D90 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
+		04F23EF2269BEA61007C2D90 /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		04F796FA269972CF00044938 /* CVCalendarViewAppearanceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarViewAppearanceDelegate.swift; sourceTree = "<group>"; };
+		04F796FB269972D100044938 /* CVCalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarView.swift; sourceTree = "<group>"; };
+		04F796FC269972D200044938 /* CVCalendarMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarMenuView.swift; sourceTree = "<group>"; };
+		04F796FD269972D400044938 /* CVScrollDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVScrollDirection.swift; sourceTree = "<group>"; };
+		04F796FE269972D500044938 /* CVCalendarMonthView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarMonthView.swift; sourceTree = "<group>"; };
+		04F796FF269972D700044938 /* CVCalendarContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarContentViewController.swift; sourceTree = "<group>"; };
+		04F79700269972D800044938 /* CVAuxiliaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVAuxiliaryView.swift; sourceTree = "<group>"; };
+		04F79701269972DA00044938 /* CVRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVRange.swift; sourceTree = "<group>"; };
+		04F79702269972DB00044938 /* CVCalendarViewAnimatorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarViewAnimatorDelegate.swift; sourceTree = "<group>"; };
+		04F79703269972DD00044938 /* CVCalendarDayViewControlCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarDayViewControlCoordinator.swift; sourceTree = "<group>"; };
+		04F79704269972DE00044938 /* CVWeekdaySymbolType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVWeekdaySymbolType.swift; sourceTree = "<group>"; };
+		04F79705269972E000044938 /* CVCalendarWeekday.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarWeekday.swift; sourceTree = "<group>"; };
+		04F79706269972E100044938 /* CVShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVShape.swift; sourceTree = "<group>"; };
+		04F79707269972E300044938 /* CVCalendarViewAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarViewAnimator.swift; sourceTree = "<group>"; };
+		04F79708269972E400044938 /* CVCalendarMonthContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarMonthContentViewController.swift; sourceTree = "<group>"; };
+		04F79709269972E600044938 /* CVCalendarDayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarDayView.swift; sourceTree = "<group>"; };
+		04F7970A269972E700044938 /* CVDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVDate.swift; sourceTree = "<group>"; };
+		04F7970B269972E900044938 /* CVCalendarTouchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarTouchController.swift; sourceTree = "<group>"; };
+		04F7970C269972EA00044938 /* CVCalendarWeekContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarWeekContentViewController.swift; sourceTree = "<group>"; };
+		04F7970D269972EC00044938 /* CVCalendarViewPresentationMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarViewPresentationMode.swift; sourceTree = "<group>"; };
+		04F7970E269972ED00044938 /* CVCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVCalendar.h; sourceTree = "<group>"; };
+		04F7970F269972EF00044938 /* CVCalendarContentPresentationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarContentPresentationCoordinator.swift; sourceTree = "<group>"; };
+		04F79710269972F000044938 /* CVStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVStatus.swift; sourceTree = "<group>"; };
+		04F79711269972F200044938 /* CVSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVSet.swift; sourceTree = "<group>"; };
+		04F79712269972F300044938 /* CVCalendarWeekView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarWeekView.swift; sourceTree = "<group>"; };
+		04F79713269972F500044938 /* CVPresent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPresent.swift; sourceTree = "<group>"; };
+		04F79714269972F600044938 /* CVCalendarManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarManager.swift; sourceTree = "<group>"; };
+		04F79715269972F800044938 /* CVCalendarMenuViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarMenuViewDelegate.swift; sourceTree = "<group>"; };
+		04F79716269972F900044938 /* CVCalendarViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarViewDelegate.swift; sourceTree = "<group>"; };
+		04F79717269972FB00044938 /* CVCalendarViewAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCalendarViewAppearance.swift; sourceTree = "<group>"; };
+		04F79718269972FC00044938 /* CVSelectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVSelectionType.swift; sourceTree = "<group>"; };
 		78008CD02569B7DA005E4A15 /* ResetPassword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPassword.swift; sourceTree = "<group>"; };
 		78008CD12569B7DA005E4A15 /* ChangePassword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePassword.swift; sourceTree = "<group>"; };
-		78008CD62569B8E4005E4A15 /* Password.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Password.swift; sourceTree = "<group>"; };
+		78008CD62569B8E4005E4A15 /* Password.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Password.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		7801D9BB25D28AE400BB0B33 /* AddProfilePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProfilePhoto.swift; sourceTree = "<group>"; };
 		7801D9BE25D296E100BB0B33 /* AllowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllowLocation.swift; sourceTree = "<group>"; };
 		78032026261F46EC008343B8 /* HomeCategoryPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCategoryPreview.swift; sourceTree = "<group>"; };
-		7804EC8F261BA24500F2C0D2 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; };
+		7804EC8F261BA24500F2C0D2 /* WelcomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		7805676626148715006ADEA9 /* SparkExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkExtensions.swift; sourceTree = "<group>"; };
 		7805676726148716006ADEA9 /* SparkModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkModels.swift; sourceTree = "<group>"; };
 		7805676826148717006ADEA9 /* SparkKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkKeys.swift; sourceTree = "<group>"; };
 		7805676926148718006ADEA9 /* SparkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkService.swift; sourceTree = "<group>"; };
 		7805676A26148718006ADEA9 /* Spark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spark.swift; sourceTree = "<group>"; };
 		7805676B26148719006ADEA9 /* SparkSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkSetup.swift; sourceTree = "<group>"; };
-		780567DD261AEFA7006ADEA9 /* WelcomeScreen2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen2.swift; sourceTree = "<group>"; };
+		780567DD261AEFA7006ADEA9 /* WelcomeScreen2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen2.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		780766BE260DBF4400962F4E /* TimePickerSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerSwift.swift; sourceTree = "<group>"; };
-		780A7F612562D565009BD93A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		780A7F612562D565009BD93A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		78147A7825EFB2CC00828998 /* NotificationObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationObject.swift; sourceTree = "<group>"; };
 		78147A7B25F13F7800828998 /* AddUsername.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUsername.swift; sourceTree = "<group>"; };
 		781F45E225C97555004F9C45 /* FeedbackLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLauncher.swift; sourceTree = "<group>"; };
@@ -166,7 +294,7 @@
 		781F45EE25CD82D4004F9C45 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Map.swift; sourceTree = "<group>"; };
 		781FAB9A260765C600C27A6E /* MapPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPage.swift; sourceTree = "<group>"; };
 		782634FB26131D9A00A958A9 /* ThirdPartyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdPartyButton.swift; sourceTree = "<group>"; };
-		78295A8D2597770A00004CE7 /* ChatLogController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController2.swift; sourceTree = "<group>"; };
+		78295A8D2597770A00004CE7 /* ChatLogController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController2.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		78295ACC2597CBAE00004CE7 /* TabStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabStoryboard.storyboard; sourceTree = "<group>"; };
 		78295B0625990AE000004CE7 /* UserChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChat.swift; sourceTree = "<group>"; };
 		78295B0925990C1C00004CE7 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -181,18 +309,18 @@
 		784646C32561B841000C5F26 /* Hiremile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hiremile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		784646C62561B841000C5F26 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		784646C82561B841000C5F26 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		784646CA2561B841000C5F26 /* SignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
+		784646CA2561B841000C5F26 /* SignInController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		784646CF2561B842000C5F26 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		784646D22561B843000C5F26 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		784646D42561B843000C5F26 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		784646DC2561C5A7000C5F26 /* SwipingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipingController.swift; sourceTree = "<group>"; };
 		784646DE2561C854000C5F26 /* PageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageCell.swift; sourceTree = "<group>"; };
-		784646E125626F79000C5F26 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		784646E125626F79000C5F26 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		784646E325629499000C5F26 /* Hiremile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hiremile.entitlements; sourceTree = "<group>"; };
 		784646E525629A97000C5F26 /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
 		784646E725629F94000C5F26 /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
-		784646E92562ADB9000C5F26 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
-		784646ED2562ADFC000C5F26 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		784646E92562ADB9000C5F26 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		784646ED2562ADFC000C5F26 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		784B6022256ED04C0024F4C8 /* MyReviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviews.swift; sourceTree = "<group>"; };
 		784C0E5A25F8F79E0075C6B5 /* OtherProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfile.swift; sourceTree = "<group>"; };
 		784C0E5D25F92ABD0075C6B5 /* InfoPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPage.swift; sourceTree = "<group>"; };
@@ -231,7 +359,7 @@
 		78BFDBFC25B471DF00A1D8B5 /* UserMessageStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageStructure.swift; sourceTree = "<group>"; };
 		78C0B8BA25878C45002866A9 /* JobStructure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobStructure.swift; sourceTree = "<group>"; };
 		78C9A84325C2D43B008056FC /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
-		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; };
+		78D5CA352565515E00BF59AB /* ViewPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPostController.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		78D5FB9925C1FF9700E3504C /* OtherRatingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherRatingController.swift; sourceTree = "<group>"; };
 		78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		78D9FFBE25B89E2900F00EA1 /* PostLauncher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLauncher.swift; sourceTree = "<group>"; };
@@ -255,10 +383,10 @@
 		AE2E0974267C529500CAE3EF /* CategorysCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategorysCell.xib; sourceTree = "<group>"; };
 		AE2E0975267C529500CAE3EF /* ChooseYourSourceVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChooseYourSourceVC.xib; sourceTree = "<group>"; };
 		AE2E0976267C529500CAE3EF /* CategoryVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoryVC.xib; sourceTree = "<group>"; };
-		AE2E0977267C529500CAE3EF /* ChooseYourSourceVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseYourSourceVC.swift; sourceTree = "<group>"; };
-		AE2E0978267C529500CAE3EF /* CategoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryVC.swift; sourceTree = "<group>"; };
+		AE2E0977267C529500CAE3EF /* ChooseYourSourceVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseYourSourceVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
+		AE2E0978267C529500CAE3EF /* CategoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryVC.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		AE2FCC95267C7DDD004E1A61 /* MyProfileFollowersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileFollowersTableViewCell.swift; sourceTree = "<group>"; };
-		AE66926A266A64F100A23EE0 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		AE66926A266A64F100A23EE0 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		AE66926C266A66D600A23EE0 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		AE7D977D2672739600EA1C4C /* MyProfilesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyProfilesVC.swift; sourceTree = "<group>"; };
 		AE7D978026727C1F00EA1C4C /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
@@ -277,6 +405,7 @@
 		AEA5FF2C266CB901003CA733 /* CommonUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
 		AEA5FF2E266CB93F003CA733 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		AEC0ADB2268204DB00C49C68 /* CreatePosts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatePosts.swift; sourceTree = "<group>"; };
+		AED4A54F26A5BCF900934B34 /* Gilroy-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Bold.ttf"; sourceTree = "<group>"; };
 		AED50E2E2679E8DE00BA72E6 /* EditPostsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPostsVC.swift; sourceTree = "<group>"; };
 		F3765C6420C496AAA66CBF98 /* Pods-HireMile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.release.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -293,6 +422,95 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		040CECCA269B2434008F07BC /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				040CECCB269B2469008F07BC /* MenuVC.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		0452B26326999F02006F9A5E /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				0452B26426999F2B006F9A5E /* MyScheduleCell.swift */,
+				0452B26526999F2B006F9A5E /* MyScheduleCell.xib */,
+				04AF8B2F269C65CC00B41537 /* ChatLeftCell.swift */,
+				04AF8B30269C65CC00B41537 /* ChatLeftCell.xib */,
+				04AF8B29269C5AD600B41537 /* ChatRightCell.swift */,
+				04AF8B2A269C5AD600B41537 /* ChatRightCell.xib */,
+				04A0F112269C713C0004CE87 /* AcceptPayCell.swift */,
+				04A0F113269C713C0004CE87 /* AcceptPayCell.xib */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
+		045A80BE2699EEEB0098BC95 /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				045A80BF2699EF130098BC95 /* PaymentVC.swift */,
+				0451DD1E269A9D14005B8BFD /* PaymentSuccessfulVC.swift */,
+				0482E9A8269AA60C008FD06F /* RattingVC.swift */,
+				0467D0B6269AB5CE003B9A24 /* AddpaymentVC.swift */,
+				040499E1269AD4C20079D8D4 /* AddCardVC.swift */,
+			);
+			path = Payment;
+			sourceTree = "<group>";
+		};
+		04F23EF1269BEA39007C2D90 /* Schedule */ = {
+			isa = PBXGroup;
+			children = (
+				0452B26126999E9E006F9A5E /* MYScheduleVC.swift */,
+			);
+			path = Schedule;
+			sourceTree = "<group>";
+		};
+		04F796F8269972A700044938 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				04F796F9269972B800044938 /* CVCalender */,
+			);
+			path = ThirdParty;
+			sourceTree = "<group>";
+		};
+		04F796F9269972B800044938 /* CVCalender */ = {
+			isa = PBXGroup;
+			children = (
+				04F79700269972D800044938 /* CVAuxiliaryView.swift */,
+				04F7970E269972ED00044938 /* CVCalendar.h */,
+				04F7970F269972EF00044938 /* CVCalendarContentPresentationCoordinator.swift */,
+				04F796FF269972D700044938 /* CVCalendarContentViewController.swift */,
+				04F79709269972E600044938 /* CVCalendarDayView.swift */,
+				04F79703269972DD00044938 /* CVCalendarDayViewControlCoordinator.swift */,
+				04F79714269972F600044938 /* CVCalendarManager.swift */,
+				04F796FC269972D200044938 /* CVCalendarMenuView.swift */,
+				04F79715269972F800044938 /* CVCalendarMenuViewDelegate.swift */,
+				04F79708269972E400044938 /* CVCalendarMonthContentViewController.swift */,
+				04F796FE269972D500044938 /* CVCalendarMonthView.swift */,
+				04F7970B269972E900044938 /* CVCalendarTouchController.swift */,
+				04F796FB269972D100044938 /* CVCalendarView.swift */,
+				04F79707269972E300044938 /* CVCalendarViewAnimator.swift */,
+				04F79702269972DB00044938 /* CVCalendarViewAnimatorDelegate.swift */,
+				04F79717269972FB00044938 /* CVCalendarViewAppearance.swift */,
+				04F796FA269972CF00044938 /* CVCalendarViewAppearanceDelegate.swift */,
+				04F79716269972F900044938 /* CVCalendarViewDelegate.swift */,
+				04F7970D269972EC00044938 /* CVCalendarViewPresentationMode.swift */,
+				04F7970C269972EA00044938 /* CVCalendarWeekContentViewController.swift */,
+				04F79705269972E000044938 /* CVCalendarWeekday.swift */,
+				04F79712269972F300044938 /* CVCalendarWeekView.swift */,
+				04F7970A269972E700044938 /* CVDate.swift */,
+				04F79713269972F500044938 /* CVPresent.swift */,
+				04F79701269972DA00044938 /* CVRange.swift */,
+				04F796FD269972D400044938 /* CVScrollDirection.swift */,
+				04F79718269972FC00044938 /* CVSelectionType.swift */,
+				04F79711269972F200044938 /* CVSet.swift */,
+				04F79706269972E100044938 /* CVShape.swift */,
+				04F79710269972F000044938 /* CVStatus.swift */,
+				04F79704269972DE00044938 /* CVWeekdaySymbolType.swift */,
+			);
+			path = CVCalender;
+			sourceTree = "<group>";
+		};
 		6139D7B2C877E877BF1CA5E8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -308,6 +526,7 @@
 				780A7F612562D565009BD93A /* Home.swift */,
 				78032026261F46EC008343B8 /* HomeCategoryPreview.swift */,
 				783015C52624278E0030BA9F /* AllCategories.swift */,
+				047A649A269AFD4200461329 /* HomeVC.swift */,
 			);
 			path = "Home Stuff";
 			sourceTree = "<group>";
@@ -415,6 +634,7 @@
 		784646C52561B841000C5F26 /* HireMile */ = {
 			isa = PBXGroup;
 			children = (
+				04F796F8269972A700044938 /* ThirdParty */,
 				AE7D977F26727BDA00EA1C4C /* Support */,
 				AEA5FF2B266CB8EE003CA733 /* Helpers */,
 				AE2E096F267C529500CAE3EF /* Xib */,
@@ -465,11 +685,13 @@
 			isa = PBXGroup;
 			children = (
 				784646E92562ADB9000C5F26 /* TabBarController.swift */,
+				04F23EF1269BEA39007C2D90 /* Schedule */,
 				787B0182256838E800BBC392 /* Menu Bar */,
 				784646F22562D45D000C5F26 /* Home */,
 				78FE863D257D603D00E5D758 /* Post */,
 				7886ED3125800A0600260D2F /* Chat */,
-				78295ACC2597CBAE00004CE7 /* TabStoryboard.storyboard */,
+				040CECCA269B2434008F07BC /* Menu */,
+				045A80BE2699EEEB0098BC95 /* Payment */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -524,6 +746,8 @@
 				78D6F615259A11E600D2A0CE /* ChatMessageCell.swift */,
 				781FAB9A260765C600C27A6E /* MapPage.swift */,
 				785D000D2609C8300060622A /* Booking.swift */,
+				0466435926975DB5007B3460 /* BookAppointmentVC.swift */,
+				04F23EF2269BEA61007C2D90 /* ChatVC.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -605,10 +829,11 @@
 		AE2E096F267C529500CAE3EF /* Xib */ = {
 			isa = PBXGroup;
 			children = (
+				0452B26326999F02006F9A5E /* TableViewCell */,
 				AE2E0970267C529500CAE3EF /* CollectionviewCell */,
 				AE2E0975267C529500CAE3EF /* ChooseYourSourceVC.xib */,
-				AE2E0976267C529500CAE3EF /* CategoryVC.xib */,
 				AE2E0977267C529500CAE3EF /* ChooseYourSourceVC.swift */,
+				AE2E0976267C529500CAE3EF /* CategoryVC.xib */,
 				AE2E0978267C529500CAE3EF /* CategoryVC.swift */,
 			);
 			path = Xib;
@@ -618,9 +843,17 @@
 			isa = PBXGroup;
 			children = (
 				AE2E0971267C529500CAE3EF /* CoverPhotoCell.xib */,
-				AE2E0972267C529500CAE3EF /* CategorysCell.swift */,
 				AE2E0973267C529500CAE3EF /* CoverPhotoCell.swift */,
 				AE2E0974267C529500CAE3EF /* CategorysCell.xib */,
+				AE2E0972267C529500CAE3EF /* CategorysCell.swift */,
+				0466435C269763B2007B3460 /* colTimeCell.xib */,
+				0466435B269763B2007B3460 /* colTimeCell.swift */,
+				041B77B02699552D00697A9C /* colDateCell.xib */,
+				041B77AF2699552D00697A9C /* colDateCell.swift */,
+				0470E0FD2699DD5700B094DB /* colPaymentCardCell.swift */,
+				0470E0FE2699DD5700B094DB /* colPaymentCardCell.xib */,
+				047A649C269B0B6600461329 /* colServicesorWorkersCell.swift */,
+				047A649D269B0B6600461329 /* colServicesorWorkersCell.xib */,
 			);
 			path = CollectionviewCell;
 			sourceTree = "<group>";
@@ -648,6 +881,7 @@
 		AE7D977F26727BDA00EA1C4C /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				AED4A54F26A5BCF900934B34 /* Gilroy-Bold.ttf */,
 				AE7D978126727C2000EA1C4C /* Lato-Black.ttf */,
 				AE7D978326727C2000EA1C4C /* Lato-Bold.ttf */,
 				AE7D978526727C2000EA1C4C /* Lato-Italic.ttf */,
@@ -663,7 +897,15 @@
 		AEA5FF1F266C9EAF003CA733 /* Storyboard */ = {
 			isa = PBXGroup;
 			children = (
+				78295ACC2597CBAE00004CE7 /* TabStoryboard.storyboard */,
+				04A0F116269C8D910004CE87 /* Tabbar.storyboard */,
 				AEA5FF20266C9EC1003CA733 /* Profile.storyboard */,
+				047A6498269AF15900461329 /* Home.storyboard */,
+				040CECC8269B2195008F07BC /* Menu.storyboard */,
+				0452B2682699D1E2006F9A5E /* Schedule.storyboard */,
+				04F23EEE269BE99D007C2D90 /* Chat.storyboard */,
+				0452B26A2699D1FB006F9A5E /* Appointment.storyboard */,
+				0452B26C2699D25E006F9A5E /* Payment.storyboard */,
 			);
 			path = Storyboard;
 			sourceTree = "<group>";
@@ -739,24 +981,40 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04AF8B2C269C5AD600B41537 /* ChatRightCell.xib in Resources */,
 				AE7D978926727C2000EA1C4C /* Lato-Bold.ttf in Resources */,
 				782F7DE125932FE80064100F /* ItemCell.xib in Resources */,
+				041B77B22699552D00697A9C /* colDateCell.xib in Resources */,
 				AE7D978B26727C2000EA1C4C /* Lato-Italic.ttf in Resources */,
 				AE2E097C267C529500CAE3EF /* CategorysCell.xib in Resources */,
+				0470E1002699DD5700B094DB /* colPaymentCardCell.xib in Resources */,
 				AE7D978726727C2000EA1C4C /* Lato-Black.ttf in Resources */,
+				0466435E269763B2007B3460 /* colTimeCell.xib in Resources */,
 				AE7D978A26727C2000EA1C4C /* Lato-Light.ttf in Resources */,
 				784646D32561B843000C5F26 /* LaunchScreen.storyboard in Resources */,
 				78295ACD2597CBAE00004CE7 /* TabStoryboard.storyboard in Resources */,
+				04A0F117269C8D910004CE87 /* Tabbar.storyboard in Resources */,
 				AE7D978D26727D1100EA1C4C /* Lato-Semibold.ttf in Resources */,
+				047A6499269AF15900461329 /* Home.storyboard in Resources */,
 				AE7D978626727C2000EA1C4C /* Lato-Regular.ttf in Resources */,
+				04AF8B32269C65CC00B41537 /* ChatLeftCell.xib in Resources */,
+				AED4A55026A5BCFA00934B34 /* Gilroy-Bold.ttf in Resources */,
 				AE2E0979267C529500CAE3EF /* CoverPhotoCell.xib in Resources */,
 				784646D02561B842000C5F26 /* Assets.xcassets in Resources */,
 				AE7D978F26727E3B00EA1C4C /* Lato-Medium.ttf in Resources */,
 				788D44FE257FDA79002AF9CB /* GoogleService-Info.plist in Resources */,
+				04F23EEF269BE99D007C2D90 /* Chat.storyboard in Resources */,
+				0452B26D2699D25E006F9A5E /* Payment.storyboard in Resources */,
+				0452B26B2699D1FB006F9A5E /* Appointment.storyboard in Resources */,
+				0452B2692699D1E3006F9A5E /* Schedule.storyboard in Resources */,
 				AE2E097E267C529500CAE3EF /* CategoryVC.xib in Resources */,
 				AE7D978826727C2000EA1C4C /* Lato-Thin.ttf in Resources */,
+				04A0F115269C713C0004CE87 /* AcceptPayCell.xib in Resources */,
 				AE2D939C268359BE00A52CCB /* RecentServiceTableViewCell.xib in Resources */,
+				040CECC9269B2195008F07BC /* Menu.storyboard in Resources */,
 				AEA5FF21266C9EC1003CA733 /* Profile.storyboard in Resources */,
+				047A649F269B0B6600461329 /* colServicesorWorkersCell.xib in Resources */,
+				0452B26726999F2B006F9A5E /* MyScheduleCell.xib in Resources */,
 				AE2E097D267C529500CAE3EF /* ChooseYourSourceVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -847,22 +1105,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04F79730269972FC00044938 /* CVCalendarWeekView.swift in Sources */,
 				78C0B8BB25878C45002866A9 /* JobStructure.swift in Sources */,
+				04F7972F269972FC00044938 /* CVSet.swift in Sources */,
 				78D5CA362565515E00BF59AB /* ViewPostController.swift in Sources */,
+				04AF8B2B269C5AD600B41537 /* ChatRightCell.swift in Sources */,
+				04F7972E269972FC00044938 /* CVStatus.swift in Sources */,
 				78D9FFC525B8A23800F00EA1 /* FinishLauncher.swift in Sources */,
+				047A649E269B0B6600461329 /* colServicesorWorkersCell.swift in Sources */,
 				78C9A84425C2D43B008056FC /* CustomImageView.swift in Sources */,
+				04F79735269972FC00044938 /* CVCalendarViewAppearance.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				78D9FFC125B89E2B00F00EA1 /* Post2.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignInController.swift in Sources */,
 				78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */,
 				78008CD72569B8E4005E4A15 /* Password.swift in Sources */,
+				04F79731269972FC00044938 /* CVPresent.swift in Sources */,
 				7805676E26148719006ADEA9 /* SparkKeys.swift in Sources */,
+				0466435A26975DB5007B3460 /* BookAppointmentVC.swift in Sources */,
 				AE2E097B267C529500CAE3EF /* CoverPhotoCell.swift in Sources */,
 				AE7D977E2672739600EA1C4C /* MyProfilesVC.swift in Sources */,
+				04F79723269972FC00044938 /* CVWeekdaySymbolType.swift in Sources */,
 				780567DE261AEFA7006ADEA9 /* WelcomeScreen2.swift in Sources */,
+				04F7972D269972FC00044938 /* CVCalendarContentPresentationCoordinator.swift in Sources */,
 				AE2E097F267C529500CAE3EF /* ChooseYourSourceVC.swift in Sources */,
 				787B018425685BD600BBC392 /* EditProfile.swift in Sources */,
 				78DA5A07256B99EC00DFABEB /* Favorites.swift in Sources */,
+				04F79729269972FC00044938 /* CVDate.swift in Sources */,
+				0482E9A9269AA60C008FD06F /* RattingVC.swift in Sources */,
 				AE2D939B268359BE00A52CCB /* RecentServiceTableViewCell.swift in Sources */,
 				786A3323256596E700B58265 /* FilterLauncher.swift in Sources */,
 				78917537260112EB006FFF06 /* Biometrics.swift in Sources */,
@@ -872,39 +1142,55 @@
 				AE66926B266A64F100A23EE0 /* UIView.swift in Sources */,
 				784646E225626F79000C5F26 /* Helpers.swift in Sources */,
 				78008CD22569B7DA005E4A15 /* ResetPassword.swift in Sources */,
+				04F7971B269972FC00044938 /* CVCalendarMenuView.swift in Sources */,
 				7805676F26148719006ADEA9 /* SparkService.swift in Sources */,
 				781F45E625C975FD004F9C45 /* ProposalPopup.swift in Sources */,
+				04A0F114269C713C0004CE87 /* AcceptPayCell.swift in Sources */,
 				78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */,
 				78147A7925EFB2CC00828998 /* NotificationObject.swift in Sources */,
+				04F7972B269972FC00044938 /* CVCalendarWeekContentViewController.swift in Sources */,
 				7805677126148719006ADEA9 /* SparkSetup.swift in Sources */,
 				AEA5FF2F266CB93F003CA733 /* Constant.swift in Sources */,
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
 				788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */,
 				78A98C022611013000E1A8D9 /* SearchController2.swift in Sources */,
+				0470E0FF2699DD5700B094DB /* colPaymentCardCell.swift in Sources */,
 				78BFDBFD25B471E000A1D8B5 /* UserMessageStructure.swift in Sources */,
 				78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */,
 				78295B0A25990C1C00004CE7 /* Message.swift in Sources */,
+				04F79727269972FC00044938 /* CVCalendarMonthContentViewController.swift in Sources */,
 				784C0E5E25F92ABD0075C6B5 /* InfoPage.swift in Sources */,
 				781F45E325C97555004F9C45 /* FeedbackLauncher.swift in Sources */,
 				AED50E2F2679E8DE00BA72E6 /* EditPostsVC.swift in Sources */,
+				040499E2269AD4C20079D8D4 /* AddCardVC.swift in Sources */,
+				04F79720269972FC00044938 /* CVRange.swift in Sources */,
 				786C8E3D2611A2160051729D /* SearchResults.swift in Sources */,
+				04AF8B31269C65CC00B41537 /* ChatLeftCell.swift in Sources */,
 				78295B1A2599133C00004CE7 /* MessagesController.swift in Sources */,
 				AE2FCC96267C7DDD004E1A61 /* MyProfileFollowersTableViewCell.swift in Sources */,
 				784C0E8E25FD25670075C6B5 /* CheckBox.swift in Sources */,
 				78D6F616259A11E600D2A0CE /* ChatMessageCell.swift in Sources */,
+				04F7971E269972FC00044938 /* CVCalendarContentViewController.swift in Sources */,
+				04F79733269972FC00044938 /* CVCalendarMenuViewDelegate.swift in Sources */,
 				784B6023256ED04C0024F4C8 /* MyReviews.swift in Sources */,
 				781FAB9B260765C600C27A6E /* MapPage.swift in Sources */,
 				782F7DE025932FE80064100F /* ItemCell.swift in Sources */,
 				787013402579721A0019C24A /* Camera.swift in Sources */,
+				04F7971A269972FC00044938 /* CVCalendarView.swift in Sources */,
 				AEA5FF26266CA392003CA733 /* ProfileServiceTableViewCell.swift in Sources */,
 				78AD20FD25724B0B004A1487 /* CashOutLauncher.swift in Sources */,
+				0467D0B7269AB5CE003B9A24 /* AddpaymentVC.swift in Sources */,
 				788D44B5257EA25D002AF9CB /* FavoriteRemoveView.swift in Sources */,
 				784646E825629F94000C5F26 /* ForgotPassword.swift in Sources */,
+				04F7971D269972FC00044938 /* CVCalendarMonthView.swift in Sources */,
 				7801D9BF25D296E100BB0B33 /* AllowLocation.swift in Sources */,
 				78295A8E2597770A00004CE7 /* ChatLogController2.swift in Sources */,
 				780A7F622562D565009BD93A /* Home.swift in Sources */,
+				04F79734269972FC00044938 /* CVCalendarViewDelegate.swift in Sources */,
 				78D9FFC825BB148400F00EA1 /* EditPost.swift in Sources */,
+				04F79721269972FC00044938 /* CVCalendarViewAnimatorDelegate.swift in Sources */,
 				783015C62624278E0030BA9F /* AllCategories.swift in Sources */,
+				0452B26626999F2B006F9A5E /* MyScheduleCell.swift in Sources */,
 				AEA5FF2A266CA3BC003CA733 /* ProfileFollowersTableViewCell.swift in Sources */,
 				AE2E097A267C529500CAE3EF /* CategorysCell.swift in Sources */,
 				782634FC26131D9A00A958A9 /* ThirdPartyButton.swift in Sources */,
@@ -916,15 +1202,25 @@
 				AEC0ADB3268204DB00C49C68 /* CreatePosts.swift in Sources */,
 				7805676D26148719006ADEA9 /* SparkModels.swift in Sources */,
 				7868125226490BB700A62134 /* ViewGalleryItemController.swift in Sources */,
+				045A80C02699EF130098BC95 /* PaymentVC.swift in Sources */,
 				7868124E2646AB8400A62134 /* Gallery.swift in Sources */,
 				78147A7C25F13F7900828998 /* AddUsername.swift in Sources */,
+				0451DD1F269A9D14005B8BFD /* PaymentSuccessfulVC.swift in Sources */,
+				04F23EF3269BEA61007C2D90 /* ChatVC.swift in Sources */,
+				04F79732269972FC00044938 /* CVCalendarManager.swift in Sources */,
 				784C0E5B25F8F79E0075C6B5 /* OtherProfile.swift in Sources */,
+				0466435D269763B2007B3460 /* colTimeCell.swift in Sources */,
 				7886ED9A25836BE300260D2F /* UserStructure.swift in Sources */,
 				7805676C26148719006ADEA9 /* SparkExtensions.swift in Sources */,
+				04F7971F269972FC00044938 /* CVAuxiliaryView.swift in Sources */,
 				78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */,
+				04F79722269972FC00044938 /* CVCalendarDayViewControlCoordinator.swift in Sources */,
 				784646C72561B841000C5F26 /* AppDelegate.swift in Sources */,
 				7886ED92258127DD00260D2F /* PostStructure.swift in Sources */,
 				786812502646B86300A62134 /* GalleryModel.swift in Sources */,
+				04F7972A269972FC00044938 /* CVCalendarTouchController.swift in Sources */,
+				04F7972C269972FC00044938 /* CVCalendarViewPresentationMode.swift in Sources */,
+				04F79726269972FC00044938 /* CVCalendarViewAnimator.swift in Sources */,
 				78008CD32569B7DA005E4A15 /* ChangePassword.swift in Sources */,
 				78F8F85A25A482F30021FD60 /* ReviewObject.swift in Sources */,
 				78032027261F46EC008343B8 /* HomeCategoryPreview.swift in Sources */,
@@ -935,30 +1231,40 @@
 				78AD2101257290B1004A1487 /* MyJobs.swift in Sources */,
 				788D44B2257E9C1F002AF9CB /* CashInAlert.swift in Sources */,
 				78A98BFE261100B800E1A8D9 /* SearchController.swift in Sources */,
+				04F79719269972FC00044938 /* CVCalendarViewAppearanceDelegate.swift in Sources */,
 				78B793C425703FBF00EFA7D1 /* Payment.swift in Sources */,
 				784646EE2562ADFC000C5F26 /* Chat.swift in Sources */,
 				7830176C2628B1DF0030BA9F /* PostSecond.swift in Sources */,
 				784646EA2562ADB9000C5F26 /* TabBarController.swift in Sources */,
+				04F7971C269972FC00044938 /* CVScrollDirection.swift in Sources */,
+				04F79728269972FC00044938 /* CVCalendarDayView.swift in Sources */,
 				78E02C3D25A1C01F00337370 /* PushNotificationManager.swift in Sources */,
 				78E02C4025A1C4BA00337370 /* PushNotificationSender.swift in Sources */,
 				784646DF2561C854000C5F26 /* PageCell.swift in Sources */,
 				AEA5FF2D266CB901003CA733 /* CommonUtils.swift in Sources */,
+				04F79724269972FC00044938 /* CVCalendarWeekday.swift in Sources */,
 				785D000E2609C8300060622A /* Booking.swift in Sources */,
 				AEA5FF28266CA3A9003CA733 /* ProfileReviewTableViewCell.swift in Sources */,
 				AE66926D266A66D600A23EE0 /* NSObject.swift in Sources */,
 				78767E1225BF1A6D00CBF2B8 /* CategoryCell.swift in Sources */,
+				04F79725269972FC00044938 /* CVShape.swift in Sources */,
 				784646DD2561C5A7000C5F26 /* SwipingController.swift in Sources */,
 				782F7DB12590E0560064100F /* HomeCatObject.swift in Sources */,
 				AE2E0980267C529500CAE3EF /* CategoryVC.swift in Sources */,
+				047A649B269AFD4200461329 /* HomeVC.swift in Sources */,
 				78767E0F25BEF7D000CBF2B8 /* DeleteLauncher.swift in Sources */,
 				78B7531925D81182007F3522 /* RatingsController.swift in Sources */,
+				04F79736269972FC00044938 /* CVSelectionType.swift in Sources */,
 				784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */,
 				78295B0725990AE000004CE7 /* UserChat.swift in Sources */,
 				7801D9BC25D28AE400BB0B33 /* AddProfilePhoto.swift in Sources */,
+				040CECCC269B2469008F07BC /* MenuVC.swift in Sources */,
 				784C0E8325FB67340075C6B5 /* WorkingHoursStructure.swift in Sources */,
 				78D5FB9A25C1FF9700E3504C /* OtherRatingController.swift in Sources */,
+				041B77B12699552D00697A9C /* colDateCell.swift in Sources */,
 				78D9FFCB25BB150700F00EA1 /* EditPostLauncher.swift in Sources */,
 				7805677026148719006ADEA9 /* Spark.swift in Sources */,
+				0452B26226999E9E006F9A5E /* MYScheduleVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1099,7 +1405,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 71;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
@@ -1122,7 +1428,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 70;
+				CURRENT_PROJECT_VERSION = 71;
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

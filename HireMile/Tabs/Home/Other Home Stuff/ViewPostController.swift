@@ -137,6 +137,62 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
+    let lineView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.blue
+        return view
+    }()
+    
+    let bottomView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.white
+        return view
+    }()
+    
+    let HireButton : UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = UIColor(red: 53/255, green: 167/255, blue: 245/255, alpha: 1)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitle("Hire", for: .normal)
+        button.addTarget(self, action: #selector(hirePressed), for: .touchUpInside)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.bold)
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let priceUserLabel : UILabel = {
+        let label = UILabel()
+        label.text = "$30"
+        label.font = UIFont.systemFont(ofSize: 22)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.textColor = UIColor.black
+        label.backgroundColor = .white
+        label.textAlignment = .left
+        return label
+    }()
+    
+    let rattingLabel : UILabel = {
+        let label = UILabel()
+        label.text = "4.5 (100)"
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 1
+        label.textColor = UIColor.darkGray
+        label.backgroundColor = .white
+        label.textAlignment = .left
+        
+        
+        
+        return label
+    }()
+    
+    
+    
     @objc func pressed() {
         let alert = UIAlertController(title: "Would you like to report this post?", message: "Management And Administration will notice", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Yes, Report Post", style: .default, handler: { (action) in
@@ -203,6 +259,7 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         profileImage.addGestureRecognizer(tapGestureRecognizer)
         
         Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(setName), userInfo: nil, repeats: false)
+        rattingLabelText(str: "4.5 (100)")
     }
     
     @objc func setName() {
@@ -229,6 +286,11 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(self.largeView)
         self.largeView.addSubview(self.seeAllButton)
         self.largeView.addSubview(self.textField)
+        self.view.addSubview(self.lineView)
+        self.view.addSubview(self.bottomView)
+        self.bottomView.addSubview(self.HireButton)
+        self.bottomView.addSubview(self.priceUserLabel)
+        self.bottomView.addSubview(self.rattingLabel)
         
       
     }
@@ -285,6 +347,31 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         self.textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
         self.textField.leftAnchor.constraint(equalTo: self.largeView.leftAnchor, constant: 20).isActive = true
         self.textField.rightAnchor.constraint(equalTo: self.seeAllButton.leftAnchor, constant: -10).isActive = true
+        
+        self.lineView.topAnchor.constraint(equalTo: self.largeView.bottomAnchor, constant: 60).isActive = true
+        self.lineView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant:5).isActive = true
+        self.lineView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -5).isActive = true
+        self.lineView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        
+        self.bottomView.topAnchor.constraint(equalTo: self.lineView.bottomAnchor, constant: 20).isActive = true
+        self.bottomView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 5).isActive = true
+        self.bottomView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -5).isActive = true
+        self.bottomView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        self.HireButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 125).isActive = true
+        self.HireButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -20).isActive = true
+        self.HireButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        self.HireButton.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 20).isActive = true
+        
+        self.priceUserLabel.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 10).isActive = true
+        self.priceUserLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        self.priceUserLabel.leftAnchor.constraint(equalTo: self.bottomView.leftAnchor, constant: 20).isActive = true
+        self.priceUserLabel.rightAnchor.constraint(equalTo: self.HireButton.leftAnchor, constant: -10).isActive = true
+        
+        self.rattingLabel.topAnchor.constraint(equalTo: self.priceUserLabel.bottomAnchor, constant: 5).isActive = true
+        self.rattingLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        self.rattingLabel.leftAnchor.constraint(equalTo: self.bottomView.leftAnchor, constant: 20).isActive = true
+        self.rattingLabel.rightAnchor.constraint(equalTo: self.HireButton.leftAnchor, constant: -10).isActive = true
         
         heightConstraint.isActive = false
         bottomConstraint.isActive = true
@@ -474,11 +561,31 @@ class ViewPostController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    @objc func hirePressed() {
+        print("Hire Pressed")
+        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Appointment.rawValue, vcIdetifier: BookAppointmentVC.className) as? BookAppointmentVC {
+            profileVC.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(profileVC,  animated: true)
+        }
+    }
+    
     @objc func handleDismiss() {
         self.launcher.handleDismiss()
         self.navigationController?.popViewController(animated: true)
     }
 
+    func rattingLabelText(str : String)  {
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = UIImage(named:"starSelected")
+        let attachmentString1 = NSAttributedString(attachment: imageAttachment)
+        let completeText = NSMutableAttributedString(string: " ")
+        completeText.append(attachmentString1)
+        var myMutableString = NSMutableAttributedString()
+        myMutableString = NSMutableAttributedString(string: str)
+        myMutableString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.lightGray, range: NSRange(location:3,length:6))
+        completeText.append(myMutableString)
+        rattingLabel.attributedText = completeText
+    }
 }
 extension ViewPostController: UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate  {
     

@@ -26,6 +26,8 @@ class CategoryVC: UIViewController,UICollectionViewDelegate, UICollectionViewDat
         // Do any additional setup after loading the view.
     }
 
+    // MARK: Button Action
+    
         @IBAction func btnClose(_ sender: Any) {
             dismiss(animated: true, completion: nil)
         }

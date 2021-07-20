@@ -22,6 +22,16 @@ class CommonUtils {
         return nil
     }
     
+    static var topViewController: UINavigationController? {
+        let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+
+        if var topController = keyWindow?.rootViewController as? UITabBarController{
+            topController.selectedIndex = 0
+            return topController.viewControllers?.first as? UINavigationController
+        }
+        return nil
+    }
+    
     static func getRecentServices() -> [String] {
         if let recent = UserDefaults.standard.array(forKey: "recent") as? [String] {
             return recent

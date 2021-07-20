@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,6 +12,7 @@
         <!--Item 2-->
         <scene sceneID="W4r-fh-Elz">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x6Y-dV-b6x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="k2x-3b-XaZ" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qK8-oO-sua">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -21,13 +22,13 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 2" id="IYf-GT-zHD"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="x6Y-dV-b6x" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="590" y="457"/>
         </scene>
         <!--Item 1-->
         <scene sceneID="IAi-dQ-YXh">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mfr-aM-ugf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="NaB-Bq-yLI" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Net-0K-GKD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -48,7 +49,6 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="r5Z-03-wn1"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="mfr-aM-ugf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="589.85507246376812" y="-149.33035714285714"/>
         </scene>
@@ -69,6 +69,11 @@
             <point key="canvasLocation" x="-300" y="154"/>
         </scene>
     </scenes>
+    <designables>
+        <designable name="iW1-cI-DbH">
+            <size key="intrinsicContentSize" width="-1" height="83"/>
+        </designable>
+    </designables>
     <resources>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

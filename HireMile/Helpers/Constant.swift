@@ -10,4 +10,10 @@ import Foundation
 
 enum StoryBoard: String {
     case Profile = "Profile"
+    case Payment = "Payment"
+    case Schedule = "Schedule"
+    case Home = "Home"
+    case Menu = "Menu"
+    case Chat = "Chat"
+    case Appointment = "Appointment"
 }

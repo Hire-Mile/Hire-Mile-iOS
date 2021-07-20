@@ -55,7 +55,8 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         self.map.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         self.map.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         self.map.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-
+   
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         // Do any additional setup after loading the view.
     }
     

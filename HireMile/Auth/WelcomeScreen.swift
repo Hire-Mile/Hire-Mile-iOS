@@ -165,6 +165,8 @@ class WelcomeScreen: UIViewController {
                 let sb = UIStoryboard(name: "TabStoryboard", bundle: nil)
                 let vc: UIViewController = sb.instantiateViewController(withIdentifier: "TabbControllerID") as! TabBarController
                 UIApplication.shared.keyWindow?.rootViewController = vc
+                
+               
             }
         }
     }

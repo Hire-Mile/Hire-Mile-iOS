@@ -1045,10 +1045,10 @@ class Home: UIViewController, UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     @objc func profileImagePressed() {
-        if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: MyProfilesVC.className) as? MyProfilesVC {
+       if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: MyProfilesVC.className) as? MyProfilesVC {
             profileVC.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(profileVC,  animated: true)
-        }
+        }  
     }
     
     @objc func handleReload() {
@@ -1360,10 +1360,18 @@ class MenuListController: UITableViewController {
         if indexPath.section == 0 {
             print("profile")
             dismiss(animated: true, completion: nil)
-            if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: MyProfilesVC.className) as? MyProfilesVC {
+           /* if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: MyProfilesVC.className) as? MyProfilesVC {
                 profileVC.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(profileVC,  animated: true)
+            }*/
+            
+            if let VC = CommonUtils.getStoryboardVC(StoryBoard.Home.rawValue, vcIdetifier: HomeVC.className) as? HomeVC {
+                VC.hidesBottomBarWhenPushed = true
+                VC.modalPresentationStyle = .fullScreen
+              //  self.navigationController?.present(VC, animated: true)
+                self.navigationController?.pushViewController(VC,  animated: true)
             }
+            
         } else {
             switch indexPath.row {
             case 0:

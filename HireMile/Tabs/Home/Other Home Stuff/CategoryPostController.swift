@@ -151,7 +151,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
                 job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                 job.postId = value["postId"] as? String ?? "Error"
                 job.timeStamp = value["time"] as? Int ?? 0
-                if self.category == "Recent" {
+                if self.category == "Recommend for you" {
                     self.allJobs.append(job)
                 } else {
                     if job.category == self.category {

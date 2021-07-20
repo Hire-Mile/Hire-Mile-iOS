@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="colTimeCell" id="gTV-IL-0wX" customClass="colTimeCell" customModule="Hiremile" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="121" height="42"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="121" height="42"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5PB-Th-ZId">
+                        <rect key="frame" x="0.0" y="0.0" width="121" height="42"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:00 AM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q83-En-TiB">
+                                <rect key="frame" x="10" y="14" width="101" height="14"/>
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Q83-En-TiB" firstAttribute="centerY" secondItem="5PB-Th-ZId" secondAttribute="centerY" id="Gi5-Mu-cH1"/>
+                            <constraint firstItem="Q83-En-TiB" firstAttribute="leading" secondItem="5PB-Th-ZId" secondAttribute="leading" constant="10" id="VNs-AD-n38"/>
+                            <constraint firstAttribute="trailing" secondItem="Q83-En-TiB" secondAttribute="trailing" constant="10" id="WmL-zU-dUh"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="5"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                <color key="value" name="LightGray"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidthNew">
+                                <real key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="5PB-Th-ZId" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Pdb-op-xxa"/>
+                <constraint firstAttribute="trailing" secondItem="5PB-Th-ZId" secondAttribute="trailing" id="XDg-YZ-Rqg"/>
+                <constraint firstAttribute="bottom" secondItem="5PB-Th-ZId" secondAttribute="bottom" id="evP-Th-MH3"/>
+                <constraint firstItem="5PB-Th-ZId" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="u7h-fO-qX8"/>
+            </constraints>
+            <size key="customSize" width="121" height="42"/>
+            <connections>
+                <outlet property="lblTitle" destination="Q83-En-TiB" id="KL6-26-Gba"/>
+                <outlet property="vwBG" destination="5PB-Th-ZId" id="sHO-hu-Bhq"/>
+            </connections>
+            <point key="canvasLocation" x="128.2608695652174" y="24.107142857142858"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="LightGray">
+            <color red="0.88200002908706665" green="0.87099999189376831" blue="0.87099999189376831" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

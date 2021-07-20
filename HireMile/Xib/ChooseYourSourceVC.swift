@@ -13,7 +13,7 @@ class ChooseYourSourceVC: UIViewController {
     @IBOutlet weak var containerView: UIView!
     let imagePicker = UIImagePickerController()
     
-    var imgName : ((_ imgName : UIImage)->())?
+    var imgName : ((_ info: [UIImagePickerController.InfoKey : Any], _ imgName : UIImage)->())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +55,7 @@ extension ChooseYourSourceVC: UIImagePickerControllerDelegate,UINavigationContro
         dismiss(animated: true, completion: nil)
         
         if (imgName != nil){
-            imgName!(img)
+            imgName!(info, img)
             self.dismiss(animated: false, completion: nil)
         }
     }

@@ -57,4 +57,6 @@ target 'HireMile' do
   
   pod 'IQKeyboardManager'
 
+  #pod 'CVCalendar', '~> 1.7.0'
+  
 end

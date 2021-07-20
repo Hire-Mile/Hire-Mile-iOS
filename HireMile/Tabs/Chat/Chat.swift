@@ -486,9 +486,15 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func showChatControllerForUser(_ user: UserChat) {
-        let chatLogController = ChatLogController2(collectionViewLayout: UICollectionViewFlowLayout())
+      /*  let chatLogController = ChatLogController2(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)
+      */
+        if let VC = CommonUtils.getStoryboardVC(StoryBoard.Chat.rawValue, vcIdetifier: ChatVC.className) as? ChatVC {
+             VC.hidesBottomBarWhenPushed = true
+            VC.user = user
+             self.navigationController?.pushViewController(VC,  animated: true)
+         }
     }
     
     @objc func refreshAction() {
