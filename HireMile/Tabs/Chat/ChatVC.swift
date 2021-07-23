@@ -35,7 +35,7 @@ class ChatVC: UIViewController, UserCellDelegate {
     @IBOutlet weak var lblWorkerjobAccepted: UILabel!
     
     @IBOutlet weak var vwAcceptOrDecline: UIView!
-    @IBOutlet weak var lblAcceptOrDecline: UILabel!
+    @IBOutlet weak var lblAcceptOrDeclineUserName: UILabel!
     @IBOutlet weak var lblAcceptOrDeclineWorkName: UILabel!
     @IBOutlet weak var lblAcceptOrDeclineDateTime: UILabel!
     @IBOutlet weak var lblAcceptOrDeclinePrice: UILabel!
@@ -79,6 +79,7 @@ class ChatVC: UIViewController, UserCellDelegate {
         
         colChat.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         vwMain.isHidden = true
+        self.lblTitle.text = user?.name ?? ""
         // Do any additional setup after loading the view.
     }
     
@@ -119,7 +120,7 @@ class ChatVC: UIViewController, UserCellDelegate {
                         GlobalVariables.chatPartnerId = message.chatPartnerId()!
                         self.isSearchingForServiceProvider = false
                         print("i am jorge, the worker")
-                        if message.firstTime == true {
+                        if message.firstTime != true {
                             print("first time")
                             self.chatId = messageId
                             self.jobId = message.postId!
@@ -132,8 +133,9 @@ class ChatVC: UIViewController, UserCellDelegate {
                         print("henry")
                         if message.firstTime == false {
                           
-                            self.btnFinish.setTitle("FINISH", for: .normal)
+                            self.btnFinish.setTitle("Finish", for: .normal)
                             self.btnFinish.backgroundColor = UIColor.mainBlue
+                            self.btnFinish.setTitleColor(.white, for: .normal)
                            
                             if let messagePostId = message.postId {
                                 GlobalVariables.jobId = messagePostId
@@ -174,16 +176,14 @@ class ChatVC: UIViewController, UserCellDelegate {
                 job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                 job.postId = value["postId"] as? String ?? "Error"
 
-                self.lblTitle.text = "\(job.titleOfPost!)"
-             /*   postImageView.loadImageUsingCacheWithUrlString(job.imagePost!)
-                self.jobTitle.text = "\(job.titleOfPost!)"
+                self.vwAcceptOrDecline.isHidden = false
+                self.imgUser.sd_setImage(with: URL(string: self.user?.profileImageUrl ?? ""), completed: nil)
+                self.lblAcceptOrDeclineWorkName.text = "\(job.titleOfPost!)"
                 if job.typeOfPrice == "Hourly" {
-                    priceTitle.text! = "$\(job.price!) / Hour"
+                    self.lblAcceptOrDeclinePrice.text! = "$\(job.price!) / Hour"
                 } else {
-                    priceTitle.text! = "$\(job.price!)"
+                    self.lblAcceptOrDeclinePrice.text! = "$\(job.price!)"
                 }
-                messageDescription.text! = self.theMessage
-                */
             }
         }
     }

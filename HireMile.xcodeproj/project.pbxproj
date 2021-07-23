@@ -184,6 +184,7 @@
 		AE2FCC96267C7DDD004E1A61 /* MyProfileFollowersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FCC95267C7DDD004E1A61 /* MyProfileFollowersTableViewCell.swift */; };
 		AE66926B266A64F100A23EE0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE66926A266A64F100A23EE0 /* UIView.swift */; };
 		AE66926D266A66D600A23EE0 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE66926C266A66D600A23EE0 /* NSObject.swift */; };
+		AE74422A26A9310B00B42194 /* ViewPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE74422926A9310B00B42194 /* ViewPostVC.swift */; };
 		AE7D977E2672739600EA1C4C /* MyProfilesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7D977D2672739600EA1C4C /* MyProfilesVC.swift */; };
 		AE7D978626727C2000EA1C4C /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978026727C1F00EA1C4C /* Lato-Regular.ttf */; };
 		AE7D978726727C2000EA1C4C /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978126727C2000EA1C4C /* Lato-Black.ttf */; };
@@ -193,6 +194,7 @@
 		AE7D978B26727C2000EA1C4C /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978526727C2000EA1C4C /* Lato-Italic.ttf */; };
 		AE7D978D26727D1100EA1C4C /* Lato-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978C26727D1100EA1C4C /* Lato-Semibold.ttf */; };
 		AE7D978F26727E3B00EA1C4C /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978E26727E3B00EA1C4C /* Lato-Medium.ttf */; };
+		AE859B2B26A7D23D0071C9D2 /* ServicesorWorkersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE859B2A26A7D23D0071C9D2 /* ServicesorWorkersCell.swift */; };
 		AEA5FF21266C9EC1003CA733 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEA5FF20266C9EC1003CA733 /* Profile.storyboard */; };
 		AEA5FF24266CA166003CA733 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5FF23266CA166003CA733 /* UserProfileViewController.swift */; };
 		AEA5FF26266CA392003CA733 /* ProfileServiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5FF25266CA392003CA733 /* ProfileServiceTableViewCell.swift */; };
@@ -388,6 +390,7 @@
 		AE2FCC95267C7DDD004E1A61 /* MyProfileFollowersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileFollowersTableViewCell.swift; sourceTree = "<group>"; };
 		AE66926A266A64F100A23EE0 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		AE66926C266A66D600A23EE0 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
+		AE74422926A9310B00B42194 /* ViewPostVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPostVC.swift; sourceTree = "<group>"; };
 		AE7D977D2672739600EA1C4C /* MyProfilesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyProfilesVC.swift; sourceTree = "<group>"; };
 		AE7D978026727C1F00EA1C4C /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		AE7D978126727C2000EA1C4C /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
@@ -397,6 +400,7 @@
 		AE7D978526727C2000EA1C4C /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
 		AE7D978C26727D1100EA1C4C /* Lato-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Semibold.ttf"; sourceTree = "<group>"; };
 		AE7D978E26727E3B00EA1C4C /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
+		AE859B2A26A7D23D0071C9D2 /* ServicesorWorkersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesorWorkersCell.swift; sourceTree = "<group>"; };
 		AEA5FF20266C9EC1003CA733 /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		AEA5FF23266CA166003CA733 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		AEA5FF25266CA392003CA733 /* ProfileServiceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceTableViewCell.swift; sourceTree = "<group>"; };
@@ -535,6 +539,7 @@
 			isa = PBXGroup;
 			children = (
 				78D5CA352565515E00BF59AB /* ViewPostController.swift */,
+				AE74422926A9310B00B42194 /* ViewPostVC.swift */,
 				786A33202565931300B58265 /* CategoryPostController.swift */,
 				786A3322256596E700B58265 /* FilterLauncher.swift */,
 				78A98BFD261100B800E1A8D9 /* SearchController.swift */,
@@ -608,6 +613,7 @@
 				78767E1125BF1A6D00CBF2B8 /* CategoryCell.swift */,
 				AE2D9399268359BE00A52CCB /* RecentServiceTableViewCell.swift */,
 				AE2D939A268359BE00A52CCB /* RecentServiceTableViewCell.xib */,
+				AE859B2A26A7D23D0071C9D2 /* ServicesorWorkersCell.swift */,
 			);
 			path = ItemCell;
 			sourceTree = "<group>";
@@ -1119,6 +1125,7 @@
 				78D9FFC125B89E2B00F00EA1 /* Post2.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignInController.swift in Sources */,
 				78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */,
+				AE859B2B26A7D23D0071C9D2 /* ServicesorWorkersCell.swift in Sources */,
 				78008CD72569B8E4005E4A15 /* Password.swift in Sources */,
 				04F79731269972FC00044938 /* CVPresent.swift in Sources */,
 				7805676E26148719006ADEA9 /* SparkKeys.swift in Sources */,
@@ -1239,6 +1246,7 @@
 				04F7971C269972FC00044938 /* CVScrollDirection.swift in Sources */,
 				04F79728269972FC00044938 /* CVCalendarDayView.swift in Sources */,
 				78E02C3D25A1C01F00337370 /* PushNotificationManager.swift in Sources */,
+				AE74422A26A9310B00B42194 /* ViewPostVC.swift in Sources */,
 				78E02C4025A1C4BA00337370 /* PushNotificationSender.swift in Sources */,
 				784646DF2561C854000C5F26 /* PageCell.swift in Sources */,
 				AEA5FF2D266CB901003CA733 /* CommonUtils.swift in Sources */,
@@ -1405,7 +1413,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 72;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
@@ -1428,7 +1436,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 71;
+				CURRENT_PROJECT_VERSION = 72;
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

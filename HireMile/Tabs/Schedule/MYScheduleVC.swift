@@ -13,6 +13,7 @@ class MYScheduleVC: UIViewController {
     @IBOutlet weak var calendarView: CVCalendarView!
     @IBOutlet weak var menuView: CVCalendarMenuView!
     @IBOutlet weak var tblSchedule: UITableView!
+    @IBOutlet weak var dropdownButton: UIButton!
     
     let arrTime = ["10:00 AM","11:00 AM","12:00 AM","01:00 PM","02:00 PM","03:00 PM","04:00 PM","05:00 PM","06:00 PM","07:00 PM","08:00 PM","09:00 PM"]
     
@@ -66,6 +67,18 @@ class MYScheduleVC: UIViewController {
     @IBAction func btnloadNext(sender: AnyObject) {
         calendarView.loadNextView()
     }
+    
+    @IBAction func btnDropDownAction(_ sender: UIButton) {
+        if sender.isSelected == true {
+            sender.isSelected = false
+            calendarView.changeMode(.weekView)
+        } else {
+            calendarView.changeMode(.monthView)
+            sender.isSelected = true
+            calendarView.layer.cornerRadius = 20
+        }
+    }
+    
 }
 
 extension MYScheduleVC : UITableViewDelegate,UITableViewDataSource {
@@ -104,12 +117,9 @@ extension MYScheduleVC : UITableViewDelegate,UITableViewDataSource {
 // MARK: - CVCalendarViewDelegate & CVCalendarMenuViewDelegate
 
 extension MYScheduleVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
-    
-    // MARK: Required methods
-    
     func presentationMode() -> CalendarMode { return .weekView }
     
-    func firstWeekday() -> Weekday { return .sunday }
+    func firstWeekday() -> Weekday { return .monday }
     
     func presentedDateUpdated(_ date: CVDate) {
         print("date.day", date.day)
@@ -153,6 +163,15 @@ extension MYScheduleVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
     }
     // MARK: Optional methods
     func dayOfWeekTextColor() -> UIColor { return .black }
+    
+    
+    func weekdaySymbolType() -> WeekdaySymbolType {
+        return .veryShort
+    }
+    
+    func dayOfWeekFont() -> UIFont {
+        return  UIFont.init(name: "Lato-Regular", size: 14)!
+    }
     
     
 }

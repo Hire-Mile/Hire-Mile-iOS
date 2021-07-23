@@ -17,7 +17,6 @@ class BookAppointmentVC: UIViewController {
     @IBOutlet weak var colTime: UICollectionView!
     @IBOutlet weak var colDate: UICollectionView!
     @IBOutlet weak var vwUserDetail: UIView!
-    @IBOutlet weak var imgArrow: UIImageView!
     
     @IBOutlet weak var calendarView: CVCalendarView!
     @IBOutlet weak var menuView: CVCalendarMenuView!
@@ -36,6 +35,7 @@ class BookAppointmentVC: UIViewController {
         if let timeZone = TimeZone(secondsFromGMT: -timeZoneBias * 60) {
             currentCalendar?.timeZone = timeZone
         }
+        
     }
     
     override func viewDidLoad() {
@@ -60,7 +60,7 @@ class BookAppointmentVC: UIViewController {
         self.menuView.commitMenuViewUpdate()
         self.calendarView.commitCalendarViewUpdate()
         
-        vwUserDetail.roundCorners(corners: [.topLeft, .topRight], radius: 20)
+        
     }
     
     // MARK: Button Action
@@ -73,13 +73,14 @@ class BookAppointmentVC: UIViewController {
         if sender.isSelected == true {
             sender.isSelected = false
             calendarView.changeMode(.weekView)
-            calendarView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 0)
-            imgArrow.image = UIImage(named: "down")
-        }else{
+            //calendarView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 0)
+            calendarView.layer.cornerRadius = 0
+            calendarView.dropShadow(color: .clear, offSet: CGSize(width: 0, height: 5))
+        } else {
             calendarView.changeMode(.monthView)
             sender.isSelected = true
-            calendarView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 20)
-            imgArrow.image = UIImage(named: "upside")
+            calendarView.layer.cornerRadius = 20//roundCorners(corners: [.bottomLeft, .bottomRight], radius: 20)
+            calendarView.dropShadow(color: .black,opacity: 0.1, offSet: CGSize(width: 0, height: 5),radius: 5)
         }
     }
 
@@ -114,9 +115,11 @@ extension BookAppointmentVC : UICollectionViewDelegate,UICollectionViewDataSourc
         if selectTime == arrTime[indexPath.row] {
             cell.vwBG.backgroundColor = UIColor(named: "cellBGColor")
             cell.vwBG.layer.borderColor = UIColor.mainBlue.cgColor
+            cell.lblTitle.font = UIFont(name: "Lato-Bold", size:  16.0)!
         }else{
             cell.vwBG.backgroundColor = UIColor.white
             cell.vwBG.layer.borderColor = UIColor(named:"LightGray")?.cgColor
+            cell.lblTitle.font = UIFont(name: "Lato-Medium", size:  16.0)!
         }
         return cell
     }
@@ -131,23 +134,24 @@ extension BookAppointmentVC : UICollectionViewDelegate,UICollectionViewDataSourc
         
         let vwWidth = (colTime.frame.size.width - 40)
             //arrTime[indexPath.row].width(withConstrainedHeight: 40, font: UIFont(name: "Lato-Medium", size:  14.0)!)
-        return CGSize(width: vwWidth / 3, height: 40)
+        return CGSize(width: vwWidth / 3, height: 51)
     }
-func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return 10
-}
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 22
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
+    }
 }
 
 // MARK: - CVCalendarViewDelegate & CVCalendarMenuViewDelegate
 
 extension BookAppointmentVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
-    
-    // MARK: Required methods
-    
     func presentationMode() -> CalendarMode { return .weekView }
     
-    func firstWeekday() -> Weekday { return .sunday }
+    func firstWeekday() -> Weekday { return .monday }
     
     func presentedDateUpdated(_ date: CVDate) {
         print("date.day", date.day)
@@ -191,5 +195,12 @@ extension BookAppointmentVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate 
     // MARK: Optional methods
     func dayOfWeekTextColor() -> UIColor { return .black }
     
+    func weekdaySymbolType() -> WeekdaySymbolType {
+        return .veryShort
+    }
+    
+    func dayOfWeekFont() -> UIFont {
+        return  UIFont.init(name: "Lato-Regular", size: 14)!
+    }
     
 }
