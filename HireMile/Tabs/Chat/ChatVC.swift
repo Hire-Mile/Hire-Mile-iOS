@@ -16,17 +16,15 @@ import FirebaseStorage
 import FirebaseDatabase
 import MobileCoreServices
 import CoreLocation
+import SwiftyJSON
 
 class ChatVC: UIViewController, UserCellDelegate {
-   
-    @IBOutlet weak var tblChat: UITableView!
     @IBOutlet weak var colChat: UICollectionView!
     @IBOutlet weak var txtInput: UITextField!
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblCategory: UILabel!
     @IBOutlet weak var btnFinish: UIButton!
     @IBOutlet weak var sendButton: UIButton!
-    @IBOutlet weak var vwMain: UIView!
     
     @IBOutlet weak var vwCostumerJobAccepted: UIView!
     @IBOutlet weak var lblCostumerJobAccepted: UILabel!
@@ -42,10 +40,9 @@ class ChatVC: UIViewController, UserCellDelegate {
     @IBOutlet weak var imgUser: UIImageView!
     @IBOutlet weak var imgCalender: UIImageView!
     
-    var user : UserChat? {
+    var userOther : UserChat? {
         didSet {
-            navigationItem.title = user?.name
-            observeMessages()
+            navigationItem.title = userOther?.name
         }
     }
     
@@ -69,23 +66,20 @@ class ChatVC: UIViewController, UserCellDelegate {
     let imagePicker = UIImagePickerController()
     let filterLauncher = FinishLauncher()
     
+    var ongoingJob:OngoingJobs!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        tblChat.register(UINib(nibName: "ChatLeftCell", bundle: nil), forCellReuseIdentifier: "ChatLeftCell")
-        
-        tblChat.register(UINib(nibName: "ChatRightCell", bundle: nil), forCellReuseIdentifier: "ChatRightCell")
-        tblChat.register(UINib(nibName: "AcceptPayCell", bundle: nil), forCellReuseIdentifier: "AcceptPayCell")
-        
+        self.finishButtonEnable(enable: false)
         colChat.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
-        vwMain.isHidden = true
-        self.lblTitle.text = user?.name ?? ""
+        colChat.register(UINib(nibName: AcceptPaymentCollectionViewCell.className, bundle: nil), forCellWithReuseIdentifier: AcceptPaymentCollectionViewCell.className)
+        self.lblTitle.text = userOther?.name ?? ""
+        observeMessages()
         // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        vwMain.isHidden = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             for message in self.messages {
                 Database.database().reference().child("Messages").child(message.textId!).child("hasViewed").setValue(true)
@@ -97,14 +91,66 @@ class ChatVC: UIViewController, UserCellDelegate {
     // MARK: Page Funtion
     
     func observeMessages() {
-        guard let uid = Auth.auth().currentUser?.uid, let toId = user?.id else {
+        guard let uid = Auth.auth().currentUser?.uid, let toId = userOther?.id else {
             return
         }
+        let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs")
+        ongoingJobRef
+            .queryOrdered(byChild: "bookUid")
+            .queryEqual(toValue: uid)
+            .observe(.value, with: { snapshot in
+                if let jobDictionary = snapshot.value as? NSDictionary {
+                    for key in jobDictionary.allKeys {
+                        if let key = key as? String {
+                            if let dic = jobDictionary[key] as? NSDictionary {
+                                let json = JSON(dic)
+                                let ongoing = OngoingJobs(json: json)
+                                if(ongoing.jobStatus.rawValue >= JobStatus.Completed.rawValue) {
+                                    continue
+                                }
+                                self.ongoingJob = ongoing
+                                self.ongoingJob.key = key
+                                self.ongoingJob.isServiceProvider = false
+                                self.firstTimeFunction(onGoinjob: self.ongoingJob)
+                                return
+                            }
+                        }
+                    }
+                }
+                ongoingJobRef
+                    .queryOrdered(byChild: "authorId")
+                    .queryEqual(toValue: uid)
+                    .observe(.value, with: { snapshot in
+                        if let jobDictionary = snapshot.value as? NSDictionary {
+                            for key in jobDictionary.allKeys {
+                                if let key = key as? String {
+                                    if let dic = jobDictionary[key] as? NSDictionary {
+                                        let json = JSON(dic)
+                                        let ongoing = OngoingJobs(json: json)
+                                        if(ongoing.jobStatus.rawValue >= JobStatus.Completed.rawValue) {
+                                            continue
+                                        }
+                                        self.ongoingJob = ongoing
+                                        self.ongoingJob.key = key
+                                        self.ongoingJob.isServiceProvider = true
+                                        self.firstTimeFunction(onGoinjob: self.ongoingJob)
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                        self.colChat.reloadData()
+                    })
+            })
+        
+        
+        
         let userMessagesRef = Database.database().reference().child("User-Messages").child(uid).child(toId)
         userMessagesRef.observe(.childAdded) { (snapshot) in
             let messageId = snapshot.key
             let messagesRef = Database.database().reference().child("Messages").child(messageId)
             messagesRef.observeSingleEvent(of: .value) { (dictSnap) in
+                debugPrint(dictSnap)
                 guard let dictionary = dictSnap.value as? [String : Any] else {
                     return
                 }
@@ -116,26 +162,23 @@ class ChatVC: UIViewController, UserCellDelegate {
                 }
                 
                 if self.isSearchingForServiceProvider {
-                    if message.serviceProvider == Auth.auth().currentUser!.uid {
+                    if message.serviceProvider != Auth.auth().currentUser!.uid {
                         GlobalVariables.chatPartnerId = message.chatPartnerId()!
                         self.isSearchingForServiceProvider = false
-                        print("i am jorge, the worker")
-                        if message.firstTime != true {
+                        if message.firstTime == true {
                             print("first time")
                             self.chatId = messageId
                             self.jobId = message.postId!
                             self.theMessage = message.text!
-                            self.firstTimeFunction()
+                            
                         }
-                        GlobalVariables.jobId = message.postId!
+                        //GlobalVariables.jobId = message.postId!
                         GlobalVariables.chatPartnerId = message.chatPartnerId()!
                     } else {
                         print("henry")
                         if message.firstTime == false {
                           
-                            self.btnFinish.setTitle("Finish", for: .normal)
-                            self.btnFinish.backgroundColor = UIColor.mainBlue
-                            self.btnFinish.setTitleColor(.white, for: .normal)
+                            
                            
                             if let messagePostId = message.postId {
                                 GlobalVariables.jobId = messagePostId
@@ -160,14 +203,11 @@ class ChatVC: UIViewController, UserCellDelegate {
     }
     
     
-    func firstTimeFunction() {
-        print("first time")
-        
-        print("jobid: \(jobId)")
-        Database.database().reference().child("Jobs").child(jobId).observe(.value) { (snapshot) in
+    func firstTimeFunction(onGoinjob: OngoingJobs) {
+        Database.database().reference().child("Jobs").child(onGoinjob.jobId).observe(.value) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = JobStructure()
-                job.authorName = value["author"] as? String ?? "Error"
+                job.authorId = value["author"] as? String ?? "Error"
                 job.titleOfPost = value["title"] as? String ?? "Error"
                 job.descriptionOfPost = value["description"] as? String ?? "Error"
                 job.price = value["price"] as? Int ?? 0
@@ -175,16 +215,100 @@ class ChatVC: UIViewController, UserCellDelegate {
                 job.imagePost = value["image"] as? String ?? "Error"
                 job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                 job.postId = value["postId"] as? String ?? "Error"
-
-                self.vwAcceptOrDecline.isHidden = false
-                self.imgUser.sd_setImage(with: URL(string: self.user?.profileImageUrl ?? ""), completed: nil)
+                self.ongoingJob.price = job.price ?? 0
+                self.imgUser.sd_setImage(with: URL(string: self.userOther?.profileImageUrl ?? ""), completed: nil)
                 self.lblAcceptOrDeclineWorkName.text = "\(job.titleOfPost!)"
+                self.lblAcceptOrDeclineDateTime.text = onGoinjob.scheduleTime
+                if let date = onGoinjob.scheduleDate.toDate(withFormat: "dd-MM-yy") {
+                    let customDate = date.toString(withFormat: "MMMM dd")
+                    self.lblAcceptOrDeclineDateTime.text = customDate + ", " + onGoinjob.scheduleTime
+                }
+                self.updateJobView(onGoinjob: onGoinjob)
                 if job.typeOfPrice == "Hourly" {
                     self.lblAcceptOrDeclinePrice.text! = "$\(job.price!) / Hour"
                 } else {
                     self.lblAcceptOrDeclinePrice.text! = "$\(job.price!)"
                 }
+                self.lblCategory.text = (job.titleOfPost ?? "") + " " + (self.lblAcceptOrDeclinePrice.text ?? "")
+
             }
+        }
+    }
+    
+    private func updateJobView(onGoinjob: OngoingJobs) {
+        if onGoinjob.isServiceProvider {
+            switch self.ongoingJob.jobStatus {
+                case .Hired:
+                    self.vwAcceptOrDecline.isHidden = false
+                    self.vwWorkerjobAccepted.isHidden = true
+                    self.vwCostumerJobAccepted.isHidden = true
+                    break
+                case .Accepted:
+                    self.lblWorkerjobAccepted.attributedText = NSMutableAttributedString().normal("You have ").bold("accepted the job. ").normal("Chat with the customer to define job details.")
+                    self.vwAcceptOrDecline.isHidden = true
+                    self.vwWorkerjobAccepted.isHidden = false
+                    self.vwCostumerJobAccepted.isHidden = true
+                    self.finishButtonEnable(enable: true)
+                    break
+                case .Declined:
+                    self.lblWorkerjobAccepted.attributedText = NSMutableAttributedString().normal("You have ").bold("Declined the job. ")
+                    self.vwAcceptOrDecline.isHidden = true
+                    self.vwWorkerjobAccepted.isHidden = false
+                    self.vwCostumerJobAccepted.isHidden = true
+                    self.finishButtonEnable(enable: false)
+                    break
+                case .AwaitingPayment:
+                    self.vwAcceptOrDecline.isHidden = true
+                    self.vwWorkerjobAccepted.isHidden = true
+                    self.vwCostumerJobAccepted.isHidden = true
+                    self.finishButtonEnable(enable: false)
+                    break
+                case .CancelledPayment:
+                    break
+                case .DeclinePayment:
+                    break
+                case .Completed:
+                    self.finishButtonEnable(enable: false)
+                break
+            }
+            
+        } else {
+            switch self.ongoingJob.jobStatus {
+                case .Hired:
+                    self.vwAcceptOrDecline.isHidden = true
+                    self.vwWorkerjobAccepted.isHidden = true
+                    self.vwCostumerJobAccepted.isHidden = false
+                    self.finishButtonEnable(enable: false)
+                    break
+                case .Accepted:
+                    self.lblCostumerJobAccepted.attributedText = NSMutableAttributedString().bold(self.userOther?.name ?? "").normal(" accept your Job Offer,\nPlease, Chat with him to define the details\nof the job")
+                    self.vwAcceptOrDecline.isHidden = true
+                    self.vwWorkerjobAccepted.isHidden = true
+                    self.vwCostumerJobAccepted.isHidden = false
+                    self.finishButtonEnable(enable: false)
+                    break
+                case .Declined:
+                    self.lblCostumerJobAccepted.attributedText = NSMutableAttributedString().bold(self.userOther?.name ?? "").normal(" declined your Job Offer")
+                    self.vwAcceptOrDecline.isHidden = true
+                    self.vwWorkerjobAccepted.isHidden = true
+                    self.vwCostumerJobAccepted.isHidden = false
+                    self.finishButtonEnable(enable: false)
+                    break
+                case .AwaitingPayment:
+                    self.vwAcceptOrDecline.isHidden = true
+                    self.vwWorkerjobAccepted.isHidden = true
+                    self.vwCostumerJobAccepted.isHidden = true
+                    self.finishButtonEnable(enable: false)
+                    break
+                case .CancelledPayment:
+                    break
+                case .DeclinePayment:
+                    break
+                case .Completed:
+                    self.finishButtonEnable(enable: false)
+                    break
+            }
+            
         }
     }
     
@@ -198,7 +322,7 @@ class ChatVC: UIViewController, UserCellDelegate {
     
     func setupCell(cell: ChatMessageCell, message: Message) {
         
-        if let profileImageUrl = self.user?.profileImageUrl {
+        if let profileImageUrl = self.userOther?.profileImageUrl {
             cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
         } else {
             cell.profileImageView.backgroundColor = UIColor.clear
@@ -282,6 +406,19 @@ class ChatVC: UIViewController, UserCellDelegate {
                 cell.mapView.isHidden = true
                 cell.mapButton.isHidden = true
             }
+        }
+    }
+    
+    func finishButtonEnable(enable: Bool) {
+        self.btnFinish.isEnabled = enable
+        if enable {
+            self.btnFinish.setTitle("Finish", for: .normal)
+            self.btnFinish.backgroundColor = UIColor.mainBlue
+            self.btnFinish.setTitleColor(.white, for: .normal)
+        } else {
+            self.btnFinish.setTitle("Finish", for: .normal)
+            self.btnFinish.backgroundColor = UIColor.lightGray
+            self.btnFinish.setTitleColor(.white, for: .normal)
         }
     }
     
@@ -391,7 +528,7 @@ class ChatVC: UIViewController, UserCellDelegate {
     private func sendMessageWithProperties(_ properties: [String: Any]) {
         let ref = Database.database().reference().child("Messages")
         let childRef = ref.childByAutoId()
-        let toId = user?.id
+        let toId = userOther?.id
         let fromId = Auth.auth().currentUser!.uid
         let timestamp = Int(Date().timeIntervalSince1970)
         var values : [String : Any] = ["toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : false, "service-provider" : "??", "text-id" : childRef.key, "hasViewed" : false] as [String : Any]
@@ -433,12 +570,54 @@ class ChatVC: UIViewController, UserCellDelegate {
     @objc func completeJobButton() {
         // show loader for 1 second
         self.filterLauncher.handleDismiss()
-        MBProgressHUD.showAdded(to: self.view, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            MBProgressHUD.hide(for: self.view, animated: true)
-            let feedbackController = FeedbackController()
-            self.navigationController?.pushViewController(feedbackController, animated: true)
+        if((self.ongoingJob) != nil) {
+            let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
+            let acceptDic = ["job-status":JobStatus.AwaitingPayment.rawValue]
+            ongoingJobRef.updateChildValues(acceptDic)
         }
+        
+        let ref = Database.database().reference().child("Messages")
+        let childRef = ref.childByAutoId()
+        let toId = userOther?.id
+        let fromId = Auth.auth().currentUser!.uid
+        let timestamp = Int(Date().timeIntervalSince1970)
+        let values : [String : Any] = ["toId": toId ?? "", "fromId": fromId, "timestamp": timestamp,  "ongoingjobkey" : self.ongoingJob.key, "text-id" : childRef.key ?? "", "job-status":JobStatus.AwaitingPayment.rawValue, "text": "You submitted a completed Job request to \(userOther?.name ?? "")"] as [String : Any]
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error ?? "")
+                return
+            }
+            
+            guard let messageId = childRef.key else { return }
+            
+            let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(toId!).child(messageId)
+            userMessagesRef.setValue(1)
+            
+            let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId!).child(fromId).child(messageId)
+            recipientUserMessagesRef.setValue(1)
+            
+            
+            Database.database().reference().child("Users").child(toId!).child("fcmToken").observe(.value) { (snapshot) in
+                let token : String = (snapshot.value as? String)!
+                let sender = PushNotificationSender()
+                Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
+                    let name : String = (snapshot.value as? String)!
+                    sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)", page: false, senderId: Auth.auth().currentUser!.uid, recipient: toId!)
+                    self.checkNilValueTextField()
+                }
+            }
+            
+            self.txtInput.text = nil
+        }
+//        MBProgressHUD.showAdded(to: self.view, animated: true)
+//        if let VC = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: RattingVC.className) as? RattingVC {
+//            VC.userOther = self.user
+//            VC.ongoingJob = self.ongoingJob
+//            VC.hidesBottomBarWhenPushed = true
+//            VC.modalPresentationStyle = .fullScreen
+//            self.navigationController?.present(VC, animated: true)
+//        }
     }
     
     
@@ -482,18 +661,12 @@ class ChatVC: UIViewController, UserCellDelegate {
     }
   
     @IBAction func btnFinishClick(_ sender: UIButton) {
-        
-        self.txtInput.resignFirstResponder()
-        UIView.animate(withDuration: 1) {
-            self.view.layoutIfNeeded()
-        }
         self.filterLauncher.showFilter()
         self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
-        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
     }
     
     @IBAction func btnPolygonClick(_ sender: UIButton) {
-        
+
     }
     
     @IBAction func btnMoreClick(_ sender: UIButton) {
@@ -516,7 +689,6 @@ class ChatVC: UIViewController, UserCellDelegate {
     }
     
     @IBAction func btnSendClick(_ sender: UIButton) {
-        vwMain.isHidden = true
         vwCostumerJobAccepted.isHidden = true
         
         if txtInput.text != nil && txtInput.text != "" {
@@ -529,12 +701,22 @@ class ChatVC: UIViewController, UserCellDelegate {
         vwCostumerJobAccepted.isHidden = true
     }
 
-    @IBAction func btnAcceptedAndPayClick(_ sender: UIButton) {
+    @IBAction func btnAcceptedClick(_ sender: UIButton) {
         vwAcceptOrDecline.isHidden = true
+        if((self.ongoingJob) != nil) {
+            let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
+            let acceptDic = ["job-status":JobStatus.Accepted.rawValue]
+            ongoingJobRef.updateChildValues(acceptDic)
+        }
     }
     
     @IBAction func btnDeclineClick(_ sender: UIButton) {
         vwAcceptOrDecline.isHidden = true
+        if((self.ongoingJob) != nil) {
+            let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
+            let acceptDic = ["job-status":JobStatus.Declined.rawValue]
+            ongoingJobRef.updateChildValues(acceptDic)
+        }
     }
     
     @objc func btnrightClick(_ sender: UIButton) {
@@ -547,10 +729,20 @@ class ChatVC: UIViewController, UserCellDelegate {
     
     @objc func btnleftClick(_ sender: UIButton) {
         if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
-            profileVC.userUID = user!.id!
+            profileVC.userUID = userOther!.id!
             self.navigationController?.pushViewController(profileVC,  animated: true)
         }
         print("left")
+    }
+    
+    @objc func btnAcceptAndPayClick(_ sender: UIButton) {
+        let message = self.messages[sender.tag]
+        if let paymentVC = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: PaymentVC.className) as? PaymentVC {
+            paymentVC.userJobPost = self.userOther
+            paymentVC.ongoingJob = self.ongoingJob
+            paymentVC.message = message
+            self.navigationController?.pushViewController(paymentVC,  animated: true)
+        }
     }
 }
 
@@ -564,15 +756,48 @@ extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollecti
     }
     
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let message = messages[indexPath.row]
+        if((ongoingJob) != nil) {
+            if ongoingJob.isServiceProvider {
+                if message.jobStatus == .AwaitingPayment {
+                    
+                }
+            } else {
+                if message.jobStatus == .AwaitingPayment {
+                    let acceptCell  = collectionView.dequeueReusableCell(withReuseIdentifier: AcceptPaymentCollectionViewCell.className, for: indexPath) as! AcceptPaymentCollectionViewCell
+                    if let profileImageUrl = self.userOther?.profileImageUrl {
+                        acceptCell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+                    } else {
+                        acceptCell.profileImageView.backgroundColor = UIColor.clear
+                        acceptCell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+                        acceptCell.profileImageView.tintColor = UIColor.lightGray
+                        acceptCell.profileImageView.contentMode = .scaleAspectFill
+                    }
+                    acceptCell.descLabel.text = "\(self.userOther?.name ?? "") requests the\ntermination of the job, do you agree?"
+                    acceptCell.acceptPayButton.tag = indexPath.item
+                    acceptCell.acceptPayButton.addTarget(self, action: #selector(btnAcceptAndPayClick(_:)), for: .touchUpInside)
+                    return acceptCell
+                }
+            }
+        }
+        
         let cell  = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ChatMessageCell
         
         cell.chatLogControllerVC = self
         
         cell.index = indexPath
         
-        let message = messages[indexPath.row]
-        cell.textView.text = message.text
         setupCell(cell: cell, message: message)
+        cell.textView.text = message.text
+        if((ongoingJob) != nil) {
+            if ongoingJob.isServiceProvider {
+                if message.jobStatus == .AwaitingPayment {
+                    cell.textView.attributedText = NSMutableAttributedString().bold("You").normal(" submitted a completed Job request to\n").bold(self.userOther?.name ?? "")
+                    cell.bubbleView.backgroundColor = #colorLiteral(red: 0.9411764706, green: 0.968627451, blue: 0.9882352941, alpha: 1)
+                }
+            }
+        }
+        
         
         if let text = message.text {
             cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: text).width + 32
@@ -601,8 +826,21 @@ extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollecti
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var height: CGFloat = 80
+        let width = UIScreen.main.bounds.width
         
         let message = messages[indexPath.item]
+        if((ongoingJob) != nil) {
+            if ongoingJob.isServiceProvider {
+                if message.jobStatus == .AwaitingPayment {
+                    
+                }
+            } else {
+                if message.jobStatus == .AwaitingPayment {
+                    return CGSize(width: width, height: 162)
+                }
+            }
+        }
+        
         if let text = message.text {
             height = estimateFrameForText(text: text).height + 15
         } else if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue {
@@ -613,132 +851,9 @@ extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollecti
             }
         }
         
-        let width = UIScreen.main.bounds.width
+       
         return CGSize(width: width, height: height + 25)
     }
     
     
-}
-
-extension ChatVC: UITableViewDelegate,UITableViewDataSource {
-   
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.messages.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        let message = messages[indexPath.row]
-       
-        print("isLocation",message.isLocation!)
-        print("text",message.text)
-        print("imageUrl",message.imageUrl)
-        if message.fromId == Auth.auth().currentUser?.uid {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ChatRightCell", for: indexPath) as! ChatRightCell
-            // current user
-           
-            
-            cell.lblChat.text = message.text
-            
-            if let text = message.text {
-                cell.lblChat.isHidden = false
-            } else if message.imageUrl != nil {
-                cell.lblChat.isHidden = true
-            }
-            
-            // get time sent
-            if let seconds = message.timestamp?.doubleValue {
-                let timeStampDate = Date(timeIntervalSince1970: seconds)
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                cell.lblTime.text = dateFormatter.string(from: timeStampDate)
-            }
-            
-            if let uid = Auth.auth().currentUser?.uid {
-                Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
-                    let profileImageString : String = (snapshot.value as? String)!
-                    if profileImageString == "not-yet-selected" {
-                        cell.imgUser.image = UIImage(systemName: "person.circle.fill")
-                        cell.imgUser.tintColor = UIColor.lightGray
-                        cell.imgUser.contentMode = .scaleAspectFill
-                    } else {
-                        cell.imgUser.loadImageUsingCacheWithUrlString(profileImageString)
-                        cell.imgUser.tintColor = UIColor.lightGray
-                        cell.imgUser.contentMode = .scaleAspectFill
-                    }
-                }
-            }
-            return cell
-        } else {
-            // recipient
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ChatLeftCell", for: indexPath) as! ChatLeftCell
-            cell.leftAnchorRec?.isActive = true
-            cell.rightAnchorMe?.isActive = false
-           
-            cell.bubbleViewRightAnchor?.isActive = false
-            cell.bubbleViewLeftAnchor?.isActive = true
-            
-            cell.lblChat.text = message.text
-            
-            if let text = message.text {
-                cell.lblChat.isHidden = false
-            } else if message.imageUrl != nil {
-                cell.lblChat.isHidden = true
-            }
-            
-            // get time sent
-            if let seconds = message.timestamp?.doubleValue {
-                let timeStampDate = Date(timeIntervalSince1970: seconds)
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                cell.lblTime.text = dateFormatter.string(from: timeStampDate)
-            }
-            
-            if let uid = Auth.auth().currentUser?.uid {
-                Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
-                    let profileImageString : String = (snapshot.value as? String)!
-                    if profileImageString == "not-yet-selected" {
-                        cell.imgUser.image = UIImage(systemName: "person.circle.fill")
-                        cell.imgUser.tintColor = UIColor.lightGray
-                        cell.imgUser.contentMode = .scaleAspectFill
-                    } else {
-                        cell.imgUser.loadImageUsingCacheWithUrlString(profileImageString)
-                        cell.imgUser.tintColor = UIColor.lightGray
-                        cell.imgUser.contentMode = .scaleAspectFill
-                    }
-                }
-            }
-            return cell
-        }
-        
-        
-                
-        
-      /*  let btn_left=UIButton(frame: CGRect(x: 8, y: cell.frame.height - 51, width: 32, height: 32))
-        btn_left.isUserInteractionEnabled = true
-        btn_left.addTarget(self, action: #selector(btnleftClick), for: .touchUpInside)
-        cell.addSubview(btn_left)
-        
-        let btn_right=UIButton(frame: CGRect(x: cell.frame.width - 40, y: cell.frame.height - 51, width: 32, height: 32))
-        btn_right.isUserInteractionEnabled = true
-        btn_right.addTarget(self, action: #selector(btnrightClick), for: .touchUpInside)
-        cell.addSubview(btn_right)
-        
-        cell.messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
-        
-        */
-        
-        
-       
-        
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-        
-    }
 }

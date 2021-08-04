@@ -15,5 +15,9 @@ class UserStructure: NSObject {
     var username : String?
     var notification : String?
     var isFollow: Bool = false
+    
+    func initFromDictionary(dic: NSDictionary) {
+        
+    }
 
 }

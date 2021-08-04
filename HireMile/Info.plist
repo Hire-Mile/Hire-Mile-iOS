@@ -82,6 +82,7 @@
 		<string>Lato-Semibold.ttf</string>
 		<string>Lato-Medium.ttf</string>
 		<string>Gilroy-Bold.ttf</string>
+		<string>Gilroy-Medium.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

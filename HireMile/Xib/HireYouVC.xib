@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="SFUIText-Semibold.ttf">
+            <string>SFUIText-Semibold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HireYouVC" customModule="Hiremile" customModuleProvider="target">
+            <connections>
+                <outlet property="btnView" destination="ihe-f9-yGm" id="crG-FN-NPv"/>
+                <outlet property="lblName" destination="mf8-7P-sKa" id="fF0-5I-Jni"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="vwMain" destination="bO5-sE-Lph" id="mOl-iz-QtO"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bO5-sE-Lph">
+                    <rect key="frame" x="20" y="515" width="335" height="62"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Albert Smith hire you" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mf8-7P-sKa">
+                            <rect key="frame" x="20" y="20.5" width="190" height="21"/>
+                            <fontDescription key="fontDescription" name="SFUIText-Semibold" family="SF UI Text" pointSize="18"/>
+                            <color key="textColor" name="F0F7FC"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ihe-f9-yGm">
+                            <rect key="frame" x="225" y="17" width="90" height="28"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="28" id="1uZ-fh-x2U"/>
+                                <constraint firstAttribute="width" constant="90" id="z7e-gE-dcl"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="SFUIText-Semibold" family="SF UI Text" pointSize="16"/>
+                            <state key="normal" title="View">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="9"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                    <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="borderWidthNew">
+                                    <real key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="btnViewClick:" destination="-1" eventType="touchUpInside" id="3Uw-2T-Spf"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.066666666666666666" green="0.10196078431372549" blue="0.31764705882352939" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="ihe-f9-yGm" firstAttribute="leading" secondItem="mf8-7P-sKa" secondAttribute="trailing" constant="15" id="8rm-Fd-MEU"/>
+                        <constraint firstAttribute="height" constant="62" id="Na0-ow-FZ9"/>
+                        <constraint firstAttribute="trailing" secondItem="ihe-f9-yGm" secondAttribute="trailing" constant="20" id="XPE-oJ-I4X"/>
+                        <constraint firstItem="ihe-f9-yGm" firstAttribute="centerY" secondItem="bO5-sE-Lph" secondAttribute="centerY" id="YnJ-wg-JFV"/>
+                        <constraint firstItem="mf8-7P-sKa" firstAttribute="leading" secondItem="bO5-sE-Lph" secondAttribute="leading" constant="20" id="jjB-s7-Bxg"/>
+                        <constraint firstItem="mf8-7P-sKa" firstAttribute="centerY" secondItem="bO5-sE-Lph" secondAttribute="centerY" id="ncz-2M-Bhc"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="15"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="bO5-sE-Lph" secondAttribute="bottom" constant="90" id="3Qg-HB-ZKG"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bO5-sE-Lph" secondAttribute="trailing" constant="20" id="fZr-Kq-cAL"/>
+                <constraint firstItem="bO5-sE-Lph" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="hjs-eL-1lg"/>
+            </constraints>
+            <point key="canvasLocation" x="78" y="29"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="F0F7FC">
+            <color red="0.94099998474121094" green="0.96899998188018799" blue="0.98799997568130493" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

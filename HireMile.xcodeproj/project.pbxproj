@@ -31,8 +31,6 @@
 		047A649E269B0B6600461329 /* colServicesorWorkersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047A649C269B0B6600461329 /* colServicesorWorkersCell.swift */; };
 		047A649F269B0B6600461329 /* colServicesorWorkersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 047A649D269B0B6600461329 /* colServicesorWorkersCell.xib */; };
 		0482E9A9269AA60C008FD06F /* RattingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0482E9A8269AA60C008FD06F /* RattingVC.swift */; };
-		04A0F114269C713C0004CE87 /* AcceptPayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A0F112269C713C0004CE87 /* AcceptPayCell.swift */; };
-		04A0F115269C713C0004CE87 /* AcceptPayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04A0F113269C713C0004CE87 /* AcceptPayCell.xib */; };
 		04A0F117269C8D910004CE87 /* Tabbar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04A0F116269C8D910004CE87 /* Tabbar.storyboard */; };
 		04AF8B2B269C5AD600B41537 /* ChatRightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AF8B29269C5AD600B41537 /* ChatRightCell.swift */; };
 		04AF8B2C269C5AD600B41537 /* ChatRightCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04AF8B2A269C5AD600B41537 /* ChatRightCell.xib */; };
@@ -86,7 +84,6 @@
 		7805677126148719006ADEA9 /* SparkSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7805676B26148719006ADEA9 /* SparkSetup.swift */; };
 		780567DE261AEFA7006ADEA9 /* WelcomeScreen2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780567DD261AEFA7006ADEA9 /* WelcomeScreen2.swift */; };
 		780766BF260DBF4400962F4E /* TimePickerSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780766BE260DBF4400962F4E /* TimePickerSwift.swift */; };
-		780A7F622562D565009BD93A /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780A7F612562D565009BD93A /* Home.swift */; };
 		78147A7925EFB2CC00828998 /* NotificationObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78147A7825EFB2CC00828998 /* NotificationObject.swift */; };
 		78147A7C25F13F7900828998 /* AddUsername.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78147A7B25F13F7800828998 /* AddUsername.swift */; };
 		781F45E325C97555004F9C45 /* FeedbackLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 781F45E225C97555004F9C45 /* FeedbackLauncher.swift */; };
@@ -195,6 +192,13 @@
 		AE7D978D26727D1100EA1C4C /* Lato-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978C26727D1100EA1C4C /* Lato-Semibold.ttf */; };
 		AE7D978F26727E3B00EA1C4C /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978E26727E3B00EA1C4C /* Lato-Medium.ttf */; };
 		AE859B2B26A7D23D0071C9D2 /* ServicesorWorkersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE859B2A26A7D23D0071C9D2 /* ServicesorWorkersCell.swift */; };
+		AE8B624526B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B624326B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift */; };
+		AE8B624626B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE8B624426B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib */; };
+		AE8B624926B59A820092F207 /* HireYouVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B624726B59A820092F207 /* HireYouVC.swift */; };
+		AE8B624A26B59A820092F207 /* HireYouVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE8B624826B59A820092F207 /* HireYouVC.xib */; };
+		AEA203BF26B1CD9000CDE20E /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEA203BE26B1CD9000CDE20E /* Gilroy-Medium.ttf */; };
+		AEA44AF026AD16F000157896 /* JobStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA44AEF26AD16F000157896 /* JobStatus.swift */; };
+		AEA44AF226AD1C3D00157896 /* OngoingJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA44AF126AD1C3D00157896 /* OngoingJob.swift */; };
 		AEA5FF21266C9EC1003CA733 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AEA5FF20266C9EC1003CA733 /* Profile.storyboard */; };
 		AEA5FF24266CA166003CA733 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5FF23266CA166003CA733 /* UserProfileViewController.swift */; };
 		AEA5FF26266CA392003CA733 /* ProfileServiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEA5FF25266CA392003CA733 /* ProfileServiceTableViewCell.swift */; };
@@ -232,8 +236,6 @@
 		047A649C269B0B6600461329 /* colServicesorWorkersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = colServicesorWorkersCell.swift; sourceTree = "<group>"; };
 		047A649D269B0B6600461329 /* colServicesorWorkersCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = colServicesorWorkersCell.xib; sourceTree = "<group>"; };
 		0482E9A8269AA60C008FD06F /* RattingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RattingVC.swift; sourceTree = "<group>"; };
-		04A0F112269C713C0004CE87 /* AcceptPayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptPayCell.swift; sourceTree = "<group>"; };
-		04A0F113269C713C0004CE87 /* AcceptPayCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AcceptPayCell.xib; sourceTree = "<group>"; };
 		04A0F116269C8D910004CE87 /* Tabbar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Tabbar.storyboard; sourceTree = "<group>"; };
 		04AF8B29269C5AD600B41537 /* ChatRightCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRightCell.swift; sourceTree = "<group>"; };
 		04AF8B2A269C5AD600B41537 /* ChatRightCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatRightCell.xib; sourceTree = "<group>"; };
@@ -287,7 +289,6 @@
 		7805676B26148719006ADEA9 /* SparkSetup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SparkSetup.swift; sourceTree = "<group>"; };
 		780567DD261AEFA7006ADEA9 /* WelcomeScreen2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen2.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		780766BE260DBF4400962F4E /* TimePickerSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimePickerSwift.swift; sourceTree = "<group>"; };
-		780A7F612562D565009BD93A /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		78147A7825EFB2CC00828998 /* NotificationObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationObject.swift; sourceTree = "<group>"; };
 		78147A7B25F13F7800828998 /* AddUsername.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUsername.swift; sourceTree = "<group>"; };
 		781F45E225C97555004F9C45 /* FeedbackLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackLauncher.swift; sourceTree = "<group>"; };
@@ -401,6 +402,13 @@
 		AE7D978C26727D1100EA1C4C /* Lato-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Semibold.ttf"; sourceTree = "<group>"; };
 		AE7D978E26727E3B00EA1C4C /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
 		AE859B2A26A7D23D0071C9D2 /* ServicesorWorkersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesorWorkersCell.swift; sourceTree = "<group>"; };
+		AE8B624326B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptPaymentCollectionViewCell.swift; sourceTree = "<group>"; };
+		AE8B624426B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AcceptPaymentCollectionViewCell.xib; sourceTree = "<group>"; };
+		AE8B624726B59A820092F207 /* HireYouVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HireYouVC.swift; sourceTree = "<group>"; };
+		AE8B624826B59A820092F207 /* HireYouVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HireYouVC.xib; sourceTree = "<group>"; };
+		AEA203BE26B1CD9000CDE20E /* Gilroy-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Medium.ttf"; sourceTree = "<group>"; };
+		AEA44AEF26AD16F000157896 /* JobStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobStatus.swift; sourceTree = "<group>"; };
+		AEA44AF126AD1C3D00157896 /* OngoingJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OngoingJob.swift; sourceTree = "<group>"; };
 		AEA5FF20266C9EC1003CA733 /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		AEA5FF23266CA166003CA733 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		AEA5FF25266CA392003CA733 /* ProfileServiceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileServiceTableViewCell.swift; sourceTree = "<group>"; };
@@ -443,8 +451,6 @@
 				04AF8B30269C65CC00B41537 /* ChatLeftCell.xib */,
 				04AF8B29269C5AD600B41537 /* ChatRightCell.swift */,
 				04AF8B2A269C5AD600B41537 /* ChatRightCell.xib */,
-				04A0F112269C713C0004CE87 /* AcceptPayCell.swift */,
-				04A0F113269C713C0004CE87 /* AcceptPayCell.xib */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -527,7 +533,6 @@
 		78032023261F469A008343B8 /* Home Stuff */ = {
 			isa = PBXGroup;
 			children = (
-				780A7F612562D565009BD93A /* Home.swift */,
 				78032026261F46EC008343B8 /* HomeCategoryPreview.swift */,
 				783015C52624278E0030BA9F /* AllCategories.swift */,
 				047A649A269AFD4200461329 /* HomeVC.swift */,
@@ -789,6 +794,8 @@
 				78F8F85925A482F30021FD60 /* ReviewObject.swift */,
 				784C0E8225FB67340075C6B5 /* WorkingHoursStructure.swift */,
 				7868124F2646B86300A62134 /* GalleryModel.swift */,
+				AEA44AEF26AD16F000157896 /* JobStatus.swift */,
+				AEA44AF126AD1C3D00157896 /* OngoingJob.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -841,6 +848,8 @@
 				AE2E0977267C529500CAE3EF /* ChooseYourSourceVC.swift */,
 				AE2E0976267C529500CAE3EF /* CategoryVC.xib */,
 				AE2E0978267C529500CAE3EF /* CategoryVC.swift */,
+				AE8B624726B59A820092F207 /* HireYouVC.swift */,
+				AE8B624826B59A820092F207 /* HireYouVC.xib */,
 			);
 			path = Xib;
 			sourceTree = "<group>";
@@ -860,6 +869,8 @@
 				0470E0FE2699DD5700B094DB /* colPaymentCardCell.xib */,
 				047A649C269B0B6600461329 /* colServicesorWorkersCell.swift */,
 				047A649D269B0B6600461329 /* colServicesorWorkersCell.xib */,
+				AE8B624326B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift */,
+				AE8B624426B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib */,
 			);
 			path = CollectionviewCell;
 			sourceTree = "<group>";
@@ -890,6 +901,7 @@
 				AED4A54F26A5BCF900934B34 /* Gilroy-Bold.ttf */,
 				AE7D978126727C2000EA1C4C /* Lato-Black.ttf */,
 				AE7D978326727C2000EA1C4C /* Lato-Bold.ttf */,
+				AEA203BE26B1CD9000CDE20E /* Gilroy-Medium.ttf */,
 				AE7D978526727C2000EA1C4C /* Lato-Italic.ttf */,
 				AE7D978426727C2000EA1C4C /* Lato-Light.ttf */,
 				AE7D978026727C1F00EA1C4C /* Lato-Regular.ttf */,
@@ -999,6 +1011,7 @@
 				AE7D978A26727C2000EA1C4C /* Lato-Light.ttf in Resources */,
 				784646D32561B843000C5F26 /* LaunchScreen.storyboard in Resources */,
 				78295ACD2597CBAE00004CE7 /* TabStoryboard.storyboard in Resources */,
+				AE8B624A26B59A820092F207 /* HireYouVC.xib in Resources */,
 				04A0F117269C8D910004CE87 /* Tabbar.storyboard in Resources */,
 				AE7D978D26727D1100EA1C4C /* Lato-Semibold.ttf in Resources */,
 				047A6499269AF15900461329 /* Home.storyboard in Resources */,
@@ -1012,11 +1025,12 @@
 				04F23EEF269BE99D007C2D90 /* Chat.storyboard in Resources */,
 				0452B26D2699D25E006F9A5E /* Payment.storyboard in Resources */,
 				0452B26B2699D1FB006F9A5E /* Appointment.storyboard in Resources */,
+				AEA203BF26B1CD9000CDE20E /* Gilroy-Medium.ttf in Resources */,
 				0452B2692699D1E3006F9A5E /* Schedule.storyboard in Resources */,
 				AE2E097E267C529500CAE3EF /* CategoryVC.xib in Resources */,
 				AE7D978826727C2000EA1C4C /* Lato-Thin.ttf in Resources */,
-				04A0F115269C713C0004CE87 /* AcceptPayCell.xib in Resources */,
 				AE2D939C268359BE00A52CCB /* RecentServiceTableViewCell.xib in Resources */,
+				AE8B624626B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib in Resources */,
 				040CECC9269B2195008F07BC /* Menu.storyboard in Resources */,
 				AEA5FF21266C9EC1003CA733 /* Profile.storyboard in Resources */,
 				047A649F269B0B6600461329 /* colServicesorWorkersCell.xib in Resources */,
@@ -1152,7 +1166,6 @@
 				04F7971B269972FC00044938 /* CVCalendarMenuView.swift in Sources */,
 				7805676F26148719006ADEA9 /* SparkService.swift in Sources */,
 				781F45E625C975FD004F9C45 /* ProposalPopup.swift in Sources */,
-				04A0F114269C713C0004CE87 /* AcceptPayCell.swift in Sources */,
 				78D9FFC025B89E2B00F00EA1 /* PostLauncher.swift in Sources */,
 				78147A7925EFB2CC00828998 /* NotificationObject.swift in Sources */,
 				04F7972B269972FC00044938 /* CVCalendarWeekContentViewController.swift in Sources */,
@@ -1160,11 +1173,13 @@
 				AEA5FF2F266CB93F003CA733 /* Constant.swift in Sources */,
 				786A33212565931300B58265 /* CategoryPostController.swift in Sources */,
 				788D44B8257ECA41002AF9CB /* PasswordSuccess.swift in Sources */,
+				AEA44AF026AD16F000157896 /* JobStatus.swift in Sources */,
 				78A98C022611013000E1A8D9 /* SearchController2.swift in Sources */,
 				0470E0FF2699DD5700B094DB /* colPaymentCardCell.swift in Sources */,
 				78BFDBFD25B471E000A1D8B5 /* UserMessageStructure.swift in Sources */,
 				78AD20FB25723E4D004A1487 /* AddCard.swift in Sources */,
 				78295B0A25990C1C00004CE7 /* Message.swift in Sources */,
+				AEA44AF226AD1C3D00157896 /* OngoingJob.swift in Sources */,
 				04F79727269972FC00044938 /* CVCalendarMonthContentViewController.swift in Sources */,
 				784C0E5E25F92ABD0075C6B5 /* InfoPage.swift in Sources */,
 				781F45E325C97555004F9C45 /* FeedbackLauncher.swift in Sources */,
@@ -1192,7 +1207,6 @@
 				04F7971D269972FC00044938 /* CVCalendarMonthView.swift in Sources */,
 				7801D9BF25D296E100BB0B33 /* AllowLocation.swift in Sources */,
 				78295A8E2597770A00004CE7 /* ChatLogController2.swift in Sources */,
-				780A7F622562D565009BD93A /* Home.swift in Sources */,
 				04F79734269972FC00044938 /* CVCalendarViewDelegate.swift in Sources */,
 				78D9FFC825BB148400F00EA1 /* EditPost.swift in Sources */,
 				04F79721269972FC00044938 /* CVCalendarViewAnimatorDelegate.swift in Sources */,
@@ -1219,6 +1233,7 @@
 				0466435D269763B2007B3460 /* colTimeCell.swift in Sources */,
 				7886ED9A25836BE300260D2F /* UserStructure.swift in Sources */,
 				7805676C26148719006ADEA9 /* SparkExtensions.swift in Sources */,
+				AE8B624926B59A820092F207 /* HireYouVC.swift in Sources */,
 				04F7971F269972FC00044938 /* CVAuxiliaryView.swift in Sources */,
 				78AD20FF25724C17004A1487 /* GlobalVariables.swift in Sources */,
 				04F79722269972FC00044938 /* CVCalendarDayViewControlCoordinator.swift in Sources */,
@@ -1253,6 +1268,7 @@
 				04F79724269972FC00044938 /* CVCalendarWeekday.swift in Sources */,
 				785D000E2609C8300060622A /* Booking.swift in Sources */,
 				AEA5FF28266CA3A9003CA733 /* ProfileReviewTableViewCell.swift in Sources */,
+				AE8B624526B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift in Sources */,
 				AE66926D266A66D600A23EE0 /* NSObject.swift in Sources */,
 				78767E1225BF1A6D00CBF2B8 /* CategoryCell.swift in Sources */,
 				04F79725269972FC00044938 /* CVShape.swift in Sources */,

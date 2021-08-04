@@ -132,7 +132,7 @@ class MyProfilesVC: UIViewController {
                     Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
                         if let value = snapshot.value as? [String : Any] {
                             let job = JobStructure()
-                            job.authorName = value["author"] as? String ?? "Error"
+                            job.authorId = value["author"] as? String ?? "Error"
                             job.titleOfPost = value["title"] as? String ?? "Error"
                             job.descriptionOfPost = value["description"] as? String ?? "Error"
                             job.price = value["price"] as? Int ?? 0
@@ -142,7 +142,7 @@ class MyProfilesVC: UIViewController {
                             job.timeStamp = value["time"] as? Int ?? 0
                             job.postId = value["postId"] as? String ?? "Error"
                             
-                            if job.authorName == uid {
+                            if job.authorId == uid {
                                 self.myJobs.append(job)
                             }
                         
@@ -250,7 +250,7 @@ class MyProfilesVC: UIViewController {
             editVC.postTitle = self.myJobs[sender.tag].titleOfPost!
             editVC.postDescription = self.myJobs[sender.tag].descriptionOfPost!
             editVC.postPrice = self.myJobs[sender.tag].price!
-            editVC.authorId = self.myJobs[sender.tag].authorName!
+            editVC.authorId = self.myJobs[sender.tag].authorId!
             editVC.postId = self.myJobs[sender.tag].postId!
             editVC.type = self.myJobs[sender.tag].typeOfPrice!
             editVC.category = self.myJobs[sender.tag].category!
@@ -565,20 +565,12 @@ extension MyProfilesVC : UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch selectIndex {
         case 0 :
-            let controller = ViewPostController()
-            controller.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
-            controller.postTitle = self.myJobs[indexPath.row].titleOfPost!
-            controller.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
-            controller.postPrice = self.myJobs[indexPath.row].price!
-            controller.authorId = self.myJobs[indexPath.row].authorName!
-            controller.postId = self.myJobs[indexPath.row].postId!
-            controller.type = self.myJobs[indexPath.row].typeOfPrice!
-            Database.database().reference().child("Users").child(self.myJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
-                if let name : String = (snapshot.value as? String) {
-                    controller.profileImage.sd_setImage(with: URL(string: name), completed: nil)
-                }
+            if let controller = CommonUtils.getStoryboardVC(StoryBoard.Home.rawValue, vcIdetifier: ViewPostVC.className) as? ViewPostVC {
+                controller.hidesBottomBarWhenPushed = true
+                let Jobs = self.myJobs[indexPath.item]
+                controller.jobPost = Jobs
+                self.navigationController?.pushViewController(controller, animated: true)
             }
-            self.navigationController?.pushViewController(controller, animated: true)
         case 1 :
             if let uid = self.allRatings[indexPath.row].userUid {
                 if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {

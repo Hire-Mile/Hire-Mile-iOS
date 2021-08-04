@@ -56,6 +56,8 @@ target 'HireMile' do
   pod 'Cosmos'
   
   pod 'IQKeyboardManager'
+  
+  pod 'Stripe', '~> 5.0'
 
   #pod 'CVCalendar', '~> 1.7.0'
   

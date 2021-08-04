@@ -34,16 +34,16 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mcZ-r3-xhJ">
-                                            <rect key="frame" x="145" y="10" width="124.5" height="40"/>
+                                            <rect key="frame" x="146" y="10" width="122.5" height="40"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="February" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YOZ-7U-jYs">
-                                                    <rect key="frame" x="10" y="0.0" width="69.5" height="40"/>
+                                                    <rect key="frame" x="10" y="0.0" width="67.5" height="40"/>
                                                     <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="17"/>
                                                     <color key="textColor" name="BlackColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y14-ET-0jw">
-                                                    <rect key="frame" x="89.5" y="7.5" width="25" height="25"/>
+                                                    <rect key="frame" x="87.5" y="7.5" width="25" height="25"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="25" id="bEp-Kd-l5n"/>
                                                         <constraint firstAttribute="height" constant="25" id="klx-sY-1fd"/>
@@ -217,7 +217,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Book an Appoinment" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6w0-cV-i83">
-                                        <rect key="frame" x="104.5" y="12" width="205" height="26.5"/>
+                                        <rect key="frame" x="103" y="12" width="208" height="26"/>
                                         <fontDescription key="fontDescription" name="Lato-Semibold" family="Lato" pointSize="22"/>
                                         <color key="textColor" name="BlackColor"/>
                                         <nil key="highlightedColor"/>
@@ -249,25 +249,28 @@
                                 <rect key="frame" x="0.0" y="950" width="414" height="200"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hair saloon" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0zh-UY-A5h">
-                                        <rect key="frame" x="24" y="24" width="87" height="20.5"/>
+                                        <rect key="frame" x="24" y="24" width="263" height="20"/>
                                         <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="17"/>
                                         <color key="textColor" name="BlackColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 30.00" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RM5-mk-NOV">
-                                        <rect key="frame" x="330" y="20" width="60" height="22"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 30.00" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RM5-mk-NOV">
+                                        <rect key="frame" x="290" y="20" width="100" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="m9r-Qn-C7C"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="18"/>
                                         <color key="textColor" name="BlackColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Albert Smith" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qd7-qD-iVK">
-                                        <rect key="frame" x="74" y="73" width="105.5" height="23"/>
+                                        <rect key="frame" x="74" y="73" width="176" height="22.5"/>
                                         <fontDescription key="fontDescription" name="Lato-Semibold" family="Lato" pointSize="19"/>
                                         <color key="textColor" name="BlackColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="haircut" translatesAutoresizingMaskIntoConstraints="NO" id="pUD-ba-UDH">
-                                        <rect key="frame" x="24" y="64.5" width="40" height="40"/>
+                                        <rect key="frame" x="24" y="64" width="40" height="40"/>
                                         <color key="backgroundColor" red="0.90980392160000001" green="0.94117647059999998" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="5oV-Ee-pj5"/>
@@ -300,8 +303,11 @@
                                             <action selector="btnBookHire:" destination="hM2-rc-Ly3" eventType="touchUpInside" id="DeT-AK-pqC"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9:30 am 10:30 am" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Od3-Uf-6bL">
-                                        <rect key="frame" x="270" y="75.5" width="120" height="18"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Od3-Uf-6bL">
+                                        <rect key="frame" x="250" y="84" width="140" height="0.0"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="140" id="AaA-4E-f0J"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" name="Lato-Semibold" family="Lato" pointSize="15"/>
                                         <color key="textColor" name="ABA9A9"/>
                                         <nil key="highlightedColor"/>
@@ -316,6 +322,7 @@
                                     <constraint firstItem="Od3-Uf-6bL" firstAttribute="centerY" secondItem="Qd7-qD-iVK" secondAttribute="centerY" id="LQe-nw-8aF"/>
                                     <constraint firstItem="RM5-mk-NOV" firstAttribute="top" secondItem="cdh-7i-2J4" secondAttribute="top" constant="20" id="RUO-ae-h9M"/>
                                     <constraint firstItem="0zh-UY-A5h" firstAttribute="top" secondItem="cdh-7i-2J4" secondAttribute="top" constant="24" id="ZEn-5c-WnV"/>
+                                    <constraint firstItem="Od3-Uf-6bL" firstAttribute="leading" secondItem="Qd7-qD-iVK" secondAttribute="trailing" id="aSn-d7-jBS"/>
                                     <constraint firstItem="pUD-ba-UDH" firstAttribute="top" secondItem="0zh-UY-A5h" secondAttribute="bottom" constant="20" id="aYO-8y-jJL"/>
                                     <constraint firstItem="Qd7-qD-iVK" firstAttribute="centerY" secondItem="pUD-ba-UDH" secondAttribute="centerY" id="abC-KF-TFg"/>
                                     <constraint firstAttribute="height" constant="200" id="eJg-WN-LG5"/>
@@ -323,6 +330,7 @@
                                     <constraint firstItem="Qd7-qD-iVK" firstAttribute="leading" secondItem="pUD-ba-UDH" secondAttribute="trailing" constant="10" id="lQl-BC-7Zw"/>
                                     <constraint firstAttribute="trailing" secondItem="Od3-Uf-6bL" secondAttribute="trailing" constant="24" id="m4s-5x-dve"/>
                                     <constraint firstAttribute="bottom" secondItem="qNc-Rv-jCU" secondAttribute="bottom" constant="20" id="r5V-bc-92k"/>
+                                    <constraint firstItem="RM5-mk-NOV" firstAttribute="leading" secondItem="0zh-UY-A5h" secondAttribute="trailing" constant="3" id="zFc-zI-AT5"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
@@ -369,6 +377,7 @@
                         <outlet property="lblPrice" destination="RM5-mk-NOV" id="lfX-Iq-ZhW"/>
                         <outlet property="lblTime" destination="Od3-Uf-6bL" id="VSh-L4-1v0"/>
                         <outlet property="menuView" destination="o5f-uc-hOY" id="xIs-dU-Qju"/>
+                        <outlet property="userProfileImageView" destination="pUD-ba-UDH" id="6am-ed-Anr"/>
                         <outlet property="vwUserDetail" destination="cdh-7i-2J4" id="ApA-wR-9gn"/>
                     </connections>
                 </viewController>

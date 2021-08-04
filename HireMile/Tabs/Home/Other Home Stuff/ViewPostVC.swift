@@ -35,16 +35,19 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
     var height : CGFloat = 0
     var arrayOfStrImages = [String]()
     
-    var postImage2 = UIImageView()
-    var postImageDownlodUrl = ""
-    var postTitle = ""
-    var postDescription = ""
-    var postPrice = 0
-    var userUID = ""
-    var postId = ""
-    var authorId = ""
-    var type = ""
-    var category = ""
+//    var postImage2 = UIImageView()
+//    var postImageDownlodUrl = ""
+//    var postTitle = ""
+//    var postDescription = ""
+//    var postPrice = 0
+//    var userUID = ""
+//    var postId = ""
+//    var authorId = ""
+//    var type = ""
+//    var category = ""
+    
+    var userStructure: UserStructure?
+    var jobPost: JobStructure!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,19 +55,18 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
         self.colProfileImg!.register(UINib(nibName: "CoverPhotoCell", bundle: nil), forCellWithReuseIdentifier: "CoverPhotoCell")
         
         
-        self.lblName.text = postTitle
-        self.lblDetail.text = postDescription
-        lblCategory.text = category
+        self.lblName.text = jobPost.titleOfPost
+        self.lblDetail.text = jobPost.descriptionOfPost
+        lblCategory.text = jobPost.category
       //  self.height = self.estimateFrameForText(text: self.descriptionLabel.text!).height
         
-        if type == "Hourly" {
-            self.lblPrice.text = "$\(postPrice) / Hour"
-            self.lblPrice1.text = "$\(postPrice) / Hour"
+        if self.jobPost.typeOfPrice == "Hourly" {
+            self.lblPrice.text = "$\(String(jobPost.price ?? 0)) / Hour"
+            self.lblPrice1.text = "$\(String(jobPost.price ?? 0)) / Hour"
         } else {
-            self.lblPrice.text = "$\(postPrice)"
-            self.lblPrice1.text = "$\(postPrice)"
+            self.lblPrice.text = "$\(String(jobPost.price ?? 0))"
+            self.lblPrice1.text = "$\(String(jobPost.price ?? 0))"
         }
-        
     }
     override func viewWillAppear(_ animated: Bool) {
         self.basicSetup()
@@ -108,7 +110,7 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
             block.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
             let key = Database.database().reference().child("Reported-Posts").childByAutoId().key
             let values = [
-                "post-id" : self.postId,
+                "post-id" : self.jobPost.postId,
                 "key" : key,
                 "reporter" : Auth.auth().currentUser!.uid
             ]
@@ -129,11 +131,11 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
         if self.txtMsg.text != " " && self.txtMsg.text != "  " && self.txtMsg.text != "   " && self.txtMsg.text != nil && self.txtMsg.text != "  Say Something..." && self.txtMsg.text != "" {
             let ref = Database.database().reference().child("Messages")
             let childRef = ref.childByAutoId()
-            let toId = authorId
+            let toId = self.jobPost.authorId ?? ""
             let fromId = Auth.auth().currentUser!.uid
             let timestamp = Int(Date().timeIntervalSince1970)
             let key = Database.database().reference().child("Users").child(toId).child("My_Jobs").childByAutoId().key
-            let values = ["text": txtMsg.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : true, "service-provider" : toId, "job-id" : self.postId, "job-ref-id" : key, "hasViewed" : false, "text-id" : childRef.key] as [String : Any]
+            let values = ["text": txtMsg.text!, "toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : true, "service-provider" : toId, "job-id" : self.jobPost.postId, "job-ref-id" : key, "hasViewed" : false, "text-id" : childRef.key] as [String : Any]
             childRef.updateChildValues(values) { (error, ref) in
                 if error != nil {
                     print(error ?? "")
@@ -174,9 +176,9 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
     }
     
     @objc func hirePressed() {
-        print("Hire Pressed")
         if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Appointment.rawValue, vcIdetifier: BookAppointmentVC.className) as? BookAppointmentVC {
             profileVC.hidesBottomBarWhenPushed = true
+            profileVC.jobStructure = jobPost
             self.navigationController?.pushViewController(profileVC,  animated: true)
         }
     }
@@ -187,22 +189,20 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
     }
     
     @objc func setName() {
-        Database.database().reference().child("Users").child(self.authorId).child("name").observe(.value) { (snapshot) in
-            if let name : String = (snapshot.value as? String) {
-                self.lblTitle.text = name
-            }
-        }
-        Database.database().reference().child("Users").child(self.authorId).child("profile-image").observe(.value) { (snapshot) in
-            if let url : String = (snapshot.value as? String) {
-                self.imgProfile.sd_setImage(with: URL(string: url), completed: nil)
-            }
-        }
-        
-        var userInformation = NSDictionary()
-        Database.database().reference().child("Users").child(self.authorId).observe(.value) { (snapshot) in
+        Database.database().reference().child("Users").child(self.jobPost.authorId ?? "").observe(.value) { (snapshot) in
             if let userInformation = snapshot.value as? NSDictionary {
                 print("userInformation" ,userInformation)
-                self.lblRate.text = "\(userInformation.value(forKey: "number-of-ratings")!)"
+                if let numberOfRating = userInformation["number-of-ratings"] as? String {
+                    self.lblRate.text = numberOfRating
+                }
+                if let name = userInformation["name"] as? String {
+                    self.lblTitle.text = name
+                    self.jobPost.author.username = name
+                }
+                if let url = userInformation["profile-image"] as? String {
+                    self.imgProfile.sd_setImage(with: URL(string: url), completed: nil)
+                    self.jobPost.author.profileImageView = url
+                }
             }
         }
     }
@@ -216,7 +216,7 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         txtMsg.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
        
-        let array = postImageDownlodUrl.components(separatedBy: ",")
+        let array = (self.jobPost.imagePost ?? "").components(separatedBy: ",")
         arrayOfStrImages = array
         self.colProfileImg!.reloadData()
         
@@ -276,7 +276,7 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
 
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         // send uid
-        Database.database().reference().child("Jobs").child(postId).child("author").observe(.value) { (snapshot) in
+        Database.database().reference().child("Jobs").child(self.jobPost.postId ?? "").child("author").observe(.value) { (snapshot) in
             if let profileUID : String = (snapshot.value as? String) {
                 if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
                     profileVC.userUID = profileUID

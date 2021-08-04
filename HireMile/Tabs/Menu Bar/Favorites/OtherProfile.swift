@@ -411,7 +411,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
         Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = JobStructure()
-                job.authorName = value["author"] as? String ?? "Error"
+                job.authorId = value["author"] as? String ?? "Error"
                 job.titleOfPost = value["title"] as? String ?? "Error"
                 job.descriptionOfPost = value["description"] as? String ?? "Error"
                 job.price = value["price"] as? Int ?? 0
@@ -421,7 +421,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                 job.timeStamp = value["time"] as? Int ?? 0
                 job.postId = value["postId"] as? String ?? "Error"
                 
-                if job.authorName ==  GlobalVariables.userUID {
+                if job.authorId ==  GlobalVariables.userUID {
                     print("my name")
                     self.myJobs.append(job)
                 }
@@ -615,7 +615,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                     Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
                         if let value = snapshot.value as? [String : Any] {
                             let job = JobStructure()
-                            job.authorName = value["author"] as? String ?? "Error"
+                            job.authorId = value["author"] as? String ?? "Error"
                             job.titleOfPost = value["title"] as? String ?? "Error"
                             job.descriptionOfPost = value["description"] as? String ?? "Error"
                             job.price = value["price"] as? Int ?? 0
@@ -624,7 +624,7 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
                             job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
                             job.postId = value["postId"] as? String ?? "Error"
                             
-                            if job.authorName == uid {
+                            if job.authorId == uid {
                                 self.myJobs.append(job)
                             }
                         }
@@ -1103,24 +1103,11 @@ class OtherProfile: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            let controller = ViewPostController()
-            controller.hidesBottomBarWhenPushed = true
-            controller.postImage2.loadImageUsingCacheWithUrlString(self.myJobs[indexPath.row].imagePost!)
-            controller.postImageDownlodUrl = self.myJobs[indexPath.row].imagePost!
-            controller.postTitle = self.myJobs[indexPath.row].titleOfPost!
-            controller.postDescription = self.myJobs[indexPath.row].descriptionOfPost!
-            controller.postPrice = self.myJobs[indexPath.row].price!
-            controller.userUID = self.myJobs[indexPath.row].authorName!
-            controller.postId = self.myJobs[indexPath.row].postId!
-            controller.type = self.myJobs[indexPath.row].typeOfPrice!
-            Database.database().reference().child("Users").child(self.allJobs[indexPath.row].authorName!).child("profile-image").observe(.value) { (snapshot) in
-                if let profileImageUrl : String = (snapshot.value as? String) {
-                    controller.profileImage.sd_setImage(with: URL(string: profileImageUrl)!, completed: nil)
-                    controller.authorId = self.allJobs[indexPath.row].authorName!
-                    controller.postId = self.allJobs[indexPath.row].postId!
-                    controller.type = self.allJobs[indexPath.row].typeOfPrice!
-                    self.navigationController?.pushViewController(controller, animated: true)
-                }
+            if let controller = CommonUtils.getStoryboardVC(StoryBoard.Home.rawValue, vcIdetifier: ViewPostVC.className) as? ViewPostVC {
+                controller.hidesBottomBarWhenPushed = true
+                let Jobs = self.myJobs[indexPath.item]
+                controller.jobPost = Jobs
+                self.navigationController?.pushViewController(controller, animated: true)
             }
         } else if self.segmentedControl.selectedSegmentIndex == 1 {
             if let uid = self.allRatings[indexPath.row].userUid {

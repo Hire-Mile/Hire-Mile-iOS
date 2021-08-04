@@ -10,7 +10,7 @@ import UIKit
 
 class FinishLauncher: NSObject {
 
-    let height : CGFloat = 500
+    let height : CGFloat = 400
 
     let blackView = UIView()
 
@@ -22,20 +22,15 @@ class FinishLauncher: NSObject {
         return view
     }()
     
-    let stopJob : MainSecondaryButton = {
-        let button = MainSecondaryButton(title: "Cancel Service")
-        return button
-    }()
-    
     let completeJob : MainButton = {
-        let button = MainButton(title: "Complete Service")
+        let button = MainButton(title: "Complete job")
         return button
     }()
 
     let filterTitle : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Finish Service?"
+        label.text = "Finish job!"
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.boldSystemFont(ofSize: 24)
@@ -46,7 +41,7 @@ class FinishLauncher: NSObject {
     let filterDescription : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Please select below, so we can log experience for your partner"
+        label.text = "Remember that the client must accept the\ncompletion of the work to proceed\nwith the payment."
         label.textAlignment = .center
         label.textColor = UIColor.black
         label.font = UIFont.systemFont(ofSize: 16)
@@ -62,14 +57,14 @@ class FinishLauncher: NSObject {
         return imageView
     }()
     
-    let exitButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "xmark"), for: .normal)
-        button.imageView?.tintColor = UIColor.black
-        button.tintColor = UIColor.black
-        return button
-    }()
+//    let exitButton : UIButton = {
+//        let button = UIButton()
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setImage(UIImage(systemName: "xmark"), for: .normal)
+//        button.imageView?.tintColor = UIColor.black
+//        button.tintColor = UIColor.black
+//        return button
+//    }()
 
     override init() {
         super.init()
@@ -78,23 +73,16 @@ class FinishLauncher: NSObject {
     }
 
     func doStuff() {
-        self.exitButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
-        
-        filterView.addSubview(stopJob)
-        self.stopJob.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
-        self.stopJob.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
-        self.stopJob.bottomAnchor.constraint(equalTo: self.filterView.bottomAnchor, constant: -50).isActive = true
-        self.stopJob.heightAnchor.constraint(equalToConstant: 45).isActive = true
-        
+        //self.exitButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
         filterView.addSubview(completeJob)
         self.completeJob.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
         self.completeJob.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
-        self.completeJob.bottomAnchor.constraint(equalTo: self.stopJob.topAnchor, constant: -15).isActive = true
+        self.completeJob.bottomAnchor.constraint(equalTo: self.filterView.bottomAnchor, constant: -50).isActive = true
         self.completeJob.heightAnchor.constraint(equalToConstant: 45).isActive = true
 
         filterView.addSubview(filterDescription)
-        self.filterDescription.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 60).isActive = true
-        self.filterDescription.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -60).isActive = true
+        self.filterDescription.leftAnchor.constraint(equalTo: self.filterView.leftAnchor, constant: 30).isActive = true
+        self.filterDescription.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
         self.filterDescription.bottomAnchor.constraint(equalTo: self.completeJob.topAnchor, constant: -25).isActive = true
         self.filterDescription.heightAnchor.constraint(equalToConstant: 60).isActive = true
 
@@ -110,11 +98,11 @@ class FinishLauncher: NSObject {
         self.filterImage.bottomAnchor.constraint(equalTo: self.filterTitle.topAnchor, constant: -25).isActive = true
         self.filterImage.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-        filterView.addSubview(exitButton)
-        self.exitButton.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
-        self.exitButton.topAnchor.constraint(equalTo: self.filterView.topAnchor, constant: 30).isActive = true
-        self.exitButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        self.exitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//        filterView.addSubview(exitButton)
+//        self.exitButton.rightAnchor.constraint(equalTo: self.filterView.rightAnchor, constant: -30).isActive = true
+//        self.exitButton.topAnchor.constraint(equalTo: self.filterView.topAnchor, constant: 30).isActive = true
+//        self.exitButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+//        self.exitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
 
     func showFilter() {
@@ -127,7 +115,7 @@ class FinishLauncher: NSObject {
             window.addSubview(filterView)
 
             let y = window.frame.height - height
-            filterView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 500)
+            filterView.frame = CGRect(x: 0, y: window.frame.height, width: window.frame.width, height: 400)
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
                 self.blackView.alpha = 1
                 self.filterView.frame = CGRect(x: 0, y: y, width: self.filterView.frame.width, height: self.filterView.frame.height)

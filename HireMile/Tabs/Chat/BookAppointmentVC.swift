@@ -7,7 +7,9 @@
 //
 
 import UIKit
-
+import FirebaseDatabase
+import FirebaseAuth
+import SwiftyJSON
 class BookAppointmentVC: UIViewController {
     @IBOutlet weak var lblMonth: UILabel!
     @IBOutlet weak var lblCategory: UILabel!
@@ -15,13 +17,14 @@ class BookAppointmentVC: UIViewController {
     @IBOutlet weak var lblPrice: UILabel!
     @IBOutlet weak var lblTime: UILabel!
     @IBOutlet weak var colTime: UICollectionView!
-    @IBOutlet weak var colDate: UICollectionView!
     @IBOutlet weak var vwUserDetail: UIView!
+    @IBOutlet weak var userProfileImageView: UIImageView!
     
     @IBOutlet weak var calendarView: CVCalendarView!
     @IBOutlet weak var menuView: CVCalendarMenuView!
+    var jobStructure: JobStructure!
     
-    let arrTime = ["09:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 AM","12:30 AM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM","07:30 PM","08:00 PM","08:30 PM","09:00 PM","09:30 PM","10:00 PM","10:30 PM"]
+    let arrTime = ["09:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM","07:30 PM","08:00 PM","08:30 PM","09:00 PM","09:30 PM","10:00 PM","10:30 PM"]
     
     var selectTime = ""
     
@@ -40,6 +43,7 @@ class BookAppointmentVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initUIData()
         self.colTime.register(UINib(nibName: "colTimeCell", bundle: nil), forCellWithReuseIdentifier: "colTimeCell")
         
         // Appearance delegate [Unnecessary]
@@ -55,12 +59,20 @@ class BookAppointmentVC: UIViewController {
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
         // Commit frames' updates
         self.menuView.commitMenuViewUpdate()
         self.calendarView.commitCalendarViewUpdate()
-        
-        
+    }
+    
+    func initUIData() {
+        self.lblName.text = jobStructure.author.username ?? ""
+        if self.jobStructure.typeOfPrice == "Hourly" {
+            self.lblPrice.text = "$\(String(jobStructure.price ?? 0)) / Hour"
+        } else {
+            self.lblPrice.text = "$\(String(jobStructure.price ?? 0))"
+        }
+        self.lblCategory.text = jobStructure.titleOfPost ?? ""
+        self.userProfileImageView.sd_setImage(with: URL(string: jobStructure.author.profileImageView ?? ""), completed: nil)
     }
     
     // MARK: Button Action
@@ -93,12 +105,109 @@ class BookAppointmentVC: UIViewController {
     }
     
     @IBAction func btnBookHire(_ sender: UIButton) {
-        self.navigationController?.pushViewController(Chat(), animated: true)
-          /*if let VC = CommonUtils.getStoryboardVC(StoryBoard.Chat.rawValue, vcIdetifier: ChatVC.className) as? ChatVC {
-               VC.hidesBottomBarWhenPushed = true
-              VC.user = user
-               self.navigationController?.pushViewController(VC,  animated: true)
-           }*/
+        if selectTime != "" {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs")
+            ongoingJobRef
+                .queryOrdered(byChild: "jobId")
+                .queryEqual(toValue: self.jobStructure.postId ?? "")
+               .observeSingleEvent(of: .value, with: {(snapshot) in
+                        print(snapshot)
+                if let jobDictionary = snapshot.value as? NSDictionary {
+                    for key in jobDictionary.allKeys {
+                        if let key = key as? String {
+                            if let dic = jobDictionary[key] as? NSDictionary {
+                                let json = JSON(dic)
+                                let ongoingJob = OngoingJobs(json: json)
+                                if ongoingJob.bookUid == uid {
+                                    if ongoingJob.jobStatus.rawValue < JobStatus.Completed.rawValue {
+                                        self.simpleAlert(title: "", message: "You already ongoing this job:  \(self.jobStructure.titleOfPost ?? "")")
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                let jobsReference = Database.database().reference().child("Ongoing-Jobs")
+                let timestamp = Int(Date().timeIntervalSince1970)
+                let infoToAdd : Dictionary<String, Any> = [
+                    "jobId" : self.jobStructure.postId ?? "",
+                    "bookUid": uid,
+                    "job-status" : JobStatus.Hired.rawValue,
+                    "running-time" : timestamp,
+                    "scheduleDate": self.jobStructure.scheduleDate ?? "",
+                    "scheduleTime": self.jobStructure.scheduleTime ?? "",
+                    "authorId": self.jobStructure.authorId ?? ""
+                ]
+                debugPrint(infoToAdd)
+                jobsReference.childByAutoId().setValue(infoToAdd)
+                let ref = Database.database().reference().child("Users").child(self.jobStructure.authorId ?? "")
+                ref.observeSingleEvent(of: .value) { snapshot in
+                    guard let dictionary = snapshot.value as? [String : AnyObject] else {
+                        return
+                    }
+                    debugPrint(dictionary)
+                    let user = UserChat(dictionary: dictionary)
+                    user.id = snapshot.key
+                    self.sendMessageWithProperties(["text":"\(user.name ?? "") hire you"], toId: user.id ?? "")
+                    self.showChatControllerForUser(user)
+                    if let token : String = (dictionary["fcmToken"] as? String) {
+                        let sender = PushNotificationSender()
+                        sender.sendPushNotificationHire(to: token, title: "Congrats! 🎉", body: "\(user.name ?? "") hire you", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.jobStructure.authorId ?? "")
+                        
+                    }
+                }
+            })
+        }
+    }
+    
+    private func sendMessageWithProperties(_ properties: [String: Any], toId: String) {
+        let ref = Database.database().reference().child("Messages")
+        let childRef = ref.childByAutoId()
+        let toId = toId
+        let fromId = Auth.auth().currentUser!.uid
+        let timestamp = Int(Date().timeIntervalSince1970)
+        var values : [String : Any] = ["toId": toId, "fromId": fromId, "timestamp": timestamp, "first-time" : false, "service-provider" : "??", "text-id" : childRef.key ?? "", "hasViewed" : false] as [String : Any]
+        
+        // append properties
+        properties.forEach({values[$0] = $1})
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error ?? "")
+                return
+            }
+            
+            guard let messageId = childRef.key else { return }
+            
+            let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(toId).child(messageId)
+            userMessagesRef.setValue(1)
+            
+            let recipientUserMessagesRef = Database.database().reference().child("User-Messages").child(toId).child(fromId).child(messageId)
+            recipientUserMessagesRef.setValue(1)
+            
+            
+            Database.database().reference().child("Users").child(toId).child("fcmToken").observe(.value) { (snapshot) in
+                let token : String = (snapshot.value as? String)!
+                let sender = PushNotificationSender()
+                Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
+                    let name : String = (snapshot.value as? String)!
+                    sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)", page: false, senderId: Auth.auth().currentUser!.uid, recipient: toId)
+
+                }
+            }
+        }
+    }
+    
+    func showChatControllerForUser(_ user: UserChat) {
+        if let VC = CommonUtils.getStoryboardVC(StoryBoard.Chat.rawValue, vcIdetifier: ChatVC.className) as? ChatVC {
+             VC.hidesBottomBarWhenPushed = true
+            VC.userOther = user
+             self.navigationController?.pushViewController(VC,  animated: true)
+         }
     }
 }
 
@@ -126,6 +235,8 @@ extension BookAppointmentVC : UICollectionViewDelegate,UICollectionViewDataSourc
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectTime = arrTime[indexPath.row]
+        lblTime.text = selectTime
+        jobStructure.scheduleTime = selectTime
         colTime.reloadData()
         
     }
@@ -201,6 +312,14 @@ extension BookAppointmentVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate 
     
     func dayOfWeekFont() -> UIFont {
         return  UIFont.init(name: "Lato-Regular", size: 14)!
+    }
+    
+    func didSelectDayView(_ dayView: DayView, animationDidFinish: Bool) {
+        if let selectedDate = dayView.date.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
+            debugPrint(selectedDate)
+            self.jobStructure.scheduleDate = selectedDate
+        }
+        
     }
     
 }

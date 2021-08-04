@@ -53,14 +53,14 @@ class HomeVC: UIViewController, UINavigationControllerDelegate, UIImagePickerCon
     override func viewDidLoad() {
         super.viewDidLoad()
         UISetUp()
-        
+        observeNotification()
         // Do any additional setup after loading the view.
     }
     
     // MARK: SetUP View
     
     func UISetUp()  {
-      
+        self.lblNotificationCount.isHidden = true
         
         checkLocationAuthorization()
         let pushManager = PushNotificationManager(userID: Auth.auth().currentUser!.uid)
@@ -110,6 +110,43 @@ class HomeVC: UIViewController, UINavigationControllerDelegate, UIImagePickerCon
         self.view = view
     }
     
+    func observeNotification() {
+        let notificationObserve =  Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("Notifcations")
+        notificationObserve
+            .queryOrdered(byChild: "hasView")
+            .queryEqual(toValue: false)
+            .observe(.value, with: { snapshot in
+                if let jobDictionary = snapshot.value as? NSDictionary {
+                    for key in jobDictionary.allKeys {
+                        if let key = key as? String {
+                            if let dic = jobDictionary[key] as? NSDictionary {
+                                let notification = NotificationObject()
+                                notification.key = key
+                                notification.title = dic["title"] as? String ?? "Error"
+                                notification.body = dic["description"] as? String ?? "Error"
+                                notification.senderId = dic["author"] as? String ?? "Error"
+                                notification.image = dic["image"] as? String ?? "Error"
+                                notification.postId = dic["postId"] as? String ?? "Error"
+                                notification.date = dic["timestamp"] as? Int ?? 0
+                                notification.hasView = dic["hasView"] as? Bool ?? true
+                                if notification.hasView == false {
+                                    let alertVC = HireYouVC.init(nibName: HireYouVC.className, bundle: nil)
+                                    alertVC.modalPresentationStyle = .custom
+                                    alertVC.notificationTitle = notification.body ?? ""
+                                    alertVC.key = key
+                                    alertVC.closure = {(Name) -> Void in
+                                        self.tabBarController?.selectedIndex = 3
+                                    }
+                                    CommonUtils.topViewController?.present(alertVC, animated: true, completion: nil)
+                                }
+                            }
+                        }
+                    }
+                }
+
+            })
+    }
+    
     func basicSetup() {
         self.view.backgroundColor = UIColor.white
         self.navigationController?.isNavigationBarHidden = true
@@ -122,7 +159,7 @@ class HomeVC: UIViewController, UINavigationControllerDelegate, UIImagePickerCon
            Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
                if let value = snapshot.value as? [String : Any] {
                    let job = JobStructure()
-                   job.authorName = value["author"] as? String ?? "Error"
+                   job.authorId = value["author"] as? String ?? "Error"
                    job.titleOfPost = value["title"] as? String ?? "Error"
                    job.descriptionOfPost = value["description"] as? String ?? "Error"
                    job.price = value["price"] as? Int ?? 0
@@ -184,7 +221,7 @@ class HomeVC: UIViewController, UINavigationControllerDelegate, UIImagePickerCon
             controller.postTitle = GlobalVariables.catId.titleOfPost!
             controller.postDescription = GlobalVariables.catId.descriptionOfPost!
             controller.postPrice = GlobalVariables.catId.price!
-            controller.authorId = GlobalVariables.catId.authorName!
+            controller.authorId = GlobalVariables.catId.authorId!
             controller.postId = GlobalVariables.catId.postId!
             controller.type = GlobalVariables.catId.typeOfPrice!
             self.navigationController?.pushViewController(controller, animated: true)
@@ -310,12 +347,15 @@ class HomeVC: UIViewController, UINavigationControllerDelegate, UIImagePickerCon
                             // extract blue
                             if ((tabBarController?.tabBar.items?.indices.contains(3)) != nil) {
                                 tabBarController?.tabBar.items?[3].badgeValue = nil
+                                self.lblNotificationCount.isHidden = true
                             }
                             
                         } else {
                             // keep blue
                             if ((tabBarController?.tabBar.items?.indices.contains(3)) != nil) {
                                 tabBarController?.tabBar.items?[3].badgeValue = "1"
+                                self.lblNotificationCount.isHidden = false
+                                self.lblNotificationCount.text = "1"
                             }
                         }
                     } else {

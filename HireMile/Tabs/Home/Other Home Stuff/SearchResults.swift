@@ -39,7 +39,7 @@ class SearchResults: UITableViewController {
             Database.database().reference().child("Jobs").observe(DataEventType.childAdded) { (snapshot) in
                 if let value = snapshot.value as? [String : Any] {
                     let job = JobStructure()
-                    job.authorName = value["author"] as? String ?? "Error"
+                    job.authorId = value["author"] as? String ?? "Error"
                     job.titleOfPost = value["title"] as? String ?? "Error"
                     job.descriptionOfPost = value["description"] as? String ?? "Error"
                     job.price = value["price"] as? Int ?? 0
@@ -88,20 +88,12 @@ class SearchResults: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = ViewPostController()
-        GlobalVariables.catId = self.allJobs[indexPath.row]
-        
-        controller.postImage2.sd_setImage(with: URL(string: GlobalVariables.catId.imagePost!), completed: nil)//loadImageUsingCacheWithUrlString(GlobalVariables.catId.imagePost!)
-        controller.postImageDownlodUrl = GlobalVariables.catId.imagePost!
-        controller.postTitle = GlobalVariables.catId.titleOfPost!
-        controller.postDescription = GlobalVariables.catId.descriptionOfPost!
-        controller.postPrice = GlobalVariables.catId.price!
-        controller.authorId = GlobalVariables.catId.authorName!
-        controller.postId = GlobalVariables.catId.postId!
-        controller.type = GlobalVariables.catId.typeOfPrice!
-        self.navigationController?.pushViewController(controller, animated: true)
-        GlobalVariables.presentToCat = false
-        GlobalVariables.catId = JobStructure()
+        if let controller = CommonUtils.getStoryboardVC(StoryBoard.Home.rawValue, vcIdetifier: ViewPostVC.className) as? ViewPostVC {
+            controller.hidesBottomBarWhenPushed = true
+            let Jobs = self.allJobs[indexPath.row]
+            controller.jobPost = Jobs
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
 
 

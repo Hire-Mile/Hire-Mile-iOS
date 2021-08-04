@@ -492,7 +492,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
       */
         if let VC = CommonUtils.getStoryboardVC(StoryBoard.Chat.rawValue, vcIdetifier: ChatVC.className) as? ChatVC {
              VC.hidesBottomBarWhenPushed = true
-            VC.user = user
+            VC.userOther = user
              self.navigationController?.pushViewController(VC,  animated: true)
          }
     }

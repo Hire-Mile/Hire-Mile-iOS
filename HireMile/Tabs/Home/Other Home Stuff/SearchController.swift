@@ -228,7 +228,7 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
         Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = JobStructure()
-                job.authorName = value["author"] as? String ?? "Error"
+                job.authorId = value["author"] as? String ?? "Error"
                 job.titleOfPost = value["title"] as? String ?? "Error"
                 job.descriptionOfPost = value["description"] as? String ?? "Error"
                 job.price = value["price"] as? Int ?? 0
@@ -429,8 +429,8 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
                 Database.database().reference().child("Jobs").observe(.childAdded, with: { (jobSnap) in
                     if let value = jobSnap.value as? [String : Any] {
                         let job = JobStructure()
-                        job.authorName = value["author"] as? String ?? "Error"
-                        if job.authorName == self.userres[indexPath.row].userid! {
+                        job.authorId = value["author"] as? String ?? "Error"
+                        if job.authorId == self.userres[indexPath.row].userid! {
                             numberOfPosts += 1
                         }
                     }
@@ -448,8 +448,8 @@ class SearchController: UIViewController, UITextFieldDelegate, UITableViewDelega
                 Database.database().reference().child("Jobs").observe(.childAdded, with: { (jobSnap) in
                     if let value = jobSnap.value as? [String : Any] {
                         let job = JobStructure()
-                        job.authorName = value["author"] as? String ?? "Error"
-                        if job.authorName == self.allUsers[indexPath.row].userid! {
+                        job.authorId = value["author"] as? String ?? "Error"
+                        if job.authorId == self.allUsers[indexPath.row].userid! {
                             numberOfPosts += 1
                         }
                     }

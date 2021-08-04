@@ -17,5 +17,8 @@ class NotificationObject: NSObject {
     var body : String?
     var image : String?
     var date : Int?
+    var hasView: Bool = true
+    var key: String?
+    
     
 }

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+
 extension NSObject {
     var className: String {
         return String(describing: type(of: self))
@@ -46,5 +48,93 @@ extension Double {
         dateFormatter.dateStyle = dateStyle
         dateFormatter.timeStyle = timeStyle
         return dateFormatter.string(from: Date(timeIntervalSince1970: self))
+    }
+}
+
+extension String {
+    func toDate(withFormat format: String = "yyyy-MM-dd HH:mm:ss")-> Date?{
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Tehran")
+        dateFormatter.locale = Locale(identifier: "fa-IR")
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        dateFormatter.dateFormat = format
+        let date = dateFormatter.date(from: self)
+        return date
+    }
+}
+
+extension Date {
+
+    func toString(withFormat format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        let myString = formatter.string(from: self)
+        let yourDate = formatter.date(from: myString)
+        formatter.dateFormat = format
+
+        return formatter.string(from: yourDate!)
+    }
+}
+
+extension NSMutableAttributedString {
+    var fontSize:CGFloat { return 14 }
+    var boldFont:UIFont { return UIFont(name: "Lato-Bold", size: fontSize) ?? UIFont.boldSystemFont(ofSize: fontSize) }
+    var normalFont:UIFont { return UIFont(name: "Lato-Regular", size: fontSize) ?? UIFont.systemFont(ofSize: fontSize)}
+    
+    func bold(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font : boldFont
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    
+    func normal(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font : normalFont,
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    /* Other styling methods */
+    func orangeHighlight(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font :  normalFont,
+            .foregroundColor : UIColor.white,
+            .backgroundColor : UIColor.orange
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    
+    func blackHighlight(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font :  normalFont,
+            .foregroundColor : UIColor.white,
+            .backgroundColor : UIColor.black
+            
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
+    }
+    
+    func underlined(_ value:String) -> NSMutableAttributedString {
+        
+        let attributes:[NSAttributedString.Key : Any] = [
+            .font :  normalFont,
+            .underlineStyle : NSUnderlineStyle.single.rawValue
+            
+        ]
+        
+        self.append(NSAttributedString(string: value, attributes:attributes))
+        return self
     }
 }

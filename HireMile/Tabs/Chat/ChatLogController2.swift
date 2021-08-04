@@ -635,7 +635,6 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
         self.filterLauncher.showFilter()
         self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
-        self.filterLauncher.stopJob.addTarget(self, action: #selector(self.stopJobButton), for: .touchUpInside)
     }
     
     @objc func handleKeyboardWillShow(notification: NSNotification) {
@@ -1073,7 +1072,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         Database.database().reference().child("Jobs").child(jobId).observe(.value) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = JobStructure()
-                job.authorName = value["author"] as? String ?? "Error"
+                job.authorId = value["author"] as? String ?? "Error"
                 job.titleOfPost = value["title"] as? String ?? "Error"
                 job.descriptionOfPost = value["description"] as? String ?? "Error"
                 job.price = value["price"] as? Int ?? 0

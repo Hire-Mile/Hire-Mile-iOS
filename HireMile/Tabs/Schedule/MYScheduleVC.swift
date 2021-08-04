@@ -7,6 +7,14 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
+import SwiftyJSON
+
+struct ScheduleDate {
+    let date: String
+    var ongoingJobs = [OngoingJobs]()
+}
 
 class MYScheduleVC: UIViewController {
     @IBOutlet weak var lblMonth: UILabel!
@@ -15,12 +23,14 @@ class MYScheduleVC: UIViewController {
     @IBOutlet weak var tblSchedule: UITableView!
     @IBOutlet weak var dropdownButton: UIButton!
     
-    let arrTime = ["10:00 AM","11:00 AM","12:00 AM","01:00 PM","02:00 PM","03:00 PM","04:00 PM","05:00 PM","06:00 PM","07:00 PM","08:00 PM","09:00 PM"]
+    var scheduleTimeArray = [ScheduleDate(date: "09:00 AM"),ScheduleDate(date: "10:00 AM"),ScheduleDate(date: "11:00 AM"),ScheduleDate(date: "12:00 PM"),ScheduleDate(date: "01:00 PM"),ScheduleDate(date: "02:00 PM"),ScheduleDate(date: "03:00 PM"),ScheduleDate(date: "04:00 PM"),ScheduleDate(date: "05:00 PM"),ScheduleDate(date: "06:00 PM"),ScheduleDate(date: "07:00 PM"),ScheduleDate(date: "08:00 PM"),ScheduleDate(date: "09:00 PM"),ScheduleDate(date: "10:00 PM")]
     
     let arrName = ["Albert Smith - Wed design","","","Robert Gomez - car Logo","","","","","","","",""]
     
     private var animationFinished = true
     private var currentCalendar: Calendar?
+    
+    var allOngoingJobs = [OngoingJobs]()
     
     override func awakeFromNib() {
         let timeZoneBias = 480 // (UTC+08:00)
@@ -46,11 +56,58 @@ class MYScheduleVC: UIViewController {
         // Commit frames' updates
         self.menuView.commitMenuViewUpdate()
         self.calendarView.commitCalendarViewUpdate()
-    
+        self.observeOngoingJobs()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+    }
+    
+    private func observeOngoingJobs() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs")
+        ongoingJobRef
+            .queryOrdered(byChild: "bookUid")
+            .queryEqual(toValue: uid)
+            .observeSingleEvent(of: .value, with: { snapshot in
+                self.allOngoingJobs = [OngoingJobs]()
+                if let jobDictionary = snapshot.value as? NSDictionary {
+                    for key in jobDictionary.allKeys {
+                        if let key = key as? String {
+                            if let dic = jobDictionary[key] as? NSDictionary {
+                                let json = JSON(dic)
+                                let ongoing = OngoingJobs(json: json)
+                                self.allOngoingJobs.append(ongoing)
+                            }
+                        }
+                    }
+                    self.fetchScheduleJob(dateStr: "")
+                }
+                ongoingJobRef
+                    .queryOrdered(byChild: "authorId")
+                    .queryEqual(toValue: uid)
+                    .observeSingleEvent(of: .value, with: { snapshot in
+                        if let jobDictionary = snapshot.value as? NSDictionary {
+                            for key in jobDictionary.allKeys {
+                                if let key = key as? String {
+                                    if let dic = jobDictionary[key] as? NSDictionary {
+                                        let json = JSON(dic)
+                                        let ongoing = OngoingJobs(json: json)
+                                        self.allOngoingJobs.append(ongoing)
+                                    }
+                                }
+                            }
+                            self.fetchScheduleJob(dateStr: "")
+                        }
+                       
+                    })
+            })
+    }
+    
+    private func fetchScheduleJob(dateStr: String) {
         
     }
     
@@ -82,15 +139,18 @@ class MYScheduleVC: UIViewController {
 }
 
 extension MYScheduleVC : UITableViewDelegate,UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return scheduleTimeArray.count
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        arrTime.count
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyScheduleCell", for: indexPath) as! MyScheduleCell
-        cell.lblTime.text = arrTime[indexPath.row]
-        cell.lblTime1.text = arrTime[indexPath.row]
-        cell.lblName.text = arrTime[indexPath.row]
+        cell.lblTime.text = scheduleTimeArray[indexPath.section].date
+        cell.lblTime1.text = scheduleTimeArray[indexPath.section].date
+        cell.lblName.text = scheduleTimeArray[indexPath.section].date
         if "" != arrName[indexPath.row] {
             cell.vwLeft.isHidden = false
             cell.lblName.text = arrName[indexPath.row]
@@ -173,5 +233,11 @@ extension MYScheduleVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
         return  UIFont.init(name: "Lato-Regular", size: 14)!
     }
     
-    
+    func didSelectDayView(_ dayView: DayView, animationDidFinish: Bool) {
+        if let selectedDate = dayView.date.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
+            debugPrint(selectedDate)
+            self.fetchScheduleJob(dateStr: selectedDate)
+        }
+        
+    }
 }

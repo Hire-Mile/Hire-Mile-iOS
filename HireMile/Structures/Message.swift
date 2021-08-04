@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 
 class Message: NSObject {
-    
+    var key: String?
     var fromId: String?
     var text: String?
     var timestamp: NSNumber?
@@ -34,6 +34,7 @@ class Message: NSObject {
     var isLocation : Bool?
     var long : Double?
     var lat : Double?
+    var jobStatus = JobStatus(rawValue: 0)
     
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String
@@ -58,6 +59,9 @@ class Message: NSObject {
         self.isLocation = dictionary["isLocation"] as? Bool ?? false
         self.long = dictionary["long-cord"] as? Double
         self.lat = dictionary["lat-cord"] as? Double
+        if let jobstatus = dictionary["job-status"] as? Int {
+            self.jobStatus = JobStatus(rawValue: jobstatus)
+        }
     }
     
     func chatPartnerId() -> String? {

@@ -88,16 +88,17 @@ extension ServicesorWorkersCell: UICollectionViewDelegate, UICollectionViewDataS
             controller.hidesBottomBarWhenPushed = true
             
             let Jobs = self.arrayJobs[indexPath.item]
-            controller.postImage2.loadImageUsingCacheWithUrlString(Jobs.imagePost!)
-            controller.postImageDownlodUrl = Jobs.imagePost!
-            controller.postTitle = Jobs.titleOfPost!
-            controller.postDescription = Jobs.descriptionOfPost!
-            controller.postPrice = Jobs.price!
-            controller.userUID = Jobs.authorName!
-            controller.category = Jobs.category!
-            controller.authorId = Jobs.authorName!
-            controller.postId = Jobs.postId!
-            controller.type = Jobs.typeOfPrice!
+            controller.jobPost = Jobs
+//            controller.postImage2.loadImageUsingCacheWithUrlString(Jobs.imagePost!)
+//            controller.postImageDownlodUrl = Jobs.imagePost!
+//            controller.postTitle = Jobs.titleOfPost!
+//            controller.postDescription = Jobs.descriptionOfPost!
+//            controller.postPrice = Jobs.price!
+//            controller.userUID = Jobs.authorName!
+//            controller.category = Jobs.category!
+//            controller.authorId = Jobs.authorName!
+//            controller.postId = Jobs.postId!
+//            controller.type = Jobs.typeOfPrice!
             self.homeVC.navigationController?.pushViewController(controller, animated: true)
             /*Database.database().reference().child("Users").child(Jobs.authorName!).child("profile-image").observe(.value) { (snapshot) in
                 if let profileImageUrl : String = (snapshot.value as? String) {

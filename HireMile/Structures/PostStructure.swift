@@ -11,7 +11,7 @@ import UIKit
 class JobStructure: NSObject {
     
     var timeStamp : Int?
-    var authorName : String?
+    var authorId : String?
     var titleOfPost : String?
     var descriptionOfPost : String?
     var price : Int?
@@ -21,5 +21,9 @@ class JobStructure: NSObject {
     var postId : String?
     var lat : Float?
     var long : Float?
-
+    
+    var scheduleDate: String?
+    var scheduleTime: String?
+    
+    var author: UserStructure = UserStructure()
 }

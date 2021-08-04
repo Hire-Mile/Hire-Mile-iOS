@@ -7,6 +7,10 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
 
 class PaymentVC: UIViewController {
 
@@ -17,14 +21,62 @@ class PaymentVC: UIViewController {
     @IBOutlet weak var lblServiceFee: UILabel!
     @IBOutlet weak var lblTotalAmount: UILabel!
     @IBOutlet weak var btnPay: UIButton!
+    @IBOutlet weak var lblPostTitle: UILabel!
+    
+    var arrToken = [[String:Any]]()
+    
+    var ongoingJob:OngoingJobs!
+    var userJobPost : UserChat!
+    var message: Message?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.colCard.register(UINib(nibName: "colPaymentCardCell", bundle: nil), forCellWithReuseIdentifier: "colPaymentCardCell")
-        // Do any additional setup after loading the view.
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("Cards").observe(.value) { (usernameSnap) in
+            print(usernameSnap)
+            if let username = usernameSnap.value as? [[String:Any]] {
+                self.arrToken = username
+                self.colCard.reloadData()
+            }
+        }
+        
+        self.lblName.text = userJobPost.name ?? ""
+        Database.database().reference().child("Jobs").child(ongoingJob.jobId).observe(.value) { (snapshot) in
+            if let value = snapshot.value as? [String : Any] {
+                let job = JobStructure()
+                job.authorId = value["author"] as? String ?? "Error"
+                job.titleOfPost = value["title"] as? String ?? "Error"
+                job.descriptionOfPost = value["description"] as? String ?? "Error"
+                job.price = value["price"] as? Int ?? 0
+                job.category = value["category"] as? String ?? "Error"
+                job.imagePost = value["image"] as? String ?? "Error"
+                job.typeOfPrice = value["type-of-price"] as? String ?? "Error"
+                job.postId = value["postId"] as? String ?? "Error"
+                
+                self.lblPostTitle.text = "\(job.titleOfPost!)"
+                self.lblDate.text = self.ongoingJob.scheduleTime
+                if let date = self.ongoingJob.scheduleDate.toDate(withFormat: "dd-MM-yy") {
+                    let customDate = date.toString(withFormat: "MMMM dd")
+                    self.lblDate.text = customDate + ", " + self.ongoingJob.scheduleTime
+                }
+                
+                if job.typeOfPrice == "Hourly" {
+                    self.lblPrice.text! = "$\(job.price!) / Hour"
+                    self.lblTotalAmount.text! = "$\(job.price!) / Hour"
+                    self.btnPay.setTitle("Pay $\(job.price!) / Hour", for: .normal)
+                } else {
+                    self.lblPrice.text! = "$\(job.price!)"
+                    self.lblTotalAmount.text! = "\(job.price!)"
+                    self.btnPay.setTitle("Pay $\(job.price!)", for: .normal)
+                }
+            }
+        }
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
+        
     }
     
     // MARK: Button Action
@@ -41,40 +93,44 @@ class PaymentVC: UIViewController {
     }
     
     @IBAction func btnPayClick(_ sender: UIButton) {
+        if((self.ongoingJob) != nil) {
+            let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
+            let acceptDic = ["job-status":JobStatus.Completed.rawValue]
+            ongoingJobRef.updateChildValues(acceptDic)
+        }
+        
+        if let message = self.message {
+//            let userMessagesRef = Database.database().reference().child("User-Messages").child(fromId).child(toId!).child(message.ke)
+//            userMessagesRef.setValue(1)
+        }
+        
+        
         if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: PaymentSuccessfulVC.className) as? PaymentSuccessfulVC {
-          //  profileVC.hidesBottomBarWhenPushed = true
+            profileVC.ongoingJob = ongoingJob
+            profileVC.userJobPost = self.userJobPost
+            profileVC.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(profileVC,  animated: true)
         }
     }
-
-    /*
-     if (textField == self.txtCardNumber){
-         if updatedText.count == 0 {
-             imgVisa.image = UIImage(named: "visa")
-         }else{
-             imgVisa.image = UIImage(named: "visacolor")
-         }
-         if string.count == 0 {
-             textField.text = String(text.dropLast()).chunkFormatted(withChunkSize: 4, withSeparator: " ")
-         }else {
-             let newText = String((text + string)
-                 .filter({ $0 != " " }).prefix(16))
-             textField.text = newText.chunkFormatted(withChunkSize: 4, withSeparator: " ")
-         }
-     }
-    */
-
 }
-extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource ,UICollectionViewDelegateFlowLayout {
+
+extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource ,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        self.arrToken.count
+    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colPaymentCardCell", for: indexPath) as! colPaymentCardCell
+        let datas = self.arrToken[indexPath.section]
+        let cardNumber = "************\(datas["last4"] as! String)"
         
-        let cardNumber = "2312323434563431"
         cell.lblCardNumber.text = cardNumber.chunkFormatted(withChunkSize: 4, withSeparator: " ")
+        if indexPath.section > 2 {
+            cell.lblName.text = "\(datas["name"] as! String)"
+        }
         return cell
     }
     
@@ -83,8 +139,7 @@ extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource ,UICol
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let vwWidth = (colCard.frame.size.width - 40)
-            //arrTime[indexPath.row].width(withConstrainedHeight: 40, font: UIFont(name: "Lato-Medium", size:  14.0)!)
+        let vwWidth = (colCard.frame.size.width)
         return CGSize(width: vwWidth, height: 196)
     }
     /*func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -94,5 +149,10 @@ extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource ,UICol
 func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return 10
 }
-    
+    //MARK: ====: UIScrollView Delegate :====
+        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            let count = scrollView.contentOffset.x / scrollView.frame.size.width
+            
+          
+        }
 }

@@ -267,7 +267,7 @@ class Map: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         Database.database().reference().child("Jobs").observe(.childAdded) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = JobStructure()
-                job.authorName = value["author"] as? String ?? "Error"
+                job.authorId = value["author"] as? String ?? "Error"
                 job.titleOfPost = value["title"] as? String ?? "Error"
                 job.descriptionOfPost = value["description"] as? String ?? "Error"
                 job.price = value["price"] as? Int ?? 0

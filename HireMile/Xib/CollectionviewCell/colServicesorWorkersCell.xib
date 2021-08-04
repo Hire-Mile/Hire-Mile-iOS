@@ -40,13 +40,13 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I will design the best website" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jhg-ss-ES0">
-                                        <rect key="frame" x="20" y="154" width="174" height="9"/>
+                                        <rect key="frame" x="20" y="154" width="174" height="7"/>
                                         <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="16"/>
                                         <color key="textColor" name="444444"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$100" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9xs-pm-FCd">
-                                        <rect key="frame" x="20" y="173" width="32.5" height="17"/>
+                                        <rect key="frame" x="20" y="173" width="31.5" height="17"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="17" id="mMT-2J-2gp"/>
                                         </constraints>
@@ -85,7 +85,7 @@
                                     <constraint firstItem="hwT-xW-bwL" firstAttribute="top" secondItem="gx7-9n-q1F" secondAttribute="top" constant="15" id="5Ne-pp-4WH"/>
                                     <constraint firstItem="oCz-38-uPp" firstAttribute="centerY" secondItem="9xs-pm-FCd" secondAttribute="centerY" id="8Jz-f7-l9t"/>
                                     <constraint firstItem="eCz-H3-DLf" firstAttribute="leading" secondItem="gx7-9n-q1F" secondAttribute="leading" id="Lfy-pJ-G0U"/>
-                                    <constraint firstItem="9xs-pm-FCd" firstAttribute="top" secondItem="Jhg-ss-ES0" secondAttribute="bottom" constant="10" id="R2t-Sl-fPG"/>
+                                    <constraint firstItem="9xs-pm-FCd" firstAttribute="top" secondItem="Jhg-ss-ES0" secondAttribute="bottom" constant="12" id="R2t-Sl-fPG"/>
                                     <constraint firstAttribute="trailing" secondItem="eCz-H3-DLf" secondAttribute="trailing" id="Yat-Av-k2C"/>
                                     <constraint firstAttribute="bottom" secondItem="9xs-pm-FCd" secondAttribute="bottom" constant="16" id="ccU-5k-5jL"/>
                                     <constraint firstItem="Jhg-ss-ES0" firstAttribute="leading" secondItem="gx7-9n-q1F" secondAttribute="leading" constant="20" id="fpI-T1-W3s"/>
