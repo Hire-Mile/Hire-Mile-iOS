@@ -137,6 +137,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="btnMore" destination="scl-oY-rwN" id="fd3-g1-lfV"/>
+                <outlet property="lblAddress" destination="taj-5W-T4g" id="jOD-zx-Mag"/>
                 <outlet property="lblName" destination="tqZ-Oc-h4U" id="Au9-mm-jds"/>
                 <outlet property="lblTime" destination="5ph-vT-TLg" id="DSt-hY-JZn"/>
                 <outlet property="lblTime1" destination="2tu-hp-7P5" id="w0O-bZ-pPI"/>

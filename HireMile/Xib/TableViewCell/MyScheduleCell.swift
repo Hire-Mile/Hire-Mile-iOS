@@ -15,6 +15,7 @@ class MyScheduleCell: UITableViewCell {
     @IBOutlet weak var lblName: UILabel!
     @IBOutlet weak var btnMore: UIButton!
     @IBOutlet weak var vwLeft: UIView!
+    @IBOutlet weak var lblAddress: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

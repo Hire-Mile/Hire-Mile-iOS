@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import CoreLocation
+
 class CommonUtils {
     static func getStoryboardVC(_ kStoryName: String, vcIdetifier: String? = nil) -> UIViewController? {
         let storyboard = UIStoryboard(name: kStoryName, bundle: Bundle.main)
@@ -25,7 +27,7 @@ class CommonUtils {
     static var topViewController: UINavigationController? {
         let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
 
-        if var topController = keyWindow?.rootViewController as? UITabBarController{
+        if var topController = keyWindow?.rootViewController as? UITabBarController {
             topController.selectedIndex = 0
             return topController.viewControllers?.first as? UINavigationController
         }
@@ -48,5 +50,45 @@ class CommonUtils {
             }
             UserDefaults.standard.set(recent, forKey: "recent")
         }
+    }
+    
+    static func getAddressFromCoordinates(latitude: Double, logitude: Double, completion: @escaping (String) -> Void){
+        // Add below code to get address for touch coordinates.
+        let geoCoder = CLGeocoder()
+        let location = CLLocation(latitude: latitude, longitude: logitude)
+        geoCoder.reverseGeocodeLocation(location, completionHandler:
+            {
+                placemarks, error -> Void in
+                var address = ""
+                // Place details
+                guard let placeMark = placemarks?.first else { return }
+                
+                // Location name
+                if let locationName = placeMark.location {
+                    print(locationName)
+                    
+                }
+                // Street address
+                if let street = placeMark.thoroughfare {
+                    print(street)
+                    address = street
+                }
+                // City
+                if let city = placeMark.subAdministrativeArea {
+                   address = address + " ," + city
+                }
+                // Zip code
+                if let zip = placeMark.isoCountryCode {
+                    print(zip)
+                    address = address + " ," + zip
+                }
+                // Country
+                if let country = placeMark.country {
+                    print(country)
+                    address = address + " ," + country
+                }
+                completion(address)
+        })
+
     }
 }

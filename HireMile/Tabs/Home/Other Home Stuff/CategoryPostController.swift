@@ -114,6 +114,7 @@ class CategoryPostController: UIViewController, UITableViewDelegate, UITableView
             controller.hidesBottomBarWhenPushed = true
             let Jobs = self.allJobs[indexPath.row]
             controller.jobPost = Jobs
+            controller.navigationController?.navigationBar.isHidden = true
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }

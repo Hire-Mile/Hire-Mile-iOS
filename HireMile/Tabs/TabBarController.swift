@@ -137,9 +137,9 @@ class TabBarController2: UITabBar {
                 CommonUtils.topViewController?.pushViewController(controller, animated: false)
                 break
             case 2:
-                let controller = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: PaymentVC.className) as! PaymentVC
-                controller.hidesBottomBarWhenPushed = true
-                CommonUtils.topViewController?.pushViewController(controller, animated: false)
+//                let controller = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: PaymentVC.className) as! PaymentVC
+//                controller.hidesBottomBarWhenPushed = true
+//                CommonUtils.topViewController?.pushViewController(controller, animated: false)
                 break
             case 3:
                 let controller = Favorites()

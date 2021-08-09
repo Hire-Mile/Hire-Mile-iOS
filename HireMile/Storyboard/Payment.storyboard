@@ -339,8 +339,6 @@ succesfully done.</string>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="kqJ-TB-YbT">
                                                 <rect key="frame" x="2" y="2" width="323" height="96"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <string key="text">Say Somenthing about Henry Service?
-</string>
                                                 <color key="textColor" name="838383"/>
                                                 <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="16"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -669,7 +667,7 @@ payment  method added with funds.
                                 <rect key="frame" x="0.0" y="55" width="375" height="612"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="ZIy-S1-aaZ">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="612"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="750"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bC1-bF-Oy9">
@@ -738,7 +736,7 @@ payment  method added with funds.
                                             </connections>
                                         </collectionView>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LDy-gd-PAD">
-                                            <rect key="frame" x="20" y="270" width="335" height="258"/>
+                                            <rect key="frame" x="20" y="301" width="335" height="258"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Henry Correa" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RfT-dc-fOC">
                                                     <rect key="frame" x="24" y="10" width="287" height="22"/>
@@ -915,7 +913,7 @@ payment  method added with funds.
                                             </userDefinedRuntimeAttributes>
                                         </view>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rjf-su-jwD">
-                                            <rect key="frame" x="24" y="558" width="327" height="57"/>
+                                            <rect key="frame" x="24" y="589" width="327" height="57"/>
                                             <color key="backgroundColor" name="mainBlue"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="57" id="G1a-V9-T08"/>
@@ -935,22 +933,38 @@ payment  method added with funds.
                                                 <action selector="btnPayClick:" destination="hEs-9Z-QPw" eventType="touchUpInside" id="Dga-Ml-1iM"/>
                                             </connections>
                                         </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pay Due" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tr9-PY-FvX">
+                                            <rect key="frame" x="42" y="261" width="77.5" height="24"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transaction" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nS7-Jv-R31">
+                                            <rect key="frame" x="217.5" y="261" width="107.5" height="24"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="2jC-sj-zNV" firstAttribute="leading" secondItem="ZIy-S1-aaZ" secondAttribute="leading" id="3E2-jN-hdA"/>
                                         <constraint firstItem="Rjf-su-jwD" firstAttribute="top" secondItem="LDy-gd-PAD" secondAttribute="bottom" constant="30" id="6FE-ik-Rhi"/>
+                                        <constraint firstItem="tr9-PY-FvX" firstAttribute="leading" secondItem="ZIy-S1-aaZ" secondAttribute="leading" constant="42" id="7nI-Zd-l7R"/>
                                         <constraint firstAttribute="trailing" secondItem="bC1-bF-Oy9" secondAttribute="trailing" id="CRq-81-QA3"/>
                                         <constraint firstItem="fN6-hp-j9n" firstAttribute="centerY" secondItem="bC1-bF-Oy9" secondAttribute="centerY" id="FpE-LB-qbp"/>
-                                        <constraint firstItem="LDy-gd-PAD" firstAttribute="top" secondItem="2jC-sj-zNV" secondAttribute="bottom" constant="29" id="J77-zu-zjA"/>
+                                        <constraint firstItem="LDy-gd-PAD" firstAttribute="top" secondItem="2jC-sj-zNV" secondAttribute="bottom" constant="60" id="J77-zu-zjA"/>
                                         <constraint firstAttribute="trailing" secondItem="LDy-gd-PAD" secondAttribute="trailing" constant="20" id="L2z-NL-70v"/>
                                         <constraint firstItem="bC1-bF-Oy9" firstAttribute="leading" secondItem="ZIy-S1-aaZ" secondAttribute="leading" id="PGm-Sf-4Ef"/>
+                                        <constraint firstItem="nS7-Jv-R31" firstAttribute="top" secondItem="2jC-sj-zNV" secondAttribute="bottom" constant="20" id="QRA-2i-5Kq"/>
                                         <constraint firstItem="bC1-bF-Oy9" firstAttribute="top" secondItem="ZIy-S1-aaZ" secondAttribute="top" id="Syk-xs-u5f"/>
+                                        <constraint firstAttribute="trailing" secondItem="nS7-Jv-R31" secondAttribute="trailing" constant="50" id="Uav-qc-quV"/>
                                         <constraint firstItem="Rjf-su-jwD" firstAttribute="leading" secondItem="ZIy-S1-aaZ" secondAttribute="leading" constant="24" id="Vtq-n3-8Ue"/>
                                         <constraint firstAttribute="trailing" secondItem="fN6-hp-j9n" secondAttribute="trailing" constant="20" id="XOT-gd-tuW"/>
                                         <constraint firstItem="LDy-gd-PAD" firstAttribute="leading" secondItem="ZIy-S1-aaZ" secondAttribute="leading" constant="20" id="Z0t-no-Gba"/>
                                         <constraint firstItem="2jC-sj-zNV" firstAttribute="top" secondItem="bC1-bF-Oy9" secondAttribute="bottom" constant="10" id="dmO-dO-PV6"/>
                                         <constraint firstAttribute="trailing" secondItem="2jC-sj-zNV" secondAttribute="trailing" id="h9W-wP-ze5"/>
+                                        <constraint firstItem="tr9-PY-FvX" firstAttribute="top" secondItem="2jC-sj-zNV" secondAttribute="bottom" constant="20" id="hka-Ls-zTc"/>
                                         <constraint firstItem="bC1-bF-Oy9" firstAttribute="centerX" secondItem="ZIy-S1-aaZ" secondAttribute="centerX" id="nFk-BM-7KC"/>
                                         <constraint firstAttribute="trailing" secondItem="Rjf-su-jwD" secondAttribute="trailing" constant="24" id="pEM-0Z-BCc"/>
                                     </constraints>
@@ -1584,7 +1598,7 @@ again.</string>
         <image name="chevron.backward" catalog="system" width="96" height="128"/>
         <image name="credit-card (1)" width="8" height="5.5"/>
         <image name="credit-card (4)" width="10" height="8"/>
-        <image name="finish" width="96.5" height="97"/>
+        <image name="finish" width="32.5" height="32.5"/>
         <image name="mc_symbol" width="9" height="6"/>
         <image name="multiply" catalog="system" width="128" height="111"/>
         <image name="starempty" width="11.5" height="11"/>

@@ -64,20 +64,20 @@ class AddCardVC: UIViewController,UITextFieldDelegate {
     
     func createToken() {
         
-        if txtCardNumber.text!.count == 19 && txtCVV.text!.count == 3 && txtExpiryDate.text!.count == 5 {
+        /*if txtCardNumber.text!.count == 19 && txtCVV.text!.count == 3 && txtExpiryDate.text!.count == 5 {
             
             let exdate = txtExpiryDate.text!
             let m = String(exdate.prefix(2))
             let y = String(exdate.suffix(2))
             
-            let stripCard = STPCard()
+            let stripCard =
             stripCard.cvc = txtCVV.text!
             stripCard.expYear = UInt(y)!
             stripCard.expMonth = UInt(m)!
             stripCard.number = txtCardNumber.text! //"4242424242424242"
             stripCard.name = txtName.text!
             
-            STPAPIClient.shared().createToken(with: stripCard, completion: { (token, error) -> Void in
+            STPAPIClient.shared.createToken(with: stripCard, completion: { (token, error) -> Void in
                 if error != nil {
                     self.alertMSG(title: "Error", Message: error!.localizedDescription)
                     return
@@ -102,7 +102,7 @@ class AddCardVC: UIViewController,UITextFieldDelegate {
                     }
                 })
             })
-        }
+        }*/
     }
     
 

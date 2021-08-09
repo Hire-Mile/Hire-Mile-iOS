@@ -62,7 +62,7 @@ class PaymentSuccessfulVC: UIViewController {
             VC.userOther = self.userJobPost
             VC.ongoingJob = self.ongoingJob
             VC.hidesBottomBarWhenPushed = true
-            VC.modalPresentationStyle = .fullScreen
+            VC.modalPresentationStyle = .overCurrentContext
             self.navigationController?.present(VC, animated: true)
         }
     }

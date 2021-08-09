@@ -39,12 +39,20 @@ class MYScheduleVC: UIViewController {
         if let timeZone = TimeZone(secondsFromGMT: -timeZoneBias * 60) {
             currentCalendar?.timeZone = timeZone
         }
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tblSchedule.register(UINib(nibName: "MyScheduleCell", bundle: nil), forCellReuseIdentifier: "MyScheduleCell")
-    
+        calendarView.appearance.dayLabelWeekdaySelectedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelPresentWeekdayHighlightedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelPresentWeekdaySelectedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelWeekdaySelectedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelWeekdayHighlightedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelPresentWeekdayTextColor = .mainBlue
+//        calendarView.appearance.dotMarkerColor = .mainBlue
+//        calendarView.
         // Appearance delegate [Unnecessary]
         self.calendarView.calendarAppearanceDelegate = self
         self.calendarView.animatorDelegate = self
@@ -57,6 +65,7 @@ class MYScheduleVC: UIViewController {
         self.menuView.commitMenuViewUpdate()
         self.calendarView.commitCalendarViewUpdate()
         self.observeOngoingJobs()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -72,7 +81,7 @@ class MYScheduleVC: UIViewController {
         ongoingJobRef
             .queryOrdered(byChild: "bookUid")
             .queryEqual(toValue: uid)
-            .observeSingleEvent(of: .value, with: { snapshot in
+            .observe(.value, with: { snapshot in
                 self.allOngoingJobs = [OngoingJobs]()
                 if let jobDictionary = snapshot.value as? NSDictionary {
                     for key in jobDictionary.allKeys {
@@ -84,7 +93,10 @@ class MYScheduleVC: UIViewController {
                             }
                         }
                     }
-                    self.fetchScheduleJob(dateStr: "")
+                    if let selectedDate = self.calendarView.presentedDate.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
+                        debugPrint(selectedDate)
+                        self.fetchScheduleJob(dateStr: selectedDate)
+                    }
                 }
                 ongoingJobRef
                     .queryOrdered(byChild: "authorId")
@@ -100,7 +112,11 @@ class MYScheduleVC: UIViewController {
                                     }
                                 }
                             }
-                            self.fetchScheduleJob(dateStr: "")
+                            self.calendarView.contentController.refreshPresentedMonth()
+                            if let selectedDate = self.calendarView.presentedDate.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
+                                debugPrint(selectedDate)
+                                self.fetchScheduleJob(dateStr: selectedDate)
+                            }
                         }
                        
                     })
@@ -108,7 +124,31 @@ class MYScheduleVC: UIViewController {
     }
     
     private func fetchScheduleJob(dateStr: String) {
+        let currentDateJobs = self.allOngoingJobs.filter { job in
+            return job.scheduleDate == dateStr
+        }
+        scheduleTimeArray = [ScheduleDate(date: "09:00 AM"),ScheduleDate(date: "10:00 AM"),ScheduleDate(date: "11:00 AM"),ScheduleDate(date: "12:00 PM"),ScheduleDate(date: "01:00 PM"),ScheduleDate(date: "02:00 PM"),ScheduleDate(date: "03:00 PM"),ScheduleDate(date: "04:00 PM"),ScheduleDate(date: "05:00 PM"),ScheduleDate(date: "06:00 PM"),ScheduleDate(date: "07:00 PM"),ScheduleDate(date: "08:00 PM"),ScheduleDate(date: "09:00 PM"),ScheduleDate(date: "10:00 PM")]
+        for job in currentDateJobs {
+            let date = job.scheduleTime.toDate(withFormat: "hh:mm a")
+            if let time = date?.toString(withFormat: "hh:00 a") {
+                if let timeIndex = scheduleTimeArray.firstIndex(where: { scheduleDate in
+                    return scheduleDate.date == time
+                }) {
+                    if scheduleTimeArray.indices.contains(timeIndex) {
+                        scheduleTimeArray[timeIndex].ongoingJobs.append(job)
+                    }
+                }
+            }
+        }
+        if((calendarView) != nil) {
+            if let cc = calendarView.contentController as? CVCalendarMonthContentViewController {
+               cc.refreshPresentedMonth()
+            }
+        }
         
+        if((tblSchedule) != nil) {
+            tblSchedule.reloadData()
+        }
     }
     
     // MARK: Button Action
@@ -143,7 +183,8 @@ extension MYScheduleVC : UITableViewDelegate,UITableViewDataSource {
         return scheduleTimeArray.count
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        let jobs = scheduleTimeArray[section].ongoingJobs
+        return jobs.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -151,12 +192,25 @@ extension MYScheduleVC : UITableViewDelegate,UITableViewDataSource {
         cell.lblTime.text = scheduleTimeArray[indexPath.section].date
         cell.lblTime1.text = scheduleTimeArray[indexPath.section].date
         cell.lblName.text = scheduleTimeArray[indexPath.section].date
-        if "" != arrName[indexPath.row] {
-            cell.vwLeft.isHidden = false
-            cell.lblName.text = arrName[indexPath.row]
-        }else{
-            cell.vwLeft.isHidden = true
+        
+        if indexPath.row == 0 {
+            cell.lblTime.isHidden = false
+        } else {
+            cell.lblTime.isHidden = true
         }
+        let ongoingJob = scheduleTimeArray[indexPath.section].ongoingJobs[indexPath.row]
+        cell.lblName.text = "  "
+        cell.lblAddress.text = ""
+        Database.database().reference().child("Jobs").child(ongoingJob.jobId).observeSingleEvent(of: .value, with: { (snapshot) in
+            let json = JSON(snapshot.value)
+            cell.lblName.text = json["title"].stringValue
+            let latitude = json["lat"].doubleValue
+            let logitude = json["long"].doubleValue
+            CommonUtils.getAddressFromCoordinates(latitude: latitude, logitude: logitude) { address in
+                cell.lblAddress.text = address
+            }
+        })
+        cell.vwLeft.isHidden = false
         
         cell.btnMore.addAction(for: .touchUpInside) {
             print("Hello, Closure!")
@@ -240,4 +294,12 @@ extension MYScheduleVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
         }
         
     }
+    
+//    func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
+//        if let selectedDate = dayView.date.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
+//            let isContain = self.allOngoingJobs.contains(where: {$0.scheduleDate == selectedDate})
+//            return isContain
+//        }
+//        return false
+//    }
 }

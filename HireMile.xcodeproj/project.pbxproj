@@ -209,6 +209,7 @@
 		AEC0ADB3268204DB00C49C68 /* CreatePosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC0ADB2268204DB00C49C68 /* CreatePosts.swift */; };
 		AED4A55026A5BCFA00934B34 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AED4A54F26A5BCF900934B34 /* Gilroy-Bold.ttf */; };
 		AED50E2F2679E8DE00BA72E6 /* EditPostsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED50E2E2679E8DE00BA72E6 /* EditPostsVC.swift */; };
+		AEEF534026BC093A0027C1D8 /* UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEF533F26BC093A0027C1D8 /* UITextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -419,6 +420,7 @@
 		AEC0ADB2268204DB00C49C68 /* CreatePosts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatePosts.swift; sourceTree = "<group>"; };
 		AED4A54F26A5BCF900934B34 /* Gilroy-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Bold.ttf"; sourceTree = "<group>"; };
 		AED50E2E2679E8DE00BA72E6 /* EditPostsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPostsVC.swift; sourceTree = "<group>"; };
+		AEEF533F26BC093A0027C1D8 /* UITextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextView.swift; sourceTree = "<group>"; };
 		F3765C6420C496AAA66CBF98 /* Pods-HireMile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HireMile.release.xcconfig"; path = "Target Support Files/Pods-HireMile/Pods-HireMile.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -891,6 +893,7 @@
 			children = (
 				AE66926A266A64F100A23EE0 /* UIView.swift */,
 				AE66926C266A66D600A23EE0 /* NSObject.swift */,
+				AEEF533F26BC093A0027C1D8 /* UITextView.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -949,8 +952,8 @@
 				784646C02561B841000C5F26 /* Frameworks */,
 				784646C12561B841000C5F26 /* Resources */,
 				DC2DA97CEE9C512A7CA88FEA /* [CP] Embed Pods Frameworks */,
-				B7B9CF93A90E9FA7C4BA367F /* [CP] Copy Pods Resources */,
 				78465BD625E6CBA10092C7FC /* Run Script */,
+				68F697BAD45B4854F1DA9D71 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1064,6 +1067,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		68F697BAD45B4854F1DA9D71 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HireMile/Pods-HireMile-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HireMile/Pods-HireMile-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HireMile/Pods-HireMile-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		78465BD625E6CBA10092C7FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1083,23 +1103,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
-		};
-		B7B9CF93A90E9FA7C4BA367F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HireMile/Pods-HireMile-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HireMile/Pods-HireMile-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HireMile/Pods-HireMile-resources.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		DC2DA97CEE9C512A7CA88FEA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1282,6 +1285,7 @@
 				784646C92561B841000C5F26 /* SceneDelegate.swift in Sources */,
 				78295B0725990AE000004CE7 /* UserChat.swift in Sources */,
 				7801D9BC25D28AE400BB0B33 /* AddProfilePhoto.swift in Sources */,
+				AEEF534026BC093A0027C1D8 /* UITextView.swift in Sources */,
 				040CECCC269B2469008F07BC /* MenuVC.swift in Sources */,
 				784C0E8325FB67340075C6B5 /* WorkingHoursStructure.swift in Sources */,
 				78D5FB9A25C1FF9700E3504C /* OtherRatingController.swift in Sources */,
@@ -1429,10 +1433,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 75;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1452,9 +1457,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 72;
+				CURRENT_PROJECT_VERSION = 75;
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

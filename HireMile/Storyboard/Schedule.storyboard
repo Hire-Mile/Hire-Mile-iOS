@@ -48,7 +48,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Schedule" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4bf-Ww-spf">
-                                        <rect key="frame" x="144.5" y="12" width="125.5" height="26.5"/>
+                                        <rect key="frame" x="143" y="12" width="128.5" height="26"/>
                                         <fontDescription key="fontDescription" name="Lato-Semibold" family="Lato" pointSize="22"/>
                                         <color key="textColor" name="BlackColor"/>
                                         <nil key="highlightedColor"/>
@@ -89,10 +89,10 @@
                                                 </constraints>
                                             </imageView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mjF-Og-x5S">
-                                                <rect key="frame" x="162.5" y="-5" width="89.5" height="40"/>
+                                                <rect key="frame" x="163.5" y="-5" width="87.5" height="40"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="February" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i6q-pM-6WR">
-                                                        <rect key="frame" x="10" y="0.0" width="69.5" height="40"/>
+                                                        <rect key="frame" x="10" y="0.0" width="67.5" height="40"/>
                                                         <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="17"/>
                                                         <color key="textColor" name="BlackColor"/>
                                                         <nil key="highlightedColor"/>
@@ -108,7 +108,7 @@
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RDn-h8-mGb">
-                                                <rect key="frame" x="252" y="2.5" width="25" height="25"/>
+                                                <rect key="frame" x="251" y="2.5" width="25" height="25"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="25" id="EnI-b3-Qcs"/>
                                                     <constraint firstAttribute="width" constant="25" id="lS9-BG-0Nr"/>

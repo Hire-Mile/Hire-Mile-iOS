@@ -99,10 +99,6 @@ class HomeVC: UIViewController, UINavigationControllerDelegate, UIImagePickerCon
         } else {
             print("no notifications")
         }
-        if GlobalVariables.finishedFeedback == true {
-            GlobalVariables.finishedFeedback = false
-            self.launcher.showFilter()
-        }
         
         // Functions to throw
         self.basicSetup()
@@ -526,7 +522,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource ,UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 80, height: 93)
+        return CGSize(width: 89, height: 93)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

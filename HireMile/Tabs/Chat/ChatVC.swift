@@ -32,6 +32,7 @@ class ChatVC: UIViewController, UserCellDelegate {
     @IBOutlet weak var vwWorkerjobAccepted: UIView!
     @IBOutlet weak var lblWorkerjobAccepted: UILabel!
     
+    @IBOutlet weak var jobTitleView: UIView!
     @IBOutlet weak var vwAcceptOrDecline: UIView!
     @IBOutlet weak var lblAcceptOrDeclineUserName: UILabel!
     @IBOutlet weak var lblAcceptOrDeclineWorkName: UILabel!
@@ -99,20 +100,24 @@ class ChatVC: UIViewController, UserCellDelegate {
             .queryOrdered(byChild: "bookUid")
             .queryEqual(toValue: uid)
             .observe(.value, with: { snapshot in
+                var customerJobs = [OngoingJobs]()
                 if let jobDictionary = snapshot.value as? NSDictionary {
                     for key in jobDictionary.allKeys {
-                        if let key = key as? String {
+                    if let key = key as? String {
                             if let dic = jobDictionary[key] as? NSDictionary {
                                 let json = JSON(dic)
-                                let ongoing = OngoingJobs(json: json)
+                                var ongoing = OngoingJobs(json: json)
+                                ongoing.key = key
+                                ongoing.isServiceProvider = false
+                                if ongoing.authorId != toId {
+                                    continue
+                                }
                                 if(ongoing.jobStatus.rawValue >= JobStatus.Completed.rawValue) {
                                     continue
                                 }
-                                self.ongoingJob = ongoing
-                                self.ongoingJob.key = key
-                                self.ongoingJob.isServiceProvider = false
-                                self.firstTimeFunction(onGoinjob: self.ongoingJob)
-                                return
+                                customerJobs.append(ongoing)
+                                //self.firstTimeFunction(onGoinjob: self.ongoingJob)
+                                //return
                             }
                         }
                     }
@@ -121,23 +126,34 @@ class ChatVC: UIViewController, UserCellDelegate {
                     .queryOrdered(byChild: "authorId")
                     .queryEqual(toValue: uid)
                     .observe(.value, with: { snapshot in
+                        var workerJobs = [OngoingJobs]()
                         if let jobDictionary = snapshot.value as? NSDictionary {
                             for key in jobDictionary.allKeys {
-                                if let key = key as? String {
+                            if let key = key as? String {
                                     if let dic = jobDictionary[key] as? NSDictionary {
                                         let json = JSON(dic)
-                                        let ongoing = OngoingJobs(json: json)
+                                        var ongoing = OngoingJobs(json: json)
+                                        ongoing.key = key
+                                        ongoing.isServiceProvider = true
+                                        if ongoing.bookUid != toId {
+                                            continue
+                                        }
                                         if(ongoing.jobStatus.rawValue >= JobStatus.Completed.rawValue) {
                                             continue
                                         }
-                                        self.ongoingJob = ongoing
-                                        self.ongoingJob.key = key
-                                        self.ongoingJob.isServiceProvider = true
-                                        self.firstTimeFunction(onGoinjob: self.ongoingJob)
-                                        return
+                                        workerJobs.append(ongoing)
+                                        //self.firstTimeFunction(onGoinjob: self.ongoingJob)
+                                        //return
                                     }
                                 }
                             }
+                        }
+                        let allJobs = customerJobs + workerJobs
+                        self.ongoingJob = allJobs.max(by: { job1, job2 in
+                            return job1.time < job2.time
+                        })
+                        if((self.ongoingJob) != nil) {
+                            self.firstTimeFunction(onGoinjob: self.ongoingJob)
                         }
                         self.colChat.reloadData()
                     })
@@ -155,39 +171,39 @@ class ChatVC: UIViewController, UserCellDelegate {
                     return
                 }
                 let message = Message(dictionary: dictionary)
+//
+//                if let jobRefId = message.jobRefId {
+//                    self.jobRefId = jobRefId
+//                    GlobalVariables.jobRefId = jobRefId
+//                }
                 
-                if let jobRefId = message.jobRefId {
-                    self.jobRefId = jobRefId
-                    GlobalVariables.jobRefId = jobRefId
-                }
-                
-                if self.isSearchingForServiceProvider {
-                    if message.serviceProvider != Auth.auth().currentUser!.uid {
-                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
-                        self.isSearchingForServiceProvider = false
-                        if message.firstTime == true {
-                            print("first time")
-                            self.chatId = messageId
-                            self.jobId = message.postId!
-                            self.theMessage = message.text!
-                            
-                        }
-                        //GlobalVariables.jobId = message.postId!
-                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
-                    } else {
-                        print("henry")
-                        if message.firstTime == false {
-                          
-                            
-                           
-                            if let messagePostId = message.postId {
-                                GlobalVariables.jobId = messagePostId
-                            }
-                        }
-                    }
-                }
-                GlobalVariables.postIdFeedback = self.jobId
-                GlobalVariables.chatPartnerId = message.chatPartnerId()!
+//                if self.isSearchingForServiceProvider {
+//                    if message.serviceProvider != Auth.auth().currentUser!.uid {
+//                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
+//                        self.isSearchingForServiceProvider = false
+//                        if message.firstTime == true {
+//                            print("first time")
+//                            self.chatId = messageId
+//                            self.jobId = message.postId!
+//                            self.theMessage = message.text!
+//                            
+//                        }
+//                        //GlobalVariables.jobId = message.postId!
+//                        GlobalVariables.chatPartnerId = message.chatPartnerId()!
+//                    } else {
+//                        print("henry")
+//                        if message.firstTime == false {
+//                          
+//                            
+//                           
+//                            if let messagePostId = message.postId {
+//                                GlobalVariables.jobId = messagePostId
+//                            }
+//                        }
+//                    }
+//                }
+//                GlobalVariables.postIdFeedback = self.jobId
+//                GlobalVariables.chatPartnerId = message.chatPartnerId()!
                 self.messages.append(message)
                 DispatchQueue.main.async(execute: {
 //                    self.tblChat.reloadData()
@@ -204,7 +220,7 @@ class ChatVC: UIViewController, UserCellDelegate {
     
     
     func firstTimeFunction(onGoinjob: OngoingJobs) {
-        Database.database().reference().child("Jobs").child(onGoinjob.jobId).observe(.value) { (snapshot) in
+        Database.database().reference().child("Jobs").child(onGoinjob.jobId).observeSingleEvent(of:.value) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = JobStructure()
                 job.authorId = value["author"] as? String ?? "Error"
@@ -230,7 +246,7 @@ class ChatVC: UIViewController, UserCellDelegate {
                     self.lblAcceptOrDeclinePrice.text! = "$\(job.price!)"
                 }
                 self.lblCategory.text = (job.titleOfPost ?? "") + " " + (self.lblAcceptOrDeclinePrice.text ?? "")
-
+                self.jobTitleView.isHidden = false
             }
         }
     }
@@ -275,6 +291,7 @@ class ChatVC: UIViewController, UserCellDelegate {
         } else {
             switch self.ongoingJob.jobStatus {
                 case .Hired:
+                    self.lblCostumerJobAccepted.attributedText = NSMutableAttributedString().bold("You sent to \(self.userOther?.name ?? "") ").normal("a job\napplication job application   ")
                     self.vwAcceptOrDecline.isHidden = true
                     self.vwWorkerjobAccepted.isHidden = true
                     self.vwCostumerJobAccepted.isHidden = false
@@ -570,17 +587,32 @@ class ChatVC: UIViewController, UserCellDelegate {
     @objc func completeJobButton() {
         // show loader for 1 second
         self.filterLauncher.handleDismiss()
+        let timestamp = Int(Date().timeIntervalSince1970)
         if((self.ongoingJob) != nil) {
             let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
-            let acceptDic = ["job-status":JobStatus.AwaitingPayment.rawValue]
+            let acceptDic = ["job-status":JobStatus.AwaitingPayment.rawValue,"complete-time":timestamp]
             ongoingJobRef.updateChildValues(acceptDic)
         }
         
-        let ref = Database.database().reference().child("Messages")
-        let childRef = ref.childByAutoId()
+        let ref = Database.database().reference().child("Users").child(self.ongoingJob.authorId)
+        ref.observeSingleEvent(of: .value) { snapshot in
+            guard let dictionary = snapshot.value as? [String : AnyObject] else {
+                return
+            }
+            debugPrint(dictionary)
+            let user = UserChat(dictionary: dictionary)
+            user.id = snapshot.key
+            if let token : String = (dictionary["fcmToken"] as? String) {
+                let sender = PushNotificationSender()
+                sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(user.name ?? "") submitted a completed Job request", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.ongoingJob.authorId)
+                
+            }
+        }
+        
+        let messageRref = Database.database().reference().child("Messages")
+        let childRef = messageRref.childByAutoId()
         let toId = userOther?.id
         let fromId = Auth.auth().currentUser!.uid
-        let timestamp = Int(Date().timeIntervalSince1970)
         let values : [String : Any] = ["toId": toId ?? "", "fromId": fromId, "timestamp": timestamp,  "ongoingjobkey" : self.ongoingJob.key, "text-id" : childRef.key ?? "", "job-status":JobStatus.AwaitingPayment.rawValue, "text": "You submitted a completed Job request to \(userOther?.name ?? "")"] as [String : Any]
         
         childRef.updateChildValues(values) { (error, ref) in
@@ -610,40 +642,12 @@ class ChatVC: UIViewController, UserCellDelegate {
             
             self.txtInput.text = nil
         }
-//        MBProgressHUD.showAdded(to: self.view, animated: true)
-//        if let VC = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: RattingVC.className) as? RattingVC {
-//            VC.userOther = self.user
-//            VC.ongoingJob = self.ongoingJob
-//            VC.hidesBottomBarWhenPushed = true
-//            VC.modalPresentationStyle = .fullScreen
-//            self.navigationController?.present(VC, animated: true)
-//        }
-    }
-    
-    
-    @objc func stopJobButton() {
-        print("cancel job")
-        self.filterLauncher.handleDismiss()
-        // send message to user that job is cancelled
-        let properties = ["text": "HIREMILE: This conversation and service has been deleted. For more information, please navigate to the 'My Jobs' section."] as [String : Any]
-        self.sendMessageWithProperties(properties)
-        // remove all children in messages for corresponding job
-        GlobalVariables.finishedFeedback = true
-        // send user a notification
-        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("name").observe(.value) { (snapshot) in
-            let name : String = (snapshot.value as? String)!
-            Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("fcmToken").observe(.value) { (snapshot) in
-                if let token : String = (snapshot.value as? String) {
-                    let sender = PushNotificationSender()
-                    Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("job-status").setValue("cancelled")
-                    let timestamp = Int(Date().timeIntervalSince1970)
-                    Database.database().reference().child("Users").child(GlobalVariables.chatPartnerId).child("My_Jobs").child(GlobalVariables.jobRefId).child("cancel-stamp").setValue(timestamp)
-                    sender.sendPushNotification(to: token, title: "\(name) cancelled your service!", body: "Open 'My Jobs' to find more", page: true, senderId: Auth.auth().currentUser!.uid, recipient: GlobalVariables.chatPartnerId)
-                    self.nextAction()
-                } else {
-                    self.nextAction()
-                }
-            }
+        if let VC = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: RattingVC.className) as? RattingVC {
+            VC.userOther = self.userOther
+            VC.ongoingJob = self.ongoingJob
+            VC.hidesBottomBarWhenPushed = true
+            VC.modalPresentationStyle = .overCurrentContext
+            self.navigationController?.present(VC, animated: true)
         }
     }
     
@@ -703,19 +707,51 @@ class ChatVC: UIViewController, UserCellDelegate {
 
     @IBAction func btnAcceptedClick(_ sender: UIButton) {
         vwAcceptOrDecline.isHidden = true
+        let timestamp = Int(Date().timeIntervalSince1970)
         if((self.ongoingJob) != nil) {
             let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
-            let acceptDic = ["job-status":JobStatus.Accepted.rawValue]
+            let acceptDic = ["job-status":JobStatus.Accepted.rawValue,"running-time": timestamp]
             ongoingJobRef.updateChildValues(acceptDic)
+        }
+        
+        let ref = Database.database().reference().child("Users").child(self.ongoingJob.authorId)
+        ref.observeSingleEvent(of: .value) { snapshot in
+            guard let dictionary = snapshot.value as? [String : AnyObject] else {
+                return
+            }
+            debugPrint(dictionary)
+            let user = UserChat(dictionary: dictionary)
+            user.id = snapshot.key
+            if let token : String = (dictionary["fcmToken"] as? String) {
+                let sender = PushNotificationSender()
+                sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(user.name ?? "") accepted your job request.", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.ongoingJob.authorId)
+                
+            }
         }
     }
     
     @IBAction func btnDeclineClick(_ sender: UIButton) {
         vwAcceptOrDecline.isHidden = true
+        let timestamp = Int(Date().timeIntervalSince1970)
         if((self.ongoingJob) != nil) {
             let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
-            let acceptDic = ["job-status":JobStatus.Declined.rawValue]
+            let acceptDic = ["job-status":JobStatus.Declined.rawValue,"cancel-time": timestamp]
             ongoingJobRef.updateChildValues(acceptDic)
+        }
+        
+        let ref = Database.database().reference().child("Users").child(self.ongoingJob.authorId)
+        ref.observeSingleEvent(of: .value) { snapshot in
+            guard let dictionary = snapshot.value as? [String : AnyObject] else {
+                return
+            }
+            debugPrint(dictionary)
+            let user = UserChat(dictionary: dictionary)
+            user.id = snapshot.key
+            if let token : String = (dictionary["fcmToken"] as? String) {
+                let sender = PushNotificationSender()
+                sender.sendPushNotificationHire(to: token, title: "Alert!", body: "\(user.name ?? "") declined your job request.", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.ongoingJob.authorId)
+                
+            }
         }
     }
     
@@ -744,6 +780,16 @@ class ChatVC: UIViewController, UserCellDelegate {
             self.navigationController?.pushViewController(paymentVC,  animated: true)
         }
     }
+    
+    @objc func btnDeclineAndPayClick(_ sender: UIButton) {
+        let message = self.messages[sender.tag]
+        let timestamp = Int(Date().timeIntervalSince1970)
+        if((self.ongoingJob) != nil) {
+            let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
+            let acceptDic = ["job-status":JobStatus.DeclinePayment.rawValue,"cancel-time": timestamp]
+            ongoingJobRef.updateChildValues(acceptDic)
+        }
+    }
 }
 
 extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
@@ -759,9 +805,7 @@ extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollecti
         let message = messages[indexPath.row]
         if((ongoingJob) != nil) {
             if ongoingJob.isServiceProvider {
-                if message.jobStatus == .AwaitingPayment {
-                    
-                }
+                
             } else {
                 if message.jobStatus == .AwaitingPayment {
                     let acceptCell  = collectionView.dequeueReusableCell(withReuseIdentifier: AcceptPaymentCollectionViewCell.className, for: indexPath) as! AcceptPaymentCollectionViewCell
@@ -776,6 +820,16 @@ extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollecti
                     acceptCell.descLabel.text = "\(self.userOther?.name ?? "") requests the\ntermination of the job, do you agree?"
                     acceptCell.acceptPayButton.tag = indexPath.item
                     acceptCell.acceptPayButton.addTarget(self, action: #selector(btnAcceptAndPayClick(_:)), for: .touchUpInside)
+                    acceptCell.declineButton.tag = indexPath.item
+                    acceptCell.declineButton.addTarget(self, action: #selector(btnDeclineAndPayClick(_:)), for: .touchUpInside)
+                    acceptCell.acceptPayButton.isEnabled = false
+                    acceptCell.declineButton.isEnabled = false
+                    if message.ongoingjobkey == self.ongoingJob.key {
+                        if self.ongoingJob.jobStatus == .AwaitingPayment {
+                            acceptCell.acceptPayButton.isEnabled = true
+                            acceptCell.declineButton.isEnabled = true
+                        }
+                    }
                     return acceptCell
                 }
             }

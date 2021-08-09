@@ -405,7 +405,7 @@ class Chat: UIViewController, UITableViewDelegate, UITableViewDataSource {
             GlobalVariables.indexToDelete = indexPath.row
             
             let ref = Database.database().reference().child("Users").child(chatPartnerId)
-            ref.observe(.value) { (snapshot) in
+            ref.observeSingleEvent(of:.value) { (snapshot) in
                 guard let dictionary = snapshot.value as? [String : AnyObject] else {
                     return
                 }

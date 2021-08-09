@@ -28,7 +28,7 @@ class PaymentVC: UIViewController {
     var ongoingJob:OngoingJobs!
     var userJobPost : UserChat!
     var message: Message?
-
+    var currentJob: JobStructure?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class PaymentVC: UIViewController {
         }
         
         self.lblName.text = userJobPost.name ?? ""
-        Database.database().reference().child("Jobs").child(ongoingJob.jobId).observe(.value) { (snapshot) in
+        Database.database().reference().child("Jobs").child(ongoingJob.jobId).observeSingleEvent(of:.value) { (snapshot) in
             if let value = snapshot.value as? [String : Any] {
                 let job = JobStructure()
                 job.authorId = value["author"] as? String ?? "Error"
@@ -70,6 +70,8 @@ class PaymentVC: UIViewController {
                     self.lblTotalAmount.text! = "\(job.price!)"
                     self.btnPay.setTitle("Pay $\(job.price!)", for: .normal)
                 }
+                self.currentJob = job
+                self.colCard.reloadData()
             }
         }
     }
@@ -93,10 +95,26 @@ class PaymentVC: UIViewController {
     }
     
     @IBAction func btnPayClick(_ sender: UIButton) {
+        let timestamp = Int(Date().timeIntervalSince1970)
         if((self.ongoingJob) != nil) {
             let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs").child(self.ongoingJob.key)
-            let acceptDic = ["job-status":JobStatus.Completed.rawValue]
+            let acceptDic = ["job-status":JobStatus.Completed.rawValue,"complete-time": timestamp]
             ongoingJobRef.updateChildValues(acceptDic)
+        }
+        
+        let ref = Database.database().reference().child("Users").child(self.ongoingJob.bookUid)
+        ref.observeSingleEvent(of: .value) { snapshot in
+            guard let dictionary = snapshot.value as? [String : AnyObject] else {
+                return
+            }
+            debugPrint(dictionary)
+            let user = UserChat(dictionary: dictionary)
+            user.id = snapshot.key
+            if let token : String = (dictionary["fcmToken"] as? String) {
+                let sender = PushNotificationSender()
+                sender.sendPushNotification(to: token, title: "Congrats! 🎉", body: "\(user.name ?? "") comleted job.", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.ongoingJob.bookUid)
+                
+            }
         }
         
         if let message = self.message {
@@ -126,6 +144,13 @@ extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource ,UICol
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colPaymentCardCell", for: indexPath) as! colPaymentCardCell
         let datas = self.arrToken[indexPath.section]
         let cardNumber = "************\(datas["last4"] as! String)"
+        if let job = currentJob {
+            if job.typeOfPrice == "Hourly" {
+                cell.lblAmount.text = "$\(job.price!) / Hour"
+            } else {
+                cell.lblAmount.text = "$\(job.price!)"
+            }
+        }
         
         cell.lblCardNumber.text = cardNumber.chunkFormatted(withChunkSize: 4, withSeparator: " ")
         if indexPath.section > 2 {
@@ -140,7 +165,7 @@ extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource ,UICol
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let vwWidth = (colCard.frame.size.width)
-        return CGSize(width: vwWidth, height: 196)
+        return CGSize(width: vwWidth-40, height: 196)
     }
     /*func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 0)

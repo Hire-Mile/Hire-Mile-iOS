@@ -47,6 +47,12 @@ class BookAppointmentVC: UIViewController {
         self.colTime.register(UINib(nibName: "colTimeCell", bundle: nil), forCellWithReuseIdentifier: "colTimeCell")
         
         // Appearance delegate [Unnecessary]
+        calendarView.appearance.dayLabelWeekdaySelectedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelPresentWeekdayHighlightedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelPresentWeekdaySelectedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelWeekdaySelectedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelWeekdayHighlightedBackgroundColor = UIColor.mainBlue
+        calendarView.appearance.dayLabelPresentWeekdayTextColor = .mainBlue
         self.calendarView.calendarAppearanceDelegate = self
         self.calendarView.animatorDelegate = self
         
@@ -106,7 +112,11 @@ class BookAppointmentVC: UIViewController {
     
     @IBAction func btnBookHire(_ sender: UIButton) {
         if selectTime != "" {
-            guard let uid = Auth.auth().currentUser?.uid else {
+            guard let uid = Auth.auth().currentUser?.uid,let authorid = self.jobStructure.authorId else {
+                return
+            }
+            if uid == authorid {
+                self.simpleAlert(title: "", message: "You can not hire your own job.")
                 return
             }
             let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs")
@@ -121,7 +131,7 @@ class BookAppointmentVC: UIViewController {
                             if let dic = jobDictionary[key] as? NSDictionary {
                                 let json = JSON(dic)
                                 let ongoingJob = OngoingJobs(json: json)
-                                if ongoingJob.bookUid == uid {
+                                if (ongoingJob.bookUid == uid && ongoingJob.jobStatus != .Declined && ongoingJob.jobStatus != .DeclinePayment) {
                                     if ongoingJob.jobStatus.rawValue < JobStatus.Completed.rawValue {
                                         self.simpleAlert(title: "", message: "You already ongoing this job:  \(self.jobStructure.titleOfPost ?? "")")
                                         return
@@ -140,11 +150,14 @@ class BookAppointmentVC: UIViewController {
                     "running-time" : timestamp,
                     "scheduleDate": self.jobStructure.scheduleDate ?? "",
                     "scheduleTime": self.jobStructure.scheduleTime ?? "",
-                    "authorId": self.jobStructure.authorId ?? ""
+                    "authorId": self.jobStructure.authorId ?? "",
+                    "price": self.jobStructure.price ?? 0,
+                    "typeOfPrice": self.jobStructure.typeOfPrice ?? "",
+                    "time": timestamp
                 ]
                 debugPrint(infoToAdd)
                 jobsReference.childByAutoId().setValue(infoToAdd)
-                let ref = Database.database().reference().child("Users").child(self.jobStructure.authorId ?? "")
+                let ref = Database.database().reference().child("Users").child(authorid)
                 ref.observeSingleEvent(of: .value) { snapshot in
                     guard let dictionary = snapshot.value as? [String : AnyObject] else {
                         return
@@ -156,7 +169,7 @@ class BookAppointmentVC: UIViewController {
                     self.showChatControllerForUser(user)
                     if let token : String = (dictionary["fcmToken"] as? String) {
                         let sender = PushNotificationSender()
-                        sender.sendPushNotificationHire(to: token, title: "Congrats! 🎉", body: "\(user.name ?? "") hire you", page: true, senderId: Auth.auth().currentUser!.uid, recipient: self.jobStructure.authorId ?? "")
+                        sender.sendPushNotificationHire(to: token, title: "Congrats! 🎉", body: "\(user.name ?? "") hire you", page: true, senderId: Auth.auth().currentUser!.uid, recipient: authorid)
                         
                     }
                 }

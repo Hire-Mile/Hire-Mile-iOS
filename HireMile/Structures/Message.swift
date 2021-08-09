@@ -35,6 +35,7 @@ class Message: NSObject {
     var long : Double?
     var lat : Double?
     var jobStatus = JobStatus(rawValue: 0)
+    var ongoingjobkey: String?
     
     init(dictionary: [String: Any]) {
         self.fromId = dictionary["fromId"] as? String
@@ -62,6 +63,7 @@ class Message: NSObject {
         if let jobstatus = dictionary["job-status"] as? Int {
             self.jobStatus = JobStatus(rawValue: jobstatus)
         }
+        self.ongoingjobkey = dictionary["ongoingjobkey"] as? String ?? ""
     }
     
     func chatPartnerId() -> String? {

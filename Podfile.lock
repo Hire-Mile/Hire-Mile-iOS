@@ -161,9 +161,12 @@ PODS:
   - SDWebImage/Core (5.11.0)
   - SideMenu (6.5.0)
   - STPopup (1.8.7)
-  - Stripe (5.1.4):
-    - Stripe/Core (= 5.1.4)
-  - Stripe/Core (5.1.4)
+  - Stripe (21.8.0):
+    - Stripe/Stripe3DS2 (= 21.8.0)
+    - StripeCore (= 21.8.0)
+  - Stripe/Stripe3DS2 (21.8.0):
+    - StripeCore (= 21.8.0)
+  - StripeCore (21.8.0)
   - SwiftyJSON (5.0.0)
   - ZKCarousel (1.1.0)
 
@@ -190,7 +193,7 @@ DEPENDENCIES:
   - SDWebImage
   - SideMenu
   - STPopup
-  - Stripe (~> 5.0)
+  - Stripe (~> 21.8.0)
   - SwiftyJSON
   - ZKCarousel
 
@@ -235,6 +238,7 @@ SPEC REPOS:
     - SideMenu
     - STPopup
     - Stripe
+    - StripeCore
     - SwiftyJSON
     - ZKCarousel
 
@@ -277,10 +281,11 @@ SPEC CHECKSUMS:
   SDWebImage: 7acbb57630ac7db4a495547fb73916ff3e432f6b
   SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
   STPopup: a9045557bc48a0df51fbb7bf0544447c5fe84d34
-  Stripe: 6864be95b09092f05526bc2e0a50804bc556aa0d
+  Stripe: 3d73c446e2493ba92b061c1802b1c98077f5866b
+  StripeCore: 91768f1a34839f97016194c3440d48186335fe45
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: e799aabd16129e924443acae0439444c4ff58d92
+PODFILE CHECKSUM: a7e63704c4e2c5435f31173cc649e44b8b71701b
 
 COCOAPODS: 1.10.1

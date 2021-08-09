@@ -92,6 +92,7 @@ class SearchResults: UITableViewController {
             controller.hidesBottomBarWhenPushed = true
             let Jobs = self.allJobs[indexPath.row]
             controller.jobPost = Jobs
+            controller.navigationController?.setNavigationBarHidden(true, animated: true)
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }

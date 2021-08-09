@@ -340,7 +340,6 @@ class FeedbackController: UIViewController, UITextFieldDelegate {
             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { (action) in
                 print("ok")
             }))
-            GlobalVariables.finishedFeedback = true
             
             // add to running
             let timestamp = Int(Date().timeIntervalSince1970)

@@ -69,6 +69,7 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
         }
     }
     override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         self.basicSetup()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
@@ -151,10 +152,10 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
                 recipientUserMessagesRef.setValue(1)
 
 
-                Database.database().reference().child("Users").child(toId).child("fcmToken").observe(.value) { (snapshot) in
+                Database.database().reference().child("Users").child(toId).child("fcmToken").observeSingleEvent(of:.value) { (snapshot) in
                     let token : String = (snapshot.value as? String)!
                     let sender = PushNotificationSender()
-                    Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
+                    Database.database().reference().child("Users").child(fromId).child("name").observeSingleEvent(of:.value) { (snapshot) in
                         let name : String = (snapshot.value as? String)!
                         sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)", page: true, senderId: Auth.auth().currentUser!.uid, recipient: toId)
                     }
@@ -184,12 +185,12 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
     }
     
     @objc func handleDismiss() {
-       
+        launcher.handleDismiss()
         self.navigationController?.popViewController(animated: true)
     }
     
     @objc func setName() {
-        Database.database().reference().child("Users").child(self.jobPost.authorId ?? "").observe(.value) { (snapshot) in
+        Database.database().reference().child("Users").child(self.jobPost.authorId ?? "").observeSingleEvent(of:.value) { (snapshot) in
             if let userInformation = snapshot.value as? NSDictionary {
                 print("userInformation" ,userInformation)
                 if let numberOfRating = userInformation["number-of-ratings"] as? String {
@@ -276,7 +277,7 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
 
     @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         // send uid
-        Database.database().reference().child("Jobs").child(self.jobPost.postId ?? "").child("author").observe(.value) { (snapshot) in
+        Database.database().reference().child("Jobs").child(self.jobPost.postId ?? "").child("author").observeSingleEvent(of:.value) { (snapshot) in
             if let profileUID : String = (snapshot.value as? String) {
                 if let profileVC = CommonUtils.getStoryboardVC(StoryBoard.Profile.rawValue, vcIdetifier: UserProfileViewController.className) as? UserProfileViewController {
                     profileVC.userUID = profileUID
