@@ -15,6 +15,7 @@ class UserStructure: NSObject {
     var username : String?
     var notification : String?
     var isFollow: Bool = false
+    var workingHours = [WorkingHour]()
     
     func initFromDictionary(dic: NSDictionary) {
         

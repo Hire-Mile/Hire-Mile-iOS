@@ -192,6 +192,7 @@
 		AE7D978D26727D1100EA1C4C /* Lato-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978C26727D1100EA1C4C /* Lato-Semibold.ttf */; };
 		AE7D978F26727E3B00EA1C4C /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978E26727E3B00EA1C4C /* Lato-Medium.ttf */; };
 		AE859B2B26A7D23D0071C9D2 /* ServicesorWorkersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE859B2A26A7D23D0071C9D2 /* ServicesorWorkersCell.swift */; };
+		AE8601E826C68A62003201D8 /* WorkingHour.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8601E726C68A62003201D8 /* WorkingHour.swift */; };
 		AE8B624526B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B624326B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift */; };
 		AE8B624626B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AE8B624426B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib */; };
 		AE8B624926B59A820092F207 /* HireYouVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B624726B59A820092F207 /* HireYouVC.swift */; };
@@ -403,6 +404,7 @@
 		AE7D978C26727D1100EA1C4C /* Lato-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Semibold.ttf"; sourceTree = "<group>"; };
 		AE7D978E26727E3B00EA1C4C /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Medium.ttf"; sourceTree = "<group>"; };
 		AE859B2A26A7D23D0071C9D2 /* ServicesorWorkersCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesorWorkersCell.swift; sourceTree = "<group>"; };
+		AE8601E726C68A62003201D8 /* WorkingHour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingHour.swift; sourceTree = "<group>"; };
 		AE8B624326B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptPaymentCollectionViewCell.swift; sourceTree = "<group>"; };
 		AE8B624426B5455D0092F207 /* AcceptPaymentCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AcceptPaymentCollectionViewCell.xib; sourceTree = "<group>"; };
 		AE8B624726B59A820092F207 /* HireYouVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HireYouVC.swift; sourceTree = "<group>"; };
@@ -798,6 +800,7 @@
 				7868124F2646B86300A62134 /* GalleryModel.swift */,
 				AEA44AEF26AD16F000157896 /* JobStatus.swift */,
 				AEA44AF126AD1C3D00157896 /* OngoingJob.swift */,
+				AE8601E726C68A62003201D8 /* WorkingHour.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -1269,6 +1272,7 @@
 				784646DF2561C854000C5F26 /* PageCell.swift in Sources */,
 				AEA5FF2D266CB901003CA733 /* CommonUtils.swift in Sources */,
 				04F79724269972FC00044938 /* CVCalendarWeekday.swift in Sources */,
+				AE8601E826C68A62003201D8 /* WorkingHour.swift in Sources */,
 				785D000E2609C8300060622A /* Booking.swift in Sources */,
 				AEA5FF28266CA3A9003CA733 /* ProfileReviewTableViewCell.swift in Sources */,
 				AE8B624526B5455D0092F207 /* AcceptPaymentCollectionViewCell.swift in Sources */,
@@ -1433,7 +1437,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 76;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
@@ -1457,7 +1461,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = HireMile/Hiremile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 75;
+				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = L4VCF9FAXL;
 				INFOPLIST_FILE = HireMile/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.2;

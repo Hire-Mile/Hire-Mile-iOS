@@ -40,8 +40,8 @@ class ChatMessageCell: UICollectionViewCell {
         return view
     }()
     
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView()
+    let profileImageView: UIButton = {
+        let imageView = UIButton()
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
@@ -50,8 +50,8 @@ class ChatMessageCell: UICollectionViewCell {
         return imageView
     }()
     
-    let myProfileImageView: UIImageView = {
-        let imageView = UIImageView()
+    let myProfileImageView: UIButton = {
+        let imageView = UIButton()
         imageView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
@@ -60,8 +60,8 @@ class ChatMessageCell: UICollectionViewCell {
         return imageView
     }()
     
-    lazy var messageImageView: UIImageView = {
-        let imageView = UIImageView()
+    lazy var messageImageView: UIButton = {
+        let imageView = UIButton()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
@@ -115,24 +115,26 @@ class ChatMessageCell: UICollectionViewCell {
         addSubview(myProfileImageView)
         addSubview(timeSent)
         
-        bubbleView.addSubview(messageImageView)
-        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
-        messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
-        messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
-        messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
-        
         bubbleView.addSubview(mapView)
         mapView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
         mapView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
         mapView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
         mapView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
         
-        contentView.addSubview(mapButton)
+        bubbleView.addSubview(mapButton)
         mapButton.addTarget(self, action: #selector(mapButtonAction), for: .touchUpInside)
         mapButton.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
         mapButton.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
         mapButton.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
         mapButton.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
+        
+        bubbleView.addSubview(messageImageView)
+        messageImageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor).isActive = true
+        messageImageView.topAnchor.constraint(equalTo: bubbleView.topAnchor).isActive = true
+        messageImageView.widthAnchor.constraint(equalTo: bubbleView.widthAnchor).isActive = true
+        messageImageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
+        
+        
         
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
         profileImageView.bottomAnchor.constraint(equalTo: self.bubbleView.bottomAnchor).isActive = true

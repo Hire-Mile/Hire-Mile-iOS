@@ -23,7 +23,7 @@ class MYScheduleVC: UIViewController {
     @IBOutlet weak var tblSchedule: UITableView!
     @IBOutlet weak var dropdownButton: UIButton!
     
-    var scheduleTimeArray = [ScheduleDate(date: "09:00 AM"),ScheduleDate(date: "10:00 AM"),ScheduleDate(date: "11:00 AM"),ScheduleDate(date: "12:00 PM"),ScheduleDate(date: "01:00 PM"),ScheduleDate(date: "02:00 PM"),ScheduleDate(date: "03:00 PM"),ScheduleDate(date: "04:00 PM"),ScheduleDate(date: "05:00 PM"),ScheduleDate(date: "06:00 PM"),ScheduleDate(date: "07:00 PM"),ScheduleDate(date: "08:00 PM"),ScheduleDate(date: "09:00 PM"),ScheduleDate(date: "10:00 PM")]
+    var scheduleTimeArray = [ScheduleDate(date: "09:00 AM"),ScheduleDate(date: "10:00 AM"),ScheduleDate(date: "11:00 AM"),ScheduleDate(date: "12:00 PM"),ScheduleDate(date: "01:00 PM"),ScheduleDate(date: "02:00 PM"),ScheduleDate(date: "03:00 PM"),ScheduleDate(date: "04:00 PM"),ScheduleDate(date: "05:00 PM"),ScheduleDate(date: "06:00 PM"),ScheduleDate(date: "07:00 PM"),ScheduleDate(date: "08:00 PM"),ScheduleDate(date: "09:00 PM"),ScheduleDate(date: "10:00 PM"),ScheduleDate(date: "11:00 PM"),ScheduleDate(date: "12:00 AM"),ScheduleDate(date: "01:00 AM"),ScheduleDate(date: "02:00 AM"),ScheduleDate(date: "03:00 AM"),ScheduleDate(date: "04:00 AM"),ScheduleDate(date: "05:00 AM"),ScheduleDate(date: "06:00 AM"),ScheduleDate(date: "07:00 AM"),ScheduleDate(date: "08:00 AM")]
     
     let arrName = ["Albert Smith - Wed design","","","Robert Gomez - car Logo","","","","","","","",""]
     
@@ -51,7 +51,7 @@ class MYScheduleVC: UIViewController {
         calendarView.appearance.dayLabelWeekdaySelectedBackgroundColor = UIColor.mainBlue
         calendarView.appearance.dayLabelWeekdayHighlightedBackgroundColor = UIColor.mainBlue
         calendarView.appearance.dayLabelPresentWeekdayTextColor = .mainBlue
-//        calendarView.appearance.dotMarkerColor = .mainBlue
+        calendarView.appearance.dotMarkerColor = .red
 //        calendarView.
         // Appearance delegate [Unnecessary]
         self.calendarView.calendarAppearanceDelegate = self
@@ -127,7 +127,7 @@ class MYScheduleVC: UIViewController {
         let currentDateJobs = self.allOngoingJobs.filter { job in
             return job.scheduleDate == dateStr
         }
-        scheduleTimeArray = [ScheduleDate(date: "09:00 AM"),ScheduleDate(date: "10:00 AM"),ScheduleDate(date: "11:00 AM"),ScheduleDate(date: "12:00 PM"),ScheduleDate(date: "01:00 PM"),ScheduleDate(date: "02:00 PM"),ScheduleDate(date: "03:00 PM"),ScheduleDate(date: "04:00 PM"),ScheduleDate(date: "05:00 PM"),ScheduleDate(date: "06:00 PM"),ScheduleDate(date: "07:00 PM"),ScheduleDate(date: "08:00 PM"),ScheduleDate(date: "09:00 PM"),ScheduleDate(date: "10:00 PM")]
+        scheduleTimeArray = [ScheduleDate(date: "09:00 AM"),ScheduleDate(date: "10:00 AM"),ScheduleDate(date: "11:00 AM"),ScheduleDate(date: "12:00 PM"),ScheduleDate(date: "01:00 PM"),ScheduleDate(date: "02:00 PM"),ScheduleDate(date: "03:00 PM"),ScheduleDate(date: "04:00 PM"),ScheduleDate(date: "05:00 PM"),ScheduleDate(date: "06:00 PM"),ScheduleDate(date: "07:00 PM"),ScheduleDate(date: "08:00 PM"),ScheduleDate(date: "09:00 PM"),ScheduleDate(date: "10:00 PM"),ScheduleDate(date: "11:00 PM"),ScheduleDate(date: "12:00 AM"),ScheduleDate(date: "01:00 AM"),ScheduleDate(date: "02:00 AM"),ScheduleDate(date: "03:00 AM"),ScheduleDate(date: "04:00 AM"),ScheduleDate(date: "05:00 AM"),ScheduleDate(date: "06:00 AM"),ScheduleDate(date: "07:00 AM"),ScheduleDate(date: "08:00 AM")]
         for job in currentDateJobs {
             let date = job.scheduleTime.toDate(withFormat: "hh:mm a")
             if let time = date?.toString(withFormat: "hh:00 a") {
@@ -295,11 +295,16 @@ extension MYScheduleVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate {
         
     }
     
-//    func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
-//        if let selectedDate = dayView.date.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
-//            let isContain = self.allOngoingJobs.contains(where: {$0.scheduleDate == selectedDate})
-//            return isContain
-//        }
-//        return false
-//    }
+    func dotMarker(shouldShowOnDayView dayView: DayView) -> Bool {
+        if let selectedDate = dayView.date.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
+            let isContain = self.allOngoingJobs.contains(where: {$0.scheduleDate == selectedDate})
+            debugPrint("current date: \(selectedDate) and contain: \(isContain)")
+            return isContain
+        }
+        return false
+    }
+    
+    func dotMarker(colorOnDayView dayView: DayView) -> [UIColor] {
+        return [.blue]
+    }
 }

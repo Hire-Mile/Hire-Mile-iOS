@@ -57,7 +57,7 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PKv-uf-zFi">
-                                <rect key="frame" x="0.0" y="597" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="597" width="375" height="70"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="axb-lA-Tjc">
                                         <rect key="frame" x="10" y="5" width="40" height="40"/>
@@ -68,6 +68,7 @@
                                         </constraints>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" image="more-circle"/>
+                                        <state key="selected" image="close-circle"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="20"/>
@@ -95,15 +96,6 @@
                                             <action selector="btnCameraClick:" destination="l7b-gf-3Lh" eventType="touchUpInside" id="0Vi-QH-97e"/>
                                         </connections>
                                     </button>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Write here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pzx-59-6Z1">
-                                        <rect key="frame" x="105" y="6" width="220" height="38"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="38" id="bT6-J4-rPk"/>
-                                        </constraints>
-                                        <color key="textColor" name="BlackColor"/>
-                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CNA-Cd-F47">
                                         <rect key="frame" x="335" y="9" width="30" height="32"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -112,26 +104,153 @@
                                             <constraint firstAttribute="width" constant="30" id="g3H-n5-65m"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="17"/>
-                                        <state key="normal" image="Iconly-Bold-Send">
+                                        <state key="normal" image="chat_light">
                                             <color key="titleColor" name="BlackColor"/>
                                         </state>
+                                        <state key="selected" image="chat-dark"/>
                                         <connections>
                                             <action selector="btnSendClick:" destination="l7b-gf-3Lh" eventType="touchUpInside" id="0cd-NL-YXA"/>
                                         </connections>
                                     </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="XsR-Rg-xAY">
+                                        <rect key="frame" x="105" y="5" width="220" height="60"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="HmS-w1-az7"/>
+                                        </constraints>
+                                        <color key="textColor" systemColor="labelColor"/>
+                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="l7b-gf-3Lh" id="C6N-PL-6Ju"/>
+                                        </connections>
+                                    </textView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Al3-t2-DoA">
+                                        <rect key="frame" x="0.0" y="65" width="375" height="5"/>
+                                        <subviews>
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qd2-2T-BYj">
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="41" translatesAutoresizingMaskIntoConstraints="NO" id="vns-HI-fmU">
+                                                        <rect key="frame" x="26" y="15" width="323" height="73"/>
+                                                        <subviews>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="FK9-nA-WCH">
+                                                                <rect key="frame" x="0.0" y="0.0" width="51" height="73"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lt1-fq-yFu">
+                                                                        <rect key="frame" x="1.5" y="0.0" width="48" height="48"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="48" id="VkE-WA-jlK"/>
+                                                                            <constraint firstAttribute="height" constant="48" id="fq0-pA-vhc"/>
+                                                                        </constraints>
+                                                                        <state key="normal" image="chat_calender"/>
+                                                                        <connections>
+                                                                            <action selector="didTapOnBookingButton:" destination="l7b-gf-3Lh" eventType="touchUpInside" id="Ysv-fc-nz7"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Booking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vYM-c6-oNG">
+                                                                        <rect key="frame" x="0.0" y="56" width="51" height="17"/>
+                                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="14"/>
+                                                                        <color key="textColor" name="707070"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="j8f-yg-1y3">
+                                                                <rect key="frame" x="92" y="0.0" width="48" height="73"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ID-Z4-2eY">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="48" id="96Y-Dh-kBy"/>
+                                                                            <constraint firstAttribute="width" constant="48" id="Nv2-RO-zJA"/>
+                                                                        </constraints>
+                                                                        <state key="normal" image="chat_file"/>
+                                                                        <connections>
+                                                                            <action selector="didTapOnFileButton:" destination="l7b-gf-3Lh" eventType="touchUpInside" id="A7k-bb-GWY"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TgN-LC-c9v">
+                                                                        <rect key="frame" x="13" y="56" width="22.5" height="17"/>
+                                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="14"/>
+                                                                        <color key="textColor" name="707070"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="RkE-FZ-gYP">
+                                                                <rect key="frame" x="181" y="0.0" width="48" height="73"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o23-qR-oxq">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="48" id="KGV-Wm-LWW"/>
+                                                                            <constraint firstAttribute="width" constant="48" id="z8N-jc-tC3"/>
+                                                                        </constraints>
+                                                                        <state key="normal" image="chat_pic"/>
+                                                                        <connections>
+                                                                            <action selector="didTapOnPhotoButton:" destination="l7b-gf-3Lh" eventType="touchUpInside" id="UP1-BA-iEy"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Photo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7N5-Vc-SgF">
+                                                                        <rect key="frame" x="5.5" y="56" width="37.5" height="17"/>
+                                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="14"/>
+                                                                        <color key="textColor" name="707070"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </stackView>
+                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="HnJ-7t-o0x">
+                                                                <rect key="frame" x="270" y="0.0" width="53" height="73"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u0e-eM-tlf">
+                                                                        <rect key="frame" x="2.5" y="0.0" width="48" height="48"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" constant="48" id="MYb-Zo-TSt"/>
+                                                                            <constraint firstAttribute="height" constant="48" id="fb7-Du-d2c"/>
+                                                                        </constraints>
+                                                                        <state key="normal" image="chat_location"/>
+                                                                        <connections>
+                                                                            <action selector="didTapOnLocationButton:" destination="l7b-gf-3Lh" eventType="touchUpInside" id="ncs-e0-gWG"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4T-yQ-8Pz">
+                                                                        <rect key="frame" x="0.0" y="56" width="53" height="17"/>
+                                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="14"/>
+                                                                        <color key="textColor" name="707070"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </stackView>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstItem="vns-HI-fmU" firstAttribute="top" secondItem="qd2-2T-BYj" secondAttribute="top" constant="15" id="3en-Tn-Vcl"/>
+                                                    <constraint firstAttribute="height" constant="100" id="I7I-PW-TIR"/>
+                                                    <constraint firstItem="vns-HI-fmU" firstAttribute="centerX" secondItem="qd2-2T-BYj" secondAttribute="centerX" id="zhj-Yd-zxv"/>
+                                                </constraints>
+                                            </view>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="axb-lA-Tjc" firstAttribute="leading" secondItem="PKv-uf-zFi" secondAttribute="leading" constant="10" id="2zr-4J-XsT"/>
-                                    <constraint firstAttribute="height" constant="50" id="86E-2R-XLt"/>
-                                    <constraint firstItem="CNA-Cd-F47" firstAttribute="leading" secondItem="Pzx-59-6Z1" secondAttribute="trailing" constant="10" id="RQj-xb-Fv9"/>
-                                    <constraint firstItem="CNA-Cd-F47" firstAttribute="centerY" secondItem="PKv-uf-zFi" secondAttribute="centerY" id="a87-GV-ibh"/>
-                                    <constraint firstItem="Pzx-59-6Z1" firstAttribute="centerY" secondItem="PKv-uf-zFi" secondAttribute="centerY" id="lGr-bl-Tkb"/>
-                                    <constraint firstItem="PjU-lT-w9U" firstAttribute="centerY" secondItem="PKv-uf-zFi" secondAttribute="centerY" id="luj-gH-Q1u"/>
+                                    <constraint firstItem="axb-lA-Tjc" firstAttribute="top" secondItem="PKv-uf-zFi" secondAttribute="top" constant="5" id="3wZ-fr-oWf"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="70" id="86E-2R-XLt"/>
+                                    <constraint firstAttribute="bottom" secondItem="Al3-t2-DoA" secondAttribute="bottom" id="C8B-Ip-JEE"/>
+                                    <constraint firstItem="CNA-Cd-F47" firstAttribute="leading" secondItem="XsR-Rg-xAY" secondAttribute="trailing" constant="10" id="Nme-rf-AgT"/>
+                                    <constraint firstItem="PjU-lT-w9U" firstAttribute="top" secondItem="PKv-uf-zFi" secondAttribute="top" constant="5" id="dFn-XZ-31N"/>
+                                    <constraint firstItem="Al3-t2-DoA" firstAttribute="leading" secondItem="PKv-uf-zFi" secondAttribute="leading" id="l1D-6L-bpD"/>
                                     <constraint firstAttribute="trailing" secondItem="CNA-Cd-F47" secondAttribute="trailing" constant="10" id="ng8-v4-cpE"/>
-                                    <constraint firstItem="Pzx-59-6Z1" firstAttribute="leading" secondItem="PjU-lT-w9U" secondAttribute="trailing" constant="10" id="pO8-s7-Bhm"/>
+                                    <constraint firstItem="CNA-Cd-F47" firstAttribute="top" secondItem="PKv-uf-zFi" secondAttribute="top" constant="9" id="oIS-a8-hpK"/>
+                                    <constraint firstItem="XsR-Rg-xAY" firstAttribute="top" secondItem="PKv-uf-zFi" secondAttribute="top" constant="5" id="oLl-3c-6hk"/>
                                     <constraint firstItem="PjU-lT-w9U" firstAttribute="leading" secondItem="axb-lA-Tjc" secondAttribute="trailing" constant="5" id="pYL-ny-8Qx"/>
-                                    <constraint firstItem="axb-lA-Tjc" firstAttribute="centerY" secondItem="PKv-uf-zFi" secondAttribute="centerY" id="wrT-Ms-KDf"/>
+                                    <constraint firstItem="XsR-Rg-xAY" firstAttribute="leading" secondItem="PjU-lT-w9U" secondAttribute="trailing" constant="10" id="vz3-lz-oBR"/>
+                                    <constraint firstAttribute="trailing" secondItem="Al3-t2-DoA" secondAttribute="trailing" id="xLn-3l-88E"/>
+                                    <constraint firstItem="Al3-t2-DoA" firstAttribute="top" secondItem="XsR-Rg-xAY" secondAttribute="bottom" id="yQF-AL-8eX"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tuq-uf-xbo">
@@ -481,7 +600,7 @@ Please, Chat with him to define the details of the job</string>
                             <constraint firstItem="R0S-fT-ER3" firstAttribute="trailing" secondItem="Ugh-df-YZn" secondAttribute="trailing" id="Oot-m8-B7k"/>
                             <constraint firstItem="R0S-fT-ER3" firstAttribute="trailing" secondItem="tuq-uf-xbo" secondAttribute="trailing" id="P5N-ff-p5c"/>
                             <constraint firstItem="tuq-uf-xbo" firstAttribute="leading" secondItem="aUP-Nu-MRM" secondAttribute="leading" id="QAL-zw-2cq"/>
-                            <constraint firstItem="R0S-fT-ER3" firstAttribute="bottom" secondItem="PKv-uf-zFi" secondAttribute="bottom" constant="20" id="Xkk-k1-VMo"/>
+                            <constraint firstItem="R0S-fT-ER3" firstAttribute="bottom" secondItem="PKv-uf-zFi" secondAttribute="bottom" id="Xkk-k1-VMo"/>
                             <constraint firstItem="boH-c9-jzm" firstAttribute="leading" secondItem="R0S-fT-ER3" secondAttribute="leading" constant="15" id="fjM-5D-3RF"/>
                             <constraint firstItem="Jqa-ta-jAi" firstAttribute="top" secondItem="tuq-uf-xbo" secondAttribute="bottom" id="hPq-L0-H3y"/>
                             <constraint firstItem="Ugh-df-YZn" firstAttribute="top" secondItem="Jqa-ta-jAi" secondAttribute="bottom" constant="10" id="hte-Yl-fuY"/>
@@ -507,8 +626,10 @@ Please, Chat with him to define the details of the job</string>
                         <outlet property="lblCostumerJobAccepted" destination="V23-PR-eia" id="VtV-1Z-BMA"/>
                         <outlet property="lblTitle" destination="Gdl-VF-ub2" id="ajD-aM-FnF"/>
                         <outlet property="lblWorkerjobAccepted" destination="Cad-eT-HtT" id="ufR-PQ-AsO"/>
+                        <outlet property="moreCircleButton" destination="axb-lA-Tjc" id="TGs-jY-Dlu"/>
+                        <outlet property="moreView" destination="qd2-2T-BYj" id="O1y-iR-Ty0"/>
                         <outlet property="sendButton" destination="CNA-Cd-F47" id="ce1-eP-X7K"/>
-                        <outlet property="txtInput" destination="Pzx-59-6Z1" id="KIr-Uh-r1O"/>
+                        <outlet property="txtInput" destination="XsR-Rg-xAY" id="qXX-IJ-HxD"/>
                         <outlet property="vwAcceptOrDecline" destination="9Ff-hE-SEl" id="Lnq-bk-VoB"/>
                         <outlet property="vwCostumerJobAccepted" destination="h1c-CR-Tcn" id="HW5-wZ-FM6"/>
                         <outlet property="vwWorkerjobAccepted" destination="0wV-gU-ohg" id="sjP-sC-y8n"/>
@@ -537,14 +658,23 @@ Please, Chat with him to define the details of the job</string>
         </scene>
     </scenes>
     <resources>
-        <image name="Iconly-Bold-Send" width="26" height="26"/>
         <image name="Iconly-Light-Calendar" width="16.5" height="18.5"/>
         <image name="Mask Group 534" width="51" height="51"/>
         <image name="Polygon 9" width="13" height="7"/>
         <image name="backArrow" width="10" height="17"/>
         <image name="cam-circle" width="40" height="40"/>
+        <image name="chat-dark" width="23" height="23"/>
+        <image name="chat_calender" width="48" height="48"/>
+        <image name="chat_file" width="48" height="48"/>
+        <image name="chat_light" width="25.5" height="25.5"/>
+        <image name="chat_location" width="48" height="48"/>
+        <image name="chat_pic" width="48" height="48"/>
+        <image name="close-circle" width="40" height="40"/>
         <image name="more-circle" width="41" height="41"/>
         <image name="multiply" catalog="system" width="128" height="111"/>
+        <namedColor name="707070">
+            <color red="0.4392156862745098" green="0.4392156862745098" blue="0.4392156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="7D7D7D">
             <color red="0.49000000953674316" green="0.49000000953674316" blue="0.49000000953674316" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -557,6 +687,9 @@ Please, Chat with him to define the details of the job</string>
         <namedColor name="mainBlue">
             <color red="0.20784313725490197" green="0.65490196078431373" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

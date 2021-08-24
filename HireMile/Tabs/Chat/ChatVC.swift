@@ -18,9 +18,9 @@ import MobileCoreServices
 import CoreLocation
 import SwiftyJSON
 
-class ChatVC: UIViewController, UserCellDelegate {
+class ChatVC: UIViewController, UserCellDelegate,CLLocationManagerDelegate {
     @IBOutlet weak var colChat: UICollectionView!
-    @IBOutlet weak var txtInput: UITextField!
+    @IBOutlet weak var txtInput: UITextView!
     @IBOutlet weak var lblTitle: UILabel!
     @IBOutlet weak var lblCategory: UILabel!
     @IBOutlet weak var btnFinish: UIButton!
@@ -40,6 +40,8 @@ class ChatVC: UIViewController, UserCellDelegate {
     @IBOutlet weak var lblAcceptOrDeclinePrice: UILabel!
     @IBOutlet weak var imgUser: UIImageView!
     @IBOutlet weak var imgCalender: UIImageView!
+    @IBOutlet weak var moreCircleButton: UIButton!
+    @IBOutlet weak var moreView: UIView!
     
     var userOther : UserChat? {
         didSet {
@@ -71,6 +73,7 @@ class ChatVC: UIViewController, UserCellDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initUI()
         self.finishButtonEnable(enable: false)
         colChat.register(ChatMessageCell.self, forCellWithReuseIdentifier: cellId)
         colChat.register(UINib(nibName: AcceptPaymentCollectionViewCell.className, bundle: nil), forCellWithReuseIdentifier: AcceptPaymentCollectionViewCell.className)
@@ -87,6 +90,11 @@ class ChatVC: UIViewController, UserCellDelegate {
             }
         }
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    private func initUI() {
+        txtInput.placeholder = "Write here"
+        txtInput.delegate = self
     }
     
     // MARK: Page Funtion
@@ -340,10 +348,10 @@ class ChatVC: UIViewController, UserCellDelegate {
     func setupCell(cell: ChatMessageCell, message: Message) {
         
         if let profileImageUrl = self.userOther?.profileImageUrl {
-            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+            cell.profileImageView.sd_setImage(with: URL(string: profileImageUrl), for: .normal, completed: nil)
         } else {
             cell.profileImageView.backgroundColor = UIColor.clear
-            cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+            cell.profileImageView.setImage(UIImage(systemName: "person.circle.fill"), for: .normal)
             cell.profileImageView.tintColor = UIColor.lightGray
             cell.profileImageView.contentMode = .scaleAspectFill
         }
@@ -360,11 +368,11 @@ class ChatVC: UIViewController, UserCellDelegate {
             Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
                 let profileImageString : String = (snapshot.value as? String)!
                 if profileImageString == "not-yet-selected" {
-                    cell.myProfileImageView.image = UIImage(systemName: "person.circle.fill")
+                    cell.myProfileImageView.setImage(UIImage(systemName: "person.circle.fill"), for: .normal)
                     cell.myProfileImageView.tintColor = UIColor.lightGray
                     cell.myProfileImageView.contentMode = .scaleAspectFill
                 } else {
-                    cell.myProfileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                    cell.myProfileImageView.sd_setImage(with: URL(string: profileImageString), for: .normal, completed: nil)
                     cell.myProfileImageView.tintColor = UIColor.lightGray
                     cell.myProfileImageView.contentMode = .scaleAspectFill
                 }
@@ -397,9 +405,12 @@ class ChatVC: UIViewController, UserCellDelegate {
         }
         
         if let messageImageUrl = message.imageUrl {
-            cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
+            cell.messageImageView.isUserInteractionEnabled = true
+            cell.messageImageView.sd_setImage(with: URL(string: messageImageUrl), for: .normal, completed: nil)//loadImageUsingCacheWithUrlString(messageImageUrl)
             cell.messageImageView.isHidden = false
             cell.bubbleView.backgroundColor = UIColor.clear
+            cell.messageImageView.addTarget(self, action: #selector(handleImageTap(tapGesture:)), for: .touchUpInside)
+            cell.messageImageView.didMoveToWindow()
         } else {
             cell.messageImageView.isHidden = true
         }
@@ -423,6 +434,9 @@ class ChatVC: UIViewController, UserCellDelegate {
                 cell.mapView.isHidden = true
                 cell.mapButton.isHidden = true
             }
+        } else {
+            cell.mapView.isHidden = true
+            cell.mapButton.isHidden = true
         }
     }
     
@@ -449,6 +463,16 @@ class ChatVC: UIViewController, UserCellDelegate {
                 mapPage.location = CLLocationCoordinate2D(latitude: message.lat!, longitude: message.long!)
                 navigationController?.pushViewController(mapPage, animated: true)
             }
+        }
+    }
+    
+    @objc func handleImageTap(tapGesture: UIButton) {
+        self.txtInput.resignFirstResponder()
+        UIView.animate(withDuration: 1) {
+            self.view.layoutIfNeeded()
+        }
+        if let imageView = tapGesture.imageView as? UIImageView {
+            self.performZoomInForStartingImageView(startingImageView: imageView)
         }
     }
     
@@ -515,30 +539,7 @@ class ChatVC: UIViewController, UserCellDelegate {
             })
         }
     }
-    
-    // MARK: Text message Upload
-    
-    func checkNilValueTextField() {
-       if self.txtInput.text == nil || self.txtInput.text == "" {
-           self.enableButton = false
-           if enableButton == true {
-               self.sendButton.tintColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
-           } else {
-               self.sendButton.tintColor = UIColor(red: 213/255, green: 213/255, blue: 213/255, alpha: 1)
-           }
-       } else {
-           self.enableButton = true
-           if enableButton == true {
-               self.sendButton.tintColor = UIColor(red: 118/255, green: 118/255, blue: 118/255, alpha: 1)
-           } else {
-               self.sendButton.tintColor = UIColor(red: 213/255, green: 213/255, blue: 213/255, alpha: 1)
-           }
-       }
-   }
-   
-   @objc func textFieldDidChange(_ textField: UITextField) {
-       checkNilValueTextField()
-   }
+ 
 
     // MARK: send Message With Properties
     
@@ -574,11 +575,69 @@ class ChatVC: UIViewController, UserCellDelegate {
                 Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
                     let name : String = (snapshot.value as? String)!
                     sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)", page: false, senderId: Auth.auth().currentUser!.uid, recipient: toId!)
-                    self.checkNilValueTextField()
                 }
             }
             
             self.txtInput.text = nil
+        }
+    }
+    
+    func performZoomInForStartingImageView(startingImageView: UIImageView) {
+        
+        startingFrame = startingImageView.superview?.convert((startingImageView.frame), to: nil)
+        let zoomingImageView = UIImageView(frame: startingFrame!)
+        zoomingImageView.image = startingImageView.image
+        zoomingImageView.isUserInteractionEnabled = true
+        zoomingImageView.layer.cornerRadius = 16
+        zoomingImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOut)))
+        
+        let exitButton = UIButton(type: .system)
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        exitButton.backgroundColor = .clear
+        exitButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        exitButton.tintColor = UIColor.white
+        self.imageView = zoomingImageView
+        exitButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleZoomOutButton)))
+        
+        if let keyWindow = UIApplication.shared.keyWindow {
+            blackBackground = UIView(frame: keyWindow.frame)
+            self.blackBackground?.backgroundColor = .black
+            self.blackBackground?.alpha = 0
+            keyWindow.addSubview(blackBackground!)
+            keyWindow.addSubview(zoomingImageView)
+            
+            blackBackground?.addSubview(exitButton)
+            exitButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+            exitButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor, constant: 10).isActive = true
+            exitButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+            exitButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+            
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+                let height = self.startingFrame!.height / self.startingFrame!.width * keyWindow.frame.width
+                zoomingImageView.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: height)
+                zoomingImageView.center = keyWindow.center
+                self.blackBackground?.alpha = 1
+            }
+
+        }
+    }
+    
+    @objc func handleZoomOut(tapGesture: UITapGestureRecognizer) {
+        if let zoomOutImageView = tapGesture.view {
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+                zoomOutImageView.frame = self.startingFrame!
+                self.blackBackground?.alpha = 0
+            } completion: { (completed) in
+                zoomOutImageView.removeFromSuperview()
+            }
+        }
+    }
+    
+    @objc func handleZoomOutButton() {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+            self.blackBackground?.alpha = 0
+            self.imageView?.alpha = 0
+        } completion: { (completed) in
         }
     }
     
@@ -636,7 +695,6 @@ class ChatVC: UIViewController, UserCellDelegate {
                 Database.database().reference().child("Users").child(fromId).child("name").observe(.value) { (snapshot) in
                     let name : String = (snapshot.value as? String)!
                     sender.sendPushNotification(to: token, title: "Chat Notification", body: "New message from \(name)", page: false, senderId: Auth.auth().currentUser!.uid, recipient: toId!)
-                    self.checkNilValueTextField()
                 }
             }
             
@@ -659,6 +717,76 @@ class ChatVC: UIViewController, UserCellDelegate {
     }
     
     // MARK: Button Action
+    @IBAction func didTapOnBookingButton(_ sender: Any) {
+        let myScheduleVC = CommonUtils.getStoryboardVC(StoryBoard.Schedule.rawValue, vcIdetifier: MYScheduleVC.className) as! MYScheduleVC
+        self.navigationController?.pushViewController(myScheduleVC, animated: true)
+    }
+    
+    @IBAction func didTapOnFileButton(_ sender: Any) {
+    }
+    
+    @IBAction func didTapOnPhotoButton(_ sender: UIButton) {
+        self.btnCameraClick(sender)
+    }
+    
+    @IBAction func didTapOnLocationButton(_ sender: Any) {
+        checkLocationServices()
+         MBProgressHUD.showAdded(to: view, animated: true)
+         if let location = self.locationManager.location?.coordinate {
+             let properties = [
+                 "isLocation" : true,
+                 "long-cord" : location.longitude,
+                 "lat-cord" : location.latitude
+             ] as [String : Any]
+             sendMessageWithProperties(properties)
+             MBProgressHUD.hide(for: self.view, animated: true)
+         } else {
+             MBProgressHUD.hide(for: self.view, animated: true)
+             let alert = UIAlertController(title: "Error", message: "Please make sure all locaation settings are allowed", preferredStyle: .alert)
+             alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+             present(alert, animated: true, completion: nil)
+         }
+    }
+    
+    @objc func checkLocationServices() {
+        if CLLocationManager.locationServicesEnabled() {
+            setupLocationManager()
+            checkLocationAuthorization()
+        } else {
+            print("TURN ON")
+        }
+    }
+    
+    func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    func checkLocationAuthorization() {
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+            break
+        case .denied:
+            // Show alert instructing them how to turn on permissions
+            let alert = UIAlertController(title: "Cannot find location", message: "Please go to Settings and allow location to view this screen!", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            break
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .restricted:
+            // Show an alert letting them know what's up
+            let alert = UIAlertController(title: "Cannot find location", message: "Your location is marked as 'restricted'", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            break
+        case .authorizedAlways:
+            locationManager.startUpdatingLocation()
+            break
+        }
+    }
+    
     
     @IBAction func btnBackClick(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
@@ -674,6 +802,8 @@ class ChatVC: UIViewController, UserCellDelegate {
     }
     
     @IBAction func btnMoreClick(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        moreView.isHidden = !sender.isSelected
     }
   
     @IBAction func btnCameraClick(_ sender: UIButton) {
@@ -861,18 +991,20 @@ extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollecti
             cell.textView.isHidden = true
         }
         
-        let btn_left=UIButton(frame: CGRect(x: 8, y: cell.frame.height - 51, width: 32, height: 32))
-        btn_left.isUserInteractionEnabled = true
-        btn_left.addTarget(self, action: #selector(btnleftClick), for: .touchUpInside)
-        cell.addSubview(btn_left)
+       // let btn_left=UIButton(frame: CGRect(x: 8, y: cell.frame.height - 51, width: 32, height: 32))
+        cell.profileImageView.addTarget(self, action: #selector(btnleftClick), for: .touchUpInside)
+        //cell.addSubview(btn_left)
+
+        //let btn_right=UIButton(frame: CGRect(x: cell.frame.width - 40, y: cell.frame.height - 51, width: 32, height: 32))
+        cell.myProfileImageView.addTarget(self, action: #selector(btnrightClick), for: .touchUpInside)
+        //cell.addSubview(btn_right)
         
-        let btn_right=UIButton(frame: CGRect(x: cell.frame.width - 40, y: cell.frame.height - 51, width: 32, height: 32))
-        btn_right.isUserInteractionEnabled = true
-        btn_right.addTarget(self, action: #selector(btnrightClick), for: .touchUpInside)
-        cell.addSubview(btn_right)
+//        let btn_image=UIButton(frame: CGRect(x: 0 , y: 0, width: cell.messageImageView.frame.width, height: cell.messageImageView.frame.height))
+//        btn_image.addTarget(self, action: #selector(handleImageTap(tapGesture:)), for: .touchUpInside)
+//        cell.addSubview(btn_image)
         
-     /*   cell.messageImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
-        */
+        
+        
         cell.delegate = self
         
         return cell
@@ -904,10 +1036,20 @@ extension ChatVC: UICollectionViewDataSource,UICollectionViewDelegate,UICollecti
                 height = 150
             }
         }
-        
-       
         return CGSize(width: width, height: height + 25)
     }
+}
+
+extension ChatVC : UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        if let placeholderLabel = textView.viewWithTag(100) as? UILabel {
+            placeholderLabel.isHidden = textView.text.count > 0
+        }
+        sendButton.isSelected = textView.text.count > 0
+    }
     
-    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        sendButton.isSelected = textView.text.count > 0
+        return true
+    }
 }

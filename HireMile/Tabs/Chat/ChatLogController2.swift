@@ -453,10 +453,10 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
     private func setupCell(cell: ChatMessageCell, message: Message) {
         
         if let profileImageUrl = self.user?.profileImageUrl {
-            cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
+           // cell.profileImageView.loadImageUsingCacheWithUrlString(profileImageUrl)
         } else {
             cell.profileImageView.backgroundColor = UIColor.clear
-            cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
+           // cell.profileImageView.image = UIImage(systemName: "person.circle.fill")
             cell.profileImageView.tintColor = UIColor.lightGray
             cell.profileImageView.contentMode = .scaleAspectFill
         }
@@ -473,11 +473,11 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
             Database.database().reference().child("Users").child(uid).child("profile-image").observe(.value) { (snapshot) in
                 let profileImageString : String = (snapshot.value as? String)!
                 if profileImageString == "not-yet-selected" {
-                    cell.myProfileImageView.image = UIImage(systemName: "person.circle.fill")
+                   // cell.myProfileImageView.image = UIImage(systemName: "person.circle.fill")
                     cell.myProfileImageView.tintColor = UIColor.lightGray
                     cell.myProfileImageView.contentMode = .scaleAspectFill
                 } else {
-                    cell.myProfileImageView.loadImageUsingCacheWithUrlString(profileImageString)
+                  //  cell.myProfileImageView.loadImageUsingCacheWithUrlString(profileImageString)
                     cell.myProfileImageView.tintColor = UIColor.lightGray
                     cell.myProfileImageView.contentMode = .scaleAspectFill
                 }
@@ -510,7 +510,7 @@ class ChatLogController2: UICollectionViewController, UITextFieldDelegate , UICo
         }
         
         if let messageImageUrl = message.imageUrl {
-            cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
+            //cell.messageImageView.loadImageUsingCacheWithUrlString(messageImageUrl)
             cell.messageImageView.isHidden = false
             cell.bubbleView.backgroundColor = UIColor.clear
         } else {

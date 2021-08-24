@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "more-circle.png",
+      "filename" : "chat_calender.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "more-circle@2x.png",
+      "filename" : "chat_calender@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "more-circle@3x.png",
+      "filename" : "chat_calender@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

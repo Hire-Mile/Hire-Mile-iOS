@@ -11,7 +11,6 @@ import UIKit
 
 extension UITextView :UITextViewDelegate
 {
-    
     /// Resize the placeholder when the UITextView bounds change
     override open var bounds: CGRect {
         didSet {

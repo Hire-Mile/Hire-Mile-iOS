@@ -64,7 +64,7 @@ class AddCardVC: UIViewController,UITextFieldDelegate {
     
     func createToken() {
         
-        /*if txtCardNumber.text!.count == 19 && txtCVV.text!.count == 3 && txtExpiryDate.text!.count == 5 {
+        if txtCardNumber.text!.count == 19 && txtCVV.text!.count == 3 && txtExpiryDate.text!.count == 5 {
             
             let exdate = txtExpiryDate.text!
             let m = String(exdate.prefix(2))
@@ -102,7 +102,7 @@ class AddCardVC: UIViewController,UITextFieldDelegate {
                     }
                 })
             })
-        }*/
+        }
     }
     
 

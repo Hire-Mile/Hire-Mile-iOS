@@ -24,12 +24,15 @@ class BookAppointmentVC: UIViewController {
     @IBOutlet weak var menuView: CVCalendarMenuView!
     var jobStructure: JobStructure!
     
-    let arrTime = ["09:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM","07:30 PM","08:00 PM","08:30 PM","09:00 PM","09:30 PM","10:00 PM","10:30 PM"]
+    let arrTime = ["12:00 AM", "12:30 AM", "01:00 AM", "01:30 AM", "02:00 AM", "02:30 AM", "03:00 AM", "03:30 AM", "04:00 AM", "04:30 AM", "05:00 AM", "05:30 AM", "06:00 AM", "06:30 AM", "07:00 AM", "07:30 AM", "08:00 AM", "08:30 AM", "09:00 AM","09:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","01:00 PM","01:30 PM","02:00 PM","02:30 PM","03:00 PM","03:30 PM","04:00 PM","04:30 PM","05:00 PM","05:30 PM","06:00 PM","06:30 PM","07:00 PM","07:30 PM","08:00 PM","08:30 PM","09:00 PM","09:30 PM","10:00 PM","10:30 PM","11:00 PM","11:30 PM"]
+    
+    var finalTime = [String]()
     
     var selectTime = ""
     
     private var animationFinished = true
     private var currentCalendar: Calendar?
+    var allOngoingJobs = [OngoingJobs]()
     
     override func awakeFromNib() {
         let timeZoneBias = 480 // (UTC+08:00)
@@ -44,6 +47,7 @@ class BookAppointmentVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initUIData()
+        currentJobData()
         self.colTime.register(UINib(nibName: "colTimeCell", bundle: nil), forCellWithReuseIdentifier: "colTimeCell")
         
         // Appearance delegate [Unnecessary]
@@ -79,6 +83,74 @@ class BookAppointmentVC: UIViewController {
         }
         self.lblCategory.text = jobStructure.titleOfPost ?? ""
         self.userProfileImageView.sd_setImage(with: URL(string: jobStructure.author.profileImageView ?? ""), completed: nil)
+    }
+    
+    func currentJobData() {
+        let ongoingJobRef = Database.database().reference().child("Ongoing-Jobs")
+        ongoingJobRef
+            .queryOrdered(byChild: "jobId")
+            .queryEqual(toValue: self.jobStructure.postId ?? "")
+           .observe( .value, with: {(snapshot) in
+                    print(snapshot)
+            self.allOngoingJobs = [OngoingJobs]()
+            if let jobDictionary = snapshot.value as? NSDictionary {
+                for key in jobDictionary.allKeys {
+                    if let key = key as? String {
+                        if let dic = jobDictionary[key] as? NSDictionary {
+                            let json = JSON(dic)
+                            let ongoingJob = OngoingJobs(json: json)
+                            if(ongoingJob.jobStatus == .Accepted || ongoingJob.jobStatus == .Hired) {
+                                self.allOngoingJobs.append(ongoingJob)
+                            }
+                        }
+                    }
+                }
+            }
+            self.filterDateOfAvailableSlots()
+        })
+    }
+    
+    func filterDateOfAvailableSlots() {
+        if((self.calendarView) == nil) {
+            return
+        }
+        if let selectedDate = self.calendarView.presentedDate.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
+            self.jobStructure.scheduleDate = selectedDate
+            self.finalTime = [String]()
+            if(jobStructure.author.workingHours.count > 0) {
+                if let dayname = self.calendarView.presentedDate.convertedDate()?.toString(format: .custom("EEEE"))  {
+                    if let workinghour = jobStructure.author.workingHours.last(where: {$0.day == dayname.lowercased()}) {
+                        let hours = workinghour.hours.components(separatedBy: " - ")
+                        debugPrint(hours)
+                        if let start = hours.first, let end = hours.last, let startDate = start.toDate(withFormat: "hh:mma"), let endDate = end.toDate(withFormat: "hh:mma")  {
+                            for time in arrTime {
+                                if let newDate = time.toDate(withFormat: "hh:mm a") {
+                                    if newDate >= startDate && newDate <= endDate {
+                                        if let ongoinJob = self.allOngoingJobs.last(where: {$0.scheduleDate == selectedDate && $0.scheduleTime == time}) {
+                                            debugPrint("current job is ongoin \(ongoinJob)")
+                                        } else {
+                                            self.finalTime.append(time)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                self.finalTime = [String]()
+                for time in arrTime {
+                    if let ongoinJob = self.allOngoingJobs.last(where: {$0.scheduleDate == selectedDate && $0.scheduleTime == time}) {
+                        debugPrint("current job is ongoin \(ongoinJob)")
+                    } else {
+                        self.finalTime.append(time)
+                    }
+                }
+            }
+        }
+        if((colTime) != nil) {
+            colTime.reloadData()
+        }
     }
     
     // MARK: Button Action
@@ -227,14 +299,14 @@ class BookAppointmentVC: UIViewController {
 
 extension BookAppointmentVC : UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return arrTime.count
+        return finalTime.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colTimeCell", for: indexPath) as! colTimeCell
         
-        cell.lblTitle.text = arrTime[indexPath.item]
-        if selectTime == arrTime[indexPath.row] {
+        cell.lblTitle.text = finalTime[indexPath.item]
+        if selectTime == finalTime[indexPath.row] {
             cell.vwBG.backgroundColor = UIColor(named: "cellBGColor")
             cell.vwBG.layer.borderColor = UIColor.mainBlue.cgColor
             cell.lblTitle.font = UIFont(name: "Lato-Bold", size:  16.0)!
@@ -247,7 +319,7 @@ extension BookAppointmentVC : UICollectionViewDelegate,UICollectionViewDataSourc
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectTime = arrTime[indexPath.row]
+        selectTime = finalTime[indexPath.row]
         lblTime.text = selectTime
         jobStructure.scheduleTime = selectTime
         colTime.reloadData()
@@ -328,11 +400,7 @@ extension BookAppointmentVC: CVCalendarViewDelegate, CVCalendarMenuViewDelegate 
     }
     
     func didSelectDayView(_ dayView: DayView, animationDidFinish: Bool) {
-        if let selectedDate = dayView.date.convertedDate()?.toString(format: .custom("dd-MM-yy"))  {
-            debugPrint(selectedDate)
-            self.jobStructure.scheduleDate = selectedDate
-        }
-        
+        filterDateOfAvailableSlots()
     }
     
 }

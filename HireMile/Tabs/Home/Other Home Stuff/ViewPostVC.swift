@@ -53,12 +53,9 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         basicSetup()
         self.colProfileImg!.register(UINib(nibName: "CoverPhotoCell", bundle: nil), forCellWithReuseIdentifier: "CoverPhotoCell")
-        
-        
         self.lblName.text = jobPost.titleOfPost
         self.lblDetail.text = jobPost.descriptionOfPost
         lblCategory.text = jobPost.category
-      //  self.height = self.estimateFrameForText(text: self.descriptionLabel.text!).height
         
         if self.jobPost.typeOfPrice == "Hourly" {
             self.lblPrice.text = "$\(String(jobPost.price ?? 0)) / Hour"
@@ -203,6 +200,15 @@ class ViewPostVC: UIViewController, UITextFieldDelegate {
                 if let url = userInformation["profile-image"] as? String {
                     self.imgProfile.sd_setImage(with: URL(string: url), completed: nil)
                     self.jobPost.author.profileImageView = url
+                }
+                if let worksHours = userInformation["work-hours"] as? NSDictionary {
+                    self.jobPost.author.workingHours = [WorkingHour]()
+                    for key in worksHours.allKeys {
+                        if let day = key as? String, let hours = worksHours[key] as? String {
+                            let workinghour = WorkingHour(day: day, hours: hours)
+                            self.jobPost.author.workingHours.append(workinghour)
+                        }
+                    }
                 }
             }
         }
