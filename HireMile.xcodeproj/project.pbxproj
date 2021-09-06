@@ -182,6 +182,7 @@
 		AE66926B266A64F100A23EE0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE66926A266A64F100A23EE0 /* UIView.swift */; };
 		AE66926D266A66D600A23EE0 /* NSObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE66926C266A66D600A23EE0 /* NSObject.swift */; };
 		AE74422A26A9310B00B42194 /* ViewPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE74422926A9310B00B42194 /* ViewPostVC.swift */; };
+		AE75F5F626E3FD1300D6B815 /* StripeWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE75F5F526E3FD1300D6B815 /* StripeWebViewController.swift */; };
 		AE7D977E2672739600EA1C4C /* MyProfilesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7D977D2672739600EA1C4C /* MyProfilesVC.swift */; };
 		AE7D978626727C2000EA1C4C /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978026727C1F00EA1C4C /* Lato-Regular.ttf */; };
 		AE7D978726727C2000EA1C4C /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE7D978126727C2000EA1C4C /* Lato-Black.ttf */; };
@@ -394,6 +395,7 @@
 		AE66926A266A64F100A23EE0 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; wrapsLines = 1; };
 		AE66926C266A66D600A23EE0 /* NSObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject.swift; sourceTree = "<group>"; };
 		AE74422926A9310B00B42194 /* ViewPostVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPostVC.swift; sourceTree = "<group>"; };
+		AE75F5F526E3FD1300D6B815 /* StripeWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeWebViewController.swift; sourceTree = "<group>"; };
 		AE7D977D2672739600EA1C4C /* MyProfilesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyProfilesVC.swift; sourceTree = "<group>"; };
 		AE7D978026727C1F00EA1C4C /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		AE7D978126727C2000EA1C4C /* Lato-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Black.ttf"; sourceTree = "<group>"; };
@@ -467,6 +469,7 @@
 				0482E9A8269AA60C008FD06F /* RattingVC.swift */,
 				0467D0B6269AB5CE003B9A24 /* AddpaymentVC.swift */,
 				040499E1269AD4C20079D8D4 /* AddCardVC.swift */,
+				AE75F5F526E3FD1300D6B815 /* StripeWebViewController.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -1143,6 +1146,7 @@
 				04F79735269972FC00044938 /* CVCalendarViewAppearance.swift in Sources */,
 				784646E625629A97000C5F26 /* SignUp.swift in Sources */,
 				78D9FFC125B89E2B00F00EA1 /* Post2.swift in Sources */,
+				AE75F5F626E3FD1300D6B815 /* StripeWebViewController.swift in Sources */,
 				784646CB2561B841000C5F26 /* SignInController.swift in Sources */,
 				78F8F85525A33BE80021FD60 /* FeedbackController.swift in Sources */,
 				AE859B2B26A7D23D0071C9D2 /* ServicesorWorkersCell.swift in Sources */,

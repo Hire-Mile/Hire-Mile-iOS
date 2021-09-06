@@ -1585,12 +1585,107 @@ again.</string>
             </objects>
             <point key="canvasLocation" x="4960.8000000000002" y="223.08845577211397"/>
         </scene>
+        <!--Stripe Web View Controller-->
+        <scene sceneID="4mF-yc-i66">
+            <objects>
+                <viewController storyboardIdentifier="StripeWebViewController" id="cta-XO-i7D" customClass="StripeWebViewController" customModule="Hiremile" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Vu3-rj-6dV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ps0-rp-fUF">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UCT-X0-eug">
+                                        <rect key="frame" x="10" y="5" width="40" height="40"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="G8T-sN-aNZ"/>
+                                            <constraint firstAttribute="width" constant="40" id="ZSV-I9-LAX"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="chevron.backward" catalog="system"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="didTapOnCancelButton:" destination="cta-XO-i7D" eventType="touchUpInside" id="krQ-F7-M88"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i1h-PU-eoU">
+                                        <rect key="frame" x="315" y="0.0" width="60" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="lhf-Ss-ksP"/>
+                                        </constraints>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Done">
+                                            <color key="titleColor" name="0D0C0C"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="20"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stripe Connect" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NUc-n0-2aU">
+                                        <rect key="frame" x="121" y="13" width="133.5" height="24"/>
+                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="20"/>
+                                        <color key="textColor" name="BlackColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="9W5-Cs-urv"/>
+                                    <constraint firstAttribute="bottom" secondItem="i1h-PU-eoU" secondAttribute="bottom" id="Eva-0r-uge"/>
+                                    <constraint firstItem="NUc-n0-2aU" firstAttribute="centerY" secondItem="Ps0-rp-fUF" secondAttribute="centerY" id="HMe-FG-Acm"/>
+                                    <constraint firstItem="NUc-n0-2aU" firstAttribute="centerX" secondItem="Ps0-rp-fUF" secondAttribute="centerX" id="OAe-YU-AMF"/>
+                                    <constraint firstItem="i1h-PU-eoU" firstAttribute="top" secondItem="Ps0-rp-fUF" secondAttribute="top" id="kIn-WG-h7I"/>
+                                    <constraint firstItem="UCT-X0-eug" firstAttribute="leading" secondItem="Ps0-rp-fUF" secondAttribute="leading" constant="10" id="o4W-yu-pix"/>
+                                    <constraint firstItem="UCT-X0-eug" firstAttribute="centerY" secondItem="Ps0-rp-fUF" secondAttribute="centerY" id="ucV-LG-Pzr"/>
+                                    <constraint firstAttribute="trailing" secondItem="i1h-PU-eoU" secondAttribute="trailing" id="xUg-pn-MKn"/>
+                                </constraints>
+                            </view>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="XNU-lQ-cAt">
+                                <rect key="frame" x="169" y="315" width="37" height="37"/>
+                                <color key="color" name="LightGray"/>
+                            </activityIndicatorView>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rmw-2B-vl7">
+                                <rect key="frame" x="0.0" y="50" width="375" height="617"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ASG-Kj-axW"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="XNU-lQ-cAt" firstAttribute="centerX" secondItem="Vu3-rj-6dV" secondAttribute="centerX" id="4Ol-Gh-TrF"/>
+                            <constraint firstItem="XNU-lQ-cAt" firstAttribute="centerY" secondItem="Vu3-rj-6dV" secondAttribute="centerY" id="EwV-ut-Xyr"/>
+                            <constraint firstItem="ASG-Kj-axW" firstAttribute="trailing" secondItem="Rmw-2B-vl7" secondAttribute="trailing" id="KLx-Kz-boa"/>
+                            <constraint firstItem="Ps0-rp-fUF" firstAttribute="leading" secondItem="Vu3-rj-6dV" secondAttribute="leading" id="RGn-WS-DAQ"/>
+                            <constraint firstAttribute="bottom" secondItem="Rmw-2B-vl7" secondAttribute="bottom" id="fk9-M8-gqM"/>
+                            <constraint firstItem="Rmw-2B-vl7" firstAttribute="top" secondItem="Ps0-rp-fUF" secondAttribute="bottom" id="jNf-SL-Xm7"/>
+                            <constraint firstItem="Rmw-2B-vl7" firstAttribute="leading" secondItem="ASG-Kj-axW" secondAttribute="leading" id="kSu-dF-g6l"/>
+                            <constraint firstItem="Ps0-rp-fUF" firstAttribute="top" secondItem="ASG-Kj-axW" secondAttribute="top" id="rXI-vf-Hwg"/>
+                            <constraint firstItem="ASG-Kj-axW" firstAttribute="trailing" secondItem="Ps0-rp-fUF" secondAttribute="trailing" id="xW5-KP-Jzm"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="objActivityIndicator" destination="XNU-lQ-cAt" id="f9B-4W-PuE"/>
+                        <outlet property="objWebView" destination="Rmw-2B-vl7" id="o0G-SN-NWp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rya-Vc-u00" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5674.3999999999996" y="243.32833583208398"/>
+        </scene>
     </scenes>
-    <designables>
-        <designable name="f5X-2s-QY4">
-            <size key="intrinsicContentSize" width="240" height="40"/>
-        </designable>
-    </designables>
     <resources>
         <image name="Add payment" width="32.5" height="32.5"/>
         <image name="Ellipse" width="12" height="12"/>
@@ -1598,11 +1693,14 @@ again.</string>
         <image name="chevron.backward" catalog="system" width="96" height="128"/>
         <image name="credit-card (1)" width="8" height="5.5"/>
         <image name="credit-card (4)" width="10" height="8"/>
-        <image name="finish" width="32.5" height="32.5"/>
+        <image name="finish" width="96.5" height="97"/>
         <image name="mc_symbol" width="9" height="6"/>
         <image name="multiply" catalog="system" width="128" height="111"/>
         <image name="starempty" width="11.5" height="11"/>
         <image name="starfill" width="11.5" height="11"/>
+        <namedColor name="0D0C0C">
+            <color red="0.050999999046325684" green="0.046999998390674591" blue="0.046999998390674591" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="282B2B">
             <color red="0.15686274509803921" green="0.16862745098039217" blue="0.16862745098039217" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -1635,6 +1733,9 @@ again.</string>
         </namedColor>
         <namedColor name="F32C2C">
             <color red="0.95294117647058818" green="0.17254901960784313" blue="0.17254901960784313" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="LightGray">
+            <color red="0.88200002908706665" green="0.87099999189376831" blue="0.87099999189376831" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainBlue">
             <color red="0.20784313725490197" green="0.65490196078431373" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

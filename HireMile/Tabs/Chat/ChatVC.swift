@@ -6,6 +6,7 @@
 //  Copyright © 2021 Jorge Zapata. All rights reserved.
 //
 
+import Alamofire
 import UIKit
 import MapKit
 import Firebase
@@ -793,8 +794,75 @@ class ChatVC: UIViewController, UserCellDelegate,CLLocationManagerDelegate {
     }
   
     @IBAction func btnFinishClick(_ sender: UIButton) {
-        self.filterLauncher.showFilter()
-        self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
+        Database.database().reference().child("Users").child(Auth.auth().currentUser!.uid).child("Stripe").observeSingleEvent(of:.value) { (usernameSnap) in
+            print(usernameSnap)
+            if let dict = usernameSnap.value as? [String:Any] {
+                let json = JSON(dict)
+                let id = json["id"].stringValue
+                if id == "" {
+                    
+                } else {
+                    self.checkAccountDetails(token: id)
+                }
+            } else {
+                
+            }
+        }
+        return
+//        self.filterLauncher.showFilter()
+//        self.filterLauncher.completeJob.addTarget(self, action: #selector(self.completeJobButton), for: .touchUpInside)
+    }
+    
+    func postRequest(token:String) {
+        let parameters: [String: Any] = [
+                "account" : token,
+                "refresh_url" : "https://example.com/reauth",
+                "return_url" : "https://example.com/return",
+                "type": "account_onboarding"
+            ]
+        let header = HTTPHeaders.init([HTTPHeader.init(name: "Content-Type", value: "application/x-www-form-urlencoded"),HTTPHeader.init(name: "Authorization", value: "Bearer sk_test_T7azo8VosFz9hDdPCsnYK5mm")])//
+        AF.request("https://api.stripe.com/v1/account_links", method: .post, parameters: parameters, encoding: URLEncoding.default, headers: header, interceptor: nil, requestModifier: nil).responseJSON { (response) in
+            if let data = response.data {
+                let json = JSON(data)
+                debugPrint(json)
+                let url = json["url"].stringValue
+                if let webVC = CommonUtils.getStoryboardVC(StoryBoard.Payment.rawValue, vcIdetifier: StripeWebViewController.className) as? StripeWebViewController {
+                    webVC.webUrl = url
+                    webVC.modalPresentationStyle = .overFullScreen
+                    self.present(webVC, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+    
+    func checkAccountDetails(token:String) {
+        let header = HTTPHeaders.init([HTTPHeader.init(name: "Content-Type", value: "application/x-www-form-urlencoded"),HTTPHeader.init(name: "Authorization", value: "Bearer sk_test_T7azo8VosFz9hDdPCsnYK5mm")])//
+        AF.request("https://api.stripe.com/v1/accounts/\(token)", method: .post, parameters: [:], encoding: URLEncoding.default, headers: header, interceptor: nil, requestModifier: nil).responseJSON { (response) in
+            if let data = response.data {
+                let json = JSON(data)
+                let payoutsEnabled = json["payouts_enabled"].boolValue
+                if (payoutsEnabled == true) {
+                    
+                } else {
+                    self.postRequest(token: token)
+                }
+            }
+        }
+    }
+    
+    func createAnAccount() {
+        let header = HTTPHeaders.init([HTTPHeader.init(name: "Content-Type", value: "application/x-www-form-urlencoded"),HTTPHeader.init(name: "Authorization", value: "Bearer sk_test_T7azo8VosFz9hDdPCsnYK5mm")])//
+        AF.request("https://api.stripe.com/v1/accounts", method: .post, parameters: [:], encoding: URLEncoding.default, headers: header, interceptor: nil, requestModifier: nil).responseJSON { (response) in
+            if let data = response.data {
+                let json = JSON(data)
+                let payoutsEnabled = json["payouts_enabled"].boolValue
+                if (payoutsEnabled == true) {
+                    
+                } else {
+                    self.postRequest(token: token)
+                }
+            }
+        }
     }
     
     @IBAction func btnPolygonClick(_ sender: UIButton) {

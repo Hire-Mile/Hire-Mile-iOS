@@ -29,9 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         
         UINavigationBar.appearance().tintColor = UIColor.black
-        
-        Stripe.setDefaultPublishableKey("pk_test_51JH1ELSGw7PeQDu7V6IdtcxvUbHu9Q81nf2oIqs0zPhjKAYrpHdZfHcTCZb5rEYQsPCSHyR7vhZjiaePE3gBuNI600ah3exMFr")
-        
+        StripeAPI.defaultPublishableKey = "pk_test_fcdgndrxovFJJWiR1ocR4uL2"
+
         IQKeyboardManager.shared().isEnabled = true
         
         print("🚀 HIREMILE LAUNCHED! 🚀")

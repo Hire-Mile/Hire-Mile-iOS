@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (5.4.3)
   - AppAuth (1.4.0):
     - AppAuth/Core (= 1.4.0)
     - AppAuth/ExternalUserAgent (= 1.4.0)
@@ -171,6 +172,7 @@ PODS:
   - ZKCarousel (1.1.0)
 
 DEPENDENCIES:
+  - Alamofire
   - BulletinBoard
   - Cosmos
   - DatePickerDialog
@@ -199,6 +201,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - AppAuth
     - BulletinBoard
     - Cosmos
@@ -243,6 +246,7 @@ SPEC REPOS:
     - ZKCarousel
 
 SPEC CHECKSUMS:
+  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   BulletinBoard: 1c0cb191b6c6245d08f51bd2445f1e36414ec0ed
   Cosmos: b5c6a9a637e28a061b54c8f8b1d8529d7d4db73f
@@ -286,6 +290,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   ZKCarousel: 935e0aa9beed83824588d9a82d8bafa5b6fc19db
 
-PODFILE CHECKSUM: a7e63704c4e2c5435f31173cc649e44b8b71701b
+PODFILE CHECKSUM: fc25e299ce90f260a3349c691c065918b8a1b694
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
